@@ -142,8 +142,8 @@ namespace WpfCardPrinter
             this.mUser = user;
             this.mWorkshop = shop;
 
-            zhi = new BitmapImage(new Uri("pack://application:,,,/WpfCardPrinter;component/Resources/zhi.jpg", UriKind.RelativeOrAbsolute));
-            zhi_e = new BitmapImage(new Uri("pack://application:,,,/WpfCardPrinter;component/Resources/zhi_e.jpg", UriKind.RelativeOrAbsolute));
+            zhi = new BitmapImage(new Uri("pack://application:,,,/WpfCardPrinter;component/Resources/hongtai.png", UriKind.RelativeOrAbsolute));
+            zhi_e = new BitmapImage(new Uri("pack://application:,,,/WpfCardPrinter;component/Resources/hongtai_e.png", UriKind.RelativeOrAbsolute));
             pan = new BitmapImage(new Uri("pack://application:,,,/WpfCardPrinter;component/Resources/pan.jpg", UriKind.RelativeOrAbsolute));
             pan_e = new BitmapImage(new Uri("pack://application:,,,/WpfCardPrinter;component/Resources/pan_e.jpg", UriKind.RelativeOrAbsolute));
 

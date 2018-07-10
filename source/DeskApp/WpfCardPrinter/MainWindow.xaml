@@ -127,11 +127,11 @@
             <StackPanel DockPanel.Dock="Bottom" Margin="0 20px 0 10px">
                 <Canvas Name="panelLabel" Width="370px" Height="230px" MaxWidth="370px" MaxHeight="370px">
                     <Canvas.Background>
-                        <ImageBrush ImageSource="/WpfCardPrinter;component/Resources/zhi.jpg" Stretch="Uniform" TileMode="None"  />
+                        <ImageBrush ImageSource="/WpfCardPrinter;component/Resources/hongtai.png" Stretch="Uniform" TileMode="None"  />
                     </Canvas.Background>
 
                     <Label Name="lbLabelProductClass" Canvas.Top="0" Canvas.Left="0" Content="" />
-                    <Label Name="lbLabelGBStandard" Canvas.Top="47" Canvas.Left="219" Content="GB/T1499.2 - 2007" Visibility="Hidden" FontSize="11px" FontWeight="Bold" VerticalContentAlignment="Center" Width="134"  />
+                    <Label Name="lbLabelGBStandard" Canvas.Top="47" Canvas.Left="219" Content="GB/T1499.2 - 2007" Visibility="Visible" FontSize="11px" FontWeight="Bold" VerticalContentAlignment="Center" Width="134"  />
                     <Label Name="lbLabelMaterial" Canvas.Top="76" Canvas.Left="85" Content="HRB400" FontSize="11px" Visibility="Hidden" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
                     <Label Name="lbLabelBatcode" Canvas.Top="76" Canvas.Left="173" Content="Z18010001" FontSize="11px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
                     <Label Name="lbLabelSpec" Canvas.Top="106" Canvas.Left="85" Content="Φ25" FontSize="11px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />

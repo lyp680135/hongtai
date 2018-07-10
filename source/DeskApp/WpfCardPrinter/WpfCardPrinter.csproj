@@ -253,6 +253,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\hongtai.png" />
+    <Resource Include="Resources\hongtai_e.png" />
+    <Resource Include="Resources\hongtai_shuju.png" />
     <Resource Include="Resources\zhi_e.jpg" />
     <Resource Include="Resources\pan_e.jpg" />
     <Resource Include="Resources\pan.jpg" />
