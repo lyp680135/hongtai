@@ -104,7 +104,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ProModels\Core\" />
-    <Folder Include="Template\" />
+    <Folder Include="Template\3\" />
+    <Folder Include="Template\3\Content\" />
     <Folder Include="ueditor\" />
     <Folder Include="UploadFile\ueditor\" />
   </ItemGroup>

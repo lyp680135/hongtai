@@ -1,0 +1,32 @@
+﻿@charset "utf-8";
+/* CSS Document */
+/*---------------------------内容-------------------------- */
+.container-fluid.sales{
+    vertical-align:middle;
+    padding: 0 12px 0 12px;
+    margin: 20px 0 25px 0;
+}
+body * {
+    color: #4c4c4c;
+}
+.container-fluid.sales .row{
+    margin-left: 0;
+    margin-right: 0;
+}
+.container-fluid.sales .row>div{
+    padding-left: 0;
+    padding-right:0;
+    vertical-align: middle;
+}
+.sales_column{
+    margin-bottom: 20px;
+}
+.sales_column h4{
+    font-size: 15px;
+    color: #212121;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+.sales_column p{
+    line-height: 24px;
+}

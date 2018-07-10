@@ -1,0 +1,194 @@
+﻿@page
+@inject ICMSService _cmsService
+@inject DataLibrary.DataContext Db
+@functions{
+    public DataLibrary.SiteBasic SiteBasic { get; set; }
+
+    // 产品模型
+    public DataLibrary.PdProduct PdProduct { get; set; }
+
+    public DataLibrary.BaseProductClass ProductClass { get; set; }
+
+    // 材质
+    public DataLibrary.BaseProductMaterial Material { get; set; }
+
+    // 规格
+    public DataLibrary.BaseSpecifications Spec { get; set; }
+
+    // 班组
+    public DataLibrary.PdWorkshopTeam PdWorkshopTeam { get; set; }
+
+    public DataLibrary.PdWorkshop PdWorkshop { get; set; }
+
+    /// <summary>
+    /// Gets or sets 出库纪录
+    /// </summary>
+    public DataLibrary.PdStockOut PdStockOut { get; set; }
+
+    public void OnGet(string batcode, string validcode)
+    {
+        var bc = batcode;
+        var vc = validcode;
+        if (string.IsNullOrEmpty(bc) && string.IsNullOrEmpty(vc))
+        {
+            bc = this.Request.Query["c"];
+            vc = this.Request.Query["r"];
+        }
+
+        this.SiteBasic = (from c in this.Db.SiteBasic select c).ToList()[0];
+
+        this.PdProduct = this.Db.PdProduct.FirstOrDefault(x => x.Batcode == bc && x.Randomcode == vc);
+        if (this.PdProduct != null)
+        {
+            this.ProductClass = this.Db.BaseProductClass.FirstOrDefault(x => x.Id == this.PdProduct.Classid);
+            this.Material = this.Db.BaseProductMaterial.FirstOrDefault(x => x.Id == this.PdProduct.Materialid);
+            this.Spec = this.Db.BaseSpecifications.FirstOrDefault(x => x.Id == this.PdProduct.Specid);
+            this.PdWorkshopTeam = this.Db.PdWorkshopTeam.FirstOrDefault(x => x.Id == this.PdProduct.WorkShift);
+            this.PdWorkshop = this.Db.PdWorkshop.FirstOrDefault(x => x.Id == this.PdWorkshopTeam.WorkshopId);
+            this.PdStockOut = this.Db.PdStockOut.FirstOrDefault(c => c.Productid == this.PdProduct.Id);
+        }
+    }
+}
+@{
+    ViewData["Title"] = "服务";
+    ViewData["Desc"] = "服务";
+    ViewData["Tag"] = 2;
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteBasic = siteBasic;
+    ViewBag.SiteSetting = mngSetting;
+}
+@section head
+    {
+    <link href="/Content/css/search_result.css" rel="stylesheet" />
+    <link href="/Content/js/layui/css/layui.css" rel="stylesheet" />
+    <script type="text/javascript" src="/Content/js/layui/layui.js"></script>
+    <script type="text/javascript" src="/Content/js/login.js"></script>
+}
+
+@if (Model.PdProduct == null)
+{
+    <div class="nodata" style="position:initial;padding-top:100px;padding-bottom:100px;height:initial;text-align:center;">
+        <img src="~/Content/images/logo_small.png" style="width:10%;" />
+        <div class="tip" style="color:gray;padding:10px 0px;">
+            暂无产品信息！
+        </div>
+    </div>
+}
+else
+{
+    <div class="container-fluid content">
+        <div class="row service title">
+            <div class="col-xs-12">
+                <img src="/Content/images/logo_small.png" />
+                <span>江苏鸿泰钢铁有限公司</span>
+            </div>
+        </div>
+        <div class="row search_result">
+            <div class="col-xs-12">
+                <table class="table">
+                    <tr>
+                        <td>产品名称:</td>
+                        <td>@Model.ProductClass.Gbname</td>
+                        <td>牌号</td>
+                        <td>@Model.Material.Name</td>
+                    </tr>
+                    <tr>
+                        <td>规格:</td>
+                        <td>@Model.Spec.Specname</td>
+                        <td>定尺:</td>
+                        <td>@Model.PdProduct.Length</td>
+                    </tr>
+                    <tr>
+                        <td>重量:</td>
+                        <td>@Html.Raw(Convert.ToInt32(Model.Spec.Refermeterweight * Model.Spec.Referlength * Model.Spec.Referpiececount))@Html.Raw("  kg")</td>
+                        <td>车间编号:</td>
+                        <td>@Model.PdWorkshop.Code</td>
+                    </tr>
+                    <tr>
+                        <td>批号:</td>
+                        <td>@Model.PdProduct.Batcode</td>
+                        <td>批号校验码:</td>
+                        <td>@Model.PdProduct.Randomcode</td>
+                    </tr>
+                    <tr>
+                        <td>捆号:</td>
+                        <td>@Model.PdProduct.Bundlecode</td>
+                        <td>支数:</td>
+                        <td>@Model.PdProduct.Piececount</td>
+                    </tr>
+                    <tr>
+                        <td>生产班组:</td>
+                        <td colspan="3">@Model.PdWorkshopTeam.TeamName</td>
+                    </tr>
+                    <tr>
+                        <td>生产日期:</td>
+                        <td colspan="3">@Util.Extensions.GetDateTimeFromUnixTime((long)Model.PdProduct.Createtime).ToString("yyyy年MM月dd日")</td>
+                    </tr>
+                    <tr>
+                        <td>出厂日期:</td>
+                        <td colspan="3">
+                            @if (Model.PdStockOut != null && Model.PdStockOut.Createtime.HasValue)
+                            {
+                                <p>@(((long)Model.PdStockOut.Createtime.Value).GetDateTimeFromUnixTime().ToString("yyyy年MM月dd日"))</p>
+                            }
+                            else
+                            {
+                                <p>&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;月&nbsp;&nbsp;日</p>
+                            }
+                    </td>
+                </tr>
+                <tr>
+                    <td>查询官网:</td>
+                    <td colspan="3">@mngSetting.Domain_PC</td>
+                </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid content print">
+        <div class="row service title">
+            <div class="col-xs-12">
+                <img src="/Content/images/title_print.png" />
+                <span>打印产品质量证明书</span>
+            </div>
+        </div>
+        <div class="row print_result">
+            <div class="col-xs-12">
+                <div class="print-cert-form">
+                    <div class="form-group">
+                        <div class="text-center">
+                            <span>手机号</span>
+                        </div>
+                        <div>
+                            <input type="text" id="UserName" name="UserName" placeholder="请输入手机号码">
+                        </div>
+                        <div>
+                            <button name="validcode" id="sendcode" class="btn btn-primary btn_code">发送验证码</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="text-center">
+                            <span>验证码</span>
+                        </div>
+                        <div>
+                            <input type="text" id="Code" name="Code" placeholder="请输入验证码">
+                        </div>
+                    </div>
+                    <p>请通过您的供货商获取电子《产品质量证明书》授权，登录官网下载</p>
+                    <input type="hidden" name="SystemMemberType" id="SystemMemberType" value="@Convert.ToInt32(DataLibrary.EnumList.SystemMemberType.Seller)" />
+                    <button type="submit" id="btnLogin_ByPhone" class="btn btn-primary btn-lg btn-block query">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+    <style type="text/css">
+        .container-fluid.footer {
+            margin-bottom: 55px;
+        }
+        .nav-bottom ul li a img{
+            margin-bottom:5px;
+        }
+    </style>

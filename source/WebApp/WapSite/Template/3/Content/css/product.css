@@ -1,0 +1,32 @@
+﻿@charset "utf-8";
+/* CSS Document */
+/*---------------------------内容-------------------------- */
+.container-fluid.matter{
+    vertical-align:middle;
+    padding: 0 12px 0 12px;
+    margin: 20px 0 25px 0;
+}
+.container-fluid.matter .row{
+    margin-left: 0;
+    margin-right: 0;
+}
+.container-fluid.matter .row>div{
+    padding-left: 0;
+    padding-right:0;
+    vertical-align: middle;
+}
+
+.matter>div{
+    border: 1px solid #e3e4e5;
+    margin-bottom: 25px;
+    background: #edeeef;
+}
+.product_column img{
+    vertical-align: middle;
+}
+.matter h3{
+    font-size: 14px;
+    color: #212121;
+    line-height: 34px;
+    padding-left: 5px;
+}

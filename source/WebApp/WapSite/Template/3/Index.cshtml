@@ -1,0 +1,159 @@
+﻿@page
+@inject ICMSService _cmsService;
+@{
+    ViewData["Tag"] = 0;
+    var siteBasic = _cmsService.GetBasic();
+    ViewBag.SiteBasic = siteBasic;
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteSetting = mngSetting;
+}
+@section head{
+    <link href="/Content/css/index.css" rel="stylesheet" />
+}
+<!--------------------------关于我们------------------------------>
+<div class="container-fluid content introduce">
+    <div class="row title text-center">
+        <div class="col-xs-12">
+            <img src="/Content/images/introduce_title.png" width="227" />
+        </div>
+    </div>
+    <div class="row introduce_details">
+        <div class="col-xs-12">
+            <a href="/Abount_us/">
+                <div class="div_img">
+                    <img src="/Content/images/introduce.jpg" />
+                    <div class="slogan">
+                        <span>质量力臻卓越 服务锲而不舍</span>
+                    </div>
+                </div>
+                <p>
+                    @{
+                        var about = _cmsService.GetSinglePage("关于鸿泰");
+                        if (about != null)
+                        {
+                            <div style="text-align:center">
+                                @if (!string.IsNullOrEmpty(about.Descrption))
+                                {
+                                    var Content = Util.Extensions.RemoveHtml(about.Descrption);
+                                    if (Content.Length > 150)
+                                    {
+                                        Content = Content.Substring(0, 126) + "...";
+                                    }
+                                    @Html.Raw(Content);
+                                }
+                            </div>
+                        }
+                    }
+                </p>
+            </a>
+        </div>
+    </div>
+</div>
+<!--------------------------新闻中心------------------------------>
+<div class="container-fluid content news">
+    <div class="row title text-center">
+        <div class="col-xs-12">
+            <img src="/Content/images/news_title.png" width="227" />
+        </div>
+    </div>
+    <div class="row news_img">
+        <div class="col-xs-12">
+            <img src="/Content/images/news_img.jpg" />
+        </div>
+    </div>
+    <div class="row news_list">
+        <div class="col-xs-12">
+            @{
+                var News = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰新闻", 1, 5);
+                if (News != null)
+                {
+                    for (int i = 0; i < News.Count; i++)
+                    {
+                        <a href="/News/@Html.Raw(News[i]["cid"]+"/"+News[i]["Id"]+".html")">
+                            <div class="news_time">
+                                @Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(News[i]["CreateTime"])).ToString("MM-dd")
+                            </div>
+                            <p class="news_details">@Html.Raw(News[i]["Title"])</p>
+                            <div class="clearfix"></div>
+                        </a>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>
+<!--------------------------公司风采------------------------------>
+<div class="container-fluid content mien">
+    <div class="row title text-center">
+        <div class="col-xs-12">
+            <img src="/Content/images/mien_title.png" width="227" />
+        </div>
+    </div>
+
+    @{
+        var Sence = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰风采", 1, 3);
+        if (Sence != null)
+        {
+            for (int i = 0; i < Sence.Count; i++)
+            {
+                <div class="row">
+                    <div class="col-xs-12">
+                        <a class="mien_list" href="#">
+                            <h2>@Html.Raw(Sence[i]["Title"])</h2>
+                            <div></div>
+                            <span>@Html.Raw(Sence[i]["Titledes"])</span>
+                            <p>@Html.Raw(Sence[i]["Content"])</p>
+                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Sence[i]["Image"].ToString()" />
+                        </a>
+                    </div>
+                </div>
+
+            }
+        }
+    }
+</div>
+<!--------------------------产品中心------------------------------>
+<div class="container-fluid content product">
+    <div class="row title text-center">
+        <div class="col-xs-12">
+            <img src="/Content/images/products_title.png" width="227" />
+        </div>
+    </div>
+    <div class="row product_introduction">
+        <div class="col-xs-12 text-center">
+            <p>
+                @{
+                    var Product = _cmsService.GetSinglePage("鸿泰产品");
+                    if (!string.IsNullOrEmpty(Product.Content))
+                    {
+                        @Html.Raw(Product.Content);
+                    }
+
+                }
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        @{
+            var ProductImg = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰产品", 1, 2);
+            if (ProductImg != null)
+            {
+                for (int i = 0; i < ProductImg.Count; i++)
+                {
+                    <div class="col-xs-6 text-center">
+                        <a href="/Product/" class="product_list">
+                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@ProductImg[i]["Image"].ToString().Split(',')[0]" />
+                            <div class="mask">
+                                <div class="mask_content">
+                                    <p>@Html.Raw(ProductImg[i]["Title"])</p>
+                                    <p>@Html.Raw(ProductImg[i]["Description"])</p>
+                                    <img src="/Content/images/more.png" width="25" />
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>

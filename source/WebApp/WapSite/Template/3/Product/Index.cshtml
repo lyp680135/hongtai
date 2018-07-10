@@ -1,0 +1,41 @@
+﻿@page
+@inject ICMSService _cmsService
+@{
+    ViewData["Tag"] = 1;
+    ViewData["Title"] = "产品";
+    ViewData["Desc"] = "产品";
+    var siteBasic = _cmsService.GetBasic();
+    ViewBag.SiteBasic = siteBasic;
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteSetting = mngSetting;
+}
+@section head{
+    <link rel="stylesheet" type="text/css" href="/Content/css/product.css">
+}
+<div class="container-fluid matter">
+    @{
+        var Product = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰产品", 1, 4);
+        if (Product != null)
+        {
+            for (int i = 0; i < Product.Count; i++)
+            {
+                <div>
+                    <div class="row product_column">
+                        <div class="col-xs-6">
+                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Product[i]["Image"].ToString().Split(',')[0]" />
+                        </div>
+                        <div class="col-xs-6">
+                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Product[i]["Image"].ToString().Split(',')[1]" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h3>@Html.Raw(Product[i]["Title"])@Html.Raw(Product[i]["Description"])</h3>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    }
+</div>
+

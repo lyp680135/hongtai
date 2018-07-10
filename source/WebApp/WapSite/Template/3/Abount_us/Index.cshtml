@@ -1,0 +1,29 @@
+﻿@page
+@inject ICMSService _cmsService
+@section head{
+    <link rel="stylesheet" href="/Content/css/about_us.css">
+}
+@{
+    ViewData["Tag"] = 0;
+    ViewData["Title"] = "关于鸿泰";
+    ViewData["Desc"] = "关于鸿泰";
+    var siteBasic = _cmsService.GetBasic();
+    ViewBag.SiteBasic = siteBasic;
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteSetting = mngSetting;
+
+}
+    <div class="banner_share">
+        <br />
+        <br />
+        <img src="/Content/images/about_us.jpg" />
+        <div class="padding_box">
+            @{
+                var about = _cmsService.GetSinglePage("关于鸿泰");
+                if (about != null)
+                {
+                    @Html.Raw(Util.Extensions.ToHtml(about.Content).ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))
+                }
+            }
+        </div>
+    </div>

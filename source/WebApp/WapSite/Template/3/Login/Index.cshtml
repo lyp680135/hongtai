@@ -1,0 +1,13 @@
+@page
+@inject ICMSService _cmsService
+@section head{
+}
+@{
+    ViewData["Tag"] = 5;
+    ViewData["Title"] = "µÇÂ¼";
+    ViewData["Desc"] = "µÇÂ¼";
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteBasic = siteBasic;
+    ViewBag.SiteSetting = mngSetting;
+}

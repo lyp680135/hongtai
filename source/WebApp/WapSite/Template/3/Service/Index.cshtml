@@ -1,0 +1,198 @@
+﻿@page
+@inject ICMSService _cmsService;
+@{
+    ViewData["Tag"] = 2;
+    ViewData["Title"] = "服务";
+    ViewData["Desc"] = "服务";
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteBasic = siteBasic;
+    ViewBag.SiteSetting = mngSetting;
+}
+@section head
+    {
+    <link href="/Content/css/services.css" rel="stylesheet" />
+    <script src="/Content/js/layui/layui.js" type="text/javascript"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&ak=507E36FA8f5d0bf5b491248d86d04bf7"></script>
+}
+
+<div class="container-fluid content">
+    <div class="row service title">
+        <div class="col-xs-12">
+            <img src="/Content//images/title_certificate.png" />
+            <span>产品质量证明书</span>
+        </div>
+    </div>
+    <div class="row certificate">
+        <div class="col-xs-12">
+            <form class="print-cert-form" id="form1" method="post" onsubmit="return submitSearch()">
+                <p>鸿泰钢铁《产品质量证明书》网上查询</p>
+                <div class="form-group">
+                    <div class="text-center">
+                        <span>产品批号</span>
+                    </div>
+                    <div>
+                        <input type="text" name="batcode" id="batcode" placeholder="请输入产品批号">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="text-center">
+                        <span>批号校验码</span>
+                    </div>
+                    <div>
+                        <input type="text" name="validcode" id="validcode" placeholder="请输入批号校验码">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg btn-block query">查询</button>
+            </form>
+        </div>
+    </div>
+</div>
+<!--------------------------联系我们------------------------------>
+<div class="container-fluid content contact">
+    <div class="row service title">
+        <div class="col-xs-12">
+            <img src="/Content//images/title_print.png" />
+            <span>联系我们</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            @{
+                var Tels = _cmsService.IcontentColumnDataService.GetContentColumnDataList("联系鸿泰", 1, 1);
+                if (Tels != null)
+                {
+                    foreach (var Tel in Tels)
+                    {
+                        <div class="contact_column">
+                            <img src="/Content//images/phone.png" width="28" />
+                            <span>@Html.Raw(Tel["Phone"])</span>
+                        </div>
+                        <div class="contact_column">
+                            <img src="/Content//images/fax.png" width="28" />
+                            <span>@Html.Raw(Tel["Fax"])</span>
+                        </div>
+                        <div class="contact_column">
+                            <img src="/Content//images/email.png" width="28" />
+                            <span>@Html.Raw(Tel["Email"])</span>
+                        </div>
+                        <div class="contact_column">
+                            <img src="/Content//images/address.png" width="28" />
+                            <span>@Html.Raw(Tel["Address"])</span>
+                        </div>
+                        <div class="contact_column">
+                            <div style="width:99%;height:210px;margin:0 1%;margin-top:8px;" id="dituContent"></div>
+                            <p id="ComAddress">@Html.Raw(Tel["Address"])</p>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>
+<!--------------------------关注我们------------------------------>
+<div class="container-fluid content focus">
+    <div class="row service title">
+        <div class="col-xs-12">
+            <img src="/Content//images/focus_us.png" />
+            <span>关注我们</span>
+        </div>
+    </div>
+    <div class="row focus_column">
+        @{
+            var Follows = _cmsService.IcontentColumnDataService.GetContentColumnDataList("关注鸿泰", 1, 1);
+            if (Follows != null)
+            {
+                foreach (var Follow in Follows)
+                {
+                    <div class="col-xs-4">
+                        <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Follow["Image"].ToString()" />
+                    </div>
+                    <div class="col-xs-8">
+
+                        <div>
+                            <h4>@Html.Raw(Follow["Title"])</h4>
+                            <p>
+                                @Html.Raw(Follow["Description"]))
+                            </p>
+                        </div>
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>
+<script type="text/javascript">
+    var ComAddress = $("#ComAddress").html();
+    //创建和初始化地图函数：
+    function initMap() {
+        //var icon = new BMap.Icon("http://map.baidu.com/image/us_mk_icon.png", new BMap.Size(100, 100));
+        createMap();//创建地图
+        setMapEvent();//设置地图事件
+        //addMapControl();//向地图添加控件
+    }
+
+    //创建地图函数：
+    function createMap() {
+        var map = new BMap.Map("dituContent");//在百度地图容器中创建一个地图
+        var localSearch = new BMap.LocalSearch(map);
+        localSearch.enableAutoViewport();
+        localSearch.setSearchCompleteCallback(function (searchResult) {
+            var new_point = new BMap.Point(@siteBasic.MapLocation);
+            var marker = new BMap.Marker(new_point);  // 创建标注
+            map.addOverlay(marker);              // 将标注添加到地图中
+           // marker.addEventListener("click", function () {
+           //     this.openInfoWindow(infoWindow);
+            //});
+            map.centerAndZoom(new_point, 17);
+        });
+        localSearch.search(ComAddress);
+        window.map = map;//将map变量存储在全局
+    }
+
+    //地图事件设置函数：
+    function setMapEvent() {
+        map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+        map.enableScrollWheelZoom();//启用地图滚轮放大缩小
+        map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+        map.enableKeyboard();//启用键盘上下左右键移动地图
+    }
+            initMap();//创建和初始化地图
+</script>
+<script type="text/javascript">
+
+    layui.use('layer', function () {
+        var $ = layui.jquery, layer = layui.layer;
+    });
+    function submitSearch() {
+        if (!$("#batcode").val()) {
+            $("#batcode").focus();
+            layer.msg('请输入产品批号！');
+            return false;
+        }
+        if (!$("#validcode").val()) {
+            $("#validcode").focus();
+            layer.msg('请输入批号校验码！');
+            return false;
+        }
+        var url = '/Service/SearchProduct';
+        var layerload = layer.load(1);
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: $("#form1").serialize(),
+            success: function (re) {
+                if (re == "success") {
+                    window.location.href = "/Service/search_result?batcode=" + $("#batcode").val() + "&validcode=" + $("#validcode").val();
+                } else {
+                    layer.msg(re);
+                }
+                layer.close(layerload);
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                layer.close(layerload);
+                layer.msg('操作失败，出现服务器错误！');
+            }
+        });
+        return false;
+    }
+</script>

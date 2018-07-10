@@ -1,0 +1,111 @@
+@charset "utf-8";
+/* CSS Document */
+/*---------------------------banner-------------------------- */
+.perch{
+    height: 99px;
+}
+.content{
+    background: #edeeef;
+}
+.table{
+    margin-bottom: 0;
+}
+.container-fluid.content{
+    vertical-align:middle;
+    padding: 0 12px 0 12px;
+}
+.container-fluid.content .row{
+    margin-left: -12px;
+    margin-right: -12px;
+}
+.container-fluid.content .row>div{
+    padding-left: 12px;
+    padding-right:12px;
+    vertical-align: middle;
+}
+/*---------------------------title-------------------------- */
+.row.service.title span{
+    color: #333;
+    font-size: 15px;
+    font-weight: 600;
+    vertical-align: middle;
+}
+.row.service.title img{
+    width: 19px;
+    vertical-align: middle;
+}
+.row.service.title{
+    margin-top: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #cccccc;
+}
+/*---------------------------查询结果-------------------------- */
+.search_result{
+    margin-bottom: 20px;
+}
+table *{
+    border: 0 solid transparent !important;
+}
+table tr>td:nth-child(odd){
+    text-align: right;
+    color: #999999;
+}
+table tr>td:nth-child(even){
+    text-align: left;
+}
+table tr td{
+    padding: 8px 0 8px 0 !important;
+}
+/*---------------------------打印-------------------------- */
+.content.print{
+    border-top:1px solid #666666;
+    padding-bottom: 45px;
+}
+input{
+    background-color:#edeeef;
+}
+.print-cert-form>div:nth-child(1){
+    margin-bottom: 20px;
+}
+.print-cert-form>div:nth-child(2){
+    margin-bottom: 14px;
+}
+.query{
+    border: 1px solid #ca9146;
+    background-color: #d58804;
+    border-radius: 4px;
+    box-shadow: 0 0 1px #e8eff6 inset;
+}
+.btn.btn-primary.btn_code{
+    background-color: #d58804;
+    border: none;
+}
+.row.print_result p{
+    font-size: 14px;
+    color: #999;
+    line-height: 20px;
+   margin-bottom: 14px;
+}
+.row.print_result{
+    margin-top: 12px;
+}
+.print-cert-form>div{
+    height: 44px;
+    border-bottom: 1px solid #cccccc;
+}
+.print-cert-form>div>div:nth-child(1){
+    width: 48px;
+    height: 42px;float: left;padding-top: 12.43px;
+    padding-left: 5px;
+}
+.print-cert-form>div>div:nth-child(2){
+    float: left;width: calc(100% - 53px);padding-left: 10px;
+}
+.print-cert-form>div>div:nth-child(2) input{
+    height: 42px;border: 0;width: 100%;outline: 0;
+}
+.print-cert-form>div>div:nth-child(3) {
+    position: absolute;
+    right: 20px;
+    top: 5px;
+}
