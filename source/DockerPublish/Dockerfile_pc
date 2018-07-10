@@ -1,0 +1,27 @@
+# 编译Docker镜像
+FROM microsoft/aspnetcore-build as build-env
+MAINTAINER xiaoyukeji
+WORKDIR /source
+COPY ./WebApp /source
+
+WORKDIR /source/WebSite
+
+RUN dotnet restore --verbosity q
+
+RUN dotnet publish -c Release -o /source/publish
+
+# PC端镜像
+FROM microsoft/aspnetcore
+WORKDIR /app
+copy --from=build-env /source/publish ./
+
+#拷贝模板
+copy --from=build-env /source/WebSite/Template ./Template
+#拷贝Upload文件夹
+copy --from=build-env /source/WebSite/UploadFile ./UploadFile
+
+RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
+
+EXPOSE 5001/tcp
+
+ENTRYPOINT ["dotnet", "WarrantyManage.dll"]

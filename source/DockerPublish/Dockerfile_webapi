@@ -1,0 +1,24 @@
+# 编译Docker镜像
+FROM microsoft/aspnetcore-build as build-env
+WORKDIR /source
+COPY ./WebApp /source
+
+WORKDIR /source/ApiCenter
+RUN dotnet restore --verbosity q
+
+RUN dotnet publish -c Release -o /source/publish
+
+# WebApi端镜像
+FROM microsoft/aspnetcore
+WORKDIR /app
+copy --from=build-env /source/publish ./
+
+
+#拷贝
+copy --from=build-env /source/ApiCenter/qualitypics ./qualitypics
+
+RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
+
+EXPOSE 5003/tcp
+
+ENTRYPOINT ["dotnet", "WarrantyApiCenter.dll"]
