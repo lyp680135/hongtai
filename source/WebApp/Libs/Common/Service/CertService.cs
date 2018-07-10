@@ -279,11 +279,11 @@
                     info.Add("QualityIcon", "qs.png");
 
                     // 生产许可证号
-                    info.Add("PermitNo", "XK05-001-00055");
+                    info.Add("PermitNo", "XK05-001-00075");
 
                     // 地址
-                    info.Add("Address", "中国·湖南·娄底");
-                    info.Add("AddressEn", "HuNan.LouDi P.R.C");
+                    info.Add("Address", "中国·江苏·镇江");
+                    info.Add("AddressEn", "ZhenJiang.JiangSu P.R.C");
 
                     // 产品品牌小图标
                     info.Add("Brand", "brand.jpg");
