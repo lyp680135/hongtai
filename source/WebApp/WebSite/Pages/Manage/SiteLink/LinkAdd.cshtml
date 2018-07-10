@@ -1,0 +1,198 @@
+﻿@page
+@model WarrantyManage.Pages.Manage.SiteLink.LinkAddModel
+@inject DataLibrary.DataContext _db
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <title>链接添加</title>
+    <style>
+        .LinkAdd {
+            margin-top: 20px
+        }
+
+        select {
+            opacity: 1;
+            border: 1px solid #9c9c9c;
+            width: 150px;
+            height: 32px;
+            line-height: 32px;
+        }
+    </style>
+</head>
+<body>
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="/Manage/Site/LinkList">网站管理</a></li>
+            <li>友情链接添加</li>
+        </ul>
+    </div>
+    <form id="form2">
+        <div class="LinkAdd">
+            <ul class="forminfo">
+
+                <li style="line-height: 34px;">
+                    <label>链接名字</label>
+                    <input name="Name" id="Name" placeholder="请输入链接文本" type="text" class="validate[required] scinput" maxlength="25" style="width:300px;" />
+                </li>
+                <li style="line-height: 34px;">
+                    <label>内容描述</label>
+                    <textarea id="Description" placeholder="限0-120个字符" name="Description" class="validate[required] scinput" maxlength="240" style="width:300px;height:60px;line-height:20px;"></textarea>
+                </li>
+                <li style="line-height: 34px;">
+                    <label>链接地址</label>
+                    <input name="Url" id="Url" type="text" class="validate[required]  validate[custom[url]] scinput" maxlength="64" style="width:200px;" />
+                </li>
+                <li style="line-height: 34px;">
+                    <label>显示位置</label>
+                    <select name="Position" style="width:200px" id="Position">
+                        <option value="@((int)SiteLinkPostion.PC端显示)">Pc端显示</option>
+                        <option value="@((int)SiteLinkPostion.移动端显示)">移动端显示</option>
+                        <option value="@((int)SiteLinkPostion.PC移动全显示)">Pc端和移动端均显示</option>
+                    </select>
+                </li>
+                <li style="line-height: 34px;">
+                    <label>链接类型</label>
+                    <select name="LinkType" id="LinkType" style="width:200px">
+                        <option value="@((int)SiteLinkType.图片链接)">图片链接</option>
+                        <option value="@((int)SiteLinkType.文字链接)" selected>文字链接</option>
+                    </select>
+                </li>
+
+                <li id="PicLink" style="line-height: 34px;display:none">
+                    <label>链接图片</label>
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn" id="test1">上传图片</button>
+                        <div class="layui-upload-list" id="isShow">
+                            <img class="layui-upload-img" style="margin-left: 95px;max-width:200px;" id="Logo" src=""/>
+                            <input type="hidden" name="PicLink" id="PicLink" />
+                        </div>
+                        <p><a href="javascript:removeLogo()" style="margin-left: 95px;">[删除]</a></p>
+                    </div>
+                </li>
+                <li id="picwid" style="line-height: 34px;display:none">
+                    <label>图片宽度</label>
+                    <input name="PicWidth" id="PicWidth" placeholder="请输入1000以内的整数" type="text" class="validate[required]  validate[custom[onlyNumberSp]] scinput" maxlength="3" style="width:200px;" />
+                </li>
+                <li id="pichei" style="line-height: 34px;display:none">
+                    <label>图片高度</label>
+                    <input name="PicHeight" id="PicHeight" type="text" placeholder="请输入1000以内的整数" class="validate[required] validate[custom[onlyNumberSp]] scinput" maxlength="3" style="width:200px;" />
+                </li>
+                <li style="line-height: 34px;">
+                    <label>是否显示</label>
+                    <group>
+                        <input type="radio" value="@((int)SiteIsShow.是)" name="IsShow"  checked="checked" />是<input type="radio" value="@((int)SiteIsShow.否)" name="IsShow" /> 否
+                    </group>
+                </li>
+                <li style="line-height: 34px;margin-left:85px">
+                    <input type="button" class="sure" value="保存" onclick="LinkAdd()" />&nbsp;
+                </li>
+            </ul>
+        </div>
+    </form>
+    <script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script>
+    <script type="text/javascript" src="/ueditor/ueditor.parse.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+
+            $("#form2").validationEngine({
+                validationEventTriggers: "blur",
+                inlineValidation: true,
+                success: false,
+            });
+
+        });
+        $(function () {
+            $("select[name=LinkType]").change(function () {
+                var value = $(this).val();
+                if (value == 2) {
+                    $("#PicLink").show();
+                    $("#picwid").show();
+                    $("#pichei").show();
+                }
+                else if(value == 1) {
+                    $("#PicLink").hide();
+                    $("#picwid").hide();
+                    $("#pichei").hide();
+                }
+            });
+        })
+
+        layui.use(['upload'], function () {
+            var $ = layui.jquery
+                , upload = layui.upload;
+
+            //普通图片上传
+            upload.render({
+                elem: '#test1'
+                , url: '/UploadImg/Upload'
+                , before: function (obj) {
+
+                }
+                , done: function (res) {
+                    if (res.result) {
+                        $('#Logo').attr('src', res.msg);
+                        $("input[name='PicLink']").attr('value', res.msg);
+                    }
+                    else {
+                        layer.msg('上传失败');
+                    }
+                    //上传成功
+                }
+                , error: function () {
+
+                }
+            })
+        })
+
+        function removeLogo() { 
+            $('#Logo').attr('src', res.msg);
+
+        }
+        function LinkAdd() {
+            var valid = $("#form2").validationEngine("validate");
+            if (valid == true) {
+                var loadLayer = layer.load(1);
+                $.ajax({
+                    type: "POST",
+                    url: "/SiteLink/AddLink",
+                    data: $("#form2").serialize(),
+                    success: function (re) {
+                        if (re == "ok") {
+                            layer.msg("添加成功！")
+                            setTimeout(function () { window.location.href = "/Manage/SiteLink/LinkList" }, 2000);
+                            layer.close(loadLayer);
+                        }
+                        else if (re == "Exit") {
+                            layer.msg("此名称已存在！");
+                            layer.close(loadLayer);
+                            return false;
+                        }
+                        else {
+                            layer.msg("添加失败，服务器错误！")
+                            setTimeout(function () { window.location.href = "/Manage/SiteLink/LinkList" }, 2000);
+                            layer.close(loadLayer);
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(loadLayer);
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                })
+            }
+            else {
+                layer.msg("请再次确认以上内容填写正确！");
+            }
+        }
+    </script>
+</body>
+</html>

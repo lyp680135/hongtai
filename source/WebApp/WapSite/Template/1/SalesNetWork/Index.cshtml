@@ -1,0 +1,34 @@
+﻿@*@page
+@model WarrantyEnterpriseMobileStation.Pages.SalesNetworkModel
+@{
+    Layout = "~/Pages/Layout/_Layout.cshtml";
+}
+
+<div style="min-height: 500px;">
+
+    <div class="carousel-inner">
+        @if (Model.CarouselImage != null && Model.CarouselImage.Count > 0)
+        {
+            <div class="item active">
+                @{
+                    var path = @Model.setting.ImgPath + "uploadfile/siteadv/";
+                    <img src="@path@Model.CarouselImage[0]["adsimage"]" style="width:100%;" />
+                }
+            </div>
+                    }
+    </div>
+
+    @{
+        var infomation = Model.Info;
+        foreach (var info in infomation)
+        {
+            <div class="info">
+                <span class="title">@info["CompanyName"]</span>
+                <div style="overflow:hidden;margin-top:5px;">
+                    <a href="http://@info["AccountNo"].31goods.com"><span class="spanclass"><span class="imgSpan"><img src="~/images/head_portrait_after.png" style="max-width:20px;" /></span><span style="margin-left:10px;">店铺</span></span></a>
+                    <a href="tel:@info["APP_Mobile"]"><span class="spanclass"><span class="imgSpan"><img src="~/images/head_portrait_after.png" style="max-width:20px;" /></span><span style="margin-left:10px;">联系</span></span></a>
+                </div>
+            </div>
+        }
+    }
+</div>*@

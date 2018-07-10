@@ -1,0 +1,97 @@
+﻿@page
+@inject Common.IService.ISettingService settingService
+@inject Common.IService.IUserService userService
+@model WarrantyManage.Pages.Manage.DefaultModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <title>系统首页</title>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+
+            layui.use('laydate', function () {
+
+            });
+
+
+            $("#form1").validationEngine({
+                validationEventTriggers: "blur",
+                inlineValidation: true,
+                success: false,
+            });
+
+            $("#form1").find("a").each(function () {
+                if ($(this).html() == '@ViewData["ReportType"]')
+                {
+                    $(this).css("font-weight","600");
+                }
+            });
+        });
+    </script>
+    <style>
+        .mainleft {
+            padding-right: 0;
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="/Manage/Default">我的面板</a></li>
+            <li><a href="/Manage/Default">首页</a></li>
+        </ul>
+    </div>
+
+
+    <div class="mainbox">
+         
+        <div class="welinfo">
+            <span><img src="/images/sun.png" alt="天气" /></span>
+            <b>你好，@userService.ApplicationUser.Mng_admin.RealName ，欢迎使用 @settingService.MngSetting.Name ！</b>
+            @*<a href="/Manage/UpdatePwd">帐号设置</a>*@
+        </div>
+
+        <div class="welinfo">
+            <span><img src="/images/time.png" alt="时间" /></span>
+            <i>您上次登录的时间：@userService.ApplicationUser.Mng_admin.LoginTime.ToDateTimeString()</i> （IP: @userService.ApplicationUser.Mng_admin.LoginIp）
+        </div>
+
+        <div class="xline"></div>
+ 
+
+        @*<ul class="iconlist">
+            <li style="margin-top: 40px;"><b>快捷入口</b></li>
+            <li><p><a href="/Address/Bulding"><img src="/Images/ico01.png" /><br />地址设置</a></p></li>
+            <li><p><a href="/Custom/Add"><img src="/Images/ico02.png" /><br />添加客户</a></p></li>
+            <li><p><a href="/Custom/Index"><img src="/Images/ico05.png" /><br />客户列表</a></p></li>
+            <li><p><a href="/Report/Distributor"><img src="/Images/ico03.png" /><br />数据报表</a></p></li>
+            
+        </ul>*@
+
+    </div>
+
+
+    <script type="text/javascript">
+        setWidth();
+        $(window).resize(function () {
+            setWidth();
+        });
+        function setWidth() {
+            var width = ($('.leftinfos').width() - 12) / 2;
+            $('.infoleft,.inforight').width(width);
+        }
+    </script>
+</body>
+</html>

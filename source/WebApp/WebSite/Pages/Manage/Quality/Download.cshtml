@@ -1,0 +1,269 @@
+﻿@page
+@model WarrantyManage.Pages.Manage.Quality.DownloadModel
+@inject DataLibrary.DataContext _db
+@using DataLibrary;
+@{
+    //网站基本设置
+    var Setting = new DataLibrary.MngSetting();
+    var query_Setting = _db.MngSetting.FirstOrDefault();
+    if (query_Setting != null)
+    {
+        Setting = query_Setting;
+    }
+    Layout = null;
+
+}
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <title>质量证明书查询</title>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+    <style>
+        /*----------用来移除向下箭头----------*/
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            margin-right: 5px;
+        }
+        /*----------用来移除上下箭头----------*/
+        input[type='date']::-webkit-inner-spin-button {
+            margin: 5px;
+        }
+
+        .layui-table td {
+            text-indent: 0px;
+        }
+
+        /*.layui-form input[type=checkbox] {
+            display: block !important;
+        }*/
+        .layui-table[lay-size=sm] td {
+            font-size: 12px;
+            padding: 4px 0px !important;
+            text-align: center;
+            text-indent: 0px;
+        }
+
+        .layui-form input[type=checkbox] {
+            display: inline-block;
+        }
+
+        .layui-table[lay-size=sm] thead tr td {
+            font-weight: 700 !important;
+        }
+
+        .layui-table tbody tr td:first-child {
+            width: 200px !important;
+        }
+
+            .layui-table tbody tr td:first-child img {
+                max-width: 100px !important;
+            }
+    </style>
+</head>
+<body>
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li>质量管理</li>
+            <li>质量证明书查询</li>
+        </ul>
+    </div>
+    <div class="rightinfo">
+        <form id="seachform" method="get" class="layui-form">
+            <div class="tools">
+                <ul class="seachform" style="width:100%">
+                    <li>
+                        <label>
+                            质保打印编号:
+                        </label>
+                        <input name="Printno" type="text" class="scinput" value="@Model.Printno" />
+                        <div style="clear:both"></div>
+                    </li>
+                    <li>
+                        <label>
+                            开始时间:
+                        </label>
+                        <input name="startTime" id="startTime" type="text" class="date scinput" value="@Model.StartTime" />
+                        <div style="clear:both"></div>
+                    </li>
+                    <li>
+                        <label>
+                            结束时间:
+                        </label>
+                        <input name="endTime" type="text" id="endTime" class="date scinput" value="@Model.EndTime" />
+                        <div style="clear:both"></div>
+                    </li>
+                    <li>
+                    </li>
+                    <li>
+                        <button id="add" name="sb" type="submit" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button>
+                    </li>
+                </ul>
+            </div>
+            @*<img src="http://localhost:41178/qualitypics/83239p.jpg" />*@
+            <table class="layui-table">
+                <thead>
+                    <tr style="background:#f0f5f7">
+                        <td>图片预览</td>
+                        <td>质保书打印编号</td>
+                        <td>收货单位</td>
+                        <td>产品数量</td>
+                        <td>时间</td>
+                        <td>操作</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var spList = Model.SalePrintLogList;
+                        if (spList != null && spList.Count > 0)
+                        {
+                            foreach (var item in spList)
+                            {
+                                var imgName = string.Format("{0}{1}", item.Id.ToString(), item.Checkcode.ToString());
+                                <tr>
+                                    <td>
+                                        <img src="@string.Format("{0}{1}{2}{3}",Setting.Domain_WebApi,"qualitypics/",imgName,"p.jpg")" />
+                                    </td>
+                                    <td>@item.Printno</td>
+                                    <td>@item.Consignor</td>
+                                    <td>@_db.SalePrintLogDetail.Where(c=>c.PrintId == item.Id).Sum(c=>c.Number)</td>
+                                    <td>@Util.Extensions.GetDateTimeFromUnixTime(item.Createtime.ToLong()).ToString("yyyy/MM/dd")</td>
+                                    <td>
+                                        @if (item.Status.Value == (int)EnumList.SalePrintlogStatus.已撤回)
+                                        {
+                                            <b>已撤回</b>
+                                        }
+                                        else
+                                        {
+                                            <button id="download" name="sb" class="layui-btn layui-btn-sm layui-btn-normal" onclick="downLoad(@item.Id); return false"><i class="layui-icon">&#xe601;</i>下载</button>
+                                            <button id="download" name="sb" class="layui-btn layui-btn-sm layui-btn-danger" onclick="withdraw(@item.Id); return false"><i class="layui-icon">&#xe633;</i>撤回</button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+            @await Component.InvokeAsync("PageList", new
+            {
+                PageSize = Model.PageSize,
+                PageIndex = Model.PageIndex,
+                PageCount = Model.PageCount,
+                PageUrl = Request.GetAbsoluteUri(new List<KeyValuePair<string, string>>() {
+                new KeyValuePair<string, string>("pg","{0}")
+                }),
+                PageText = "{0}",
+                ShowCount = 6,
+                ShowAll = false
+            })
+        </form>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $('.layui-table tbody tr:odd').addClass('odd');
+        });
+
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#startTime' //指定元素
+            });
+
+            laydate.render({
+                elem: '#endTime' //指定元素
+            });
+        });
+        function downLoad(id) {
+            //先检查图片是否存在
+            $.ajax({
+                url: '/Quality/CheckDownLoad',
+                type: 'post',
+                data: { id: id },
+                dataType: 'json',
+                success: function (res) {
+                    if (res.state) {
+                        var index = layer.open({
+                            title: '图片预览',
+                            type: 1,
+                            area: ['100%', '100%'],
+                            shadeClose: true, //点击遮罩关闭
+                            content: ' <img src="@Setting.Domain_WebApi.Substring(0,Setting.Domain_WebApi.Length-1)/qualitypics/' + res.content + '.jpg" height="100%" width="100%"/>',
+                            anim: '5',//动画效果
+                            offset: 'auto',//弹出层位置
+                            shadeClose: true,
+                            maxmin: true,//最大化,最小化
+                            btn: ['确认下载','取消'],
+                            yes: function (index, layero) {
+                                //下载图片
+                                window.location.href = "/Quality/DownLoad?id=" + id;
+                                layer.close(index);
+                            }, no: function () {
+                                layer.close(index);
+                            }
+                        });
+                    }
+                    else {
+                        layer.msg(res.content, { icon: 2 });
+                    }
+                }
+            })
+        }
+        function stopchoose() {
+            cancelBubble();
+        }
+        function cancelBubble(e) {
+            var evt = e ? e : window.event;
+            if (evt.stopPropagation) {        //W3C
+                evt.stopPropagation();
+            } else {       //IE
+                evt.cancelBubble = true;
+            }
+        }
+        function getSelectedId() {
+            var selectedid = 0;
+            //获取最后一条选中项
+            $("input[name='id']:checked").each(function () {
+                selectedid = $(this).val();
+            });
+
+            return selectedid;
+        }
+
+        function withdraw(id)
+        {
+
+
+            var index = layer.confirm("确认撤回该质保书吗？", function () {
+                var loadIndex = layer.load(1, { shade: [0.1, '#fff'] });
+                 //先检查图片是否存在
+                $.ajax({
+                    url: '/Quality/Withdraw',
+                    type: 'post',
+                    data: { id: id },
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.state) {
+                            layer.msg(res.content, { icon: 1 });
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 1500);
+                        }
+                        else {
+                            layer.msg(res.content, { icon: 2 });
+                            layer.close(loadIndex);
+                        }
+                    }
+                })
+                 }, function () {
+                });
+        }
+    </script>
+</body>
+</html>

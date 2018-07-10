@@ -1,0 +1,54 @@
+﻿@page
+@inject ICMSService _cmsService;
+@{ 
+    ViewData["Title"] = "工艺流程";
+    ViewData["Desc"] = "工艺流程";
+}
+@section head{
+    
+}
+
+<!-- 主体 -->
+
+<div id="main" class="part">
+
+    <ul id="menu" class="fl">
+        <li>
+            <a href="/ProductService/0-1.html">
+                <i class="icon-chevron-right"></i>产品电子目录
+            </a>
+        </li>
+        <li class="on">
+            <a href="/ProductService/Process">
+                <i class="icon-chevron-right"></i>工艺流程
+            </a>
+        </li>
+        <li>
+            <a href="/ProductService/Standard">
+                <i class="icon-chevron-right"></i>产品标准
+            </a>
+        </li>
+        <li>
+            <a href="/ProductService/Authentication/0-1.html">
+                <i class="icon-chevron-right/0-1.html"></i>质量认证
+            </a>
+        </li>
+        <li>
+            <a href="/ProductService/Sale">
+                <i class="icon-chevron-right"></i>销售网络
+            </a>
+        </li>
+    </ul>
+
+
+    <div id="content" class="fr">
+        @{
+            var Process = _cmsService.GetSinglePage("工艺流程");
+            if (Process != null)
+            {
+                <div class="tit"><h1>@Html.Raw(Process.Title)</h1></div>
+                <div class="con">@Html.Raw(Process.Content)</div>
+            }
+        }
+    </div>
+</div>

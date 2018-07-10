@@ -1,0 +1,45 @@
+﻿@page "{cid:int}/{Id:int}.html"
+@inject ICMSService _cmsService
+@{
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    int CId = Convert.ToInt32(RouteData.Values["CId"]);
+    int Id = Convert.ToInt32(RouteData.Values["Id"]);
+    var model = _cmsService.IcontentColumnDataService.GetContentColumnData(Id, CId);
+    ViewData["Title"] = model["Title"];
+    ViewData["Desc"] = model["Content"].ToString().RemoveHtml();
+    var qfengcai = _cmsService.IcontentColumnDataService.GetContentColumnDataList("闽源风采", 1, 10);
+}
+@section head
+    {
+    <link rel="stylesheet" type="text/css" href="/Content/css/fengcai.css">
+}
+
+    <div id="main" class="part">
+
+        <ul id="menu" class="fl">
+            @{
+                foreach (var fc in qfengcai)
+                {
+                    <li @Html.Raw(Id==Convert.ToInt32(fc["Id"])? "class=\"on\"":"")>
+                        <a  href="/FengCai/@Html.Raw(fc["cid"]+ "/" + fc["Id"]+ ".html")" >
+                            <i class="icon-chevron-right"></i>@fc["Title"]
+                        </a>
+                    </li>
+                }
+            }
+
+        </ul>
+
+        @{
+                <div id="content" class="fr">
+                    <div class="tit"><h1>@Html.Raw(model["Title"])</h1></div>
+                    <div class="con">
+                        <span style="text-indent:32pt">@Html.Raw(Util.Extensions.ToHtml(model["Content"].ToString()).ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))</span>
+                        <p>
+                            <br />
+                        </p>
+                    </div>
+                </div>
+        }
+    </div>

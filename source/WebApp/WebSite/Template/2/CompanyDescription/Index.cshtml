@@ -1,0 +1,53 @@
+﻿@page
+@inject ICMSService _cmsService;
+@{
+    var mngSetting = _cmsService.GetSetting();
+    ViewData["Title"] = "总经理致辞";
+    ViewData["Desc"] = "总经理致辞";
+}
+@section head{
+
+}
+
+
+<div id="main" class="part">
+
+    <ul id="menu" class="fl">
+        <li class="on">
+            <a href="/CompanyDescription/">
+                <i class="icon-chevron-right"></i>总经理致辞
+            </a>
+        </li>
+        <li >
+            <a href="/CompanyDescription/Introduction">
+                <i class="icon-chevron-right"></i>公司简介
+            </a>
+        </li>
+        <li>
+            <a href="/CompanyDescription/Greatevents/0-1.html">
+                <i class="icon-chevron-right"></i>公司大事记
+            </a>
+        </li>
+        <li>
+            <a href="/CompanyDescription/ContactUs">
+                <i class="icon-chevron-right"></i>联系我们
+            </a>
+        </li>
+    </ul>
+            @{
+                var Speak = _cmsService.GetSinglePage("总经理致辞");
+                if (Speak != null)
+                {
+                    <div id="content" class="fr">
+                        <div class="tit"><h1>@Html.Raw(Speak.Title)</h1></div>
+                        <div class="con">
+                            <span style="text-indent:32pt">@Html.Raw(Util.Extensions.ToHtml(Speak.Content).ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))</span>
+                            <p>
+                                <br />
+                            </p>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+

@@ -1,0 +1,50 @@
+﻿@page
+@inject ICMSService _cmsService;
+@inject Common.IService.IContentGroupService _contentService
+@{ 
+    ViewData["Title"] = "钢城风采";
+    ViewData["Desc"] = "钢城风采";
+}
+@section head{
+
+}
+
+<!-- 主体 -->
+
+<div id="main" class="part">
+
+    <ul id="menu" class="fl">
+        <li >
+            <a href="/Culture/">
+                <i class="icon-chevron-right"></i>文化体系
+            </a>
+        </li>
+        <li class="on">
+            <a href="/Culture/Sence">
+                <i class="icon-chevron-right"></i>钢城风采
+            </a>
+        </li>
+    </ul>
+
+    <div id="content" class="fr">
+        <ul class="imglist">
+            @{
+                DataLibrary.SiteCategory Sence = _contentService.GetSiteCategoryByName("钢城风采");
+                if (Sence != null)
+                {
+                    var Children = _contentService.GetAllDataForRecursion(Sence.Id, Sence.Id);
+                    for (var i = 0; i < Children.Count; i++)
+                    {
+                        var S = _cmsService.IcontentColumnDataService.GetContentColumnDataList(Convert.ToInt32(Children[i]["id"]), 1, 15);
+                        <li>
+                            <a href="/Culture/OneDetail/@Html.Raw(Sence.Id+"/"+Children[i]["id"]+".html")">
+                                <img src="@Html.Raw(S[0]["Content"])" />@Html.Raw(Children[i]["name"])
+                            </a>
+                        </li>
+                    }
+                }
+            }
+        </ul>
+    </div>
+</div>
+

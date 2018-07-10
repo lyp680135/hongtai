@@ -1,0 +1,195 @@
+﻿@page
+@model WarrantyManage.Pages.Manage.Site.ModelContent.AddModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+    <style type="text/css">
+        select {
+            opacity: 1;
+            border: 1px solid #ced9df;
+            width: 157px;
+            height: 34px;
+            line-height: 34px;
+            padding-left: 5px;
+        }
+
+        .tipinfo {
+            padding-top: 0px;
+        }
+
+        .forminfo li label {
+            min-width: 30px;
+        }
+
+        .forminfo {
+            padding-left: 0px;
+        }
+        body {
+            min-width:0px;
+        }
+        .tipbtn {
+            margin-top:55px;
+        }
+        .tipbtn .sure {
+            margin-left: 105px;
+        }
+        .layui-layedit {
+            display:inline-block;
+        }
+        #edui1 {
+            display:inline-block;
+            width:100% !important;
+        }
+        #container {
+            display:inline-block;
+            width:100% !important;
+        }
+        .tipinfo span {
+            height:auto;
+            width:auto;
+        }
+ 
+        
+    </style>
+</head>
+<body>
+
+    <div class="rightinfo">
+        <div id="addbox">
+
+            <form id="form2" method="post" style="margin-top:20px;">
+                <div class="tipinfo">
+                    <ul class="forminfo">
+                        @foreach (var item in Model.Columns)
+                        {
+                            <li>
+                                @{
+                                    ViewDataDictionary data = new ViewDataDictionary(ViewData);
+                                    data.Add("model", item);
+                                    if (Model.KeyValuePairs != null)
+                                    {
+                                        data.Add("modelData", Model.KeyValuePairs);
+                                    }
+                                    Html.RenderPartial("Component", data);
+                                }
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+
+                <div class="tipbtn">
+                    <input name="" type="button" class="sure" value="保存" id="btnSubmit" />&nbsp;
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="~/ueditor/ueditor.all.min.js"></script>
+    <script type="text/javascript" src="~/ueditor/ueditor.parse.js"></script>
+
+    <script type="text/javascript">
+        var showImgId = "";
+
+        $(document).ready(function (e) {
+            layui.use('laydate', function () {
+                var laydate = layui.laydate;
+                laydate.render({
+                    elem: '#date',
+                    type: 'datetime'
+                });
+            });
+
+            $("#form2").validationEngine({
+                validationEventTriggers: "blur",
+                inlineValidation: true,
+                success: false,
+            });
+
+            var ue = UE.getEditor('container', {
+                autoHeight: false,
+                enterTag: 'br',
+            });
+        });
+
+        function setShowImgId(id) {
+            showImgId = id;
+        }
+
+
+        layui.use(['laydate', 'upload'], function uploadImg() {
+            var laydate = layui.laydate;
+            var $ = layui.jquery
+                , upload = layui.upload;
+
+            //多图片上传
+            upload.render({
+                elem: '.layui-btn'
+                , url: '/UploadImg/Upload'
+                , multiple: true
+                , number: 5
+                , before: function (obj) {
+                    //预读本地文件示例，不支持ie8
+                    var loadLayer = layer.load(1);
+                    obj.preview(function (index, file, result) {
+                        //$('#demo2').append('<img src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
+                    });
+                   
+                }
+                , done: function (res) {
+                    if (res.result) {
+                        var id = Date.parse(new Date());
+                        $('#' + showImgId).append('<div id="' + id + '" style="display:inline-block;text-align:center;margin-left:20px;"><img src="' + res.msg + '"  class="layui-upload-img" style="max-width:200px;max-height:100px;" ><br/><a href="javascript:void(0)" onclick="removeImg(' + id + ')">[删除]</a><input type="hidden" name="' + showImgId + '" value="' + res.msg + '"/></div>');
+                        layer.closeAll();
+                    }
+                    else {
+                        layer.msg('上传失败');
+                        layer.closeAll();
+                    }
+                }
+            });
+        });
+        function removeImg(id) {
+            $("#" + id).remove();
+        }
+
+        //保存数据
+        $("#btnSubmit").click(function () {
+            var valid = $("#form2").validationEngine("validate");
+            if (!valid) {
+                return;
+            }
+            var url = '/ContentGroup/AddModelContent?id=' + @Model.Category.Id;
+            if (@Model.ModelContentId > 0) {
+                url = '/ContentGroup/EditModelContent?id=' + @Model.Category.Id + "&modelContentId=" + @Model.ModelContentId;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: $("#form2").serialize(),
+                success: function (re) {
+                    if (re == "1") {
+                        layer.msg('保存成功', { icon: 1 });
+                        setTimeout(function () {
+                            window.location.href = "/Manage/Site/ModelContent/ListIframe?cid=" + @Model.Category.Id;
+                        },2000)
+                    } else {
+                        layer.msg('保存失败', { icon: 2 });
+                    }
+                }, error: function () {
+                    layer.close(loadLayer);
+                    layer.msg('保存失败，系统出现未知错误', { icon: 2 });
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

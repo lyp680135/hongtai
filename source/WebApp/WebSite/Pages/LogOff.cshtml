@@ -1,0 +1,35 @@
+﻿@page
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authentication.Cookies;
+@{
+    Layout = null;
+}
+@model LogOffModel
+@functions{
+
+    public class LogOffModel : BaseModel<DataLibrary.DataContext>
+    {
+        public LogOffModel()
+        {
+
+        }
+
+        public void OnGet()
+        {
+           Task task = HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+           task.Wait();
+           Response.Redirect("/");
+        }
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>退出系统中...</title>
+</head>
+<body>
+</body>
+</html>

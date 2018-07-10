@@ -1,0 +1,58 @@
+﻿@page "{cid:int}/{Id:int}.html"
+@inject ICMSService _cmsService
+@{
+    int CId = Convert.ToInt32(RouteData.Values["CId"]);
+    int Id = Convert.ToInt32(RouteData.Values["Id"]);
+    var model = _cmsService.IcontentColumnDataService.GetContentColumnData(Id, CId);
+    ViewData["Title"] = model["Title"];
+    string content = Util.Extensions.ToHtml(model["Content"].ToString());
+    ViewData["Desc"] = content.Length > 30 ? content.Substring(0, 30) : content;
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteBasic = siteBasic;
+    ViewBag.SiteSetting = mngSetting;
+
+}
+@section head{
+
+}
+
+<div id="main" class="part">
+
+    <ul id="menu" class="fl">
+        <li class="on">
+            <a href="/News/0-1.html">
+                <i class="icon-chevron-right"></i>公司新闻
+            </a>
+        </li>
+        <li>
+            <a href="/News/Dynamics/0-1.html">
+                <i class="icon-chevron-right"></i>行业动态
+            </a>
+        </li>
+        <li>
+            <a href="/News/Video">
+                <i class="icon-chevron-right"></i>闽源视频
+            </a>
+        </li>
+    </ul>
+
+
+    <div id="list" class="fr">
+        <div id="content" class="fr">
+            <div class="tit"><h1>@Html.Raw(model["Title"])</h1></div>
+            <div class="con">
+                @if (model["Image"]!= null && model["Image"].SafeString() != string.Empty)
+                {
+                    foreach (var imgItem in model["Image"].ToString().Split(','))
+                    {
+                        <div style="max-width: 100%; margin: 10px auto;">
+                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Html.Raw(imgItem)" />
+                        </div>
+                    }
+                }
+                <p>@Html.Raw(model["Content"].ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))</p>
+            </div>
+        </div>
+    </div>
+</div>

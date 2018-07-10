@@ -1,0 +1,63 @@
+﻿@page "{cid:int}/{Id:int}.html"
+@inject ICMSService _cmsService
+@{
+    ViewData["Tag"] = 0;
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteBasic = siteBasic;
+    ViewBag.SiteSetting = mngSetting;
+    int CId= Convert.ToInt32(RouteData.Values["CId"]);
+    int Id = Convert.ToInt32(RouteData.Values["Id"]);
+    var model= _cmsService.IcontentColumnDataService.GetContentColumnData(Id,CId);
+    var RelevantNews= _cmsService.IcontentColumnDataService.GetContentColumnDataList("涟钢新闻", 1, 5);
+    ViewData["Title"] = model["title"];
+    ViewData["Desc"] = Util.Extensions.ToHtml(model["content"].ToString()).Substring(0, 30);
+
+}
+<div class="stipulation_width container_box list_box">
+    <div class="article">
+        <h3>@Html.Raw(model["title"])</h3>
+        <div class="time">
+            <span style="margin-right:20px;">@Html.Raw(Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(model["createtime"])).ToString("yyyy年MM月dd日 hh:mm:ss"))</span>
+            @if (model["source"] != null)
+            {
+                <span>@Html.Raw("来源:   ")@Html.Raw(model["source"])</span>
+            }
+        </div>
+        @{
+            //图片
+            @if (model["Image"].SafeString() != string.Empty)
+            {
+                foreach (var imgItem in model["Image"].ToString().Split(','))
+                {
+                    <div style="max-width: 100%; margin: 10px auto;">
+                        <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Html.Raw(imgItem)" />
+                    </div>
+                }
+            }
+        }
+        <div class="newsContent">@Html.Raw(model["content"].ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))</div>
+
+    </div>
+    @if (RelevantNews.Count > 0)
+    {
+        <div class="correlation">
+            <h2>相关阅读</h2>
+            @foreach (var item in RelevantNews)
+            {
+                @if (item["Id"].ToString() != model["Id"].ToString())
+                {
+                    <a href="/News/@Html.Raw(item["cid"] + "/" + item["Id"] + ".html")" class="correlation_row">
+                        <p>@Html.Raw(item["title"])</p>
+                        <span>@Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(item["createtime"])).ToString("MM/dd")</span>
+                        <div class="clearfix"></div>
+                    </a>
+                }
+            }
+        </div>
+    }
+</div>
+
+@section head{
+    <link rel="stylesheet" type="text/css" href="/Content/css/detail.css">
+}

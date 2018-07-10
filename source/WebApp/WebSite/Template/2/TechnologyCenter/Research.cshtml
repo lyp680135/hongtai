@@ -1,0 +1,76 @@
+﻿@page "{tid:int}-{p:int}.html"
+@inject ICMSService _cmsService;
+@inject IContentGroupService _contentService
+@{
+    ViewData["Title"] = "研发动态";
+    ViewData["Desc"] = "研发动态";
+}
+@functions{
+    private int pageSize = 6;
+
+    public int NewsTypeId { get; set; }
+
+    public int PageIndex { get; set; }
+
+    public int PageCount { get; set; }
+
+    public List<Dictionary<string, object>> dict { get; set; }
+
+    public List<DataLibrary.SiteModelColumn> NewsType { get; set; }
+
+    public new int Page { get; set; }
+
+    public void OnGet(int? tid, int? p)
+    {
+        this.Page = p ?? 1;
+        var AllNews = _cmsService.IcontentColumnDataService.GetContentColumnDataList("理化实验室", 1, 1000);
+        this.PageCount = AllNews.Count;
+        int Cid = _contentService.GetSiteCategoryByName("理化实验室").Id;
+    }
+}
+@section head{
+
+}
+
+<!-- 主体 -->
+
+<div id="main" class="part">
+
+    <ul id="menu" class="fl">
+        <li>
+            <a href="/TechnologyCenter/0-1.html">
+                <i class="icon-chevron-right"></i>理化实验室
+            </a>
+        </li>
+        <li class="on">
+            <a href="/TechnologyCenter/Research/0-1.html">
+                <i class="icon-chevron-right"></i>研发动态
+            </a>
+        </li>
+    </ul>
+
+    <div id="list" class="fr">
+        <ul class="list1">
+            @{
+                var Research = _cmsService.IcontentColumnDataService.GetContentColumnDataList("研发动态", Page, pageSize);
+                if (Research != null)
+                {
+                    for (var i = 0; i < Research.Count; i++)
+                    {
+                        <li>
+                            <span> @Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(Research[i]["CreateTime"])).ToString("yyyy-MM-dd")</span>
+                            <a href="/TechnologyCenter/Detail/@Html.Raw(Research[i]["cid"] + "/" + Research[i]["Id"] + ".html")">
+                                @Html.Raw(Research[i]["Title"])
+                            </a>
+                        </li>
+                    }
+                }
+            }
+        </ul>
+        <div class="clearit"></div>
+        <div id="Pagination">
+            @await Component.InvokeAsync("PageList", new { PageSize = this.pageSize, PageIndex = this.Page, PageCount = this.PageCount, PageUrl = Model.NewsTypeId + "-{0}.html", PageText = "{0}", ShowCount = 6, ShowAll = false })
+
+        </div>
+    </div>
+</div>

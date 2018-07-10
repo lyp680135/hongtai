@@ -1,0 +1,24 @@
+﻿@page
+@using System.Diagnostics
+@using Microsoft.AspNetCore.Diagnostics
+@inject Common.IService.ILogService _logServices
+@{
+    ViewData["Title"] = "Error";
+    string RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier;
+    bool ShowRequestId = !string.IsNullOrEmpty(RequestId);
+}
+@{
+    //捕获异常
+        IExceptionHandlerFeature exf = HttpContext.Features.Get<IExceptionHandlerFeature>();
+        Exception ex = exf?.Error;
+        //写入日志
+    @if (ex != null)
+        {
+        //记录文件
+        //_logServices.LogError(_logServices.GetLogStr(this.HttpContext, ex));
+    <div class="error">
+        <img src="/Content/images/Error.png" />
+        <h2>页面错误，请稍后重试</h2>
+    </div>
+      }
+}

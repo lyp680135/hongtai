@@ -1,0 +1,39 @@
+﻿
+.topclass {
+    margin: 20px auto;
+    border-bottom: 1px solid rgb(213, 213, 213);
+    width: 960px;
+}
+
+/*.ImgBody {
+    margin: 0 auto;
+    width: 960px;
+}*/
+.spanclass {
+    margin: 20px 6% 10px 0;
+    border-bottom: 1px solid rgb(213, 213, 213);
+}
+
+.header .left span {
+    position: relative;
+    top: 36px;
+}
+.Pic {
+    float: left;
+    max-width: 300px;
+    margin: 0 0 0 15%;
+}
+.Pic img {
+    max-width: 200px;
+    margin-top:30px;
+}
+
+.content {
+    float: left;
+    max-width: 300px;
+    margin-left:20px;
+}
+
+.footer {
+    margin-top: 20px;
+}

@@ -1,0 +1,175 @@
+﻿@page
+@model WarrantyManage.Pages.Authority.PermissiongroupModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <title>角色与权限管理</title>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+</head>
+<body>
+
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li>基本设置</li>
+            <li>角色与权限设置</li>
+            <li>角色管理</li>
+        </ul>
+    </div>
+
+    <div class="rightinfo">
+        <div class="formtext">
+            <a href="javascript:addMenu();"><span class="clickbutton"><span><img src="/images/t01.png" /></span>添加角色</span></a>
+        </div>
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th>角色名</th>
+                    <th>说明</th>
+                    <th>编辑</th>
+                    <th>权限设置</th>
+                    <th>删除</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.List_PermissionGroup != null && Model.List_PermissionGroup.Count > 0)
+                {
+                    foreach (var item in Model.List_PermissionGroup)
+                    {
+                        <tr>
+                            <td>@item.GroupName</td>
+                            <td>@item.Description</td>
+                            <td>
+                                <a class="tablelink" onclick="editMenu(this,@item.Id,'@item.GroupName','@item.Description')">编辑</a>
+                            </td>
+                            <td><a class="tablelink" href="PermissionGroupSet?GroupId=@item.Id">权限设置</a></td>
+                            <td>
+                                @if (item.IsCanDelete)
+                                {
+                                    <a class="tablelink" onclick="deleteMenu(this,@item.Id)">删除</a>
+                                }
+                                else
+                                { 
+                                    <font color="#ccc">不可删除</font>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+
+
+            </tbody>
+        </table>
+
+
+        <div class="tip" id="addbox">
+            <form id="formGroup">
+                <div class="tiptop"><span id="addtips">添加角色</span><a onclick="javascript:$('#addbox').hide();"></a></div>
+                <input type="hidden" value="add" id="hiddType" />
+                <input type="hidden" value="" id="hiddId" name="hiddId" />
+                <div class="tipinfo">
+                    <ul class="forminfo">
+                        <li style="line-height: 34px;"><label>角色名<b>*</b></label> <input name="GroupName" id="GroupName" type="text" class="validate[required] scinput" value="" /></li>
+                        <li>
+                        </li>
+                        <li style="line-height: 34px;"><label>说明</label> <input id="Title" name="Title" type="text" class="scinput" value="" /></li>
+                        <li>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tipbtn">
+                    <input name="" type="button" class="sure" value="确定" onclick="submitMenu()" />&nbsp;
+                    <input name="" onclick="javascript: $('#addbox').hide();" type="button" class="cancel" value="取消" />
+                </div>
+            </form>
+        </div>
+
+
+
+
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.layui-table tbody tr:odd').addClass('odd');
+        });
+
+        function addMenu() {
+            $('#addbox').show(); $('#hiddType').val('add'); $('#GroupName').val(''); $('#Title').val('');
+            $('#GroupName').focus();
+        }
+
+        function submitMenu() {
+            var pass = $("#formGroup").validationEngine("validate");
+            if (pass) {
+                var url = '/Authority/PermissionGroupAdd';
+                if ($("#hiddType").val() == "edit") { url = '/Authority/PermissionGroupEdit'; }
+                if ($("#hiddType").val() == "add") { url = '/Authority/PermissionGroupAdd'; }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: $("#formGroup").serialize(),
+                    success: function (re) {
+                        if (re.toString() == "true") {
+                            layer.msg('操作成功', { icon: 1 });
+                            setTimeout("window.location.reload();", 1000);
+                        } else {
+                            layer.msg('操作失败 ' + re, { icon: 2 });
+                        }
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                });
+            }
+
+        } 
+
+        function editMenu(obj, groupId, groupName, Title) {
+            $("#addbox").show();
+            $('#hiddType').val('edit');
+            $('#hiddId').val(groupId);
+
+            $('#GroupName').val(groupName);
+            $('#Title').val(Title);
+        }
+
+        function deleteMenu(obja, id) {
+            layer.confirm('确定删除该角色？将影响拥有该角色的用户！', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+
+                $.ajax({
+                    type: "POST",
+                    url: '/Authority/PermissionGroupDelete',
+                    data: "Id=" + id,
+                    success: function (re) {
+                        if (re.toString() == "true") {
+                            $(obja).parent().parent().remove();
+                            $('.layui-table tbody tr').removeClass('old');
+                            $('.layui-table tbody tr:odd').addClass('odd');
+                            layer.msg('删除成功', { icon: 1 });
+
+                        } else {
+                            layer.msg('删除失败，请稍候重试', { icon: 2 });
+                        }
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                });
+
+
+            }, function () {
+
+            });
+        }
+    </script>
+</body>
+</html>

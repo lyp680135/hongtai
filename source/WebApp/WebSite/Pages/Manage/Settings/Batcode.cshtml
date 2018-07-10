@@ -1,0 +1,266 @@
+﻿@page
+@model BatcodeModel
+@using Newtonsoft.Json.Linq
+@inject DataLibrary.DataContext _db
+@{
+}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <title>系统首页</title>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+
+            layui.use('laydate', function () {
+
+            });
+
+
+            $("#form1").validationEngine({
+                validationEventTriggers: "blur",
+                inlineValidation: true,
+                success: false,
+            });
+
+            $("#form1").find("a").each(function () {
+                if ($(this).html() == '@ViewData["ReportType"]')
+                {
+                    $(this).css("font-weight","600");
+                }
+            });
+            $()
+
+            //$("#chkall").selall("id");
+        });
+        function stopchoose() {
+            cancelBubble();
+        }
+        function cancelBubble(e) {
+            var evt = e ? e : window.event;
+            if (evt.stopPropagation) {        //W3C
+                evt.stopPropagation();
+            } else {       //IE
+                evt.cancelBubble = true;
+            }
+        }
+    </script>
+    <style>
+        .mainleft {
+            padding-right: 0;
+        }
+
+        .tipinfo {
+            margin-left: 20px;
+        }
+
+        .forminfo li {
+            line-height: 34px;
+        }
+            .forminfo li label {
+                width: 100px;
+            }
+
+        .layui-table tbody tr {
+            cursor: pointer;
+        }
+
+        #form1 lable {
+            font-size: 14px;
+            height: 38px;
+        }
+
+        input.dfinput {
+            height: 38px;
+        }
+
+        #total {
+            display: none;
+        }
+        #total_actual {
+            display: none;
+        }
+
+        #workshopid {
+            opacity: 1;
+            width: 150px !important;
+            display: block;
+            margin: -3px 0;
+            border: 1px solid #cccccc;
+            padding: 0px 10px;
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="javascript:void(0)">基础设置</a></li>
+            <li><a href="/Manage/Settings/Batcode">轧制批号</a></li>
+        </ul>
+    </div>
+    <div class="rightinfo">
+        <div class="tools" style="height: auto;">
+
+        </div>
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th style="width:60px">编号</th>
+                    <th style="width:220px">车间名称</th>
+                    <th style="width:220px">车间代码（一个大写字母）</th>
+                    <th>当前批号</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var list = ViewData["list"] as JArray;
+                    if (list != null)
+                    {
+                        foreach (JObject wsclass in list)
+                        {
+                            <tr>
+                                <td>@wsclass["Id"]</td>
+                                <td>@wsclass["Name"]</td>
+                                <td>@wsclass["Code"]</td>
+                                <td>@wsclass["LastBatcode"]</td>
+                                <td>
+                                    <button type="button" onclick="javascript:generate(@wsclass["Id"],'@wsclass["Name"]')" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe61a;</i>生成下一个批号</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="tip" id="addbox">
+
+        <form id="form2">
+            <div class="tiptop"><span id="addtips">生成新轧制批号</span><a onclick="javascript:layer.closeAll();"></a></div>
+            <div class="tipinfo">
+                <input type="hidden" value="" id="hiddId" name="hiddId" />
+                <ul class="forminfo">
+                    <li><label>当前车间：</label><div id="currshopname"></div></li>
+                    <li><label>钢坯支数<b>*</b></label> <input onchange="javascript:count_total()" name="number" id="number" type="text" class="validate[required] scinput" value="" style="width:80px" /></li>
+                    <li>
+                        <label>单重(kg)<b>*</b></label> <input onchange="javascript:count_total()" name="pieceweight" id="pieceweight" type="text" class="validate[required] scinput" value="" style="width:80px" />
+                        <i id="total">总重：<b>0kg</b></i> <input name="totalweight" id="totalweight" type="hidden" class="validate[required] scinput" value="" style="width:80px" />
+                    </li>
+                    <li>
+                        <label>计划成品率<b>*</b></label> <input  onchange="javascript:count_actual_count()" name="rate" id="rate" type="text" class="validate[required] scinput" value="" style="width:50px" />&nbsp;%
+                        <i id="total_actual">计划总重：<b>0kg</b></i> <input name="totalactualweight" id="totalactualweight" type="hidden" class="validate[required] scinput" value="" style="width:80px" />
+                    </li>
+                    <li>
+                        <label>
+                            班组<b>*</b>
+                        </label>
+                        <select name="workshopid" id="workshopid" class="validate[required] scinput">
+                            <option value="">请选择</option>
+                        </select>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="tipbtn" style="margin-top:40px;">
+                <input name="" type="button" class="sure" value="确定" onclick="submitAdd()" />&nbsp;
+                <input name="" onclick="javascript: layer.closeAll();" type="button" class="cancel" value="取消" />
+            </div>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+
+        var addformhtml = $("#addbox").html();
+        var addformwidth = $("#addbox").width();
+        $("#addbox").html("");
+
+        $('.layui-table tbody tr:odd').addClass('odd');
+
+        function generate(id, name) {
+            $.ajax({
+                type: "GET",
+                url: '/Batcode/GetWorkShop?id=' + id,
+                data: {},
+                success: function (data) {                   
+                    $.each(data, function (key, val) {                      
+                        $("<option></option>").text(val.teamName).val(val.id)
+                            .appendTo("#workshopid");
+                    });
+                }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                }
+            });
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                area: addformwidth + "px",
+                content: addformhtml,
+            });
+
+            $("#hiddId").val(id);
+            $("#currshopname").html(name);
+        }
+
+        function count_total() {
+            var number = $("#number").val();
+            var pieceweight = $("#pieceweight").val();
+            if (parseInt(number) > 0 && parseFloat(pieceweight) > 0) {
+                var totalweight = (parseInt(number) * parseFloat(pieceweight));
+                $("#totalweight").val(totalweight);
+
+                $("#total").show();
+                $("#total b").text(totalweight.toFixed(3) + "kg")
+            }
+        }
+
+        function count_actual_count() { 
+            var number = $("#number").val();
+            var pieceweight = $("#pieceweight").val();
+            var rate = $("#rate").val();
+            if (parseInt(number) > 0 && parseFloat(pieceweight) > 0 && rate > 0) {
+
+                var totalactualweight = (parseInt(number) * parseFloat(pieceweight) * parseInt(rate) / 100);
+                $("#totalactualweight").val(totalactualweight);
+
+                $("#total_actual").show();
+                $("#total_actual b").text(totalactualweight.toFixed(3) + "kg")
+            }
+
+        }
+
+        function submitAdd() {
+            var valid = $("#form2").validationEngine("validate");
+            if (valid) {
+                var url = '/Batcode/Create';
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: $("#form2").serialize(),
+                    success: function (re) {
+                        if (parseInt(re) > 0) {
+                            layer.msg('操作成功', { icon: 1 });
+                            setTimeout("window.location.reload();", 1000);
+                        } else {
+                            layer.msg('操作失败，请稍候重试', { icon: 2 });
+                        }
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                });
+            }
+
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+﻿@page
+@inject ICMSService _cmsService
+@{
+    ViewData["Title"] = "联系我们";
+    ViewData["Desc"] = "联系我们";
+    var siteBasic = _cmsService.GetBasic();
+    ViewBag.SiteBasic = siteBasic;
+
+}
+@section head{
+    <script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&ak=507E36FA8f5d0bf5b491248d86d04bf7"></script>
+}
+
+
+<div id="main" class="part">
+
+    <ul id="menu" class="fl">
+        <li>
+            <a href="/CompanyDescription/">
+                <i class="icon-chevron-right"></i>总经理致辞
+            </a>
+        </li>
+        <li >
+            <a href="/CompanyDescription/Introduction">
+                <i class="icon-chevron-right"></i>公司简介
+            </a>
+        </li>
+        <li>
+            <a href="/CompanyDescription/Greatevents/0-1.html">
+                <i class="icon-chevron-right"></i>公司大事记
+            </a>
+        </li>
+        <li class="on">
+            <a href="/CompanyDescription/ContactUs">
+                <i class="icon-chevron-right"></i>联系我们
+            </a>
+        </li>
+    </ul>
+
+    <div id="content" class="fr">
+        <div class="tit"><h1>联系我们</h1></div>
+        <div class="con">
+            @{
+                var Phone = _cmsService.IcontentColumnDataService.GetContentColumnDataList("联系闽源", 1, 5);
+                if (Phone != null)
+                {
+                    foreach (var P in Phone)
+                    {
+                        <div class="contact_row">
+                            <img src="/Content/images/contact1.png" />
+                            <span>电 话:@Html.Raw(P["Phone"])</span>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="contact_row">
+                            <img src="/Content/images/contact3.png" />
+                            <span>传 真:@Html.Raw(P["ZipCode"])</span>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="contact_row">
+                            <img src="/Content/images/contact2.png" />
+                            <span>邮 编:@Html.Raw(P["Fax"])</span>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="contact_row">
+                            <img src="/Content/images/contact6.png" />
+                            <span>邮 箱:@Html.Raw(P["Email"])</span>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="contact_row">
+                            <img src="/Content/images/contact5.png" />
+                            <span>网 址:@Html.Raw(P["Url"])</span>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="contact_row">
+                            <img src="/Content/images/contact4.png" />
+                            <span>地 址:@Html.Raw(P["Address"])</span>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <div class="map_box">
+                            <div style="width:80%;height:300px;border:#ccc solid 1px;margin:0 1%;margin-top:8px;margin-top:50px" id="dituContent"></div>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var ComAddress = $("#ComAddress").html();
+    //创建和初始化地图函数：
+    function initMap() {
+        //var icon = new BMap.Icon("http://map.baidu.com/image/us_mk_icon.png", new BMap.Size(100, 100));
+        createMap();//创建地图
+        setMapEvent();//设置地图事件
+        //addMapControl();//向地图添加控件
+    }
+
+    //创建地图函数：
+    function createMap() {
+        var map = new BMap.Map("dituContent");//在百度地图容器中创建一个地图
+        var localSearch = new BMap.LocalSearch(map);
+        localSearch.enableAutoViewport();
+        localSearch.setSearchCompleteCallback(function (searchResult) {
+            var new_point = new BMap.Point(@siteBasic.MapLocation);
+            var marker = new BMap.Marker(new_point);  // 创建标注
+            map.addOverlay(marker);              // 将标注添加到地图中
+           // marker.addEventListener("click", function () {
+           //     this.openInfoWindow(infoWindow);
+            //});
+            map.centerAndZoom(new_point, 17);
+        });
+        localSearch.search(ComAddress);
+        window.map = map;//将map变量存储在全局
+    }
+
+    //地图事件设置函数：
+    function setMapEvent() {
+        map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+        map.enableScrollWheelZoom();//启用地图滚轮放大缩小
+        map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+        map.enableKeyboard();//启用键盘上下左右键移动地图
+    }
+            initMap();//创建和初始化地图
+</script>
+

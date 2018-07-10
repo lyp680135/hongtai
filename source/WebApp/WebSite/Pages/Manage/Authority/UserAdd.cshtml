@@ -1,0 +1,150 @@
+﻿@page
+@model WarrantyManage.Pages.Authority.UserAddModel
+@inject DataLibrary.DataContext _db
+@{
+    Layout = null;
+    var Group = (from c in _db.MngPermissiongroup select c).ToList();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <title>添加操作员</title>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+
+    <script type="text/javascript">
+
+        $(document).ready(function (e) {
+            layui.use('laydate', function () {
+
+            });
+
+            $("#formAdd").validationEngine({
+                validationEventTriggers: "blur",
+                inlineValidation: true,
+                success: false,
+            });
+
+
+        });
+    </script>
+    <style>
+        .mainleft {
+            padding-right: 0;
+        }
+
+        .tipinfo {
+            margin-left: 20px;
+        }
+
+
+
+        select {
+            opacity: 1;
+            border-top: solid 1px #a7b5bc;
+            border-left: solid 1px #a7b5bc;
+            border-right: solid 1px #ced9df;
+            border-bottom: solid 1px #ced9df;
+            width: 152px;
+            height: 34px;
+            line-height: 30px;
+        }
+
+        .Managebox {
+            width: 80px;
+            text-align: center;
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a>系统管理</a></li>
+            <li>人员管理</li>
+            <li>增加人员</li>
+        </ul>
+    </div>
+
+    <div class="formbody">
+        <br />
+        <div id="usual1" class="usual">
+            <form method="post" id="formAdd">
+                <ul class="forminfo">
+                    <li>
+                        <label>
+                            姓名<b>*</b>
+                        </label>
+                        <input name="RealName" id="RealName" type="text" class="validate[required] scinput" value="@Model.RealName" maxlength="5" />
+                        <div style="clear:both"></div>
+                    </li>
+                    <li>
+                        <label>
+                            性别<b>*</b>
+                        </label>
+                        <label style="width: 55px;"><input type="radio" value="1" name="Sex" checked="checked" />男</label>
+                        <label style="width: 55px;"><input type="radio" value="0" name="Sex"/>女</label>
+                        <div style="clear:both"></div>
+                    </li>
+                    <li><label>登录手机号<b>*</b></label><input name="UserName" type="text" class="validate[required ,custom[MobilePhone] scinput" value="@Model.UserName" maxlength="11" /></li>
+
+                    <li>
+                        <label>登录密码<b>*</b></label>
+                        <input name="Password" type="password" class="validate[required,minSize[6],maxSize[16]] scinput" value="@Model.Password" maxlength="16" />
+                        <div style="clear:both"></div>
+                    </li>
+
+                    <li>
+                        <label>所属角色组<b>*</b></label>
+                        @foreach (var re in Group)
+                        {
+                            if (re.GroupName == "质量员" || re.GroupName == "入库操作员" || re.GroupName == "出库操作员" || re.GroupName == "炉号工")
+                            {
+                                <label class="Managebox"><input type="checkbox" @Html.Raw(Model.GroupManage!=null&&Model.GroupManage.Contains(re.Id)?"checked='checked'":"") onclick="javascript: layer.msg('该角色需前往车间管理设置');return false;" value="@re.Id" name="GroupManage" />@re.GroupName</label>
+                            }
+                            else
+                            {
+                                <label class="Managebox"><input type="checkbox" @Html.Raw(Model.GroupManage!=null&&Model.GroupManage.Contains(re.Id)?"checked='checked'":"") value="@re.Id" name="GroupManage" />@re.GroupName</label>
+                            }
+                        }
+                    </li>
+
+
+                    <li>
+                        <label>&nbsp;</label><input id="btnAdd" onclick="return checkValidAdd(this)" name="submit" type="submit" asp-page-handler="First" class="sbbtn" value="保存" />
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var Msg =@Html.Raw("'"+Model.Msg+"'");
+        if (Msg != "") {
+            layer.msg(Msg);
+        }
+        function checkValidAdd(obj) {
+            var selectedids = "";
+            //获取最后一条选中项
+            $("input[name='GroupManage']:checked").each(function () {
+                selectedids += $(this).val() + ",";
+            });
+            if (selectedids.length <= 0) {
+                layer.msg('请为添加人员选择所属角色组！', { icon: 2 });
+                return false;
+            }
+            var valid = $("#formAdd").validationEngine("validate");
+            if (valid) {
+                layer.load(1);
+            }
+            return valid;
+        }
+
+    </script>
+</body>
+</html>

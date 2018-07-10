@@ -1,0 +1,41 @@
+﻿@page "{cid:int}/{Id:int}.html"
+@inject ICMSService _cmsService
+@{
+    int CId = Convert.ToInt32(RouteData.Values["CId"]);
+    int Id = Convert.ToInt32(RouteData.Values["Id"]);
+    var model = _cmsService.IcontentColumnDataService.GetContentColumnData(Id, CId);
+   // var RelevantNews = _cmsService.IcontentColumnDataService.GetContentColumnDataList("理化实验室", 1, 5);
+    ViewData["Title"] = model["Title"];
+    ViewData["Desc"] = Util.Extensions.ToHtml(model["Content"].ToString()).Substring(0, 30);
+    ViewData["Tag"] = 0;
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteBasic = siteBasic;
+    ViewBag.SiteSetting = mngSetting;
+}
+@section head{
+
+}
+
+<div id="main" class="part">
+    <ul id="menu" class="fl">
+        <li class="on">
+            <a href="/TechnologyCenter/0-1.html">
+                <i class="icon-chevron-right"></i>理化实验室
+            </a>
+        </li>
+        <li>
+            <a href="/TechnologyCenter/Research/0-1.html">
+                <i class="icon-chevron-right"></i>研发动态
+            </a>
+        </li>
+    </ul>
+
+
+    <div id="list" class="fr">
+        <div class="tit"><h1>@Html.Raw(model["Title"])</h1></div>
+        <div class="con">
+            <p style="padding-top:30px">@Html.Raw(model["Content"].ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))</p>
+        </div>
+    </div>
+</div>

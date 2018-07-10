@@ -1,0 +1,165 @@
+﻿@page
+@inject ICMSService _cmsService
+@inject DataLibrary.DataContext Db
+@functions{
+    public string CertPath { get; set; }
+
+    public void OnGet(string p)
+    {
+        if (!string.IsNullOrEmpty(p))
+        {
+            string[] args = p.Split('-');
+            if (args.Length == 2)
+            {
+                int.TryParse(args[0], out int id);
+
+                var cert = this.Db.SalePrintlog.Where(s => s.Id == id && s.Checkcode == args[1] && s.Status == (int)EnumList.SalePrintlogStatus.已下载).FirstOrDefault();
+                if (cert != null)
+                {
+                    this.CertPath = string.Format("{0}{1}.jpg", id, args[1]);
+                }
+            }
+        }
+    }
+
+}
+@{
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteBasic = siteBasic;
+    ViewBag.SiteSetting = mngSetting;
+    //网站基本设置
+    ViewData["Title"] = $"产品质量证明书";
+    ViewData["Desc"] = $"产品质量证明书";
+
+    string certpath = mngSetting.Domain_WebApi + "qualitypics/" + CertPath;
+}
+@section head{
+    <link rel="stylesheet" href="/Content/js/photo-swiper/photoswipe.css">  
+    <link rel="stylesheet" href="/Content/js/photo-swiper/default-skin/default-skin.css"> 
+    <script src="/Content/js/photo-swiper/photoswipe.min.js" type="text/javascript"></script>
+    <script src="/Content/js/photo-swiper/photoswipe-ui-default.min.js" type="text/javascript"></script>
+    <style>
+        .pswp__button.pswp__button--rotate {
+            background: url(/Content/js/photo-swiper/default-skin/rotate.png) no-repeat;
+            background-position: 50% 50%;
+            background-size: 25px 25px;
+        }
+    </style>
+    <script>
+        var gallery;
+        function initgallery(photos, index, height) {
+            var pswpElement = document.querySelectorAll('.pswp')[0];
+
+            for (var i = 0; i < photos.length; i++) {
+                var items = [
+                    {
+                        src: photos[i],
+                        w: window.screen.width,
+                        h: height,
+                    },
+                ];
+            }
+
+            var options = {
+                index: index, // start at first slide
+                tapToClose: true,
+                maxSpreadZoom: 4,
+            };
+
+            // Initializes and opens PhotoSwipe
+            gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+            gallery.init();
+        }
+
+        function showPreview(index, elem) {
+            if (elem != undefined) {
+                var width = window.screen.width;
+                var height = width;
+                var img = new Image();
+                img.src = elem.src;
+
+                var w = img.width;
+                if (w > 0) {
+                    height = img.height * width / w;
+                }
+
+                var photos=["@certpath"]
+
+                initgallery(photos, 0, height);
+            }
+
+        }
+
+        function rotate() {
+            return false;
+        }
+    </script>
+}
+
+
+<div class="cert">
+    @if (!string.IsNullOrEmpty(CertPath))
+    {
+        <img src="@certpath" width="100%" onclick="javascript:showPreview(0,this)" />
+
+        <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+            <div class="pswp__bg"></div>
+
+            <div class="pswp__scroll-wrap">
+
+                <div class="pswp__container">
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                </div>
+
+                <div class="pswp__ui pswp__ui--hidden">
+
+                    <div class="pswp__top-bar">
+
+                        <div class="pswp__counter"></div>
+
+                        <button class="pswp__button pswp__button--close" title="关闭"></button>
+                        <button class="pswp__button pswp__button--rotate" title="旋转"></button>
+
+                        <div class="pswp__preloader">
+                            <div class="pswp__preloader__icn">
+                                <div class="pswp__preloader__cut">
+                                    <div class="pswp__preloader__donut"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                        <div class="pswp__share-tooltip"></div>
+                    </div>
+
+                    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+
+                    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+                    <div class="pswp__caption">
+                        <div class="pswp__caption__center"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+    else
+    {
+        <div class="nodata" style="position:initial;padding-top:100px;padding-bottom:100px;height:initial;">
+            <img src="/Content/images/nodata.png" width="40%" />
+            <div class="tip" style="color:gray;padding:10px 0px;font-size:12px;">
+                找不到相关信息！
+            </div>
+        </div>
+
+    }
+</div>
+

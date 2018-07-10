@@ -1,0 +1,433 @@
+﻿@page
+@model TemplateInfoModel
+@inject DataLibrary.DataContext _db
+@{
+    Layout = null;
+}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <title>产品质量数据</title>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+    <style type="text/css">
+        .tdtips {
+            color: #737373;
+        }
+
+        .tbData {
+        }
+
+            .tbData th {
+                width: 88px;
+                line-height: 38px;
+                height: 38px;
+                text-align: center;
+                background-color: #f0f5f7;
+                border: 1px solid #e8e8e8;
+            }
+
+            .tbData td {
+                height: 38px;
+                text-align: center;
+                border: 1px solid #e8e8e8;
+            }
+
+                .tbData td input {
+                    width: 86px;
+                    text-align: center;
+                    border: none;
+                    height: 36px;
+                }
+
+                    .tbData td input:focus {
+                        border: 1px solid #dcdcdc;
+                    }
+
+        #Materialid {
+            opacity: 1;
+            width: 150px !important;
+            display: block;
+            margin: -3px 0;
+            border: 1px solid #cccccc;
+            padding: 10px 10px;
+        }
+
+        option {
+            color: black;
+            line-height: 20px;
+        }
+
+        .bgcolor {
+            background: red;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li>质量管理</li>
+            <li>
+                产品质量数据
+                @{
+                    if (Model.PdQuality != null)
+                    {
+                        @(Model.PdQuality.Id > 0 ? "修改" : "录入")
+                    }
+                }
+            </li>
+        </ul>
+    </div>
+
+    <div class="rightinfo">
+        <form id="form1" class="layui-form" action="" method="post" onsubmit="javascript: return false;">
+            <div class="layui-form-item">
+                <div class="tools">
+                    <ul class="seachform" style="width:100%">
+                        <li>
+                            <label>材质:</label>
+                            <select name="materialid" id="Materialid" @if (Model.PdQuality.Id > 0){<text>disabled </text> }>
+                                <option value="0">请选择</option>
+                                @foreach (var item in _db.BaseProductClass.ToList())
+                                {
+                                    <optgroup label="@item.Name">
+                                        @foreach (var items in _db.BaseProductMaterial.Where(w => w.Classid == item.Id).ToList())
+                                        {
+                                            if (Model.MaterialId == items.Id)
+                                            {
+                                                <option value="@Html.Raw(Model.MaterialId)" selected=selected>@Html.Raw(items.Name)</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@Html.Raw(items.Id)">@Html.Raw(items.Name)</option>
+                                            }
+
+                                        }
+                                    </optgroup>
+                                }
+                            </select>
+                        </li>
+                    </ul>
+                </div>
+                @if (Model.ListQualityStandards != null)
+                {
+                    <div class="layui-form-item">
+                        <table class="tbData">
+                            <thead>
+                                <tr>
+                                    @{
+                                        var ListQualityStandards = Model.ListQualityStandards.ToList();
+                                        if (ListQualityStandards != null && ListQualityStandards.Count > 0)
+                                        {
+                                            var dxQualityStandards = Model.ListQualityStandards.Where(w => w.TargetType == 0).ToList();
+                                            if (dxQualityStandards != null && dxQualityStandards.Count > 0)
+                                            {
+                                                foreach (var item in dxQualityStandards)
+                                                {
+                                                    if (item.TargetName != "Ceq")
+                                                    {
+                                                        <th>@item.TargetName</th>
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    @{
+                                        // var list_required = new List<string> { "C", "Si", "Mn", "P", "S" };
+                                        if (ListQualityStandards != null && ListQualityStandards.Count > 0)
+                                        {
+                                            var sxQualityStandards = Model.ListQualityStandards.Where(w => w.TargetType == 0).ToList();
+                                            if (sxQualityStandards != null && sxQualityStandards.Count > 0)
+                                            {
+                                                foreach (var joItem in sxQualityStandards)
+                                                {
+                                                    if (joItem.TargetName != "Ceq")
+                                                    {
+                                                        if (Model.PdQuality.Qualityinfos_Dynamics.SafeString() != string.Empty)
+                                                        {
+                                                            Newtonsoft.Json.Linq.JObject jObject = (Newtonsoft.Json.Linq.JObject)Model.PdQuality.Qualityinfos.Object;
+                                                            if (jObject.Property(joItem.TargetName) != null)
+                                                            {
+                                                                if (jObject.Property(joItem.TargetName) != null)
+                                                                {
+                                                                    var value = jObject[joItem.TargetName].ToString();
+                                                                    <td>
+                                                                        <input class="validate[@Html.Raw(joItem.TargetIsNull == 1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(joItem.TargetName)" value="@value" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
+                                                                    </td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td>
+                                                                        <input class="validate[@Html.Raw(joItem.TargetIsNull == 1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(joItem.TargetName)" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
+                                                                    </td>
+
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <td>
+                                                                    <input class="validate[@Html.Raw(joItem.TargetIsNull == 1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(joItem.TargetName)" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
+                                                                </td>
+
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <td>
+                                                                <input class="validate[@Html.Raw(joItem.TargetIsNull == 1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(joItem.TargetName)" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
+                                                            </td>
+
+                                                        }
+
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="layui-form-item">
+                        <table class="tbData">
+                            <thead>
+                                <tr>
+
+                                    @{
+                                        if (ListQualityStandards != null && ListQualityStandards.Count > 0)
+                                        {
+                                            var sxQualityStandards = Model.ListQualityStandards.Where(w => w.TargetType == 1).ToList();
+                                            if (sxQualityStandards != null && sxQualityStandards.Count > 0)
+                                            {
+                                                <th></th>
+                                                @foreach (var item in sxQualityStandards)
+                                                {
+                                                    <th>@item.TargetName</th>
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    for (int i = 0; i < 3; i++)
+                                    {
+                                        <tr>
+
+                                            @if (ListQualityStandards != null && ListQualityStandards.Count > 0)
+                                            {
+                                                var sxQualityStandards = Model.ListQualityStandards.Where(w => w.TargetType == 1).ToList();
+                                                if (sxQualityStandards != null && sxQualityStandards.Count > 0)
+                                                {
+                                                    <td class="tdtips">第@(i + 1)次</td>
+                                                    @foreach (var item in sxQualityStandards)
+                                                    {
+
+                                                        if (Model.PdQuality != null && Model.PdQuality.Qualityinfos_Dynamics.SafeString() != string.Empty && Model.PdQuality.Qualityinfos_Dynamics.Object.Count > 2)
+                                                        {
+                                                            var itemChild = (Newtonsoft.Json.Linq.JObject)Model.PdQuality.Qualityinfos_Dynamics.Object[i];
+                                                            if (itemChild.Property(item.TargetName) != null)
+                                                            {
+                                                                <td>
+                                                                    <input class="validate[@Html.Raw(item.TargetIsNull==1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName + i)" value="@Html.Raw(itemChild[item.TargetName])" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
+
+                                                                </td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td>
+                                                                    <input class="validate[@Html.Raw(item.TargetIsNull==1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName + i)" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
+                                                                </td>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <td>
+                                                                <input class="validate[@Html.Raw(item.TargetIsNull==1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName + i)" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
+                                                            </td>
+                                                        }
+
+                                                    }
+
+                                                }
+                                            }
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            @if (Model.PdQuality.Id == 0)
+                            {
+                                <button class="layui-btn layui-btn-normal" type="button" id="btnSubmit">保存</button>
+                            }
+                            else
+                            {
+                                <button class="layui-btn layui-btn-normal" type="button" id="btnEdit">修改</button>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        //按回车移动光标
+        function focusNextInput(thisInput) {
+            var inputs = document.getElementsByTagName("input");
+            for (var i = 0; i < inputs.length; i++) {
+                // 如果是最后一个，则焦点回到第一个
+                if (i == (inputs.length - 1)) {
+                    inputs[0].focus();
+                    break;
+                } else if (thisInput == inputs[i]) {
+                    inputs[i + 1].focus();
+                    break;
+                }
+            }
+        }
+        $(document).ready(function () {
+            $("#form1").validationEngine({
+                validationEventTriggers: "blur",
+                inlineValidation: true,
+                success: false,
+            });
+            $('#Materialid').change(function () {
+                var $this = $(this);
+                window.location.href = './TemplateInfo?mid=' + $this.val();
+            });
+            //保存数据
+            $("#btnSubmit").click(function () {
+                $('input').removeClass('bgcolor');
+                var Materialid = $("#Materialid").val();
+                var pass = $("#form1").validationEngine("validate");
+                if (pass) {
+                    $.ajax({
+                        type: "POST", url: '/Quality/Check',
+                        data: $("#form1").serialize(),
+                        success: function (re) {
+                            //如果校验通过就直接添加
+                            if (re.flag == "true") {
+                                Add(Materialid);
+                            }
+                            else if (re.flag == 2) {
+                                layer.msg(re.msg);
+                            }
+                            //否则提示
+                            else {
+                                $.each(re.msg, function (key, val) {
+
+                                    //alert($('input[name=' + val.trim() + ']').length);
+                                    //$('.' + val + '').css({ 'background':'red'});
+                                    $('input[name=' + val.trim() + ']').addClass('bgcolor');
+                                });
+                                layer.confirm('系统检测到录入数据中有不合格数据，请确认是否继续保存?', { icon: 3, title: '提示' }, function (index) {
+
+                                    Add(Materialid);
+                                    layer.close(index);
+                                });
+                            }
+                        }, error: function () {
+                            layer.close(loadLayer);
+                            layer.msg('添加失败，系统出现未知错误', { icon: 2 });
+                        }
+                    });
+                }
+            });
+            //添加
+            function Add(Materialid) {
+                var loadLayer = layer.load(1);
+                $.ajax({
+                    type: "POST", url: '/Quality/AddQuality?materialid=' + Materialid,
+                    data: $("#form1").serialize(),
+                    success: function (re) {
+                        if (re.toString() == 'true') {
+                            layer.msg('添加成功', { icon: 1 });
+                            window.location.href = './Template?materialId=' + Materialid;
+                        } else {
+                            layer.msg(re, { icon: 2 });
+                        }
+                        layer.close(loadLayer);
+                    }, error: function () {
+                        layer.close(loadLayer);
+                        layer.msg('添加失败，系统出现未知错误', { icon: 2 });
+                    }
+                });
+                $('input').removeClass('bgcolor');
+            }
+            function Edit(id,materialid) {
+                var loadLayer = layer.load(1);
+                $.ajax({
+                    type: "POST", url: '/Quality/EditQuality?id=' + id,
+                    data: $("#form1").serialize(),
+                    success: function (re) {
+                        if (re.toString() == 'true') {
+                            layer.msg('修改成功', { icon: 1 });
+                            window.location.href = './Template?materialid=' + materialid;
+                        } else {
+                            layer.msg(re, { icon: 2 });
+                        }
+                        layer.close(loadLayer);
+                    }, error: function () {
+                        layer.close(loadLayer);
+                        layer.msg('修改失败，系统出现未知错误', { icon: 2 });
+                    }
+                });
+                $('input').removeClass('bgcolor');
+            }
+            $('#btnEdit').click(function () {
+                $('input').removeClass('bgcolor');
+                var id = @Model.PdQuality.Id;
+                var materialid = $("#Materialid").val();
+                var pass = $("#form1").validationEngine("validate");
+                if (pass) {
+                    $.ajax({
+                        type: "POST", url: '/Quality/Check?materialid='+materialid,
+                        data: $("#form1").serialize(),
+                        success: function (re) {
+                            //如果校验通过就直接添加
+                            if (re.flag == "true") {
+                                Edit(id, materialid);
+                            }
+                            else if (re.flag == "2") {
+                                layer.msg(re.msg);
+                            }
+                            //否则提示
+                            else {
+                                $.each(re.msg, function (key, val) {
+                                    //$('.' + val + '').css({ 'background':'red'});
+                                    $('input[name=' + val + ']').addClass('bgcolor');
+                                });
+                                layer.confirm('系统检测到录入数据中有不合格数据，请确认是否继续修改?', { icon: 3, title: '提示' }, function (index) {
+
+                                    Edit(id, materialid);
+                                    layer.close(index);
+                                });
+                            }
+                        }, error: function () {
+                            layer.close(loadLayer);
+                            layer.msg('添加失败，系统出现未知错误', { icon: 2 });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

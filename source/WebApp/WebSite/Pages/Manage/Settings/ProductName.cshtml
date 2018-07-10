@@ -1,0 +1,389 @@
+﻿@page
+@inject DataLibrary.DataContext _db
+@model WarrantyManage.Pages.Manage.Settings.ProductNameModel
+@{
+    ViewData["Title"] = "ProductName";
+    var GbNameList = _db.BaseProductGbClass.ToList();
+}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <title>系统首页</title>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+
+            layui.use('laydate', function () {
+
+            });
+
+
+            $("#form1").validationEngine({
+                validationEventTriggers: "blur",
+                inlineValidation: true,
+                success: false,
+            });
+
+            $("#form1").find("a").each(function () {
+                if ($(this).html() == '@ViewData["ReportType"]')
+                {
+                    $(this).css("font-weight","600");
+                }
+            });
+
+            //$("#chkall").selall("id");
+        });
+        function stopchoose() {
+            cancelBubble();
+        }
+        function cancelBubble(e) {
+            var evt = e ? e : window.event;
+            if (evt.stopPropagation) {        //W3C 
+                evt.stopPropagation();
+            } else {       //IE      
+                evt.cancelBubble = true;
+            }
+        }
+    </script>
+    <style>
+
+        .mainleft {
+            padding-right: 0;
+        }
+
+        .tipinfo {
+            margin-left: 20px;
+        }
+
+        .forminfo li label {
+            width: 50px;
+        }
+
+        select {
+            opacity: 1;
+            border: 1px solid #9c9c9c;
+            width: 100px;
+            height: 32px;
+        }
+        .layui-table tbody tr {
+            cursor: pointer;
+        }
+        #form1 lable {
+            font-size: 14px;
+            height: 38px;
+        }
+
+        input.dfinput {
+            height: 38px;
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="javascript:void(0)">基础设置</a></li>
+            <li><a href="/Manage/Settings/ProductName">品名</a></li>
+        </ul>
+    </div>
+    <div class="rightinfo">
+        <div class="tools" style="height: auto;">
+            <form method="get" id="form1">
+                <ul class="seachform">
+                    <li class="notDistributorCss">
+                        <label>名称：</label>
+                        <input name="keyword" type="text" class="dfinput" style="width: 128px;" value="@ViewData["keyword"]" />
+                    </li>
+                    <li><label>&nbsp;</label><button id="sb" name="sb" class="layui-btn layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button></li>
+                </ul>
+            </form>
+        </div>
+        <div style="float:right;position: absolute;top: 48px; right: 10px;">
+            <label>&nbsp;</label>
+            <button id="add" name="add" class="layui-btn layui-btn-normal"><i class="layui-icon">&#xe654;</i>添加</button>
+            <button id="delete" name="delete" class="layui-btn layui-btn-danger"><i class="layui-icon"></i> 删除</button>
+        </div>
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th><input name="" type="checkbox" value="" id="chkall" /></th>
+                    <th>编号</th>
+                    <th>商品名称</th>
+                    <th>标准名称</th>
+                    <th>计量方式</th>
+                    <th>交货类型</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var list = ViewData["list"] as List<DataLibrary.BaseProductClass>;
+                    if (list != null)
+                    {
+                        foreach (DataLibrary.BaseProductClass proclass in list)
+                        {
+                            <tr  onclick="Edit(@proclass.Id)">
+                                <td onclick="stopchoose()"><input name="id" type="checkbox"  value="@proclass.Id" /></td>
+                                <td>@proclass.Id</td>
+                                <td>@proclass.Name</td>
+                                <td>@proclass.Gbname</td>
+                                <td>@Enum.GetName(typeof(DataLibrary.EnumList.MeteringMode), proclass.Measurement == 0 ? 0 : proclass.Measurement)</td>
+                                <td>@Enum.GetName(typeof(DataLibrary.EnumList.DeliveryType), proclass.DeliveryType == 0 ? 0 : proclass.DeliveryType)</td>
+                                <td>@proclass.Note</td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="tip" id="addbox">
+
+        <form id="form2">
+            <div class="tiptop"><span id="addtips">添加产品</span><a onclick="javascript:layer.closeAll();"></a></div>
+            <div class="tipinfo">
+                <input type="hidden" value="add" id="hiddType" />
+                <input type="hidden" value="" id="Id" name="Id" />
+                <ul class="forminfo">
+
+                    <li style="line-height: 34px;"><label style="width:70px;">产品名称<b>*</b></label> <input name="ProductName" id="ProductName" type="text" class="validate[required] scinput" value="" style="width:200px" /></li>
+                    <li>
+                    </li>
+                    <li style="line-height: 34px;" class="rukuli">
+                        <label style="width:70px;">标准名称</label>
+                        <select name="NormName" id="NormName" class="validate[required] scinput">
+                            <option value="">请选择</option>
+                            @foreach (var item in GbNameList)
+                            {
+                                <option value="@Html.Raw(item.Gbname)" >@Html.Raw(item.Gbname)</option>
+                            }
+
+                        </select>
+                    </li>
+                    <li>
+                    </li>
+                    <li style="line-height: 34px;" class="chukuli">
+                        <label style="width:70px;">计量方式</label>
+                        <select name="Measurement" id="Measurement" class="validate[required] scinput">
+                            <option value="">请选择</option>
+                            @foreach (var item in Enum.GetValues(typeof(DataLibrary.EnumList.MeteringMode)))
+                            {
+                                <option value="@Html.Raw((int)item)">@Html.Raw(item)</option>
+                            }
+
+                        </select>
+                    </li>
+                    <li>
+                    </li>
+                    <li style="line-height: 34px;" class="luruli">
+                        <label style="width:70px;">交货类型</label>
+                        <select name="DeliveryType" id="DeliveryType" class="validate[required] scinput" >
+                            <option value="">请选择</option>
+                            @foreach (var item in Enum.GetValues(typeof(DataLibrary.EnumList.DeliveryType)))
+                            {
+                                <option value="@Html.Raw((int)item)">@Html.Raw(item)</option>
+                            }
+
+                        </select>
+                    </li>
+                    <li>
+                    </li>
+                    <li style="line-height: 34px;"><label style="width:70px;">备注</label> <textarea name="Remark" id="Remark" class="scinput" style="width:280px;height:120px;"></textarea></li>
+                    <li>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="tipbtn">
+                <input name="" type="button" class="sure" value="确定" onclick="submitAdd()" />&nbsp;
+                <input name="" onclick="javascript: layer.closeAll();" type="button" class="cancel" value="取消" />
+            </div>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        var addformhtml = $("#addbox").html();
+        var addformwidth = $("#addbox").width();
+        $("#addbox").html("");
+
+        $('.layui-table tbody tr:odd').addClass('odd');
+        function getSelectedIds() {
+            var selectedids = "";
+            //获取最后一条选中项
+            $("input[name='id']:checked").each(function () {
+                selectedids += $(this).val() + ",";
+            });
+
+            return selectedids;
+        }
+
+        function getSelectedId() {
+            var selectedid = 0;
+            //获取最后一条选中项
+            $("input[name='id']:checked").each(function () {
+                selectedid = $(this).val();
+            });
+
+            return selectedid;
+        }
+
+        $("#sb").click(function () {
+            $("#form1").submit();
+        });
+
+        $("#add").click(function () {
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                area: addformwidth + "px",
+                content: addformhtml,
+            });
+
+            $("#hiddType").val("add");
+        });
+
+        function Edit(id) { 
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                area: addformwidth + "px",
+                content: addformhtml,
+            });
+
+            $("#hiddType").val("edit");
+
+            //ajax请求编辑数据
+            $.ajax({
+                type: "GET",
+                url: '/ProductName/Edit?Id=' + id,
+                success: function (re) {
+                  //  console.log(re);
+
+                    $("#ProductName").val(re.name);
+                    $("#NormName").val(re.gbname);
+                    $("#Measurement").val(re.measurement);
+                    $("#DeliveryType").val(re.deliveryType);
+                    $("#Remark").val(re.note);
+
+                    $("#Id").val(id);
+                }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    layer.msg('无法获取到数据！', { icon: 2 });
+                }
+            });
+        }
+        $("#edit").click(function () {
+            var selectedid = getSelectedId();
+
+            if (selectedid <= 0) {
+                layer.msg('请选中所需编辑行！', { icon: 2 });
+                return;
+            }
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                area: addformwidth + "px",
+                content: addformhtml,
+            });
+
+            $("#hiddType").val("edit");
+            var loadLayer = layer.load(1);
+            //ajax请求编辑数据
+            $.ajax({
+                type: "GET",
+                url: '/ProductName/Edit?Id=' + selectedid,
+                success: function (re) {
+                  //  console.log(re);
+
+                    $("#ProductName").val(re.name);
+                    $("#NormName").val(re.gbname);
+                    $("#Measurement").val(re.measurement);
+                    $("#DeliveryType").val(re.deliveryType);
+                    $("#Remark").val(re.note);
+
+                    $("#Id").val(selectedid);
+                    layer.close(loadLayer);
+                }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    layer.close(loadLayer);
+                    layer.msg('无法获取到数据！', { icon: 2 });
+                }
+            });
+        });
+        $("#delete").click(function () {
+            var selectedids = getSelectedIds();
+
+            if (selectedids.length <= 0) {
+                layer.msg('请选中所需编辑行！', { icon: 2 });
+                return;
+            }
+
+            layer.confirm('确定删除该记录？此操作不可恢复！', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var loadLayer = layer.load(1);
+                $.ajax({
+                    type: "POST",
+                    url: "/ProductName/Delete",
+                    data: "Ids=" + selectedids,
+                    success: function (re) {
+                        if (parseInt(re) > 0) {
+                            layer.msg('操作成功', { icon: 1 });
+                            setTimeout("window.location.reload();", 1000);
+                        } else {
+                            layer.msg('您所选的品名已被应用，不能删除', { icon: 2 });
+                        }
+                        layer.close(loadLayer);
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(loadLayer);
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                });
+            }, function () {
+
+            });
+        })
+
+        function submitAdd() {
+            var valid = $("#form2").validationEngine("validate");
+            if (valid) {
+                $("#Node").val($("#NodeArea").val());
+                var url = '/ProductName/Create';
+                var selectedid = getSelectedId();
+                if ($("#hiddType").val() == "edit") { url = '/ProductName/Edit?id=' + selectedid; }
+                if ($("#hiddType").val() == "add") { url = '/ProductName/Create'; }
+                var loadLayer = layer.load(1);
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: $("#form2").serialize(),
+                    success: function (re) {
+                        if (parseInt(re) > 0) {
+                            layer.msg('操作成功', { icon: 1 });
+                            setTimeout("window.location.reload();", 1000);
+                        } else if (parseInt(re) == -1) {
+                            layer.msg('您已添加过该品名，请勿重复添加', { icon: 2 });
+                        }
+                        else {
+                            layer.msg(re, { icon: 2 });
+                        }
+                        layer.close(loadLayer);
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(loadLayer);
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                });
+            }
+
+        }
+    </script>
+</body>
+</html>

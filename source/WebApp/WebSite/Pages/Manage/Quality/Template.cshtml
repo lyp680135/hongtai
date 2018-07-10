@@ -1,0 +1,479 @@
+﻿@page
+@model TemplateModel
+@using Util.Helpers
+@using static DataLibrary.EnumList
+@inject DataLibrary.DataContext _db
+@{
+    Layout = null;
+    var PdQualityList = Model.PdQualityList;
+    var qualityList = _db.BaseQualityStandard.ToList();
+    //单行元素,未禁用
+    var danxList = qualityList.Where(w => w.TargetType == 0 && w.Status == 0).ToList();
+    //多行元素,未禁用
+    var duoxList = qualityList.Where(w => w.TargetType == 1 && w.Status == 0).ToList();
+
+    var dxXZ = new List<string>();
+}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <title>产品质量数据预置</title>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+    <style type="text/css">
+        .layui-table[lay-size=sm] td {
+            font-size: 12px;
+            padding: 4px 0px !important;
+            text-align: center;
+            text-indent: 0px;
+        }
+
+        .layui-form input[type=checkbox] {
+            display: inline-block;
+        }
+
+        .layui-table[lay-size=sm] thead tr td {
+            font-weight: 700 !important;
+        }
+
+        /*----------用来移除向下箭头----------*/
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            margin-right: 5px;
+        }
+        /*----------用来移除上下箭头----------*/
+        input[type='date']::-webkit-inner-spin-button {
+            margin: 5px;
+        }
+
+        #Materialid {
+            opacity: 1;
+            width: 150px !important;
+            display: block;
+            border: 1px solid #cccccc;
+            padding:7px 10px;
+        }
+
+        option {
+            color: black;
+            line-height: 20px;
+        }
+
+        .element {
+            width: 600px;
+            height: 200px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%); /* 50%为自身尺寸的一半 */
+            font-size: 45px;
+            color: #808080;
+        }
+    </style>
+</head>
+<body>
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li>质量管理</li>
+            <li>产品质量数据预置</li>
+        </ul>
+    </div>
+    <div class="rightinfo">
+        <form id="seachform" method="get" class="layui-form">
+            <div class="tools">
+                <ul class="seachform" style="width:100%">
+                    <li>
+                        <label>
+                            按时间查询:
+                        </label>
+                        <input type="text" style="width:100px" class="date scinput" id="startTime" name="startTime" value="@Model.StartTime" />
+                        -
+                        <input type="text" style="width:100px" class="date scinput" id="endTime" name="endTime" value="@Model.EndTime" />
+                        <div style="clear:both"></div>
+                    </li>
+                    <li>
+                        <label>按材质:</label>
+
+                        <select name="materialId" style="width:200px;opacity:1" id="Materialid">
+                            <option value="0">请选择</option>
+                            @foreach (var item in _db.BaseProductClass.ToList())
+                            {
+                                <optgroup label="@item.Name">
+                                    @foreach (var items in _db.BaseProductMaterial.Where(w => w.Classid == item.Id).ToList())
+                                    {
+                                        if (Model.MaterialId == items.Id)
+                                        {
+                                            <option value="@Html.Raw(Model.MaterialId)" selected=selected>@Html.Raw(items.Name)</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@Html.Raw(items.Id)">@Html.Raw(items.Name)</option>
+                                        }
+
+                                    }
+                                </optgroup>
+                            }
+                        </select>
+
+                    </li>
+                    <li>
+                        <button id="sb" name="sb" type="submit" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button>
+                    </li>
+                </ul>
+                <div style="clear:both"></div>
+                <ul class="seachform" style="width:100%">
+                    @{
+                        if (Model.MaterialId > 0)
+                        {
+                            <li>
+                                <button id="addBtn" name="sb" class="layui-btn layui-btn-sm layui-btn-normal" onclick="return false;"><i class="layui-icon">&#xe654;</i>添加</button>
+                                <button id="editBtn" name="sb" class="layui-btn layui-btn-sm layui-btn-normal" onclick="return false;"><i class="layui-icon">&#xe642</i>修改</button>
+                                <button id="delBtn" name="sb" class="layui-btn layui-btn-sm layui-btn-normal" onclick="return false;"><i class="layui-icon"></i> 删除</button>
+                                <button id="downBtn" class="layui-btn layui-btn-sm layui-btn-normal" type="button" onclick="return false;"><i class="layui-icon">&#xe601;</i>下载模板</button>
+                                <button id="uploadBtn" name="uploadBtn" class="layui-btn layui-btn-sm layui-btn-normal" lay-type="file" onclick="return false;"><i class="layui-icon">&#xe67c;</i>上传数据</button>
+                            </li>
+                            <li style="float:right">
+                                <button id="batsyncBtn" class="layui-btn layui-btn-sm layui-btn-danger" style="float:right"><i class="layui-icon">&#xe623;</i>产品质量同步</button>
+                            </li>
+                        }
+
+                    }
+                </ul>
+            </div>
+            @if (Model.MaterialId > 0)
+            {
+                <table class="layui-table" lay-size="sm">
+                    <thead>
+                        <tr>
+                            @{
+
+                                if (PdQualityList != null && PdQualityList.Count > 0)
+                                {
+                                    var dxxz = danxList.Where(w => w.Materialid == Model.MaterialId).ToList();
+                                    if (dxxz.Count > 0)
+                                    {
+                                        <td><input name="id" type="checkbox" /></td>
+                                        <td>序号</td>
+                                        foreach (var item in dxxz)
+                                        {
+                                            <td>@item.TargetName</td>
+                                        }
+                                    }
+                                    var duoxxz = duoxList.Where(w => w.Materialid == Model.MaterialId).ToList();
+                                    if (duoxxz.Count > 0)
+                                    {
+                                        foreach (var item in duoxxz)
+                                        {
+                                            <td colspan="3">@item.TargetName</td>
+                                        }
+                                    }
+                                }
+                            }
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            if (PdQualityList != null && PdQualityList.Count > 0)
+                            {
+                                //循环质量数据List
+                                foreach (var item in Model.PdQualityList)
+                                {
+                                    var danxing = item.Qualityinfos.Object;
+                                    var duoxing = item.Qualityinfos_Dynamics;
+                                    Newtonsoft.Json.Linq.JObject jObject = (Newtonsoft.Json.Linq.JObject)item.Qualityinfos.Object;
+
+                                    <tr onclick="editQuality(@item.Id,@item.MaterialId)">
+                                        <td onclick="stopchoose()"><input name="id" type="checkbox" value="@item.Id" /></td>
+                                        <td>@item.Id</td>
+                                        @*单行元素数据*@
+                                        @if (jObject != null)
+                                        {
+                                            var mid = Model.MaterialId;
+                                            var qualityLists = danxList.Where(w => w.Materialid == item.MaterialId).ToList();
+                                            if (qualityLists.Count > 0)
+                                            {
+                                                foreach (var joItem in qualityLists)
+                                                {
+                                                    if (jObject.Property(joItem.TargetName) != null)
+                                                    {
+                                                        var value = jObject[joItem.TargetName].ToString();
+                                                        if (value != string.Empty && value != "NaN" && value != "null" && value != "0")
+                                                        {
+                                                            <td style="color:@Html.Raw((value.ToDouble(2) >= joItem.TargetMin && value.ToDouble(2) <= joItem.TargetMax) ? "black" : "red")">@value</td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td>-</td>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <td>-</td>
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                        @*多行元素数据*@
+                                        @{
+                                            var qualityListss = duoxList.Where(w => w.Materialid == Model.MaterialId).ToList();
+                                            //var mid = Model.MaterialId;
+                                            if (duoxing.SafeString() != string.Empty && duoxing.Object.Count > 2)
+                                            {
+
+                                                if (qualityListss.Count > 0)
+                                                {
+                                                    foreach (var pro in qualityListss)
+                                                    {
+                                                        if ((duoxing.Object[0] as Newtonsoft.Json.Linq.JObject).Property(pro.TargetName) != null)
+                                                        {
+                                                            //内层循环控制数据Value
+                                                            for (int i = 0; i < duoxing.Object.Count; i++)
+                                                            {
+                                                                var value = (duoxing.Object[i] as Newtonsoft.Json.Linq.JObject)[pro.TargetName].ToString();
+                                                                if (value != string.Empty && value != "NaN" && value != "null" && value != "0")
+                                                                {
+                                                                    <td style="color:@Html.Raw((value.ToDouble(2) >= pro.TargetMin && value.ToDouble(2) <= pro.TargetMax) ? "black" : "red")">@value</td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td>-</td>
+                                                                }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            for (int i = 0; i < 3; i++)
+                                                            {
+                                                                <td>-</td>
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                foreach (var pro in qualityListss)
+                                                {
+                                                    for (int i = 0; i < 3; i++)
+                                                    {
+                                                        <td>-</td>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+                @await Component.InvokeAsync("PageList", new
+                {
+                    PageSize = Model.PageSize,
+                    PageIndex = Model.PageIndex,
+                    PageCount = Model.PageCount,
+                    PageUrl = Request.GetAbsoluteUri(new List<KeyValuePair<string, string>>() {
+new KeyValuePair<string, string>("pg","{0}")
+}),
+                    PageText = "{0}",
+                    ShowCount = 6,
+                    ShowAll = false
+                })
+            }
+            else
+            {
+                <h1 class="element">请选择材质,进行查询</h1>
+            }
+        </form>
+    </div>
+    <script type="text/javascript">
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#startTime' //指定元素
+            });
+
+            laydate.render({
+                elem: '#endTime' //指定元素
+            });
+        });
+        $(function () {
+            //添加
+            $('#addBtn').click(function () {
+                window.location.href = './TemplateInfo?mid=' + $('#Materialid').val();
+            })
+            //修改
+            $('#editBtn').click(function () {
+                var id = getSelectedId();
+                if (id <= 0) {
+                    layer.msg('请选中所需编辑行！', { icon: 2 });
+                    return;
+                }
+                editQuality(id, $('#Materialid').val());
+            })
+            //删除
+            $('#delBtn').click(function () {
+                var id = getSelectedId();
+                if (id <= 0) {
+                    layer.msg('请选中所需删除行！', { icon: 2 });
+                    return;
+                }
+                delQuality(id);
+
+            });
+
+            //下载
+            $('#downBtn').click(function () {
+                var Materialid = $('#Materialid').val();
+                if (Materialid == '') {
+                    layer.alert('请选择材质', { icon: 2, time: 2000 });
+                    return;
+                }
+                //window.location.href = '/Quality/DownTemplate?Materialid=' + Materialid;
+                $.ajax({
+                    url: '/Quality/CheckMaterialid',
+                    type: 'post',
+                    data: { Materialid: Materialid },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.state) {
+                            //layer.msg(data.content, { icon: 1 });
+                            window.location.href = '/Quality/DownTemplate?Materialid=' + Materialid;
+                        } else {
+                            layer.alert(data.content, { icon: 2, time: 3000 });
+                        }
+                    }, error: function () {
+                        layer.msg("操作失败，系统出现错误！", { icon: 2 });
+                        layer.close(index);
+                    }
+                })
+            });
+
+            $("#batsyncBtn").click(function () {
+                $("#batsyncBtn").attr("disabled", true);
+
+                var loading = layer.msg('正在同步中...', {
+                    icon: 16
+                    , shade: 0.01
+                });
+
+
+                $.ajax({
+                    url: '/Quality/BatSync',
+                    type: 'post',
+                    data: {},
+                    dataType: 'json',
+                    success: function (data) {
+                        var json = data;
+                       // console.log(json);
+                        if (json.status == 1) {
+                            if (parseInt(json.data) > 0) {
+                                layer.alert('同步成功了！', { icon: 6 });
+                            }
+                        } else {
+                            layer.alert(json.data, { icon: 2, time: 2000 });
+                        }
+                        layer.close(loading);
+                        $("#batsyncBtn").attr("disabled", false);
+                    }, error: function () {
+                        layer.msg("操作失败，系统出现错误！", { icon: 2 });
+                        layer.close(index);
+                        layer.close(loading);
+                        $("#batsyncBtn").attr("disabled", false);
+                    }
+                })
+            });
+        })
+
+        function editQuality(id, mid) {
+
+            window.location.href = './TemplateInfo?mid=' + mid + '&id=' + id;
+        }
+        //删除的方法
+        function delQuality(id) {
+            layer.confirm('确认删除吗?', {
+                btn: ['是', '否']
+            }, function (index, layero) {
+                $.ajax({
+                    url: '/Quality/DeleteQuality',
+                    type: 'post',
+                    data: { Id: id },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.state) {
+                            layer.msg(data.content, { icon: 1 });
+                            window.location.reload();
+                        } else {
+                            layer.alert(data.content, { icon: 2, time: 2000 });
+                        }
+                    }, error: function () {
+                        layer.msg("操作失败，系统出现错误！", { icon: 2 });
+                        layer.close(index);
+                    }
+                })
+            }, function (index) {
+                layer.closeAll();
+            });
+        }
+        function stopchoose() {
+            cancelBubble();
+        }
+        function cancelBubble(e) {
+            var evt = e ? e : window.event;
+            if (evt.stopPropagation) {        //W3C
+                evt.stopPropagation();
+            } else {       //IE
+                evt.cancelBubble = true;
+            }
+        }
+        //获取勾选的行
+        function getSelectedId() {
+            var selectedid = 0;
+            //获取最后一条选中项
+            $("input[name='id']:checked").each(function () {
+                selectedid = $(this).val();
+            });
+
+            return selectedid;
+        }
+
+        layui.use('upload', function () {
+            var Materialid = $('#Materialid').val();
+            //得到 upload 对象
+            var upload = layui.upload;
+            upload.render({
+                elem: '#uploadBtn'
+                , url: '/Quality/UpLoadTemplate/'
+                , accept: 'file'
+                , exts: 'xlsx'
+                , before: function (obj) { //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                    layer.load(); //上传loading
+                }
+                , done: function (data, index, upload) {
+                    if (data.state) {
+                        layer.alert(data.content, { icon: 1, time: 2000 });
+                        window.location.reload();
+                    }
+                    else {
+                        layer.alert(data.content, { icon: 1, time: 2000 });
+                    }
+                    layer.closeAll('loading'); //关闭loading
+                }
+                , error: function (index, upload) {
+                    layer.msg("操作失败，系统出现错误！", { icon: 2 });
+                    //关闭loading
+                    layer.closeAll('loading');
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
