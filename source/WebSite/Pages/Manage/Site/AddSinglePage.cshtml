@@ -1,0 +1,243 @@
+﻿@page
+@model WarrantyManage.Pages.Manage.Site.AddSinglePageModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>添加单页内容</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            layui.use('laydate', function () {
+
+            });
+
+
+            $("#form2").validationEngine({
+                validationEventTriggers: "blur",
+                inlineValidation: true,
+                success: false
+
+            });
+
+
+        });
+    </script>
+    <style>
+        select {
+            opacity: 1;
+            border: 1px solid #ced9df;
+            width: 157px;
+            height: 34px;
+            line-height: 34px;
+            padding-left: 5px;
+        }
+
+        input {
+            height: 100%;
+            width: 150%;
+            padding-left: 5px;
+        }
+
+        .forminfo {
+            padding-left: 0px;
+        }
+            .forminfo li label {
+                width: 95px;
+            }
+        .tipinfo {
+            padding: 0;
+            /* padding-top: 30px; */
+            margin-left: 30px;
+            /* height: 95px; */
+        }
+
+        blockquote.layui-elem-quote.layui-quote-nm {
+            margin-left: 70px;
+        }
+
+        .tablelist {
+            border: solid 1px #cbcbcb;
+            clear: both;
+        }
+
+            .tablelist td {
+                line-height: 35px;
+                text-indent: 0px;
+                border: solid 1px #9c9c9c;
+                white-space: nowrap;
+            }
+
+        .tipinfo span {
+            width: auto;
+            height: auto;
+            float: left;
+        }
+
+        .rightinfo {
+            padding: 8px;
+            width: 600px;
+        }
+
+        img {
+            border: none;
+            width: 150px;
+        }
+
+        div#container {
+            margin-left: 70px;
+        }
+
+        .layui-upload-list {
+            padding-left: 70px;
+        }
+
+        .site-demo-upload {
+            position: relative;
+            background: #e2e2e2;
+        }
+
+            .site-demo-upload, .site-demo-upload img {
+                width: 124px;
+                height: 124px;
+                background: #efefef;
+            }
+
+                .site-demo-upload .site-demo-upbar {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    margin: -20px 0 0 -40px;
+                }
+
+        .hand {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="javascript:void(0)">单页管理</a></li>
+            <li><a href="/Manage/Site/SiteNewsType">添加单页内容</a></li>
+        </ul>
+    </div>
+    <div class="rightinfo">
+        <div id="addbox">
+
+            <form id="form2" method="post">
+                <div class="tipinfo">
+                    <input type="hidden" value="add" id="hiddType" />
+                    <input type="hidden" value="" id="hiddId" name="hiddId" />
+                    <ul class="forminfo">
+
+                        <li style="line-height: 34px;"><label style="width:70px;">单页标题<b>*</b></label> <input name="Title" id="Title" maxlength="25" type="text" class="validate[required] scinput" value="" /></li>
+                        <li>
+                        </li>
+
+                        <li style="line-height: 34px;" class="luruli"><label style="width:70px;">发布时间</label><input type="text" class="validate[required] scinput" id="test5" name="CreateTime" placeholder="选择时间" value=""></li>
+                        <li></li>
+                        <li style="line-height: 34px;"><label style="width:70px;">单页描述<b>*</b></label><textarea name="Descrption" id="Descrption" maxlength="200" style="width:400px;height:80px;line-height:20px;" type="text" class="validate[required] scinput" value="" ></textarea></li>
+                        <li>
+                        </li>
+                        <li>
+                            <label style="width:70px;">单页内容</label>
+                            <script id="container" name="Content" type="text/plain" style="width:120%;height:380px;">
+                            </script>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="tipbtn">
+                    <input name="" id="btnAdd" onclick="return checkValid(this)" type="submit" class="sure" value="确定" asp-page-handler="First" />&nbsp;
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+    <script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="/ueditor/ueditor.all.js"></script>
+    <script type="text/javascript" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
+    <script type="text/javascript">
+        var ue = UE.getEditor('container', {
+            autoHeight: false,
+            enterTag: 'br',
+        });
+        var IsSuccess =  @Model.IsSuccess.ToString().ToLower();
+        if(IsSuccess) {
+            layer.msg('添加成功', { icon: 1 });
+            //setTimeout("window.location.href=window.location.href;", 1000);
+         }
+        function getNowFormatDate() {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + date.getMinutes()
+                + seperator2 + date.getSeconds();
+            return currentdate;
+        }
+        var currentDate = getNowFormatDate();
+
+        function clearPic() {
+            $("#ImgUrl").remove();
+            $("#clearGiftPic").remove();
+        }
+        $("#test5").attr("value", currentDate);
+        layui.use(['laydate', 'upload'], function () {
+            var laydate = layui.laydate;
+            var $ = layui.jquery
+                , upload = layui.upload;
+
+            //时间选择器
+            laydate.render({
+                elem: '#test5'
+                , type: 'datetime'
+            });
+            //普通图片上传
+
+            //var uploadInst = upload.render({
+            //    elem: '#test1'
+            //    , url: '/UploadImg/Upload'
+            //    , before: function (obj) {
+
+            //    }
+            //    , done: function (res) {
+            //        $("#showPic").append('<img class="layui-upload-img" id="ImgUrl">');
+            //        $("#showPic").append('<p><a id="clearGiftPic"  onclick="clearPic()" class="hand">[删除]</a></p>');
+            //        if (res.result) {
+
+            //            $('#ImgUrl').attr('src', res.msg);
+
+            //            $("input[name='ImgUrl']").attr('value', res.msg);
+            //        }
+            //        else {
+            //            layer.msg('上传失败');
+            //        }
+            //        //上传成功
+            //    }
+            //    , error: function () {
+
+            //    }
+            //});
+        });
+
+    </script>
+
+
+</body>
+</html>

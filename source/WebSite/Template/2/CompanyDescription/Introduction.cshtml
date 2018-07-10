@@ -1,0 +1,53 @@
+﻿@page
+@inject ICMSService _cmsService
+@{ 
+    var mngSetting = _cmsService.GetSetting();
+    ViewData["Title"] = "公司简介";
+    ViewData["Desc"] = "公司简介";
+}
+@section head{
+
+}
+
+<div id="main" class="part">
+
+    <ul id="menu" class="fl">
+        <li>
+            <a href="/CompanyDescription/">
+                <i class="icon-chevron-right"></i>总经理致辞
+            </a>
+        </li>
+        <li class="on">
+            <a href="/CompanyDescription/Introduction">
+                <i class="icon-chevron-right"></i>公司简介
+            </a>
+        </li>
+        <li>
+            <a href="/CompanyDescription/Greatevents/0-1.html">
+                <i class="icon-chevron-right"></i>公司大事记
+            </a>
+        </li>
+        <li>
+            <a href="/CompanyDescription/ContactUs">
+                <i class="icon-chevron-right"></i>联系我们
+            </a>
+        </li>
+    </ul>
+
+    @{
+        var about = _cmsService.GetSinglePage("关于闽源");
+        if (about != null)
+        {
+            <div id="content" class="fr">
+                <div class="tit"><h1>@Html.Raw(about.Title)</h1></div>
+                <div class="con">
+                    <span style="text-indent:32pt">@Html.Raw(Util.Extensions.ToHtml(about.Content).ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))</span>
+                    <p>
+                        <br />
+                    </p>
+                </div>
+            </div>
+        }
+    }
+</div>
+

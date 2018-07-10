@@ -1,0 +1,252 @@
+﻿@page
+@inject DataLibrary.DataContext _db
+@model WarrantyManage.Pages.Authority.UserModel
+@{
+    Layout = null;
+    var Group = (from c in _db.MngPermissiongroup select c).ToList();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>User</title>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+    <style>
+        .mainleft {
+            padding-right: 0;
+        }
+
+        .tipinfo {
+            margin-left: 20px;
+        }
+
+        .forminfo li label {
+            width: 50px;
+        }
+
+        select {
+            opacity: 1;
+            border: 1px solid #9c9c9c;
+            width: 100px;
+            height: 32px;
+            line-height: 32px;
+        }
+
+        .seachform label {
+            height: 38px;
+        }
+
+        .seachform input {
+            height: 38px;
+        }
+
+        .seachform select {
+            height: 38px;
+        }
+    </style>
+</head>
+<body>
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li>基本设置</li>
+            <li>用户管理</li>
+            <li>操作员管理</li>
+        </ul>
+    </div>
+    <div class="rightinfo">
+        <form id="seachform" method="get">
+            <ul class="seachform">
+                <li><a href="UserAdd"><span class="clickbutton"><span><img src="/images/t01.png" style="position: relative;top: -5px;" /></span>添加操作员</span></a></li>
+                <li class="notDistributorCss">
+                    <label>用户名：</label>
+                    <input name="UserName" type="text" class="dfinput" style="width: 128px;" value="@ViewData["UserName"]" />
+                </li>
+                <li class="notDistributorCss">
+                    <label>姓名：</label>
+                    <input name="RealName" type="text" class="dfinput" style="width: 128px;" value="@ViewData["RealName"]" />
+                </li>
+                <li class="notDistributorCss">
+                    <label>用户角色：</label>
+                    <select name="GroupManage">
+                        <option value="">请选择</option>
+                        @{
+
+                            foreach (DataLibrary.MngPermissiongroup pclass in Group)
+                            {
+                                if (ViewData["GroupManage"] != null)
+                                {
+                                    if (ViewData["GroupManage"].ToString() == pclass.Id.ToString())
+                                    {
+                                        @Html.Raw("<option value='" + pclass.Id + "' selected='selected'>" + pclass.GroupName + "</option>");
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("<option value='" + pclass.Id + "' >" + pclass.GroupName + "</option>");
+                                    }
+                                }
+                                else
+                                {
+                                    @Html.Raw("<option value='" + pclass.Id + "'>" + pclass.GroupName + "</option>");
+                                }
+
+                            }
+                        }
+                    </select>
+                </li>
+
+                <li class="notDistributorCss">
+                    <label>是否可用： </label>
+                    <select name="InJob">
+                        <option value="">请选择</option>
+                        @if (ViewData["InJob"].ToString() == "0")
+                        {
+                            <option value="0" selected="selected">不可用</option>
+                            <option value="1">可用</option>
+                        }
+                        else if (ViewData["InJob"].ToString() == "1")
+                        {
+                            <option value="0">不可用</option>
+                            <option value="1" selected="selected">可用</option>
+                        }
+                        else
+                        {
+                            <option value="0">不可用</option>
+                            <option value="1">可用</option>
+                        }
+                    </select>
+                </li>
+
+                <li><label>&nbsp;</label><button id="sb" name="sb" class="layui-btn layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button></li>
+            </ul>
+
+
+
+            <table class="layui-table">
+                <thead>
+                    <tr>
+                        @*<th>编号</th>*@
+                        <th>用户名</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>用户角色</th>
+                        <th>最近登录(登录次数)</th>
+                        <th>锁定</th>
+
+                        @*<th>权限设置</th>*@
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                @if (Model.AdminList.Count > 0)
+                {
+                    <tbody>
+                        @foreach (var Admin in Model.AdminList)
+                        {
+                            <tr>
+                                @*<td>@Distributor.Info.Id</td>*@
+                                <td>@Admin.UserName</td>
+                                <td>@Admin.RealName</td>
+                                <td>@(Admin.Sex == true ? "男" : "女")</td>
+                                <td>
+                                    @if (Admin.GroupManage.SafeString() != string.Empty)
+                                    {
+                                        var queryRole = Group.Where(c => Admin.GroupManage.Object.Contains(c.Id));
+                                        foreach (var qr in queryRole)
+                                        {
+                                            <font style="margin-right:6px;">@qr.GroupName</font>
+                                        }
+                                    }
+                                </td>
+                                <td>@Admin.LoginTime.ToDateTimeString()@Html.Raw(Admin.LoginTimes)</td>
+                                <td>
+                                    @if (Admin.Id > 1)
+                                    {
+                                        if (Convert.ToBoolean(Admin.InJob))
+                                        {
+                                            <span style="cursor:pointer;" onclick="SetUse('no',@Admin.Id)"><font color="green">可用</font></span>
+                                        }
+                                        else
+                                        {
+                                            <span style="cursor:pointer;" onclick="SetUse('yes',@Admin.Id)">不可用</span>
+                                        }
+                                    }
+                                </td>
+
+                                @*<td>
+                                        @if (Admin.GroupManage.Object.ToList().Contains((int)DataLibrary.EnumList.GroupManage.管理员))
+                                        {<a class="tablelink" href="PermissionPersonSet?AdminId=@Admin.Id">权限设置</a>}
+                                    </td>*@
+                                <td>
+                                    @if (Admin.Id > 1)
+                                    {
+                                        <a href="/Manage/Authority/UserEdit?id=@Admin.Id" class="tablelink">修改</a>
+
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                }
+
+            </table>
+            @await Component.InvokeAsync("PageList", new
+               {
+                   PageSize= Model.PageSize,
+                   PageIndex = Model.Page,
+                   PageCount = Model.PageCount,
+                   PageUrl = Request.GetAbsoluteUri(new List<KeyValuePair<string, string>>() {
+                                         new KeyValuePair<string, string>("pg","{0}")
+                                   }),
+                   PageText = "{0}",
+                   ShowCount = 6,
+                   ShowAll = false
+               })
+
+
+        </form>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $('.layui-table tbody tr:odd').addClass('odd');
+        });
+        $("#sb").click(function () {
+            $("#seachform").submit();
+        });
+
+        function SetUse(stype, id) {
+            layer.confirm('是否改变帐户可用状态？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var loadLayer = layer.load(1);
+                $.ajax({
+                    type: "POST",
+                    url: '/User/UserAdminSetUse',
+                    data: "sType=" + stype + "&Id=" + id,
+                    success: function (re) {
+                        if (re == "True") {
+                            layer.msg('操作成功', { icon: 1 });
+                            setTimeout("window.location.reload();", 1000);
+                        } else {
+                            layer.msg(re, { icon: 2 });
+                        }
+                        layer.close(loadLayer);
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(loadLayer);
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                });
+            }, function () { });
+        }
+
+
+
+    </script>
+
+
+
+
+
+</body>
+</html>

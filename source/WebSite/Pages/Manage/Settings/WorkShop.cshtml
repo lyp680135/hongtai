@@ -1,0 +1,334 @@
+﻿@page
+@using Newtonsoft.Json
+@model WarrantyManage.Pages.Manage.Settings.WorkShopModel
+@inject DataLibrary.DataContext db
+@{
+}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <title>系统首页</title>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+
+            layui.use('laydate', function () {
+
+            });
+
+
+            $("#form1").validationEngine({
+                validationEventTriggers: "blur",
+                inlineValidation: true,
+                success: false,
+            });
+
+            $("#form1").find("a").each(function () {
+                if ($(this).html() == '@ViewData["ReportType"]')
+                {
+                    $(this).css("font-weight","600");
+                }
+            });
+
+            //$("#chkall").selall("id");
+        });
+        function stopchoose() {
+            cancelBubble();
+        }
+        function cancelBubble(e) {
+            var evt = e ? e : window.event;
+            if (evt.stopPropagation) {        //W3C 
+                evt.stopPropagation();
+            } else {       //IE      
+                evt.cancelBubble = true;
+            }
+        }
+    </script>
+    <style>
+        .mainleft {
+            padding-right: 0;
+        }
+
+        .tipinfo {
+            margin-left: 20px;
+        }
+
+        .forminfo li label {
+            width: 50px;
+        }
+        .layui-table td {
+            text-align:center;
+            text-indent:0px;
+        }
+        .addclass {
+            cursor:pointer;
+        }
+        .layui-table tbody tr {
+            cursor: pointer;
+        }
+        .layui-table thead th {
+           text-align:center;
+        }
+        #form1 lable {
+            font-size: 14px;
+            height: 38px;
+        }
+
+        input.dfinput {
+            height: 38px;
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="javascript:void(0)">基础设置</a></li>
+            <li><a href="/Manage/Settings/WorkShop">车间</a></li>
+        </ul>
+    </div>
+    <div class="rightinfo">
+        <div class="tools" style="height: auto;">
+            <form method="get" id="form1">
+                <ul class="seachform">
+                    <li class="notDistributorCss">
+                        <label>名称：</label>
+                        <input name="keyword" id="keyword" type="text" class="dfinput" style="width: 128px;" value="@ViewData["keyword"]" />
+                    </li>
+                    <li><label>&nbsp;</label><button id="sb" name="sb" class="layui-btn layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button></li>
+                </ul>
+            </form>
+            <div style="float:right;position: absolute;top: 48px; right: 10px;">
+                <label>&nbsp;</label>
+                <button id="add" name="add" class="layui-btn layui-btn-normal"><i class="layui-icon">&#xe654;</i>添加</button>
+                <button id="delete" name="delete" class="layui-btn layui-btn-danger"><i class="layui-icon"></i> 删除</button>
+            </div>
+        </div>
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th style="width:40px"><input name="" type="checkbox" value="" id="chkall" /></th>
+                    <th style="width:60px">编号</th>
+                    <th style="width:220px">车间名称</th>
+                    <th style="width:220px">车间代码（一个大写字母）</th>
+                    <th>入库操作员</th>
+                    <th>出库操作员</th>
+                    <th>质量录入员</th>
+                    <th>炉号工</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var list = ViewData["list"] as List<DataLibrary.PdWorkshop>;
+                    if (list != null)
+                    {
+                        foreach (DataLibrary.PdWorkshop wsclass in list)
+                        {
+                <tr onclick="Edit(@wsclass.Id)">
+
+                    <td onclick="stopchoose()"><input name="id" type="checkbox" value="@wsclass.Id" /></td>
+                    <td>@wsclass.Id</td>
+                    <td>@wsclass.Name</td>
+                    <td>@wsclass.Code</td>
+                    <td>
+                        @{
+                            if (!string.IsNullOrEmpty(wsclass.Inputer))
+                            {
+                                var temp_userid = Array.ConvertAll(wsclass.Inputer.Split(','), new Converter<string, int>(x => int.Parse(x)));
+                                var resultOperator = db.MngAdmin.Where(c => temp_userid.Contains(c.Id)).ToList();
+                                foreach (var result in resultOperator)
+                                {
+                                    @Html.Raw("  " + result.RealName + " " + result.UserName);<br />
+                                }
+                            }
+                        }
+                    </td>
+                    <td>
+                        @{
+                            if (!string.IsNullOrEmpty(wsclass.Outputer))
+                            {
+                                var temp_userid2 = Array.ConvertAll(wsclass.Outputer.Split(','), new Converter<string, int>(x => int.Parse(x)));
+                                var resultOperator2 = db.MngAdmin.Where(c => temp_userid2.Contains(c.Id)).ToList();
+                                foreach (var result in resultOperator2)
+                                {
+                                    @Html.Raw("  " + result.RealName + " " + result.UserName);<br />
+                                }
+                            }
+                        }
+                    </td>
+                    <td>
+                        @{
+                            if (!string.IsNullOrEmpty(wsclass.QAInputer))
+                            {
+                                var temp_userid3 = Array.ConvertAll(wsclass.QAInputer.Split(','), new Converter<string, int>(x => int.Parse(x)));
+                                var resultOperator3 = db.MngAdmin.Where(c => temp_userid3.Contains(c.Id)).ToList();
+                                foreach (var result in resultOperator3)
+                                {
+                                    @Html.Raw("  " + result.RealName + " " + result.UserName);<br />
+                                }
+                            }
+                        }
+                    </td>
+                    <td>
+                        @{
+                            if (!string.IsNullOrEmpty(wsclass.Furnacer))
+                            {
+                                var temp_userid4 = Array.ConvertAll(wsclass.Furnacer.Split(','), new Converter<string, int>(x => int.Parse(x)));
+                                var resultOperator4 = db.MngAdmin.Where(c => temp_userid4.Contains(c.Id)).ToList();
+                                foreach (var result in resultOperator4)
+                                {
+                                    @Html.Raw("  " + result.RealName + " " + result.UserName);<br />
+                                }
+                            }
+                        }
+                    </td>
+
+                </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+    <script type="text/javascript">
+        var addformhtml = $("#addbox").html();
+        var addformwidth = $("#addbox").width();
+
+        $("#addbox").html("");
+
+        $('.layui-table tbody tr:odd').addClass('odd');
+
+        function getSelectedIds() {
+            var selectedids = "";
+            //获取最后一条选中项
+            $("input[name='id']:checked").each(function () {
+                selectedids += $(this).val() + ",";
+            });
+
+            return selectedids;
+        }
+
+        function addworkin(obj) {
+
+            var html = '<br/><input placeholder="姓名" name="RukuName"  type="text"  value="" class="scinput" style="width:100px ;margin-left: 70px;" />  <input  placeholder="手机号" name="rukuTel"  type="text" class="scinput" value="" style="width:100px" /> ';
+            $(obj).before(html);
+        }
+        function addworkout(obj) {
+            var html = '<br/><input placeholder="姓名" name="chukuName"  type="text" value="" class="scinput" style="width:100px;margin-left: 70px;" />  <input placeholder="手机号" name="chukuTel"  type="text" class="scinput" value="" style="width:100px" />';
+            $(obj).before(html);
+
+        }
+        function addquanlityin(obj) {
+
+            var html = '<br/><input placeholder="姓名" name="luruName"  type="text"  value="" class="scinput" style="width:100px;margin-left: 70px;" />  <input placeholder="手机号" name="ruluTel" type="text" class="scinput" value="" style="width:100px" />';
+            $(obj).before(html);
+
+        }
+        function getSelectedId() {
+            var selectedid = 0;
+            //获取最后一条选中项
+            $("input[name='id']:checked").each(function () {
+                selectedid = $(this).val();
+            });
+
+            return selectedid;
+        }
+
+        $("#sb").click(function () {
+            $("#form1").submit();
+        });
+
+        $("#add").click(function () {
+           
+            layer.open({
+                type: 2,
+                title: '新增车间',
+                shadeClose: false,
+                area: ['50%','90%'],
+                content: '/Manage/Settings/AddWorkShop',
+            }); 
+
+            $("#hiddType").val("add");
+        });
+        function Edit(id) { 
+            layer.open({
+                type: 2,
+                title:'修改车间',
+                shadeClose: false,
+                area: ['50%', '90%'],
+                content: '/Manage/Settings/EditWorkShop?id=' + id,
+            });
+
+            $("#hiddType").val("edit");
+        }
+        $("#delete").click(function () {
+            var selectedids = getSelectedIds();
+
+            if (selectedids.length <= 0) {
+                layer.msg('请选中所需编辑行！', { icon: 2 });
+                return;
+            }
+
+            layer.confirm('确定删除该记录？此操作不可恢复！', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var loadLayer = layer.load(1);
+                $.ajax({
+                    type: "POST",
+                    url: "/WorkShop/Delete",
+                    data: "Ids=" + selectedids,
+                    success: function (re) {
+                        if (parseInt(re) > 0) {
+                            layer.msg('操作成功', { icon: 1 });
+                            setTimeout("window.location.reload();", 1000);
+                        } else {
+                            layer.msg('您所选择的车间已被应用，不能删除', { icon: 2 });
+                        }
+                        layer.close(loadLayer);
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(loadLayer);
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                });
+            }, function () {
+
+            });
+        })
+
+        function submitAdd() {
+            var valid = $("#form2").validationEngine("validate");
+            if (valid) {
+                $("#Node").val($("#NodeArea").val());
+                var url = '/WorkShop/Create';
+                var selectedid = getSelectedId();
+                if ($("#hiddType").val() == "edit") { url = '/WorkShop/Edit?id=' + selectedid; }
+                if ($("#hiddType").val() == "add") { url = '/WorkShop/Create'; }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: $("#form2").serialize(),
+                    success: function (re) {
+                        if (parseInt(re) > 0) {
+                            layer.msg('操作成功', { icon: 1 });
+                            setTimeout("window.location.reload();", 1000);
+                        } else {
+                            layer.msg('操作失败，请稍候重试', { icon: 2 });
+                        }
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                });
+            }
+
+        }
+    </script>
+</body>
+</html>

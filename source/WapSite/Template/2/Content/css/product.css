@@ -1,0 +1,38 @@
+﻿@charset "utf-8";
+/* CSS Document */
+.product_box{
+	background:#f5f5f5;
+	padding:5px 5px 0 5px;
+	margin-top:20px;
+	box-shadow: 0 2px 6px #e0e0e0;
+
+}
+/*.product_picture img{
+	float:left;
+	width:49.2%;
+}*/
+.product_picture img:last-of-type{
+	float:right;
+}
+.ImgClass {
+    width: 48%;
+    margin: 0 1% 10px 1%;
+    float: left;
+}
+.product_name img{
+	float:left;
+	width:12px;
+	margin: 11px 4px 0 0;
+}
+.product_name h1{
+	float:left;
+	font-size:12px;
+	color:#666;
+	font-weight:inherit;
+	line-height: 35px;
+	font-family: inherit;
+}
+
+.product_list{
+	padding-bottom:40px;
+}

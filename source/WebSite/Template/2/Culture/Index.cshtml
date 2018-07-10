@@ -1,0 +1,42 @@
+﻿@page
+@inject ICMSService _cmsService;
+@{ 
+    ViewData["Title"] = "文化体系";
+    ViewData["Desc"] = "文化体系";
+}
+@section head{
+
+}
+
+
+<div id="main" class="part">
+
+    <ul id="menu" class="fl">
+        <li class="on">
+            <a href="/Culture/">
+                <i class="icon-chevron-right"></i>文化体系
+            </a>
+        </li>
+        <li>
+            <a href="/Culture/Sence">
+                <i class="icon-chevron-right"></i>钢城风采
+            </a>
+        </li>
+    </ul>
+
+
+    <div id="content" class="fr">
+        @{
+            var Culture = _cmsService.GetSinglePage("文化体系");
+            if (Culture != null)
+            {
+                <div class="tit"><h1>@Html.Raw(Culture.Title)</h1></div>
+                <div class="con">
+                    @Html.Raw(Culture.Content)
+                </div>
+            }
+
+        }
+    </div>
+</div>
+

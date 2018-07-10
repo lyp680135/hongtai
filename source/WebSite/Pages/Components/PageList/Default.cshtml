@@ -1,0 +1,69 @@
+﻿@{
+    int currentIndex = int.Parse(ViewData["CurrentIndex"].ToString());
+    int beginIndex = int.Parse(ViewData["BeginIndex"].ToString());
+    int endIndex = int.Parse(ViewData["EndIndex"].ToString());
+    int pageCount = int.Parse(ViewData["PageCount"].ToString());
+    string pageUrl = ViewData["PageUrl"].ToString();
+    string pageText = ViewData["PageText"].ToString();
+    bool showAll = Boolean.Parse(ViewData["ShowAll"].ToString());
+
+}
+
+
+<script type="text/javascript">
+    String.prototype.replaceAll = function (s1, s2) {
+        　　return this.replace(new RegExp(s1, "gm"), s2);
+    }
+
+    function gotopage() {
+        var url = "@pageUrl";
+        var pagenum = $("#gotopage").val();
+        if (!isNaN(pagenum)) {
+            window.location.href = url.replace("{0}", pagenum).replaceAll("&amp;","&");
+        } else {
+            alert("请输入正确的数字");
+        }
+
+    }
+</script>
+
+@{
+    if (endIndex <= 1) { }
+    else
+    {
+        <div class="pagenumber_box">
+            <span class="total">共 @pageCount 条记录</span>
+            <div class="jump">
+                <span>跳转到&nbsp;<input type="text" id="gotopage" />&nbsp;页&nbsp;</span>
+                <a href="javascript:void(0);" onclick="gotopage()">GO</a>
+            </div>
+            <div class="pagenumber">
+                @if (showAll && currentIndex > 1)
+                {
+                    <a href="@string.Format(pageUrl, 1)">首页</a>
+                }
+
+                @if (currentIndex - 1 >= 1)
+                {<a href="@string.Format(pageUrl, currentIndex - 1)"><span class=""></span></a>
+                }
+
+                @for (int pageIndex = beginIndex; pageIndex <= endIndex; pageIndex++)
+                {
+                    <a href="@string.Format(pageUrl, pageIndex)" class="@(currentIndex == pageIndex ? "selected" : "")">@(string.Format(pageText, pageIndex))</a>
+                }
+
+                @if (currentIndex + 1 <= endIndex)
+                {
+                    <a href="@string.Format(pageUrl, currentIndex + 1)"><span class="span_right"></span></a>
+                }
+                @if (showAll && currentIndex < pageCount)
+                {
+                    <a href="@string.Format(pageUrl, pageCount)">尾页</a>
+                }
+
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    }
+}
+

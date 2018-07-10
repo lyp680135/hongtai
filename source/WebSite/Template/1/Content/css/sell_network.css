@@ -1,0 +1,143 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+	/* banner --------------------------------------*/
+	.carousel-indicators{
+		bottom: 10px;
+		top: inherit;
+		left: 50%;
+		margin-left: -15px;
+	}
+	.carousel-indicators li{
+		width: 8px;
+		height: 8px;
+		margin-left:7px;
+	}
+	.carousel{
+		margin-bottom:inherit;
+	}
+	/* container_box --------------------------------------*/
+	.container_box{
+		margin:8px auto 56px auto;
+	}
+	.merchant{
+		margin:30px 0 0 0;
+		padding:34px 0 34px 20px;
+		width:550px;
+		border:1px solid #fff;
+		border-bottom:1px solid #e5e5e5;
+	}
+	.merchant:hover{
+		background:#fafafa;
+	}
+	.merchant_left{
+		float:left;
+	}
+	.merchant:nth-last-of-type(2),.merchant:nth-last-of-type(3){
+		border-bottom:1px solid #fff;
+	}
+	.merchant_right{
+		float:right;
+	}
+	
+	.merchant .logo_box{
+		float:left;
+		border:1px solid #e5e5e5; 
+		border-radius:5px;
+		width:148px;
+		height:148px;
+	}
+	.merchant .logo{
+		display: table-cell;
+		width:148px;
+		height:148px;
+		vertical-align: middle;
+		text-align: center;
+		background:#fff;
+	}
+	.merchant .logo img{
+		max-width: 148px;
+    	vertical-align: middle;
+	}
+	
+	.merchant .contact{
+		float:left;
+		margin:34px 0 0 30px;
+	}
+	.contact h1{
+		font-size:26px;
+	}
+	.contact a{
+		color:#333;
+		border:1px solid #b2b2b2;
+		border-radius:3px;
+		width:158px;
+		height:40px;
+		display:inline-block;
+		margin:26px 20px 0 0;
+		text-align:center;
+		line-height:40px;
+		background:#fff;
+	}
+	.contact a i{
+		font-size: 20px;
+		line-height: 17px;
+		margin-right: 9px;
+	}
+	.contact a span{
+		font-size:18px;
+	}
+	.contact a:hover{
+		border:1px solid #e50011;
+		color:#e50011;
+	}
+	
+	
+	
+	/*@media only screen and (max-width:1300px){*/
+		
+		.banner img{
+			width:960px;
+		}
+		
+		.merchant{
+			margin:24px 0 0 0;
+			padding:26px 0 26px 16px;
+			width:440px;
+		}
+		.merchant .logo_box {
+			width: 118px;
+			height: 118px;
+		}
+		.merchant .logo{
+			width: 118px;
+			height: 118px;
+		}
+		.merchant .logo img {
+			max-width: 118px;
+		}
+		.merchant .contact{
+			margin:0 0 0 12px;
+		}
+		.contact h1{
+			font-size:22px;
+		}
+		.contact a{
+			width:118px;
+			height:34px;
+			margin:14px 16px 0 0;
+			line-height:34px;
+		}
+		.contact a span{
+			font-size:16px;
+		}
+		.contact a i{
+			font-size: 17px;
+			line-height: 18px;
+			margin-right: 6px;
+		}
+		.merchant:hover{
+			background:#fafafa;
+		}
+		
+	/*}*/

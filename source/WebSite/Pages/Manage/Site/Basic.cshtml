@@ -1,0 +1,269 @@
+﻿@page
+@model WarrantyManage.Pages.Manage.Site.BasicModel
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <link href="~/js/layui/css/layui.css" rel="stylesheet" />
+    <title>基础设置</title>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+    <style type="text/css">
+        /*.forminfo input {
+            width: 300px !important;
+        }*/
+        .forminfo li label {
+            width:95px;
+        }
+        .edui-default .edui-editor-breadcrumb span {
+            cursor: pointer;
+            text-decoration: underline;
+            color: blue;
+            display:inline;
+        }
+        .site-demo-upload {
+            position: relative;
+            background: #e2e2e2;
+        }
+
+            .site-demo-upload, .site-demo-upload img {
+                width: 124px;
+                height: 124px;
+                background: #efefef;
+            }
+
+                .site-demo-upload .site-demo-upbar {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    margin: -20px 0 0 -40px;
+                }
+    </style>
+</head>
+
+
+<body>
+
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="javascript:void(0)">网站设置</a></li>
+            <li><a href="/Manage/Site/Basic">基础设置</a></li>
+        </ul>
+    </div>
+    <form id="form" method="post">
+        <input type="hidden" value="@Model.List[0].Id" id="Id" name="Id" />
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">基础设置</li>
+                <li>首页轮播图</li>
+                @*<li>企业介绍</li>
+                <li>热线服务</li>*@
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <ul class="forminfo">
+                        <li style="line-height: 34px;">
+                            <label>公司名称</label>
+                            <input name="CompName" id="CompName" type="text" class="validate[required] scinput" maxlength="25" style="width:300px;" value="@Model.List[0].CompName" />
+                        </li>
+                        <li style="line-height: 34px;">
+                            <label>网站标题</label>
+                            <input name="SiteTitle" id="SiteTitle" type="text" class="validate[required] scinput" maxlength="64" style="width:200px;" value="@Model.List[0].SiteTitle" />
+                        </li>
+                        <li style="line-height: 34px;">
+                            <label>网站英文标题</label>
+                            <input name="SiteTitleEn" id="SiteTitleEn" type="text" class="validate[required] scinput" maxlength="64" style="width:200px;" value="@Model.List[0].SiteTitleEn" />
+                        </li>
+                        <li style="line-height: 34px;">
+                            <label>网站Logo</label>
+                            <div class="layui-upload">
+                                <button type="button" class="layui-btn" id="test1">上传图片</button>
+                                <div class="layui-upload-list" id="showPic">
+                                    <img class="layui-upload-img" style="margin-left: 95px;max-width:200px;" id="Logo" src="@Model.List[0].Logo" />
+                                    <input type="hidden" value="@Model.List[0].Logo" name="Logo" />
+                                </div>
+                                <p><a href="javascript:removeLogo()" style="margin-left: 95px;">[删除]</a></p>
+                            </div>
+                        </li>
+                        <li style="line-height: 34px;">
+                            <label>Logo描述</label>
+                            <input name="LogoText" id="LogoText" type="text" class="validate[required] scinput" maxlength="20" style="width:150px;" value="@Model.List[0].LogoText" />
+                        </li>
+                        <li style="line-height: 34px;">
+                            <label>公司地址</label>
+                            <input name="CompAddress" id="CompAddress" type="text" class="validate[required] scinput" maxlength="25" style="width:300px;" value="@Model.List[0].CompAddress" />
+                        </li>
+                        <li style="line-height: 34px;">
+                            <label>公司地址经纬度</label>
+                            <input name="MapLocation" id="MapLocation" type="text" class="validate[required] scinput" maxlength="255" style="width:300px;" value="@Model.List[0].MapLocation" /><i>例:116.403694,39.916706</i>
+                        </li>
+                        <li style="line-height: 34px;">
+                            <label>网站名称备案号</label>
+                            <input name="Icp" id="Icp" type="text" class="validate[required] scinput" maxlength="50" style="width:150px;" value="@Model.List[0].Icp" />
+                        </li>
+                        <li style="line-height: 34px;">
+                            <label>网站版权</label>
+                            <input name="Copyright" id="Copyright" type="text" class="validate[required] scinput" maxlength="50" style="width:300px;" value="@Model.List[0].Copyright" />
+                        </li>
+
+
+                        <li style="line-height: 34px;">
+                            <label>网站描述</label>
+                            <textarea id="SiteDesc" placeholder="限0-120个字符" name="SiteDesc" class="validate[required] scinput" maxlength="240" style="width:500px;height:80px;line-height:20px;">@Model.List[0].SiteDesc</textarea>
+                        </li>
+                        <li style="line-height: 34px;">
+                            <label>统计代码</label>
+                            <textarea id="StatsCode" name="StatsCode" class="scinput" maxlength="1000" style="width:500px;height:150px;line-height:20px;">@Model.List[0].StatsCode</textarea>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="layui-tab-item">
+                    <ul class="forminfo">
+                        <li>
+                            <div class="layui-upload">
+                                <button type="button" class="layui-btn" id="test2">上传图片</button>
+                                <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                                    预览图：
+                                    <div class="layui-upload-list" id="demo2">
+                                        @if (Model.List[0].CarouselImage.SafeString() != string.Empty)
+                                        {
+                                            foreach (var item in Model.List[0].CarouselImage.Object.ToList())
+                                            {
+                                            <div id="@Model.List[0].CarouselImage.Object.ToList().IndexOf(item)" style="text-align:center;display:inline-block;">
+                                                <img src="@item" style="max-width:200px;max-height:100px;" /><br />
+                                                <a href="javascript:void(0)" onclick="removeImg(@Model.List[0].CarouselImage.Object.ToList().IndexOf(item))">[删除]</a>
+                                                <input type="hidden" name="CarouselImage" value="@item" />
+                                            </div>
+                                            }
+                                        }
+                                    </div>
+                                </blockquote>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                @*<div class="layui-tab-item">
+                    <script id="container1" name="CompIntroduce" type="text/plain" style="width:120%;height:380px;">@Html.Raw(Model.List[0].CompIntroduce)</script>
+                </div>
+                <div class="layui-tab-item">
+                    <script id="container2" name="Hotline" type="text/plain" style="width:120%;height:380px;">@Html.Raw(Model.List[0].Hotline)</script>
+                
+                </div>*@
+            </div>
+        </div>
+
+        <div class="tipbtn">
+            <input name="" type="submit" id="btnAdd" onclick="return checkValid(this)" class="sure" value="保存" asp-page-handler="First" />&nbsp;
+        </div>
+    </form>
+
+    <script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script>
+    <script type="text/javascript" src="/ueditor/ueditor.parse.js"></script>
+    <script>
+
+ 
+
+        layui.use('element', function () {
+            var $ = layui.jquery
+                , element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+
+            //触发事件
+            var active = {
+                tabChange: function () {
+                    //切换到指定Tab项
+                    element.tabChange('demo', '22'); //切换到：用户管理
+                }
+            };
+
+            $('.site-demo-active').on('click', function () {
+                var othis = $(this), type = othis.data('type');
+                active[type] ? active[type].call(this, othis) : '';
+            });
+
+
+
+        });
+
+
+        layui.use(['laydate', 'upload'], function () {
+            var laydate = layui.laydate;
+            var $ = layui.jquery
+                , upload = layui.upload;
+
+            //时间选择器
+            laydate.render({
+                elem: '#test5'
+                , type: 'datetime'
+            });
+
+            //多图片上传
+            upload.render({
+                elem: '#test2'
+                , url: '/UploadImg/Upload'
+                , multiple: true
+                , before: function (obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        var id = index.substring(0, index.length - 2);
+                        //$('#demo2').append('<div id="' + id + '" style="display:inline-block;text-align:center;"><img src="' + result + '" alt="' + file.name + '" class="layui-upload-img"><br/><a href="javascript:void(0)" onclick="removeImg(' + id + ')">[删除]</a><input type="hidden" name="CarouselImage" value="' + result + '"/></div>');
+                    });
+                }
+                , done: function (res) {
+                    if (res.result) {
+                        var id = 0;
+                        $('#Logo').attr('src', res.msg);
+                        //$("input[name='CarouselImage']").attr('value', res.msg);
+                        $('#demo2').append('<div id="' + id + '" style="display:inline-block;text-align:center;"><img src="' + res.msg + '"  class="layui-upload-img" style="max-width:200px;max-height:100px;" ><br/><a href="javascript:void(0)" onclick="removeImg(' + id + ')">[删除]</a><input type="hidden" name="CarouselImage" value="' + res.msg + '"/></div>');
+                    }
+                    else {
+                        layer.msg('上传失败');
+                    }
+                    //上传成功
+                }
+            });
+
+            //普通图片上传
+            upload.render({
+                elem: '#test1'
+                , url: '/UploadImg/Upload'
+                , before: function (obj) {
+
+                }
+                , done: function (res) {
+                    if (res.result) {
+                        $('#Logo').attr('src', res.msg);
+                        $("input[name='Logo']").attr('value', res.msg);
+                    }
+                    else {
+                        layer.msg('上传失败');
+                    }
+                    //上传成功
+                }
+                , error: function () {
+
+                }
+            });
+        });
+
+
+        function removeImg(id) {
+            $("#" + id).remove();
+        }
+
+        function removeLogo() {
+            $("#Logo").removeAttr("src");
+        }
+
+        var IsSuccess = @Model.IsSuccess.ToString().ToLower();
+        if(IsSuccess) {
+            layer.msg('保存成功', { icon: 1 });
+         }
+
+    </script>
+</body>
+</html>
+

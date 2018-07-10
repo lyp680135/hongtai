@@ -1,0 +1,206 @@
+﻿@page
+@inject ICMSService _cmsService
+@inject DataLibrary.DataContext Db
+@functions{
+
+    // 产品模型
+    public DataLibrary.PdProduct PdProduct { get; set; }
+
+    // 品名
+    public DataLibrary.BaseProductClass ProductClass { get; set; }
+
+    // 材质
+    public DataLibrary.BaseProductMaterial Material { get; set; }
+
+    // 规格
+    public DataLibrary.BaseSpecifications Spec { get; set; }
+
+    // 班组
+    public DataLibrary.PdWorkshopTeam PdWorkshopTeam { get; set; }
+
+    public DataLibrary.PdWorkshop PdWorkshop { get; set; }
+
+    /// <summary>
+    /// Gets or sets 出库纪录
+    /// </summary>
+    public DataLibrary.PdStockOut PdStockOut { get; set; }
+
+    public void OnGet(string batcode, string validcode)
+    {
+        this.PdProduct = this.Db.PdProduct.FirstOrDefault(x => x.Batcode == batcode && x.Randomcode == validcode);
+        if (this.PdProduct != null)
+        {
+            this.ProductClass = this.Db.BaseProductClass.FirstOrDefault(x => x.Id == this.PdProduct.Classid);
+            this.Material = this.Db.BaseProductMaterial.FirstOrDefault(x => x.Id == this.PdProduct.Materialid);
+            this.Spec = this.Db.BaseSpecifications.FirstOrDefault(x => x.Id == this.PdProduct.Specid);
+            this.PdWorkshopTeam = this.Db.PdWorkshopTeam.FirstOrDefault(x => x.Id == this.PdProduct.WorkShift);
+            char code = this.PdProduct.Batcode.FirstOrDefault();
+            this.PdWorkshop = this.Db.PdWorkshop.FirstOrDefault(x => x.Code == code.ToString());
+            this.PdStockOut = this.Db.PdStockOut.FirstOrDefault(c => c.Productid == this.PdProduct.Id);
+        }
+    }
+}
+@{
+    ViewData["Title"] = "服务";
+    ViewData["Desc"] = "服务";
+    ViewData["Tag"] = 3;
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+}
+ <div class="stipulation_width container_box">
+    @if (Model.PdProduct == null)
+    {
+    <div class="nodata" style="padding-top:50px;height:285px;">
+        <img src="~/Content/images/nodata.png">
+        <div class="tip">暂无产品信息！</div>
+    </div>
+    }
+    else
+    {
+        <div class="portion query_result">
+            <div class="title_bar">
+            <h1>@siteBasic.CompName</h1>
+            <div class="clearfix"></div>
+        </div>
+            <div class="content">
+
+                <div style="width:25%;display:inline-block;float:left">
+                    <div class="row_box row1">
+                        <h2>产品名称</h2>
+                        <p>@Model.ProductClass.Gbname</p>
+                        <div class="clearfix"></div>
+                    </div>
+
+
+                    <div class="row_box row1">
+                        <h2>规格</h2>
+                        <p>@Model.Spec.Specname</p>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="row_box row1">
+                        <h2>重量</h2>
+                        <p>@Model.Spec.Referpieceweight kg</p>
+                        <div class="clearfix"></div>
+                    </div>
+
+
+
+                </div>
+
+                <div style="width:30%;display:inline-block;float:left">
+                    <div class="row_box row2">
+                        <h2>牌号</h2>
+                        <p>@Model.Material.Name</p>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="row_box row1">
+                        <h2>定尺</h2>
+                        <p>@Model.PdProduct.Length<text>m</text></p>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="row_box row1">
+                        <h2>支数</h2>
+                        <p>@Model.PdProduct.Piececount</p>
+                        <div class="clearfix"></div>
+                    </div>
+
+                </div>
+
+                <div style="width:25%;display:inline-block;float:left">
+                    <div class="row_box row1">
+                        <h2>批号</h2>
+                        <p>@Model.PdProduct.Batcode</p>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="row_box row1">
+                        <h2>捆号</h2>
+                        <p>@Model.PdProduct.Bundlecode</p>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="row_box row1">
+                        <h2>生产日期</h2>
+                        <p>@Util.Extensions.GetDateTimeFromUnixTime((long)Model.PdProduct.Createtime).ToString("yyyy年MM月dd日")</p>
+                        <div class="clearfix"></div>
+                    </div>
+
+                </div>
+
+                <div style="width:20%;display:inline-block;float:right">
+                    <div class="row_box row1">
+                        <h2>批号校验码</h2>
+                        <p>@Model.PdProduct.Randomcode</p>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="row_box row1">
+                        <h2>生产班组</h2>
+                        <p>@Model.PdWorkshopTeam.TeamName</p>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="row_box row1">
+                        <h2>出厂日期</h2>
+                        @if (Model.PdStockOut != null && Model.PdStockOut.Createtime.HasValue)
+                        {
+                            <p>@(((long)Model.PdStockOut.Createtime.Value).GetDateTimeFromUnixTime().ToString("yyyy年MM月dd日"))</p>
+                        }
+                        else
+                        {
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;月&nbsp;&nbsp;日</p>
+                        }
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+                <div class="row_box row2">
+                    <h2>指定查询官网</h2>
+                    <p>@mngSetting.Domain_PC</p>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+
+        </div>
+    }
+    <div class="portion stamp">
+        <div class="title_bar">
+            <img src="../images/stamp.png" />
+            <h1>打印《产品质量证明书》</h1>
+            <div class="clearfix"></div>
+        </div>
+        <div class="content">
+            <div class="left_stamp">
+                <div class="row_box">
+                    <h2>手机</h2>
+                    <div class="input_box phone_number"><input type="text" id="UserName" name="UserName" maxlength="11" placeholder="请输入手机号码" /></div>
+                    <input class="send" type="button" name="validcode" id="sendcode" value="发送验证码" />
+                    <div class="clearfix"></div>
+                </div>
+                <div class="row_box">
+                    <h2>短信验证码</h2>
+                    <div class="input_box"><input type="text" id="Code" name="Code" maxlength="4" placeholder="请输入验证码" /></div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="right_stamp">
+                <span>请通过您的供货商获取电子《产品质量证明书》授权，登录官网下载。</span>
+                <input type="hidden" name="SystemMemberType" id="SystemMemberType" value="@Convert.ToInt32(DataLibrary.EnumList.SystemMemberType.Seller)" />
+                <div class="determine"><input class="common_button" id="btnLogin_ByPhone" type="submit" value="确定"></div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+</div>
+
+@section head
+    {
+    <link href="/Content/css/service.css" rel="stylesheet" />
+    <link type="text/css" href="/js/layui/css/layui.css" rel="stylesheet" />
+    <script type="text/javascript" src="/js/layui/layui.js"></script>
+    <script type="text/javascript" src="/js/login.js"></script>
+}
+
+
+

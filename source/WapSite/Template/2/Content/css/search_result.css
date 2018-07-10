@@ -1,0 +1,77 @@
+﻿@charset "utf-8";
+/* CSS Document */
+.layui-layer-hui .layui-layer-content {
+    padding: 12px 25px;
+    text-align: center;
+    color: white;
+}
+.search_details{
+	background:#f7f7f7;
+	padding: 6px 0 4px 5px;
+    margin: 5px 0 12px 0;
+}
+.search_details img{
+	max-width:184px;
+}
+
+.details_row span{
+	line-height:25px;
+	padding:0;
+	color:#666;
+}
+.details_row span:first-of-type{
+	text-align:right;
+	color:#999;
+}
+.details_left span:first-of-type{
+	width:77px;
+}
+
+.details_right{
+	margin-left: 56%;
+}
+.details_right span:first-of-type{
+	width:65px;
+}
+
+.details_left{
+	float:left;
+}
+
+.search_box .send {
+    position: absolute;
+    right: 12px;
+    top: 8px;
+    z-index: 120;
+    width: 84px;
+    height: 28px;
+    background:none;
+	border:1px solid #a1010d;
+    border-radius: 3px;
+    font-size: 13px;
+    color: #a1010d;
+}
+
+.details_box span{
+	display:inline-block;
+}
+.content span{
+	line-height:20px;
+	padding:4px 0;
+	color:#999;
+}
+.content .common_button{
+	margin:0 0 40px 0;
+}
+.left span {
+    background: #b3b3b3;
+    width: 1px;
+    height: 20px;
+    display: inline-block;
+    margin: 0 4px 5px 5px;
+    margin: 16px 4px 5px 5px;
+}
+.right .after {
+    width: 18px;
+    margin-bottom: 3px;
+}

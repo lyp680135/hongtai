@@ -1,0 +1,353 @@
+﻿#main {
+    width: 980px;
+}
+
+#parta {
+    height: 350px;
+    margin-bottom: 15px;
+}
+
+#partb {
+    background: #FFF;
+    padding: 10px 20px;
+    height: 250px;
+    margin-bottom: 15px;
+}
+
+#partc {
+    height: 145px;
+    background: url(/Content/images/partc_bg.jpg) top center no-repeat;
+    margin-bottom: 15px;
+}
+
+#partb .hd {
+    height: 40px;
+    background: url(/Content/images/img.png) no-repeat;
+}
+
+#partd {
+    padding: 10px 20px;
+}
+#partd #myfc .hd {
+    height: 40px;
+
+    background: url(/Content/images/title.png) no-repeat;
+}
+#myfc .content {
+    padding: 0px 0 0 0;
+}
+    #myfc .content .row_box:hover {
+        box-shadow: 5px 5px 5px #ccc;
+    }
+#myfc .content .row_box {
+    width: 460px;
+    margin-bottom: 22px;
+}
+    .left_row {
+        float:left;
+    }
+     .right_row {
+        float:right;
+    }
+.picture {
+    float: left;
+    width: 221px;
+    height: 166px;
+}
+    .picture img {
+        width: 221px;
+    }
+.detail {
+    width: 220px;
+    margin-left: 16px;
+    float: left;
+    height: 166px;
+    overflow: hidden;
+    font-size: 17px;
+    color: grey;
+}
+    .detail h2{
+        font-weight:600;
+        color:#333;
+        font-size:18px;
+    }
+    #partb .more {
+        width: 50px;
+        height: 20px;
+        background: url(/Content/images/img.png) 0 -130px no-repeat;
+    }
+
+    #partb .more a {
+        width: 50px;
+        height: 20px;
+        display: block;
+    }
+
+#jdtp {
+    width: 980px;
+    height: 350px;
+    position: relative;
+    overflow: hidden;
+}
+
+    #jdtp .pic li img {
+        width: 980px;
+        height: 350px;
+    }
+
+    #jdtp .next,
+    #jdtp .prev {
+        background: url(/Content/images/ico.png) no-repeat;
+        width: 15px;
+        height: 25px;
+        position: absolute;
+        left: 945px;
+        top: 150px;
+        cursor: pointer;
+    }
+
+    #jdtp .prev {
+        background-position: 0 -25px;
+        left: 20px;
+    }
+
+#gsjj {
+    width: 325px;
+    margin-right: 25px;
+}
+
+    #gsjj .con img {
+        width: 325px;
+        height: 100px;
+        margin-bottom: 6px;
+    }
+
+    #gsjj .con p {
+        height: 78px;
+        overflow: hidden;
+        line-height: 26px;
+        color: #333;
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+.simpleintroduct {
+    font-size: 13px;
+    line-height: 21px;
+}
+
+#xwzx {
+    width: 335px;
+}
+
+    #xwzx ul {
+        height: 190px;
+        /*background: url(/Content/images/xwzx_bg.jpg) right 13px no-repeat;*/
+    }
+
+        #xwzx ul li {
+            line-height: 30px;
+            height: 30px;
+            background: url('/Content/images/news.png') left 12px no-repeat;
+            padding-left: 25px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+            #xwzx ul li a,
+            #xwzx ul li a:visited {
+                color: #333;
+                font-size: 12px;
+            }
+
+#lxwm {
+    width: 230px;
+}
+
+    #lxwm .con {
+        height: 190px;
+    }
+
+    #lxwm p {
+        line-height: 30px;
+        color: #000;
+    }
+
+#cpzx {
+    padding-left: 250px;
+    padding-top: 10px;
+}
+
+    #cpzx li {
+        width: 216px;
+        height: 56px;
+        margin: 0 10px;
+        margin-bottom: 10px;
+        display: inline;
+        float: left;
+        border: 2px solid #D0D0D0;
+    }
+
+        #cpzx li img {
+            width: 216px;
+            height: 56px;
+            display: block;
+        }
+
+
+.itemFloat {
+    height: auto;
+}
+
+#scrollbox li {
+    height: 48px;
+    width: 48px;
+    background: url(/Content/images/img.png) no-repeat #FFF;
+    padding: 0;
+    margin-bottom: 2px;
+    cursor: pointer;
+    position: relative;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+    #scrollbox li span {
+        display: none;
+        line-height: 48px;
+        font-size: 16px;
+        color: #666;
+        position: absolute;
+        z-index: 100;
+        background: url(/Content/images/img.png) no-repeat #FFF;
+        -moz-border-radius: 10px;
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+    }
+
+    #scrollbox li.wx {
+        background-position: 0 -300px;
+    }
+
+    #scrollbox li.qq {
+        background-position: 0 -350px;
+    }
+
+    #scrollbox li.tel {
+        background-position: 0 -400px;
+    }
+
+    #scrollbox li.gotop {
+        background-position: 0 -450px;
+    }
+
+    #scrollbox li.wx span {
+        width: 80px;
+        height: 80px;
+        left: -32px;
+        top: -32px;
+        background: url(/Content/images/2wm.jpg) top center no-repeat;
+    }
+
+    #scrollbox li.qq span {
+        background-position: 0 -350px;
+        width: 110px;
+        left: -112px;
+        padding-left: 50px;
+    }
+
+    #scrollbox li.tel span {
+        background-position: 0 -400px;
+        width: 110px;
+        left: -112px;
+        padding-left: 50px;
+    }
+
+    #scrollbox li.hover span {
+        display: block;
+    }
+
+#main {
+    width: 980px;
+    background: url(/Content/images/menu_bg.jpg) left top repeat-y #FFFFFF;
+}
+
+#content {
+    width: 720px;
+    padding-top: 20px;
+    margin-right: 10px;
+}
+
+.tit {
+    border-bottom: 1px solid #E3E3E3;
+}
+
+    .tit h1 {
+        font-size: 24px;
+        line-height: 60px;
+        text-align: center;
+        font-weight: normal;
+    }
+
+#content .con {
+    padding: 20px 0px;
+}
+
+#content p {
+    line-height: 32px;
+    font-size: 14px;
+    color: #333;
+}
+
+#list {
+    width: 720px;
+    padding-top: 20px;
+    margin-right: 10px;
+}
+
+.imglist li {
+    width: 215px;
+    height: 165px;
+    line-height: 35px;
+    display: inline;
+    background: #F6F6F6;
+    float: left;
+    margin: 0 12px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+    .imglist li img {
+        width: 215px;
+        height: 130px;
+    }
+
+    .imglist li a,
+    .imglist li a:visited {
+        color: #333;
+        font-size: 12px;
+    }
+#FriendShip ul a {
+    color: gray;
+    margin: 5px;
+}
+
+    #FriendShip ul a:hover {
+        color: red;
+    }
+
+#FriendShip {
+    width: 960px;
+    margin-bottom: 20px;
+    line-height: 25px;
+    margin-left: auto;
+    margin-right: auto
+}
+
+    #FriendShip a {
+        text-decoration: none;
+    }
+
+    #FriendShip li {
+        display: inline;
+        list-style: none
+    }

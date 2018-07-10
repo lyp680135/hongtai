@@ -1,0 +1,266 @@
+﻿@page
+@model WarrantyManage.Pages.Authority.MenuModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <title>菜单管理</title>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+    <style type="text/css">
+        .formMenu li {
+            line-height: 34px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li>系统管理</li>
+            <li>系统设置</li>
+            <li>菜单/权限设置</li>
+        </ul>
+    </div>
+
+    <div class="rightinfo">
+        <div class="formtext">
+            当前位于：&nbsp;&nbsp;<a href="?ParId=0" class="tablelink">根目录</a>
+            @Html.Raw(Model.ClassPath)
+            <a href="javascript:addMenu();"><span style="float: right;" class="clickbutton"><span><img src="/images/t01.png" /></span>添加菜单 / 权限</span></a>
+        </div>
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th>名称 (子菜单数)</th>
+                    <th>链接地址</th>
+                    <th>类型</th>
+                    <th>排序</th>
+                    <th>编辑</th>
+                    <th>删除</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @if (Model.List_menu != null && Model.List_menu.Count > 0)
+                {
+                    for (int i = 0; i < Model.List_menu.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                @if (Model.List_menu[i].ParPath.Split(',').Length > 3)
+                                {
+                                    @Model.List_menu[i].ClassName
+                                }
+                                else
+                                {
+                                    <a class="tablelink" href="?ParId=@Model.List_menu[i].Id">@Model.List_menu[i].ClassName (@Model.List_menu[i].ChildNum)</a>
+                                }
+                            </td>
+                            <td>@Model.List_menu[i].Url</td>
+                            <td>
+                                @(Convert.ToBoolean(Model.List_menu[i].IsPermission) ? "功能权限" : "菜单页面")
+                                (@(Util.Helpers.Enum.GetName<DataLibrary.EnumList.PermissionType>(Model.List_menu[i].PermissionType)))
+                            </td>
+                            <td>
+                                @if (i != 0)
+                                {
+                                    <button type="button" onclick="moveMenu(@Model.List_menu[i].Id,'up')" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe619;</i>上移</button>
+                                }
+                                @if (i != Model.List_menu.Count - 1)
+                                {
+                                    <button type="button" onclick="moveMenu(@Model.List_menu[i].Id,'down')" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe61a;</i>下移</button>
+                                }
+                            </td>
+                            <td><a class="tablelink" onclick="editMenu(this,@Model.List_menu[i].Id,'@Model.List_menu[i].ClassName','@Model.List_menu[i].Url','@Model.List_menu[i].IsPermission.ToString().ToLower()',@((int)Model.List_menu[i].PermissionType))">编辑</a></td>
+                            <td>
+                                @if (Model.List_menu[i].IsCanDelete)
+                                {
+                                    <a class="tablelink" onclick="deleteMenu(this,@Model.List_menu[i].Id)">删除</a>
+                                }
+                                else
+                                {
+                                    <font color="#ccc">不可删除</font>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+
+        <div class="tip" id="addbox">
+            <form id="formMenu">
+                <div class="tiptop"><span id="addtips">添加菜单/权限</span><a onclick="javascript:$('#addbox').hide();"></a></div>
+                <input type="hidden" value="add" id="hiddType" />
+                <input type="hidden" value="" id="hiddId" name="hiddId" />
+                <input type="hidden" value="@Model.ParId" name="hiddParId" />
+                <div class="tipinfo">
+                    <ul class="forminfo">
+                        <li>
+                            <label>父级菜单<b>*</b></label><a href="?ParId=0" class="tablelink">根目录</a>
+                            @Html.Raw(Model.ClassPath)
+                        </li>
+                        <li>
+                            <label>类型<b>*</b></label>
+                            <label><input type="radio" value="false" name="IsPermission" checked="checked" />菜单页面</label>&nbsp;&nbsp;
+                            <label><input type="radio" value="true" name="IsPermission" />功能权限</label>
+                        </li>
+                        <li>
+                            <label>应用范围<b>*</b></label>
+                            <label><input type="radio" value="0" name="PermissionType" checked="checked" />PC端</label>&nbsp;&nbsp;
+                            <label><input type="radio" value="1" name="PermissionType" />WAP端</label>
+                            <label><input type="radio" value="2" name="PermissionType" />所有</label>
+                        </li>
+
+                        <li><label>名称<b>*</b></label> <input name="MenuName" id="MenuName" type="text" class="validate[required] scinput" value="" /></li>
+                        <li>
+                        </li>
+                        <li id="MenuUrl_li"><label>页面/权限URL</label> <input id="MenuUrl" name="MenuUrl" type="text" class="scinput" value="" /></li>
+                        <li>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tipbtn">
+                    <input name="" type="button" class="sure" value="确定" onclick="submitMenu()" />&nbsp;
+                    <input name="" onclick="javascript: $('#addbox').hide();" type="button" class="cancel" value="取消" />
+                </div>
+            </form>
+        </div>
+
+
+
+
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.layui-table tbody tr:odd').addClass('odd');
+        });
+
+        function addMenu() {
+            $('#addbox').show();
+            $("#formMenu")[0].reset();
+            $('#MenuName').focus();
+            $('#hiddType').val('add');
+        }
+
+        function submitMenu() {
+            var pass = $("#formMenu").validationEngine("validate");
+            if (pass) {
+                var url = '/Authority/MenuCreate';
+                if ($("#hiddType").val() == "edit") { url = '/Authority/MenuEdit'; }
+                if ($("#hiddType").val() == "add") { url = '/Authority/MenuCreate'; }
+                var loadLayer = layer.load(1);
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: $("#formMenu").serialize(),
+                    success: function (re) {
+                        if (re.toString() == "true") {
+                            layer.msg('操作成功', { icon: 1 });
+                            setTimeout("window.location.reload();", 1000);
+                        } else {
+                            layer.msg('操作失败，请稍候重试', { icon: 2 });
+                        }
+                        layer.close(loadlayer);
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(loadlayer);
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                });
+            }
+
+        }
+
+        function moveMenu(menuId, type) {
+            var url = '';
+            if (type == "up") {
+                url = '/Authority/MenuOrderUp';
+            } else if (type == "down") {
+                url = '/Authority/MenuOrderDown';
+            }
+            var loadLayer = layer.load(1);
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "Id=" + menuId,
+                success: function (re) {
+                    if (re.toString() == "true") {
+                        layer.msg('操作成功', { icon: 1 });
+                        setTimeout("window.location.reload();", 1000);
+                    } else {
+                        layer.msg('操作失败，请稍候重试', { icon: 2 });
+                    }
+                    layer.close(loadlayer);
+                }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    layer.close(loadlayer);
+                    layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                }
+            });
+        }
+
+        function editMenu(obj, menuId, menuClassName, menuUrl, menuBeLock, PermissionType) {
+            $("#addbox").show();
+            $('#hiddType').val('edit');
+            $('#hiddId').val(menuId);
+
+            $('#MenuName').val(menuClassName);
+            $('#MenuUrl').val(menuUrl);
+
+            $("input[name='IsPermission']").each(function () {
+                if ($(this).val() == menuBeLock) {
+                    $(this).prop("checked", "checked");
+                }
+            });
+
+            $("input[name='PermissionType']").each(function () {
+                if ($(this).val() == PermissionType) {
+                    $(this).prop("checked", "checked");
+                }
+            });
+
+        }
+
+        function deleteMenu(obja, id) {
+            layer.confirm('确定删除该菜单？此操作不可恢复！', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var loadLayer = layer.load(1);
+                $.ajax({
+                    type: "POST",
+                    url: '/Authority/MenuDelete',
+                    data: "Id=" + id,
+                    success: function (re) {
+                        if (re.toString() == "true") {
+                            $(obja).parent().parent().remove();
+                            layer.msg('删除成功', { icon: 1 });
+                            $('.layui-table tbody tr').removeClass('old');
+                            $('.layui-table tbody tr:odd').addClass('odd');
+
+                        } else {
+                            layer.msg('删除失败，请稍候重试', { icon: 2 });
+                        }
+                        layer.close(loadlayer);
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(loadlayer);
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                });
+
+
+            }, function () {
+
+            });
+        }
+    </script>
+</body>
+</html>

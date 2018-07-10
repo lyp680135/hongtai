@@ -1,0 +1,60 @@
+﻿@page
+@model WarrantyManage.Pages.Manage.LeftModel
+@inject DataLibrary.DataContext _db
+@{
+    Layout = null;
+}
+
+<script type="text/javascript">
+
+    //左侧导航切换
+    $(".menuson li").click(function () {
+        $(".menuson li.active").removeClass("active")
+        $(this).addClass("active");
+    });
+    $(".title").toggle(function () {
+        $(this).next().hide();
+    }, function () {
+        $(this).next().show();
+    });
+    function jumpHref(obj) {
+        var hrefUrl = $(obj).attr('url');
+        $('#rightFrame').attr('src', hrefUrl);
+     }
+</script>
+<dl class="leftmenu">
+    @{ 
+        List<DataLibrary.MngMenuclass> menus = Model.List_menu;
+        if (menus.Count > 0)
+        {
+            foreach (DataLibrary.MngMenuclass model_parent in menus)
+            {
+            <dd>
+                <div class="title">
+                    <span> </span>
+                    @if (string.IsNullOrEmpty(model_parent.Url))
+                    {
+                        @model_parent.ClassName
+                    }
+                    else
+                    {
+                        <a href="@model_parent.Url" target="rightFrame">@model_parent.ClassName</a>
+                    }
+                </div>
+                <ul class="menuson">
+                    @{
+                        var query = _db.MngMenuclass.Where(c => c.ParId == model_parent.Id && c.PermissionType == DataLibrary.EnumList.PermissionType.PC 
+                        && c.IsPermission == false
+                        && Model.User.PermissionIds.ToArray().Contains(c.Id)).OrderBy(c => c.Sequence);
+                        foreach (var s in query)
+                        {
+                            <li><cite></cite><a url="@s.Url" onclick="jumpHref(this)">@s.ClassName</a><i></i></li>
+                        }
+                    }
+
+                </ul>
+            </dd>
+        }
+    }
+}
+</dl>

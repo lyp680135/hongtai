@@ -1,0 +1,143 @@
+﻿@page "{tid:int}-{p:int}.html"
+@inject ICMSService _cmsService
+@inject IContentGroupService _contentService
+@{
+    DataLibrary.SiteCategory sitecontent = _contentService.GetSiteCategoryByName("涟钢新闻");
+    var Children = _contentService.GetAllDataForRecursion(sitecontent.Id, sitecontent.Id);
+    ViewData["Tag"] = 1;
+    ViewData["Title"] = "新闻";
+    ViewData["Desc"] = "新闻";
+}
+
+@functions{
+    private int pageSize = 5;
+
+    public int NewsTypeId { get; set; }
+
+    public int PageIndex { get; set; }
+
+    public int PageCount { get; set; }
+
+    public List<Dictionary<string, object>> dict { get; set; }
+
+    public List<DataLibrary.SiteModelColumn> NewsType { get; set; }
+
+    public new int Page { get; set; }
+
+    public string NewsTypeName { get; set; }
+
+    public void OnGet(int? tid, int? p)
+    {
+        this.Page = p ?? 1;
+        this.PageIndex = (p.HasValue && p < 1) ? 0 : (p.Value - 1) * this.pageSize;
+        this.NewsTypeId = tid ?? 0;
+        DataLibrary.SiteCategory sitecontent = _contentService.GetSiteCategoryByName("涟钢新闻");
+        var Children = _contentService.GetAllDataForRecursion(sitecontent.Id, sitecontent.Id);
+        dict = new List<Dictionary<string, object>>();
+        foreach (var ne in Children) {
+            var news = _cmsService.IcontentColumnDataService.GetContentColumnDataList(Convert.ToInt32(ne["id"]), 1, 1000);
+            dict.AddRange(news);
+        }
+        if (NewsTypeId == 0)
+        {
+        }
+        else
+        {
+
+            //foreach (var di in dict)
+            //{
+            //    if (Convert.ToInt32(di["newstype"]) == NewsTypeId)
+            //    {
+            //        News.Add(di);
+            //    }
+            //}
+            //dict = News;
+            //this.PageCount = News.Count;
+        }
+        this.PageCount = dict.Count;
+
+    }
+}
+@section head
+    {
+    <link rel="stylesheet" type="text/css" href="/Content/css/news.css">
+}
+<span class="stipulation_width position">
+    <a href="~/">首页</a>>><a>@Html.Raw(NewsTypeId == 0 ? "所有新闻" : NewsType[0].FildValue.Split(',')[NewsTypeId - 1])</a>
+</span>
+
+<div class="stipulation_width container_box list_box">
+    <div class="left_list">
+        @if (dict.Count > 0)
+        {
+            @foreach (var item in dict)
+            {
+                bool flag = item["Image"].SafeString() != string.Empty;
+                <a href="/News/Detail/@Html.Raw(item["cid"] + "/" + item["Id"] + ".html")" class="row_box">
+                    @if (flag)
+                    {
+                        <img src="@item["Image"].ToString().Split(',')[0]" />
+                    }
+                    <div @Html.Raw(flag ? "class=\"content_box\"" : "class=\"nopiccontent_box\"")>
+                        <h2>@Html.Raw(item["title"])</h2>
+                        <p>
+                            @{
+                                if (!string.IsNullOrEmpty(item["content"].ToString()))
+                                {
+                                    var content = Util.Extensions.RemoveHtml(item["content"].ToString());
+                                    if (content.Length > 60)
+                                    {
+                                        content = content.Substring(0, 60) + "...";
+                                    }
+                                    @Html.Raw(content)
+                                }
+                            }
+                        </p>
+                        <span>@Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(item["createtime"])).ToString("MM/dd")</span>
+                        <span class="detail">详情></span>
+                    </div>
+                    <div class="clearfix"></div>
+                </a>
+            }
+
+            @await Component.InvokeAsync("PageList", new { PageSize = this.pageSize, PageIndex = this.Page, PageCount = this.PageCount, PageUrl = Model.NewsTypeId + "-{0}.html", PageText = "{0}", ShowCount = 6, ShowAll = false })
+        }
+        else
+        {
+            <div>
+                <div class="nodata">
+                    <img src="/site/images/nodata.png" width="100" />
+                    <div class="tip">还没有@{@Html.Raw(NewsTypeId == 0 ? "所有新闻" : NewsType[0].FildValue.Split(',')[NewsTypeId - 1])}哦</div>
+                </div>
+            </div>
+        }
+
+
+    </div>
+
+    <div class="right_nav">
+        <div class="news_nav">
+            <a href="/News/0-1.html" @(0 == Model.NewsTypeId ? "class=current_box" : "")> 所有新闻</a>
+            @{
+                for (var i = 0; i < Children.Count; i++)
+                {
+                    <a href="/News/@Children[i]["id"]-1.html" @((i + 1) == Model.NewsTypeId ? "class=current_box" : "")> @Html.Raw(Children[i]["name"])</a>
+                }
+            }
+        </div>
+        <div class="hot_news">
+            <h1>热点新闻</h1>
+            @foreach (var item in dict)
+            {
+                if (Convert.ToInt32(item["IsHot"]) == 0)
+                {
+                    <a href="/News/Detail/@Html.Raw(item["cid"]+ "/" +item["Id"]+ ".html")">@Html.Raw(item["title"])</a>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+</div>
+

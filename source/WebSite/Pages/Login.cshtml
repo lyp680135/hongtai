@@ -1,0 +1,154 @@
+﻿@page
+@model WarrantyManage.Pages.LoginModel
+@{
+    Layout = null;
+}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <meta name="renderer" content="webkit" />
+
+    <title>系统登录 - @Model.SettingService.MngSetting.Name</title>
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+    <script src="/js/login.js"></script>
+    <script language="javascript">
+        if (window.top != window.self) {//不存在父页面
+            window.top.location = "/Login";
+        }
+        $(function () {
+            $('.loginbox').css({ 'position': 'absolute', 'left': ($(window).width() - 692) / 2 });
+            $(window).resize(function () {
+                $('.loginbox').css({ 'position': 'absolute', 'left': ($(window).width() - 692) / 2 });
+            })
+        });
+
+        $(document).ready(function () {
+            $("#formLogin").validationEngine({
+                validationEventTriggers: "blur",
+                inlineValidation: true,
+                success: false,
+            });
+
+
+            @if (!string.IsNullOrEmpty(Model.UserName))
+            {
+                @Html.Raw("$('input[name=Password]').focus()");
+            }
+            else
+            {
+                @Html.Raw("$('input[name=UserName]').focus()");
+            }
+        });
+    </script>
+
+</head>
+<body style="background-color:#1c77ac; background-image:url(/images/light.png); background-repeat:no-repeat; background-position:center top; overflow:hidden;">
+    <div class="logintop">
+        <span>欢迎使用 @Model.SettingService.MngSetting.Name</span>
+        <ul></ul>
+    </div>
+
+    <div id="mainBody">
+        <div id="cloud1" class="cloud"></div>
+        <div id="cloud2" class="cloud"></div>
+    </div>
+    <div class="loginbody">
+        <span class="systemlogo"></span>
+        <div class="loginbox">
+            <form id="formLogin" method="post">
+                @if (Model.IsFirstLogin == 1) //手机号登录
+                {
+                    <ul>
+                        <li>
+                            <input name="UserName" id="UserName" type="text" class="validate[required] loginuser" value="@(Model.UserName)" placeholder="手机号" style="width: 190px;border-radius: 5px;border-right: 1px solid #c3c3c3;" />
+                            <input id="sendcode" type="button" class="layui-btn layui-btn-normal" value="获取验证码" style="height: 45px;line-height: 45px;" />
+                        </li>
+                        <li><input name="Code" type="text" class="validate[required,custom[number]] loginpwd" maxlength="4" value="@(Model.Password)" placeholder="验证码" /></li>
+                        <li>
+                            <input name="" type="submit" class="loginbtn" value="登录" />
+                            <span style="float: right;margin-right: 67px;line-height: 35px;"><a href="?IsFirstLogin=0">用户名密码登录</a></span>
+                        </li>
+                    </ul>
+                        <input type="hidden" id="SystemMemberType" value="@Html.Raw((int)DataLibrary.EnumList.SystemMemberType.Manage)" />
+                }
+                else if (Model.IsFirstLogin == 2) //设置密码
+                {
+                    <ul>
+                        <li><input name="NewPassWord" id="NewPassWord" type="password" class="validate[required,minSize[6]] loginpwd" value="" placeholder="设置您的密码" /></li>
+                        <li><input name="NewPassWord2" id="NewPassWord2" type="password" class="validate[required] loginpwd" value="" placeholder="确认您的密码" /></li>
+                        <li>
+                            <input id="btnSetPwd" type="button" class="loginbtn" value="确定" onclick="return checkNewpwd(this);" />
+                        </li>
+                    </ul>
+                        <script type="text/javascript">
+                            layer.alert('登录成功，请设置您的密码<br/>下次就可使用 手机号+密码 登录了', { icon: 1 });
+
+                            function checkNewpwd(obj) {
+                                if (checkValid(obj)) {
+                                    if ($("#NewPassWord2").val() != $("#NewPassWord").val()) {
+                                        layer.msg('两次输入的密码不一致', { icon: 2 });
+                                        setTimeout(function () {
+                                            layer.closeAll();
+                                        }, 2000);
+                                        return false;
+                                    } else {
+
+                                        $.ajax({
+                                            type: "POST", url: '/Authority/SetFirstPwd',
+                                            data: $("#formLogin").serialize(),
+                                            success: function (re) {
+                                                if (re.state) {
+                                                    layer.msg('设置成功', { icon: 1 });
+                                                    setTimeout(function () { window.location.href="/Manage/Index" }, 1000);
+                                                } else {
+                                                    layer.msg(re.content, { icon: 2 });
+                                                }
+                                                setTimeout(function () {
+                                                    layer.closeAll();
+                                                }, 2000);
+                                            }, error: function (err) {
+                                                if (err.status == 401) {
+                                                    layer.msg("暂无权限", { icon: 2 });
+                                                } else {
+                                                    layer.msg("操作失败，系统出现错误！", { icon: 2 });
+                                                }
+                                                setTimeout(function () {
+                                                    layer.closeAll();
+                                                }, 2000);
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        </script>
+                }
+                else //用户名/密码 登录
+                {
+                    <ul>
+                        <li><input name="UserName" type="text" class="validate[required] loginuser" value="@(Model.UserName)" placeholder="用户名" /></li>
+                        <li><input name="Password" type="password" class="validate[required] loginpwd" value="@(Model.Password)" placeholder="密码" /></li>
+                        <li>
+                            <input name="" type="submit" class="loginbtn" value="登录" />
+                            <span style="float: right;margin-right: 67px;line-height: 35px;"><a href="?IsFirstLogin=1">首次登录 / 忘记密码</a></span>
+                        </li>
+                    </ul>
+                }
+
+
+
+            </form>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Msg))
+    {
+        <script type="text/javascript">
+            layer.msg('@Model.Msg', { icon: 2 });
+        </script>
+    }
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+﻿@page "{cid:int}/{Id:int}.html"
+@inject ICMSService _cmsService;
+@inject Common.IService.IContentGroupService _contentService
+@{
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteBasic = siteBasic;
+    ViewBag.SiteSetting = mngSetting;
+    int CId = Convert.ToInt32(RouteData.Values["CId"]);
+    int Id = Convert.ToInt32(RouteData.Values["Id"]);
+    DataLibrary.SiteCategory Sence = _contentService.GetSiteCategoryById(CId);
+    var Children = _contentService.GetAllDataForRecursion(Sence.Id, Sence.Id);
+    var model = _cmsService.IcontentColumnDataService.GetContentColumnData(Id, CId);
+    ViewData["Title"] = Sence.ContentTitle;
+}
+@section head{
+
+}
+@functions{
+            private int pageSize = 30;
+
+            public int NewsTypeId { get; set; }
+
+            public int PageIndex { get; set; }
+
+            public int PageCount { get; set; }
+
+            public List<Dictionary<string, object>> dict { get; set; }
+
+            public List<DataLibrary.SiteModelColumn> NewsType { get; set; }
+
+            public new int Page { get; set; }
+
+            public void OnGet(int? tid, int? p)
+            {
+                DataLibrary.SiteCategory Sence = _contentService.GetSiteCategoryByName("钢城风采");
+                var Children = _contentService.GetAllDataForRecursion(Sence.Id, Sence.Id);
+                int Id = Convert.ToInt32(RouteData.Values["Id"]);
+                for (var i=0;i<Children.Count;i++)
+                {
+                    if (Convert.ToInt32(Children[i]["id"]) == Id)
+                    {
+                            this.Page = p ?? 1;
+                            var AllNews = _cmsService.IcontentColumnDataService.GetContentColumnDataList((Children[i]["name"]).ToString(), 1, 1000);
+                            this.PageCount = AllNews.Count;
+                            int Cid = _contentService.GetSiteCategoryByName((Children[i]["name"]).ToString()).Id;
+                    }
+                }
+            }
+        }
+
+<div id="main" class="part">
+    <ul id="menu" class="fl">
+        @{
+            for (var i = 0; i < Children.Count; i++)
+            {
+                <li>
+                    <a href="/Culture/OneDetail/@Html.Raw(CId+"/"+Children[i]["id"]+".html")">
+                        <i class="icon-chevron-right"></i>@Children[i]["name"]
+                    </a>
+                </li>
+            }
+    }
+    </ul>
+
+    <div id="content" class="fr">
+        <ul class="imglist">
+            @{
+                if (Sence != null)
+                {
+                    for (var j = 0; j < Children.Count; j++)
+                    {
+                        if (Convert.ToInt32(Children[j]["id"]) == Id)
+                        {
+                            var S = _cmsService.IcontentColumnDataService.GetContentColumnDataList(Convert.ToInt32(Children[j]["id"]), Page, pageSize);
+                            for (var i = 0; i < S.Count; i++)
+                            {
+                                <li>
+                                    <a href="/Culture/TwoDetail/@Html.Raw(S[i]["cid"] + "/" + S[i]["Id"] + ".html")">
+                                        <img src="@Html.Raw(S[i]["Content"])" />@Html.Raw(S[i]["Title"])
+                                    </a>
+                                </li>
+                            }
+                        }
+                    }
+                }
+            }
+        </ul>
+        <div class="clearit"></div>
+        <div id="Pagination">
+            @await Component.InvokeAsync("PageList", new { PageSize = this.pageSize, PageIndex = this.Page, PageCount = this.PageCount, PageUrl = Model.NewsTypeId + "-{0}.html", PageText = "{0}", ShowCount = 6, ShowAll = false })
+        </div>
+    </div>
+</div>

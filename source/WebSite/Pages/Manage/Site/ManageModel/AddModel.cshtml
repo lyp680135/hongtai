@@ -1,0 +1,251 @@
+﻿@page
+@model WarrantyManage.Pages.Manage.Site.ManageModel.AddModelModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <title>添加模型</title>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+    <style type="text/css">
+        .scinput {
+            width: 100px !important;
+        }
+
+        .layui-table td {
+            text-indent: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li>模型管理</li>
+            <li>添加模型</li>
+        </ul>
+    </div>
+    <div class="formbody">
+        <form id="form2">
+            <div class="layui-form-item" style="margin-bottom: -10px !important;margin-left:-20px">
+                <div style="display:inline-block;">
+                    <label class="layui-form-label" style="font-size:14px !important;text-align:center">模型名称</label>
+                    <div class="layui-input-block" style="font-size:14px !important">
+                        <input type="text" placeholder="请输入模型描述" autocomplete="off" class="layui-input validate[required] scinput" id="ModelDes" style="width:150px !important">
+                    </div>
+                </div>
+                <button class="layui-btn layui-btn-normal" type="button" id="btnSubmit" style="margin:16px 0 20px 10px">保存</button>
+            </div>
+            <table class="layui-table">
+                <thead>
+                    <tr>
+                        <th>字段英文名</th>
+                        <th>字段中文名</th>
+                        <th>字段数据类型</th>
+                        <th>字段长度</th>
+                        <th>是否必填</th>
+                        <th>展示类型</th>
+                        <th>字段初始值</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="rowsData">
+                    <tr>
+                        <td><input class="validate[required] validate[custom[onlyLetterSp]] scinput" name="strCheck" /></td>
+                        <td><input class="validate[required] scinput" /></td>
+                        <td>
+                            <select name="FileType" id="FileType" class="validate[required] scinput" style="opacity:1">
+                                <option value="">请选择</option>
+                                @foreach (DataLibrary.EnumList.FileType item in Enum.GetValues(typeof(DataLibrary.EnumList.FileType)))
+                                {
+                                    <option value="@Convert.ToInt32(item)">@Enum.GetName(typeof(DataLibrary.EnumList.FileType), item)</option>
+                                }
+                            </select>
+                        </td>
+                        <td><input class="validate[required] scinput" value="255" /></td>
+                        <td>
+                            <input type="checkbox" name="FildIsNull" id="FildIsNull">
+                            @*<label for="FildIsNull" style="font-size:14px">是</label>*@
+                            @*<select name="FildIsNull" id="FildIsNull" class="validate[required] scinput" style="opacity:1">
+                                    @foreach (DataLibrary.EnumList.FileIsNull item in Enum.GetValues(typeof(DataLibrary.EnumList.FileIsNull)))
+                                    {
+                                        <option value="@Convert.ToInt32(item)">@Enum.GetName(typeof(DataLibrary.EnumList.FileIsNull), item)</option>
+                                    }
+                                </select>*@
+                        </td>
+                        <td>
+                            @* 反射遍历枚举*@
+                            <select name="PageShowType" id="PageShowType" class="validate[required] scinput" style="opacity:1">
+                                <option value="">请选择</option>
+                                @foreach (DataLibrary.EnumList.PageShowType item in Enum.GetValues(typeof(DataLibrary.EnumList.PageShowType)))
+                                {
+                                    <option value="@Convert.ToInt32(item)">@Enum.GetName(typeof(DataLibrary.EnumList.PageShowType), item)</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <textarea class="scinput" style="width:100px;height:60px;" placeholder="多个值用,隔开"></textarea>
+                        </td>
+                        <td>
+                            <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="addRow(); return false;"><i class="layui-icon">&#xe654;</i>添加</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="delRow(this); return false;"><i class="layui-icon"></i>刪除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+
+    $(function () {
+
+        //$('input[name=strCheck]').live('blur', function () {
+        //    var $this = $(this);
+        //    var val = $this.val();
+        //    if (!checkStr(val)) {
+        //        alert('字段名只能是英文');
+        //        $this.css({ 'background': 'red' });
+        //    }
+        //    else {
+        //        $this.css({ 'background': 'white' });
+        //    }
+
+        //});
+        //保存
+        $('#btnSubmit').click(function () {
+            var flag = true;
+            $('#rowsData tr').each(function () {
+                var $tr = $(this);
+                var selVal = $tr.find('td:eq(5) select').val();
+                var txtVal = $tr.find('td:eq(6) textarea').val()
+                var trIndex = $tr.index() + 1;
+                if (selVal == 7 || selVal == 9 || selVal == 10) {
+                    if (txtVal == '') {
+                        alert('第' + trIndex + '行,字段初始值不能为空');
+                        flag = false;
+                    }
+                }
+            });
+            if (!flag)
+                return false;
+            //校验数据是否为空
+            var valid = $("#form2").validationEngine("validate");
+            if (valid) {
+                var rowsData = '';
+                //循环tr取值
+                $('#rowsData tr').each(function () {
+                    var $tr = $(this);
+                    //字段名
+                    var fnVal = $tr.find('td:eq(0) input').val() + ';';
+                    //字段描述
+                    var fnDes = $tr.find('td:eq(1) input').val() + ';';
+                    //字段类型
+                    var fnType = $tr.find('td:eq(2) select').val() + ';';
+                    //字段长度
+                    var fnLength = $tr.find('td:eq(3) input').val() + ';';
+                    //字段是否为空
+                    var fnIsNull = $tr.find('td:eq(4) input').is(':checked')==true ? '1;' : '0;';
+                    //展示类型
+                    var pageShowType = $tr.find('td:eq(5) select').val() + ';';                   
+                    //字段初始值
+                    var fildValue = $tr.find('td:eq(6) textarea').val() + '$';
+                    //单行row的数据
+                    var rowDate = fnVal + fnDes + fnType + fnLength + fnIsNull + pageShowType + fildValue;
+                    //拼接所有row数据
+                    rowsData += rowDate;
+                });
+              
+                //请求的数据
+                var reqData = {
+                    rowsData: rowsData,
+                    modelDes: $('#ModelDes').val()
+                };
+                var loadLayer = layer.load(1);
+                $.ajax({
+                    url: '/ManageModel/AddModel',
+                    type:'post',
+                    dataType: 'json',
+                    data: reqData,
+                    success: function (res) {
+                        if (res.state) {
+                            layer.msg(res.content, { icon: 1 });
+                            window.location.href = '/Manage/Site/ManageModel/ListModel';
+                        }
+                        else {
+                            layer.msg(res.content, { icon: 2});
+                            //window.location.href = '/Manage/Site/ManageModel/ListModel';
+                        }
+                        layer.close(loadLayer);
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(loadLayer);
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                })
+            }
+        });
+        //数据校验(数据类型)
+        $('select[name=FileType]').live('change', function () {
+            var $this = $(this);
+            var val = $this.val();
+            var $fileType = $this.parent().parent().find('td').eq(3).find('.scinput');
+            var $pageShowType = $this.parent().parent().find('td').eq(5).find('.scinput');
+            if (val == 2 || val == 3) {
+                $fileType.val(11).prop('disabled', 'disabled');
+                if (val == 3) {
+                    $pageShowType.val(11).prop('disabled', 'disabled');
+                } else if (val == 2) {
+                    $pageShowType.val(3).prop('disabled', 'disabled');
+                }
+
+            }
+            else if (val == 4) {
+                $fileType.val(18).prop('disabled ', 'disabled');
+                $pageShowType.val(3).prop('disabled', 'disabled');
+            }
+            else{
+                $fileType.val(255).removeAttr('disabled');
+                $pageShowType.val('').removeAttr('disabled');
+             }
+        });
+    })
+    //添加row
+    function addRow() {
+        var $tr = '<tr>';
+        $tr += '<td><input class="validate[required] validate[custom[onlyLetterSp]] scinput" name="strCheck"/></td>';
+        $tr += '<td><input class="validate[required] scinput" /></td>';
+        $tr += '<td><select name="FileType" id="FileType" class="validate[required] scinput" style="opacity:1"><option value="">请选择</option>@foreach (var item in Enum.GetValues(typeof(DataLibrary.EnumList.FileType))){<option value="@Convert.ToInt32(item)">@Enum.GetName(typeof(DataLibrary.EnumList.FileType), item)</option>}</select ></td>';
+        $tr += '<td><input class="validate[required] scinput" value="255"/></td>';
+        $tr += '<td><input type="checkbox" name="FildIsNull" id="FildIsNull"></td>';
+        $tr += '<td><select name="PageShowType" id="PageShowType" class="validate[required] scinput" style="opacity:1"><option value="0">请选择</option>@foreach (var item in Enum.GetValues(typeof(DataLibrary.EnumList.PageShowType))){<option value="@Convert.ToInt32(item)">@Enum.GetName(typeof(DataLibrary.EnumList.PageShowType), item)</option>}</select ></td>';
+        $tr += '<td> <textarea class="scinput" style="width:100px;height:60px;" placeholder="多个值用,隔开"></textarea></td>';
+        $tr += '<td><button class="layui-btn layui-btn-sm layui-btn-normal" onclick="addRow();return false;"><i class="layui-icon">&#xe654;</i>添加</button>';
+        $tr += '<button class="layui-btn layui-btn-sm layui-btn-normal" onclick="delRow(this); return false;"><i class="layui-icon"></i>刪除</button></td>';
+        $tr += '</tr>';
+        $('#rowsData').append($tr);
+    }
+    //刪除row
+    function delRow(obj) {
+        var tabObj = $(obj).closest('table');
+        if (tabObj.find('tbody tr').length === 1) {
+            layer.msg('最后一行数据,无法删除!');
+            return;
+        }
+        $(obj).closest('tr').remove();
+    }
+    //校验英文正则
+    function checkStr(str)  {
+        var strReg = /^[A-Za-z]+$/;
+        if (strReg.test(str)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+</script>

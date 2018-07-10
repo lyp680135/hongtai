@@ -1,0 +1,150 @@
+﻿@{
+    var model = ViewData["model"] as DataLibrary.SiteModelColumn;
+    var modelData = ViewData["modelData"] as System.Collections.Generic.Dictionary<string, object>;
+    <label>@Html.Raw(model.FildDescription)</label>
+    switch (model.PageShowType)
+    {
+        case DataLibrary.EnumList.PageShowType.文本:
+            if (modelData != null)
+            {
+                <input type="text" maxlength="@Html.Raw(model.FildLength)" name="@Html.Raw(model.FildName)" class="@Html.Raw(model.FildIsNull == 0 ? "scinput" : "validate[required] scinput")" value="@modelData[@Html.Raw(model.FildName).ToString()]" />
+            }
+            else
+            {
+                <input type="text" maxlength="@Html.Raw(model.FildLength)" name="@Html.Raw(model.FildName)" class="@Html.Raw(model.FildIsNull == 0 ? "scinput" : "validate[required] scinput")" value="" />
+            }
+            break;
+        case DataLibrary.EnumList.PageShowType.图片:
+            if (modelData != null)
+            {
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn" onclick="setShowImgId('@Html.Raw(model.FildName)')">上传图片</button>
+                    <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                        预览图：
+                        <div class="layui-upload-list" id="@Html.Raw(model.FildName)">
+                            @if (@modelData[@Html.Raw(model.FildName).ToString()].SafeString() != string.Empty)
+                            {
+                                string[] imgs = modelData[Html.Raw(model.FildName).ToString()].SafeString().Split(",");
+                                for (var i = 0; i < imgs.Length; i++)
+                                {
+                                    <div id="@i" style="display:inline-block;text-align:center;margin-left:20px;"><img src="@imgs[i]" class="layui-upload-img" style="max-width:200px;max-height:100px;"><br /><a href="javascript:void(0)" onclick="removeImg(@i)">[删除]</a><input type="hidden" name="@Html.Raw(model.FildName)" value="@imgs[i]" /></div>
+                                }
+                            }
+                        </div>
+                    </blockquote>
+                </div>
+            }
+            else
+            {
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn" onclick="setShowImgId('@Html.Raw(model.FildName)')">上传图片</button>
+                    <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                        预览图：
+                        <div class="layui-upload-list" id="@Html.Raw(model.FildName)">
+
+                        </div>
+                    </blockquote>
+                </div>
+            }
+            break;
+        case DataLibrary.EnumList.PageShowType.富文本框:
+            if (modelData != null)
+            {
+                <script id="container" name="@Html.Raw(model.FildName)" type="text/plain" style="width:120%;height:380px;">@Html.Raw(modelData[model.FildName.ToString()])</script>
+            }
+            else
+            {
+                <script id="container" name="@Html.Raw(model.FildName)" type="text/plain" style="width:120%;height:380px;"></script>
+            }
+            break;
+        case DataLibrary.EnumList.PageShowType.数字:
+            if (modelData != null)
+            {
+                <input type="text" maxlength="@Html.Raw(model.FildLength)" name="@Html.Raw(model.FildName)" class="@Html.Raw(model.FildIsNull == 0 ? "scinput" : "validate[required,custom[number]] scinput")" value="@modelData[@Html.Raw(model.FildName).ToString()]" />
+            }
+            else
+            {
+                <input type="text" maxlength="@Html.Raw(model.FildLength)" name="@Html.Raw(model.FildName)" class="@Html.Raw(model.FildIsNull == 0 ? "scinput" : "validate[required,custom[number]] scinput")" value="" />
+            }
+            break;
+        case DataLibrary.EnumList.PageShowType.单选按钮:
+            string[] arr = model.FildValue.Split(",");
+            var index = modelData != null ? Convert.ToInt32(modelData[@Html.Raw(model.FildName).ToString()]) : 0;
+            for (var i = 0; i < arr.Length; i++)
+            {
+                if (i == index)
+                {
+                    <label><input type="radio" name="@Html.Raw(model.FildName)" value="@i" class="input_radio" checked="checked" />@arr[i]</label>
+                }
+                else
+                {
+                    <label><input type="radio" name="@Html.Raw(model.FildName)" value="@i" class="input_radio" />@arr[i]</label>
+                }
+            }
+            break;
+        case DataLibrary.EnumList.PageShowType.下拉框:
+            string[] cb_arr = model.FildValue.Split(",");
+            <select name="@Html.Raw(model.FildName)" class="@Html.Raw(model.FildIsNull == 0 ? "select2" : "validate[required,custom[number]] select2")">
+                <option value="">请选择</option>
+                @for (var i = 0; i < cb_arr.Length; i++)
+                {
+                    if (modelData != null && i == Convert.ToInt32(modelData[@Html.Raw(model.FildName).ToString()]))
+                    {
+                        <option value="@(i+1)" selected="selected">@cb_arr[i]</option>
+                    }
+                    else
+                    {
+                        <option value="@(i+1)">@cb_arr[i]</option>
+                    }
+                }
+            </select>
+            break;
+        case DataLibrary.EnumList.PageShowType.复选框:
+            string[] arr1 = model.FildValue.Split(",");
+            var index1 = modelData != null ? Convert.ToInt32(modelData[@Html.Raw(model.FildName).ToString()]) : 0;
+            for (var i = 0; i < arr1.Length; i++)
+            {
+                if (modelData != null && i == Convert.ToInt32(modelData[@Html.Raw(model.FildName).ToString()]))
+                {
+                    <label><input type="checkbox" name="@Html.Raw(model.FildName)" value="@i" class="input_radio" selected="selected" />@arr1[i]</label>
+                }
+                else
+                {
+                    <label><input type="checkbox" name="@Html.Raw(model.FildName)" value="@i" class="input_radio" />@arr1[i]</label>
+                }
+            }
+            break;
+        case DataLibrary.EnumList.PageShowType.邮箱:
+            if (modelData != null)
+            {
+                <input type="text" lay-verify="email" autocomplete="off" maxlength="@Html.Raw(model.FildLength)" name="@Html.Raw(model.FildName)" class="@Html.Raw(model.FildIsNull == 0 ? "scinput" : "validate[required] scinput")" value="@modelData[@Html.Raw(model.FildName).ToString()]" />
+            }
+            else
+            {
+                <input type="text" lay-verify="email" autocomplete="off" maxlength="@Html.Raw(model.FildLength)" name="@Html.Raw(model.FildName)" class="@Html.Raw(model.FildIsNull == 0 ? "scinput" : "validate[required] scinput")" value="" />
+            }
+            break;
+        case DataLibrary.EnumList.PageShowType.手机号:
+            if (modelData != null)
+            {
+                <input type="tel" lay-verify="required|phone" autocomplete="off" maxlength="@Html.Raw(model.FildLength)" name="@Html.Raw(model.FildName)" value="@modelData[@Html.Raw(model.FildName).ToString()]"  class="@Html.Raw(model.FildIsNull == 0 ? "scinput validate[custom[phone]]" : "validate[required] validate[custom[phone]] scinput")"/>
+            }
+            else
+            {
+                <input type="tel" lay-verify="required|phone" autocomplete="off" maxlength="@Html.Raw(model.FildLength)" name="@Html.Raw(model.FildName)" class="@Html.Raw(model.FildIsNull == 0 ? "scinput validate[custom[phone]]" : "validate[required] validate[custom[phone]] scinput")" value="" />
+            }
+            break;
+        case DataLibrary.EnumList.PageShowType.时间选择框:
+            if (modelData != null)
+            {
+                <input type="text" placeholder="请选择时间" maxlength="@Html.Raw(model.FildLength)" name="@Html.Raw(model.FildName)" id="date" autocomplete="off" class="@Html.Raw(model.FildIsNull == 0 ? "scinput" : "validate[required] scinput")" value=" @modelData[model.FildName].ToLong().GetDateTimeFromUnixTime().ToDateTimeString()">
+            }
+            else
+            {
+                <input type="text" placeholder="请选择时间" maxlength="@Html.Raw(model.FildLength)" name="@Html.Raw(model.FildName)" id="date" autocomplete="off" class="@Html.Raw(model.FildIsNull == 0 ? "scinput" : "validate[required] scinput")" value="">
+            }
+            break;
+    }
+}
+
+

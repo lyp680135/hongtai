@@ -1,0 +1,52 @@
+﻿@page
+@inject ICMSService _cmsService;
+@{
+    ViewData["Title"] = "产品标准";
+    ViewData["Desc"] = "产品标准";
+}
+@section head{
+
+}
+
+<!-- 主体 -->
+
+<div id="main" class="part">
+
+    <ul id="menu" class="fl">
+        <li>
+            <a href="/ProductService/0-1.html">
+                <i class="icon-chevron-right"></i>产品电子目录
+            </a>
+        </li>
+        <li>
+            <a href="/ProductService/Process">
+                <i class="icon-chevron-right"></i>工艺流程
+            </a>
+        </li>
+        <li class="on">
+            <a href="/ProductService/Standard">
+                <i class="icon-chevron-right"></i>产品标准
+            </a>
+        </li>
+        <li>
+            <a href="/ProductService/Authentication/0-1.html">
+                <i class="icon-chevron-right/0-1.html"></i>质量认证
+            </a>
+        </li>
+        <li>
+            <a href="/ProductService/Sale">
+                <i class="icon-chevron-right"></i>销售网络
+            </a>
+        </li>
+    </ul>
+    @{
+        var Standard = _cmsService.GetSinglePage("产品标准");
+        if (Standard != null)
+        {
+            <div id="content" class="fr">
+                <div class="tit"><h1>@Html.Raw(Standard.Title)</h1></div>
+                <div class="con">@Html.Raw(Standard.Content)</div>
+            </div>
+        }
+    }
+</div>

@@ -1,0 +1,24 @@
+﻿@page "{id:int}.html"
+@inject ICMSService _cmsService
+@{
+    int Id = Convert.ToInt32(RouteData.Values["id"]);
+    var Pageclass = _cmsService.GetSinglePage(Id);
+    this.ViewData["Tag"] = 0;
+    this.ViewData["Title"] = "企业介绍";
+    this.ViewData["Desc"] = Pageclass.Descrption;
+}
+@section head
+    {
+    <link rel="stylesheet" type="text/css" href="/Content/css/single.css">
+}
+
+<span class="stipulation_width position">
+    <a href="/">首页</a>><a>@Html.Raw(Pageclass.Title)</a>
+</span>
+
+<div class="stipulation_width container_box list_box">
+    <div class="article">
+        <h1>@Html.Raw(Pageclass.Title)</h1>
+        @Html.Raw(Util.Extensions.ToHtml(Pageclass.Content))
+    </div>
+</div>

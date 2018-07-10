@@ -1,0 +1,363 @@
+﻿@page
+@inject ICMSService _cmsService
+@inject Common.IService.IContentGroupService _contentService
+@{
+    ViewData["Tag"] = 0;
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    var linklist = _cmsService.GetSiteLink((int)SiteLinkPostion.PC端显示);
+    var list = _cmsService.GetSiteLink((int)SiteLinkPostion.PC移动全显示);
+    string strUserAgent = this.Request.Headers["User-Agent"].ToString().ToLower();
+
+    if (strUserAgent.Contains("mobile"))
+    {
+        this.Response.Redirect(mngSetting.Domain_WAP, false);
+    }
+}
+@functions{
+    public bool IsFirstLogin { get; set; }
+
+    public void OnGet(string t)
+    {
+        if (!string.IsNullOrWhiteSpace(t) && t.ToLower() == "first")
+        {
+            this.IsFirstLogin = true;
+        }
+        else
+        {
+            this.IsFirstLogin = false;
+        }
+    }
+
+}
+@section head
+    {
+    <link href="/Content/css/index.css" rel="stylesheet" type="text/css" />
+    <link type="text/css" href="/Content/js/layui/css/layui.css" rel="stylesheet" />
+    <script type="text/javascript" src="/Content/js/layui/layui.js"></script>
+    <script src="/Content/js/jquery.contentcarousel.js"></script>
+    <script src="/js/login.js"></script>
+    <script>
+        layui.use(['carousel', 'form'], function () {
+            var carousel = layui.carousel
+                , form = layui.form;
+            //改变下时间间隔、动画类型、高度
+            carousel.render({
+                elem: '#carouserlImg'
+                , interval: 5000
+                , anim: 'default'
+                , height: '320px'
+                , width: '960px'
+            });
+        });
+    </script>
+    <style>
+        a {
+            color: gray;
+            margin: 5px;
+        }
+
+            a:hover {
+                color: red;
+            }
+
+        #Wfriend {
+            background: #e6e6e6;
+            border-bottom: double 0.3px #cac3c3;
+        }
+
+        #Tit {
+            font-size: 18px;
+            font-weight: bold
+        }
+
+        #FriendShip {
+            padding: 20px;
+            width: 960px;
+            margin-bottom: 20px;
+            line-height: 25px;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+            #FriendShip a {
+                text-decoration: none;
+            }
+
+            #FriendShip li {
+                display: inline;
+                list-style: none
+            }
+    </style>
+}
+<div class="layui-carousel" id="carouserlImg">
+    <div carousel-item="">
+        @if (siteBasic.CarouselImage.SafeString() != string.Empty)
+        {
+            for (var i = 0; i < siteBasic.CarouselImage.Object.Count; i++)
+            {
+                if (i == 0)
+                {
+                    <div class="item active">
+                        <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@siteBasic.CarouselImage.Object[i]" width="100%" />
+                    </div>
+                }
+                else
+                {
+                    <div class="item">
+                        <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@siteBasic.CarouselImage.Object[i]" width="100%" />
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>
+<div class="stipulation_width container_box">
+    <div class="portion news">
+        <div class="title_bar">
+            <img src="/Content/images/news.png" />
+            <h1>涟钢新闻</h1>
+            <div class="clearfix"></div>
+        </div>
+        <div class="content">
+            @{
+                DataLibrary.SiteCategory dict = _contentService.GetSiteCategoryByName("涟钢新闻");
+                if (dict != null)
+                {
+                    var Children = _contentService.GetAllDataForRecursion(dict.Id, dict.Id);
+                    var news = _cmsService.IcontentColumnDataService.GetContentColumnDataList(Convert.ToInt32(Children[1]["id"]), 1, 5);
+                    for (var i = 0; i < news.Count; i++)
+                    {
+                        <a class="row_box" href="/News/Detail/@Html.Raw(news[i]["cid"]+ "/" +news[i]["Id"]+ ".html")">
+                            <p>@(i + 1)、@Html.Raw(news[i]["title"])</p><span>@Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(news[i]["createtime"])).ToString("MM/dd")</span>
+                            <div class="clearfix"></div>
+                        </a>
+                    }
+                }
+            }
+        </div>
+    </div>
+    @if (!_cmsService.IuserService.IsAuth)
+    {
+        if (IsFirstLogin)
+        {
+            await Html.RenderPartialAsync("../1/Login/FirstLogin.cshtml");
+        }
+        else
+        {
+            await Html.RenderPartialAsync("../1/Login/UserLogin.cshtml");
+        }
+    }
+    else
+    {
+        var data = new ViewDataDictionary(ViewData);
+        data.Add("UserName", _cmsService.IuserService.IsManageMember ? _cmsService.IuserService.ApplicationUser.Mng_admin.RealName : _cmsService.IuserService.SaleSellerUser.Name);
+        await Html.RenderPartialAsync("../1/Login/LoginState.cshtml", data);
+    }
+
+    @{
+        var jituan = _cmsService.GetSinglePage("集团介绍");
+        if (jituan != null)
+        {
+            <div class="portion introduce">
+                <div class="title_bar">
+                    <img src="/Content/images/introduce.png" />
+                    <h1>@Html.Raw(jituan.Title)</h1>
+                    <a href="/singlepage/@Html.Raw(jituan.Id + ".html")">查看全文></a>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="content">
+                    &nbsp; &nbsp;&nbsp; &nbsp;
+                    @{
+                        var jcontent = Util.Extensions.RemoveHtml(jituan.Content);
+                        if (jcontent.Length > 190)
+                        {
+                            jcontent = jcontent.Substring(0, 190) + "...";
+                        }
+                    }
+
+                    @Html.Raw(jcontent)
+                </div>
+            </div>
+        }
+    }
+    @{
+        var company = _cmsService.GetSinglePage("企业介绍");
+        if (company != null)
+        {
+            <div class="portion introduce">
+                <div class="title_bar">
+                    <img src="/Content/images/introduce.png" />
+                    <h1>@Html.Raw(company.Title)</h1>
+                    <a href="/singlepage/@Html.Raw(company.Id + ".html")">查看全文></a>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="content">
+                    &nbsp; &nbsp;&nbsp; &nbsp;
+                    @{
+                        var content = Util.Extensions.RemoveHtml(company.Content);
+                        if (content.Length > 190)
+                        {
+                            content = content.Substring(0, 190) + "...";
+                        }
+                    }
+                    @Html.Raw(content)
+                </div>
+            </div>
+        }
+    }
+
+    <div class="clearfix"></div>
+    <div class="portion mien">
+        <div class="title_bar">
+            <img src="/Content/images/mien.png" />
+            <h1>集团风采</h1>
+            <div class="clearfix"></div>
+        </div>
+        <div class="content">
+            @{
+                var fengcai = _cmsService.IcontentColumnDataService.GetContentColumnDataList("集团风采", 1, 5);
+                if (fengcai != null)
+                {
+                    for (var i = 0; i < fengcai.Count; i++)
+                    {
+                        <a href="FengCai/@Html.Raw(fengcai[i]["cid"]+ "/" + fengcai[i]["Id"] + ".html")">
+                            <div class="row_box left_row" @if (i % 2 != 0) { @Html.Raw("style='margin-left:20px;'") }>
+                                @if (fengcai[i]["Image"].SafeString() != string.Empty)
+                                {
+                                    <div class="picture"><img alt="@Html.Raw(fengcai[i]["title"])" src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@fengcai[i]["Image"].ToString().Split(',')[0]" /></div>
+                                }
+                                <div class="detail">
+                                    <h2>@Html.Raw(fengcai[i]["title"])</h2>
+                                    <span style="font-size:13px;">
+                                        @{
+                                            if (!string.IsNullOrEmpty(fengcai[i]["description"].ToString()))
+                                            {
+                                                var content = Util.Extensions.RemoveHtml(fengcai[i]["description"].ToString());
+                                                if (content.Length > 90)
+                                                {
+                                                    content = content.Substring(0, 90) + "...";
+                                                }
+                                                @Html.Raw(content)
+                                            }
+                                        }
+
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                }
+            }
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="portion mien">
+        <div class="title_bar">
+            <img src="/Content/images/mien.png" />
+            <h1>企业风采</h1>
+            <div class="clearfix"></div>
+        </div>
+        <div class="content" style="margin-bottom:70px;">
+            @{
+                var qfengcai = _cmsService.IcontentColumnDataService.GetContentColumnDataList("企业风采", 1, 5);
+                if (qfengcai != null)
+                {
+                    for (var i = 0; i < qfengcai.Count; i++)
+                    {
+                        <a href="FengCai/@Html.Raw(qfengcai[i]["cid"]+ "/" + qfengcai[i]["Id"]+ ".html")">
+                            <div class="row_box left_row" @if (i % 2 != 0) { @Html.Raw("style='margin-left:20px;'") }>
+                                @if (qfengcai[i]["Image"].SafeString() != string.Empty)
+                                {
+                                    <div class="picture"><img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@qfengcai[i]["Image"].ToString().Split(',')[0]" /></div>
+                                }
+                                <div class="detail">
+                                    <h2>@Html.Raw(qfengcai[i]["title"])</h2>
+                                    <span style="font-size:13px;">
+                                        @{
+                                            if (!string.IsNullOrEmpty(qfengcai[i]["description"].ToString()))
+                                            {
+                                                var content = Util.Extensions.RemoveHtml(qfengcai[i]["description"].ToString());
+                                                if (content.Length > 90)
+                                                {
+                                                    content = content.Substring(0, 90) + "...";
+                                                }
+                                                @Html.Raw(content)
+                                            }
+                                        }
+
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                }
+            }
+            <div class="clearfix"></div>
+
+        </div>
+    </div>
+
+</div>
+@if (linklist.Count > 0 || list.Count > 0)
+{
+    <div id="Wfriend">
+        <div id="FriendShip">
+            <p id="Tit">友情链接</p>
+            <ul>
+                @foreach (var a in linklist)
+                {
+                    if (a.LinkType == (int)SiteLinkType.图片链接)
+                    {
+                        <li>
+                            <a href="@a.Url"><img src="@a.PicLink" alt="@Html.Raw(a.Description)" style="height:@Convert.ToInt32(a.PicHeight)px;width:@Convert.ToInt32(a.PicWidth)px" /></a>
+                        </li>
+                        @if (a.Sequence > 2)
+                        {
+                            <li>|</li>
+                        }
+                    }
+                    else
+                    {
+                        <li>
+                            <a href="@a.Url" title="@Html.Raw(a.Description)">@Html.Raw(a.Name)</a>
+                        </li>
+                        @if (a.Sequence > 2)
+                        {
+                            <li>|</li>
+                        }
+                    }
+                }
+                @if(list.Count>0 && linklist.Count>0)
+                {
+                    <li>|</li>
+                }
+                @foreach (var a in list)
+                {
+                    if (a.LinkType == (int)SiteLinkType.图片链接)
+                    {
+                        <li>
+                            <a href="@a.Url"><img src="@a.PicLink" alt="@Html.Raw(a.Description)" style="height:@Convert.ToInt32(a.PicHeight)px;width:@Convert.ToInt32(a.PicWidth)px" /></a>
+                        </li>
+                        @if (a.Sequence > 1)
+                        {
+                            <li>|</li>
+                        }
+                    }
+                    else
+                    {
+                        <li>
+                            <a href="@a.Url" title="@Html.Raw(a.Description)">@Html.Raw(a.Name)</a>
+                        </li>
+                        @if (a.Sequence > 1)
+                        {
+                            <li>|</li>
+                        }
+                    }
+                }
+            </ul>
+
+        </div>
+    </div>
+}

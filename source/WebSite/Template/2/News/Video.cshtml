@@ -1,0 +1,40 @@
+﻿@page
+@inject ICMSService _cmsService
+@{
+    ViewData["Title"] = "闽源视频";
+    ViewData["Desc"] = "闽源视频";
+}
+@section head{
+
+}
+
+<div id="main" class="part">
+
+    <ul id="menu" class="fl">
+        <li>
+            <a href="/News/0-1.html">
+                <i class="icon-chevron-right"></i>公司新闻
+            </a>
+        </li>
+        <li>
+            <a href="/News/Dynamics/0-1.html">
+                <i class="icon-chevron-right"></i>行业动态
+            </a>
+        </li>
+        <li class="on">
+            <a href="/News/Video">
+                <i class="icon-chevron-right"></i>闽源视频
+            </a>
+        </li>
+    </ul>
+
+
+    <div id="list" class="fr">
+        <div class="tit"><h1>公司宣传片</h1></div>
+        <div class="con">
+            <video controls="" loop="" onended="var v=this;setTimeout(function(){v.play()},300)" style="height: 405px; width:100%; background:#000;" title="闽源钢铁股份有限公司">
+                <source src="http://mygtjt.xiaoyutt.com/UploadFile/video/mytgjt.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+﻿@page
+@inject ICMSService _cmsService
+@{
+    ViewData["Title"] = "登录";
+    ViewData["Desc"] = "登录";
+    ViewData["Tag"] = 3;
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteBasic = siteBasic;
+    ViewBag.SiteSetting = mngSetting;
+}
+@section head{
+    <link rel="stylesheet" type="text/css" href="/Content/css/login.css">
+    @*<link type="text/css" href="/Content/js/layui/css/layui.css" rel="stylesheet" />*@
+    <script type="text/javascript" src="/Content/js/layui/layui.js"></script>
+    <script type="text/javascript" src="/Content/js/login.js?v=1"></script>
+}
+
+<div class="container_box">
+    <div class="portion stamp">
+        <div class="title_bar">
+            <img src="/Content/images/introduce.png" />
+            <h1>生产管理登录</h1>
+            <b class="title_bar_Right"><a href="/Login/SaleSeller">经销商登录>></a></b>
+        </div>
+        <div class="content">
+            <div class="row_box">
+                <h2>登录名</h2>
+                <div class="input_box"><input type="text" placeholder="手机号码或者用户名" id="UserName" name="UserName" /></div>
+            </div>
+            <div class="row_box">
+                <h2>密&nbsp;&nbsp;&nbsp;码</h2>
+                <div class="input_box"><input type="password" id="Pwd" name="Pwd" placeholder="请输入密码" /></div>
+            </div>
+            <span><a href="/Login/ByPhone">首次登录/忘记密码</a></span>
+            <div class="determine"><input class="common_button" type="submit" value="确定" id="btnLogin_ByUserName"></div>
+        </div>
+    </div>
+</div>
+
+@section foot{
+
+}

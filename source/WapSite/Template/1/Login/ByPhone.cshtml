@@ -1,0 +1,42 @@
+﻿@page
+@inject ICMSService _cmsService
+@{
+    ViewData["Title"] = "手机号登陆";
+    ViewData["Desc"] = "手机号登陆";
+    ViewData["Tag"] = 3;
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteBasic = siteBasic;
+    ViewBag.SiteSetting = mngSetting;
+}
+@section head{
+    <link rel="stylesheet" type="text/css" href="/Content/css/login.css">
+    @*<link type="text/css" href="/Content/js/layui/css/layui.css" rel="stylesheet" />*@
+    <script type="text/javascript" src="/Content/js/layui/layui.js"></script>
+    <script type="text/javascript" src="/Content/js/login.js?v=1"></script>
+}
+
+<div class="container_box">
+    <div class="portion stamp">
+        <div class="title_bar">
+            <img src="/Content/images/introduce.png" />
+            <h1>手机号登录</h1>
+        </div>
+        <div class="content">
+            <div class="row_box">
+                <h2>手机号</h2>
+                <div class="input_box"><input type="text" placeholder="请输入手机号码" id="UserName" name="UserName" /></div>
+                <input class="send" type="button" id="sendcode" value="发送验证码" />
+            </div>
+            <div class="row_box">
+                <h2>短信验证码</h2>
+                <div class="input_box"><input type="text" id="Code" name="Code" placeholder="请输入验证码" /></div>
+            </div>
+            <input type="hidden" name="SystemMemberType" id="SystemMemberType" value="@Convert.ToInt32(DataLibrary.EnumList.SystemMemberType.Manage)" />
+            <div class="determine"><input class="common_button" type="submit" value="确定" id="btnLogin_ByPhone"></div>
+        </div>
+    </div>
+</div>
+
+@section foot{
+}

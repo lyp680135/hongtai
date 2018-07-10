@@ -1,0 +1,255 @@
+﻿@page
+@model LinkListModel
+@using static DataLibrary.EnumList
+@inject DataLibrary.DataContext _db
+@{
+    Layout = null;
+}
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@{ await Html.RenderPartialAsync("_ValidationCssPartial");}
+@functions{
+    public string GetPerson(int PersonId)
+    {
+        var AdminID = _db.SiteLink.FirstOrDefault(c => c.AdminId == PersonId);
+        if (AdminID != null)
+        {
+            return AdminID.Name;
+        }
+        else
+        {
+            return string.Empty;
+        }
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+
+    <style>
+        table {
+            cursor: pointer;
+        }
+
+        .seachform {
+            margin-left: 20px;
+            margin-top: 20px
+        }
+
+        #add {
+            position: absolute;
+            top: 60px;
+            right: 110px
+        }
+
+        #delete {
+            position: absolute;
+            top: 60px;
+            right: 10px
+        }
+
+        .layui-table {
+            width: 99%;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="/Manage/Site/LinkList">网站管理</a></li>
+            <li>友情链接</li>
+        </ul>
+    </div>
+    <ul class="seachform">
+        <li>
+            <button id="add" name="add" class="layui-btn layui-btn-normal" onclick="AddLink()"><i class="layui-icon">&#xe654;</i>添加</button>
+            <button id="delete" name="delete" class="layui-btn layui-btn-danger" onclick="del(); return false"><i class="layui-icon"></i> 删除</button>
+
+        </li>
+        <form method="get">
+            <li class="notDistributorCss">
+                <label>搜索条件：</label>
+                <input name="Name" value="@ViewData["Name"]" type="text" class="dfinput" style="width: 128px;height:38px" />
+            </li>
+            <li><label>&nbsp;</label><button id="sb" name="sb" class="layui-btn layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button></li>
+        </form>
+    </ul>
+    <div>
+        <table id="Enta" class="layui-table">
+            <thead>
+                <tr>
+                    <th><input name="id" type="checkbox" style="margin-left:10px" id="chkall" /></th>
+                    <th>链接名字</th>
+                    <th>内容描述</th>
+                    <th style="width:140px">链接地址</th>
+                    <th>链接类型</th>
+                    <th>是否显示</th>
+                    <th>显示位置</th>
+                    <th>创建时间</th>
+                    <th>排序</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model.List_Q)
+                {
+                    <tr onclick="Edit(@a.Id)">
+                        <td style="width:80px" onclick="stopchoose()"><input name="id" type="checkbox" value="@a.Id" /></td>
+                        <td style="width:80px">@a.Name</td>
+                        <td style="width:80px">@a.Description</td>
+                        <td style="width:140px">@a.Url</td>
+                        <td style="width:80px">
+                            @Html.Raw(a.LinkType == ((int)SiteLinkType.文字链接) ? "文字链接" : "图片链接")
+                        </td>
+                        <td style="width:80px">
+                            @Html.Raw(a.IsShow == ((int)SiteIsShow.是) ? "是" : "否")
+                        </td>
+                        <td style="width:100px">
+                            @Enum.GetName(typeof(SiteLinkPostion), a.Position)
+                        </td>
+                        <td style="width:80px">@Html.Raw(((long)(a.CreateTime.Value)).GetDateTimeFromUnixTime().ToDateTimeString())</td>
+                        <td>
+                            <button type="button" onclick="moveList(@a.Id,'up')" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe619;</i>上移</button>
+                            <button type="button" onclick="moveList(@a.Id,'down')" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe61a;</i>下移</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @await Component.InvokeAsync("PageList", new
+         {
+             PageSize=Model.Psize,
+             PageIndex = Model.PageIndex,
+             PageCount = Model.Total,
+             PageUrl = Request.GetAbsoluteUri(new List<KeyValuePair<string, string>>() {
+                           new KeyValuePair<string, string>("page","{0}")
+                     }),
+             PageText = "{0}",
+             ShowCount = 6,
+             ShowAll = false
+         })
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $('.layui-table tbody tr:odd').addClass('odd');
+        });
+
+        function moveList(id, type) {
+
+            $(function () {
+                cancelBubble();
+            })
+            $(function (e) {
+                var evt = e ? e : window.event;
+                if (evt.stopPropagation) {        //W3C
+                    evt.stopPropagation();
+                } else {       //IE
+                    evt.cancelBubble = true;
+                }
+            })
+            var loadLayer = layer.load(1);
+            var url = '';
+            if (type == "up") {
+                url = '/SiteLink/LinkOrderUp';
+            } else if (type == "down") {
+                url = '/SiteLink/LinkOrderDown';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "id=" + id,
+                success: function (re) {
+                    if (re.toString() == "true") {
+                        layer.msg('操作成功', { icon: 1 });
+                        setTimeout("window.location.reload();", 1000);
+                    } else {
+                        layer.msg('操作失败，请稍候重试', { icon: 2 });
+                    }
+                    layer.close(loadLayer);
+                }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    layer.close(loadLayer);
+                    layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                }
+            });
+        }
+
+        function AddLink() {
+            window.location.href = "/Manage/SiteLink/LinkAdd";
+        }
+
+        function stopchoose() {
+            cancelBubble();
+        }
+
+        function cancelBubble(e) {
+            var evt = e ? e : window.event;
+            if (evt.stopPropagation) {        //W3C
+                evt.stopPropagation();
+            } else {       //IE
+                evt.cancelBubble = true;
+            }
+        }
+
+        function Edit(id) {
+            window.location.href = "/Manage/SiteLink/LinkEdit?id=" + id;
+        }
+
+        function getSelectedIds() {
+            var selectedids = "";
+            //获取最后一条选中项
+            $("input[name='id']:checked").each(function () {
+                selectedids += $(this).val() + ",";
+            });
+
+            return selectedids;
+        }
+
+        function del() {
+            var selectedids = getSelectedIds();
+            if (selectedids.length <= 0) {
+
+                layer.msg('请选中所需删除行！', { icon: 2 });
+                return;
+            }
+
+            layer.confirm('确定删除该记录？此操作不可恢复！', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var loadLayer = layer.load(1);
+                $.ajax({
+                    type: "POST",
+                    url: "/SiteLink/LinkDel",
+                    data: "ids=" + selectedids,
+                    success: function (re) {
+                        if (re == "ok") {
+                            layer.msg('操作成功', { icon: 1 });
+                            setTimeout("window.location.reload();", 1000);
+                        } else {
+                            layer.msg('系统错误，删除失败！', { icon: 2 });
+                        }
+                        layer.close(loadLayer);
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(loadLayer);
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                });
+            }, function () {
+
+            });
+        }
+
+        var flag = false;
+        function check() {
+            flag = !flag;
+            chk = document.forms[0].id;
+            for (i = 0; i < chk.length; i++)
+                chk[i].checked = flag;
+        }
+    </script>
+</body>
+</html>
