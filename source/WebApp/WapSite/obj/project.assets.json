@@ -24,26 +24,6 @@
           "lib/netstandard1.3/AutoMapper.dll": {}
         }
       },
-      "ImageSharp/1.0.0-alpha9-00194": {
-        "type": "package",
-        "dependencies": {
-          "NETStandard.Library": "1.6.1",
-          "SixLabors.Core": "0.1.0-alpha0002",
-          "System.Buffers": "4.4.0",
-          "System.IO.Compression": "4.3.0",
-          "System.Memory": "4.4.0-preview2-25405-01",
-          "System.Numerics.Vectors": "4.4.0",
-          "System.Runtime.CompilerServices.Unsafe": "4.4.0",
-          "System.Threading.Tasks.Parallel": "4.3.0",
-          "System.ValueTuple": "4.4.0"
-        },
-        "compile": {
-          "lib/netstandard1.3/ImageSharp.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard1.3/ImageSharp.dll": {}
-        }
-      },
       "Libuv/1.10.0": {
         "type": "package",
         "dependencies": {
@@ -3156,17 +3136,28 @@
           }
         }
       },
-      "SixLabors.Core/0.1.0-alpha0002": {
+      "SixLabors.Core/1.0.0-beta0005": {
         "type": "package",
-        "dependencies": {
-          "NETStandard.Library": "1.6.1",
-          "System.Numerics.Vectors": "4.3.0"
-        },
         "compile": {
-          "lib/netstandard1.1/SixLabors.Core.dll": {}
+          "lib/netcoreapp2.0/SixLabors.Core.dll": {}
         },
         "runtime": {
-          "lib/netstandard1.1/SixLabors.Core.dll": {}
+          "lib/netcoreapp2.0/SixLabors.Core.dll": {}
+        }
+      },
+      "SixLabors.ImageSharp/1.0.0-beta0004": {
+        "type": "package",
+        "dependencies": {
+          "SixLabors.Core": "1.0.0-beta0005",
+          "System.Buffers": "4.4.0",
+          "System.Memory": "4.5.0-rc1",
+          "System.Runtime.CompilerServices.Unsafe": "4.5.0-rc1"
+        },
+        "compile": {
+          "lib/netstandard2.0/SixLabors.ImageSharp.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/SixLabors.ImageSharp.dll": {}
         }
       },
       "SQLitePCLRaw.bundle_green/1.1.7": {
@@ -5205,9 +5196,9 @@
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
           "DataLibrary": "1.0.0",
-          "ImageSharp": "1.0.0-alpha9-00194",
           "Microsoft.AspNetCore.Http.Abstractions": "2.1.1",
           "Microsoft.AspNetCore.StaticFiles": "2.0.0",
+          "SixLabors.ImageSharp": "1.0.0-beta0004",
           "Util": "1.0.0",
           "log4net": "2.0.8"
         },
@@ -5288,19 +5279,6 @@
         "lib/netstandard1.1/AutoMapper.xml",
         "lib/netstandard1.3/AutoMapper.dll",
         "lib/netstandard1.3/AutoMapper.xml"
-      ]
-    },
-    "ImageSharp/1.0.0-alpha9-00194": {
-      "sha512": "2w8uehHvrydE34Sxzb52oCmTtUc20sNtj4lMmSQlq+mrQW/6XKg5FA3YmLMI6a1DCp9e+D98Roq4JmNn7ndLkA==",
-      "type": "package",
-      "path": "imagesharp/1.0.0-alpha9-00194",
-      "files": [
-        "imagesharp.1.0.0-alpha9-00194.nupkg.sha512",
-        "imagesharp.nuspec",
-        "lib/netstandard1.1/ImageSharp.dll",
-        "lib/netstandard1.1/ImageSharp.xml",
-        "lib/netstandard1.3/ImageSharp.dll",
-        "lib/netstandard1.3/ImageSharp.xml"
       ]
     },
     "Libuv/1.10.0": {
@@ -8313,7 +8291,7 @@
       ]
     },
     "Remotion.Linq/2.1.1": {
-      "sha512": "IJn0BqkvwEDpP+2qjvci7n4/a9f7DhKESLWb2/uG4xQh3rTkGTBUz69bI4IivCoKkTFAqjXxYDZw2K/npohjsw==",
+      "sha512": "TQdD4TKktUNJJhZqGAxGa07Ws3qjYxN4rnjwrVI0p0xtd70Kvhl92US5dSHj8eSaOLKZNzvDVzlMMq1oGzLbTA==",
       "type": "package",
       "path": "remotion.linq/2.1.1",
       "files": [
@@ -8590,15 +8568,32 @@
         "version.txt"
       ]
     },
-    "SixLabors.Core/0.1.0-alpha0002": {
-      "sha512": "MXfbVvZIXx8bt1Qwn3Pv9k7Wrz5eL3Qg8WZusJyQwo4pJRF7WUpEd/mEbZxXNajbTqYYuBXodCsVeTGYhKzKwQ==",
+    "SixLabors.Core/1.0.0-beta0005": {
+      "sha512": "RnLbRe5J9kjSH+EDA8a58shzI+nNt96aJw1WgXxdn+DSc/ryirdEPO/2EIITvaSX6Nk9Lepcj8EOVfq16fhUmg==",
       "type": "package",
-      "path": "sixlabors.core/0.1.0-alpha0002",
+      "path": "sixlabors.core/1.0.0-beta0005",
       "files": [
+        "lib/netcoreapp2.0/SixLabors.Core.dll",
+        "lib/netcoreapp2.0/SixLabors.Core.xml",
         "lib/netstandard1.1/SixLabors.Core.dll",
         "lib/netstandard1.1/SixLabors.Core.xml",
-        "sixlabors.core.0.1.0-alpha0002.nupkg.sha512",
+        "sixlabors.core.1.0.0-beta0005.nupkg.sha512",
         "sixlabors.core.nuspec"
+      ]
+    },
+    "SixLabors.ImageSharp/1.0.0-beta0004": {
+      "sha512": "ypYAt2A8FLJ85y42VOVzrCTaULbTwKMM87kYspWOpeBQG/nGBfKWGzFikNJUqOFET7lqQ1nCMp30Nin/W3DPhQ==",
+      "type": "package",
+      "path": "sixlabors.imagesharp/1.0.0-beta0004",
+      "files": [
+        "lib/netstandard1.1/SixLabors.ImageSharp.dll",
+        "lib/netstandard1.1/SixLabors.ImageSharp.xml",
+        "lib/netstandard1.3/SixLabors.ImageSharp.dll",
+        "lib/netstandard1.3/SixLabors.ImageSharp.xml",
+        "lib/netstandard2.0/SixLabors.ImageSharp.dll",
+        "lib/netstandard2.0/SixLabors.ImageSharp.xml",
+        "sixlabors.imagesharp.1.0.0-beta0004.nupkg.sha512",
+        "sixlabors.imagesharp.nuspec"
       ]
     },
     "SQLitePCLRaw.bundle_green/1.1.7": {
@@ -13841,44 +13836,49 @@
     ]
   },
   "packageFolders": {
-    "/root/.nuget/packages/": {},
-    "/usr/share/dotnet/sdk/NuGetFallbackFolder": {}
+    "C:\\Users\\钟\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
+    "restoreSettings": {
+      "hideWarningsAndErrors": true
+    },
     "restore": {
-      "projectUniqueName": "/var/lib/jenkins/workspace/warrantymanage_base/WebApp/WapSite/WarrantyEnterpriseMobileStation.csproj",
+      "projectUniqueName": "E:\\shangjiaobao\\开发\\WarrantyManage\\hongtai\\source\\WebApp\\WapSite\\WarrantyEnterpriseMobileStation.csproj",
       "projectName": "WarrantyEnterpriseMobileStation",
-      "projectPath": "/var/lib/jenkins/workspace/warrantymanage_base/WebApp/WapSite/WarrantyEnterpriseMobileStation.csproj",
-      "packagesPath": "/root/.nuget/packages/",
-      "outputPath": "/var/lib/jenkins/workspace/warrantymanage_base/WebApp/WapSite/obj/",
+      "projectPath": "E:\\shangjiaobao\\开发\\WarrantyManage\\hongtai\\source\\WebApp\\WapSite\\WarrantyEnterpriseMobileStation.csproj",
+      "packagesPath": "C:\\Users\\钟\\.nuget\\packages\\",
+      "outputPath": "E:\\shangjiaobao\\开发\\WarrantyManage\\hongtai\\source\\WebApp\\WapSite\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "/root/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\钟\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
       ],
       "sources": {
-        "https://www.myget.org/F/imagesharp": {}
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "/var/lib/jenkins/workspace/warrantymanage_base/WebApp/Libs/Common/Common.csproj": {
-              "projectPath": "/var/lib/jenkins/workspace/warrantymanage_base/WebApp/Libs/Common/Common.csproj"
+            "E:\\shangjiaobao\\开发\\WarrantyManage\\hongtai\\source\\WebApp\\Libs\\DataLibrary\\DataLibrary.csproj": {
+              "projectPath": "E:\\shangjiaobao\\开发\\WarrantyManage\\hongtai\\source\\WebApp\\Libs\\DataLibrary\\DataLibrary.csproj"
             },
-            "/var/lib/jenkins/workspace/warrantymanage_base/WebApp/Libs/DataLibrary/DataLibrary.csproj": {
-              "projectPath": "/var/lib/jenkins/workspace/warrantymanage_base/WebApp/Libs/DataLibrary/DataLibrary.csproj"
+            "E:\\shangjiaobao\\开发\\WarrantyManage\\hongtai\\source\\WebApp\\Libs\\Tools\\Util.csproj": {
+              "projectPath": "E:\\shangjiaobao\\开发\\WarrantyManage\\hongtai\\source\\WebApp\\Libs\\Tools\\Util.csproj"
             },
-            "/var/lib/jenkins/workspace/warrantymanage_base/WebApp/Libs/Models/Models.csproj": {
-              "projectPath": "/var/lib/jenkins/workspace/warrantymanage_base/WebApp/Libs/Models/Models.csproj"
+            "E:\\shangjiaobao\\开发\\WarrantyManage\\hongtai\\source\\WebApp\\Libs\\Models\\Models.csproj": {
+              "projectPath": "E:\\shangjiaobao\\开发\\WarrantyManage\\hongtai\\source\\WebApp\\Libs\\Models\\Models.csproj"
             },
-            "/var/lib/jenkins/workspace/warrantymanage_base/WebApp/Libs/Tools/Util.csproj": {
-              "projectPath": "/var/lib/jenkins/workspace/warrantymanage_base/WebApp/Libs/Tools/Util.csproj"
+            "E:\\shangjiaobao\\开发\\WarrantyManage\\hongtai\\source\\WebApp\\Libs\\Common\\Common.csproj": {
+              "projectPath": "E:\\shangjiaobao\\开发\\WarrantyManage\\hongtai\\source\\WebApp\\Libs\\Common\\Common.csproj"
             }
           }
         }
@@ -13892,18 +13892,9 @@
     "frameworks": {
       "netcoreapp2.0": {
         "dependencies": {
-          "Microsoft.NETCore.App": {
+          "Microsoft.Extensions.FileProviders.Physical": {
             "target": "Package",
-            "version": "2.0.0",
-            "autoReferenced": true
-          },
-          "log4net": {
-            "target": "Package",
-            "version": "2.0.8"
-          },
-          "Microsoft.AspNetCore.All": {
-            "target": "Package",
-            "version": "2.0.0"
+            "version": "2.0.1"
           },
           "Microsoft.AspNetCore": {
             "target": "Package",
@@ -13913,11 +13904,16 @@
             "target": "Package",
             "version": "2.0.1"
           },
-          "Microsoft.AspNetCore.Mvc": {
+          "log4net": {
             "target": "Package",
-            "version": "2.0.1"
+            "version": "2.0.8"
           },
-          "Microsoft.AspNetCore.StaticFiles": {
+          "Microsoft.NETCore.App": {
+            "target": "Package",
+            "version": "2.0",
+            "autoReferenced": true
+          },
+          "Microsoft.VisualStudio.Web.BrowserLink": {
             "target": "Package",
             "version": "2.0.1"
           },
@@ -13925,11 +13921,15 @@
             "target": "Package",
             "version": "2.0.0"
           },
-          "Microsoft.Extensions.FileProviders.Physical": {
+          "Microsoft.AspNetCore.All": {
+            "target": "Package",
+            "version": "2.0.0"
+          },
+          "Microsoft.AspNetCore.Mvc": {
             "target": "Package",
             "version": "2.0.1"
           },
-          "Microsoft.VisualStudio.Web.BrowserLink": {
+          "Microsoft.AspNetCore.StaticFiles": {
             "target": "Package",
             "version": "2.0.1"
           }

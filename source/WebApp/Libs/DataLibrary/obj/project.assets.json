@@ -261,7 +261,7 @@
           "lib/netstandard2.0/MySqlConnector.dll": {}
         }
       },
-      "NETStandard.Library/2.0.0": {
+      "NETStandard.Library/2.0.1": {
         "type": "package",
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0"
@@ -1979,10 +1979,10 @@
         "mysqlconnector.nuspec"
       ]
     },
-    "NETStandard.Library/2.0.0": {
-      "sha512": "7jnbRU+L08FXKMxqUflxEXtVymWvNOrS8yHgu9s6EM8Anr6T/wIX4nZ08j/u3Asz+tCufp3YVwFSEvFTPYmBPA==",
+    "NETStandard.Library/2.0.1": {
+      "sha512": "oA6nwv9MhEKYvLpjZ0ggSpb1g4CQViDVQjLUcDWg598jtvJbpfeP2reqwI1GLW2TbxC/Ml7xL6BBR1HmKPXlTg==",
       "type": "package",
-      "path": "netstandard.library/2.0.0",
+      "path": "netstandard.library/2.0.1",
       "files": [
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
@@ -2103,7 +2103,7 @@
         "build/netstandard2.0/ref/netstandard.dll",
         "build/netstandard2.0/ref/netstandard.xml",
         "lib/netstandard1.0/_._",
-        "netstandard.library.2.0.0.nupkg.sha512",
+        "netstandard.library.2.0.1.nupkg.sha512",
         "netstandard.library.nuspec"
       ]
     },
@@ -2163,7 +2163,7 @@
       ]
     },
     "Remotion.Linq/2.1.1": {
-      "sha512": "IJn0BqkvwEDpP+2qjvci7n4/a9f7DhKESLWb2/uG4xQh3rTkGTBUz69bI4IivCoKkTFAqjXxYDZw2K/npohjsw==",
+      "sha512": "TQdD4TKktUNJJhZqGAxGa07Ws3qjYxN4rnjwrVI0p0xtd70Kvhl92US5dSHj8eSaOLKZNzvDVzlMMq1oGzLbTA==",
       "type": "package",
       "path": "remotion.linq/2.1.1",
       "files": [
@@ -5549,36 +5549,41 @@
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
       "Microsoft.EntityFrameworkCore.Tools >= 2.0.0",
-      "NETStandard.Library >= 2.0.0",
+      "NETStandard.Library >= 2.0.1",
       "Pomelo.EntityFrameworkCore.Extensions.ToSql >= 2.0.0-rtm-10002",
       "Pomelo.EntityFrameworkCore.MySql >= 2.0.0.1",
       "StyleCop.Analyzers >= 1.0.2"
     ]
   },
   "packageFolders": {
-    "/root/.nuget/packages/": {},
-    "/usr/share/dotnet/sdk/NuGetFallbackFolder": {}
+    "C:\\Users\\钟\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
+    "restoreSettings": {
+      "hideWarningsAndErrors": true
+    },
     "restore": {
-      "projectUniqueName": "/var/lib/jenkins/workspace/warrantymanage_base/WebApp/Libs/DataLibrary/DataLibrary.csproj",
+      "projectUniqueName": "E:\\shangjiaobao\\开发\\WarrantyManage\\hongtai\\source\\WebApp\\Libs\\DataLibrary\\DataLibrary.csproj",
       "projectName": "DataLibrary",
-      "projectPath": "/var/lib/jenkins/workspace/warrantymanage_base/WebApp/Libs/DataLibrary/DataLibrary.csproj",
-      "packagesPath": "/root/.nuget/packages/",
-      "outputPath": "/var/lib/jenkins/workspace/warrantymanage_base/WebApp/Libs/DataLibrary/obj/",
+      "projectPath": "E:\\shangjiaobao\\开发\\WarrantyManage\\hongtai\\source\\WebApp\\Libs\\DataLibrary\\DataLibrary.csproj",
+      "packagesPath": "C:\\Users\\钟\\.nuget\\packages\\",
+      "outputPath": "E:\\shangjiaobao\\开发\\WarrantyManage\\hongtai\\source\\WebApp\\Libs\\DataLibrary\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "/root/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\钟\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netstandard2.0"
       ],
       "sources": {
-        "https://www.myget.org/F/imagesharp": {}
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netstandard2.0": {
@@ -5594,27 +5599,27 @@
     "frameworks": {
       "netstandard2.0": {
         "dependencies": {
-          "NETStandard.Library": {
-            "suppressParent": "All",
+          "Pomelo.EntityFrameworkCore.MySql": {
             "target": "Package",
-            "version": "2.0.0",
-            "autoReferenced": true
+            "version": "2.0.0.1"
           },
           "Microsoft.EntityFrameworkCore.Tools": {
             "target": "Package",
             "version": "2.0.0"
           },
-          "Pomelo.EntityFrameworkCore.Extensions.ToSql": {
+          "NETStandard.Library": {
+            "suppressParent": "All",
             "target": "Package",
-            "version": "2.0.0-rtm-10002"
-          },
-          "Pomelo.EntityFrameworkCore.MySql": {
-            "target": "Package",
-            "version": "2.0.0.1"
+            "version": "2.0.1",
+            "autoReferenced": true
           },
           "StyleCop.Analyzers": {
             "target": "Package",
             "version": "1.0.2"
+          },
+          "Pomelo.EntityFrameworkCore.Extensions.ToSql": {
+            "target": "Package",
+            "version": "2.0.0-rtm-10002"
           }
         },
         "imports": [
