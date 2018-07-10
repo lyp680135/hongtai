@@ -546,7 +546,15 @@
                                                 find = true;
                                                 if (d.Key != "强屈比" && d.Key != "屈屈比")
                                                 {
-                                                    dynamicdata[d.Key] = dynamicdata[d.Key] + "/" + x.Value;
+                                                    if (d.Key == "伸长率Agt")
+                                                    {
+                                                        double.TryParse(x.Value.ToString(), out double val);
+                                                        dynamicdata[d.Key] = dynamicdata[d.Key] + "/" + val.ToString("0.0");
+                                                    }
+                                                    else
+                                                    {
+                                                        dynamicdata[d.Key] = dynamicdata[d.Key] + "/" + x.Value;
+                                                    }
                                                 }
 
                                                 break;
@@ -556,6 +564,11 @@
                                         if (!find)
                                         {
                                             dynamicdata[x.Key] = x.Value;
+                                            if (x.Key == "伸长率Agt")
+                                            {
+                                                double.TryParse(x.Value.ToString(), out double val);
+                                                dynamicdata[x.Key] = val.ToString("0.0");
+                                            }
                                         }
                                     }
 
@@ -846,6 +859,29 @@
                                                 if (newcontent != null && !string.IsNullOrEmpty(newcontent.ToString()))
                                                 {
                                                     newcontent = newcontent[secondprop];
+                                                    if (!string.IsNullOrWhiteSpace(string.Format("{0}", newcontent)))
+                                                    {
+                                                        if (Regex.IsMatch(string.Format("{0}", newcontent), "^([0-9]{1,})$")
+                                                            || Regex.IsMatch(string.Format("{0}", newcontent), "^([0-9]{1,}[.][0-9]*)$"))
+                                                        {
+                                                            if (secondprop != "C"
+                                                                && secondprop != "Si"
+                                                                && secondprop != "Mn"
+                                                                && secondprop != "P"
+                                                                && secondprop != "S")
+                                                            {
+                                                                double.TryParse(string.Format("{0}", newcontent), out double val);
+                                                                if (val <= 0)
+                                                                {
+                                                                    newcontent = "－";
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        newcontent = "－";
+                                                    }
                                                 }
                                                 else
                                                 {
