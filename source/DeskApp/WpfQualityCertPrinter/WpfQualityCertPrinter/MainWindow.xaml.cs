@@ -629,7 +629,7 @@ namespace WpfQualityCertPrinter
             PaperSize pp = new PaperSize();
             foreach (PaperSize ps in pd.PrinterSettings.PaperSizes)
             {
-                if (ps.PaperName.Equals("信纸"))
+                if (ps.PaperName.Equals("A4"))
                 {
                     pp = ps;
                 }
@@ -727,9 +727,9 @@ namespace WpfQualityCertPrinter
             Bitmap bmp = new Bitmap(ms);
             ms.Close();
 
-            e.Graphics.PageScale = 0.67f;
+            e.Graphics.PageScale = 0.725f;
 
-            e.Graphics.DrawImage(bmp, 10, 50, (float)(imgPreview.Source.Width - 20), (float)imgPreview.Source.Height);
+            e.Graphics.DrawImage(bmp, 0, 0, (float)(imgPreview.Source.Width), (float)imgPreview.Source.Height);
         }
 
         /// <summary>
