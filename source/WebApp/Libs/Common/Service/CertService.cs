@@ -286,7 +286,7 @@
                     info.Add("AddressEn", "ZhenJiang.JiangSu P.R.C");
 
                     // 产品品牌小图标
-                    info.Add("Brand", "brand.jpg");
+                    info.Add("Brand", "brand.png");
                 }
 
                 info.Add("Id", printFirst.Id);
