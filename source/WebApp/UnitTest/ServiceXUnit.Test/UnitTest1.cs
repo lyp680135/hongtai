@@ -15,7 +15,7 @@ namespace ServiceXUnit.Test
         [Fact]
         public void Test1()
         {
-            string dbconnectstring = "Server=192.168.0.120; Port=3306; Uid=warranty; Pwd=warranty123456; Database=warranty_base";
+            string dbconnectstring = "Server=192.168.0.120; Port=3306; Uid=warranty; Pwd=warranty123456; Database=warranty_hongtai";
 
             DbContextOptions<DataLibrary.DataContext> options;
             var builder = new DbContextOptionsBuilder<DataLibrary.DataContext>();
@@ -55,7 +55,7 @@ namespace ServiceXUnit.Test
         [Fact]
         public void Test2()
         {
-            string dbconnectstring = "Server=192.168.0.120; Port=3306; Uid=warranty; Pwd=warranty123456; Database=warranty_base";
+            string dbconnectstring = "Server=192.168.0.120; Port=3306; Uid=warranty; Pwd=warranty123456; Database=warranty_hongtai";
 
             DbContextOptions<DataLibrary.DataContext> options;
             var builder = new DbContextOptionsBuilder<DataLibrary.DataContext>();
@@ -74,7 +74,7 @@ namespace ServiceXUnit.Test
 
             CertService service = new CertService(dataContext, qservice, stock);
 
-            var result = service.GenerateCert("10000020", Environment.CurrentDirectory, false);
+            var result = service.GenerateCert("10000044", Environment.CurrentDirectory, true);
 
             Assert.True(result != null && result.Status == (int)CommonResultStatus.Success && result.Message == "生成成功");
         }
@@ -82,7 +82,7 @@ namespace ServiceXUnit.Test
         [Fact]
         public void Test3()
         {
-            string dbconnectstring = "Server=192.168.0.120; Port=3306; Uid=warranty; Pwd=warranty123456; Database=warranty_base";
+            string dbconnectstring = "Server=192.168.0.120; Port=3306; Uid=warranty; Pwd=warranty123456; Database=warranty_hongtai";
 
             DbContextOptions<DataLibrary.DataContext> options;
             var builder = new DbContextOptionsBuilder<DataLibrary.DataContext>();
@@ -101,7 +101,7 @@ namespace ServiceXUnit.Test
         [Fact]
         public void Test4()
         {
-            string dbconnectstring = "Server=192.168.0.120; Port=3306; Uid=warranty; Pwd=warranty123456; Database=warranty_base";
+            string dbconnectstring = "Server=192.168.0.120; Port=3306; Uid=warranty; Pwd=warranty123456; Database=warranty_hongtai";
 
             DbContextOptions<DataLibrary.DataContext> options;
             var builder = new DbContextOptionsBuilder<DataLibrary.DataContext>();
@@ -115,70 +115,6 @@ namespace ServiceXUnit.Test
             var result = service.GetPrevBatcode("A18050012");
 
             Assert.True(result == "A18050011");
-        }
-
-        /// <summary>
-        /// 涟钢振兴授权明细表升级脚本
-        /// </summary>
-        [Fact]
-        public void Test5()
-        {
-            string dbconnectstring = "Server=192.168.0.120; Port=3306; Uid=warranty; Pwd=warranty123456; Database=warranty_base";
-
-            DbContextOptions<DataLibrary.DataContext> options;
-            var builder = new DbContextOptionsBuilder<DataLibrary.DataContext>();
-            builder.UseMySql(dbconnectstring);
-            options = builder.Options;
-
-            DataLibrary.DataContext dataContext = new DataLibrary.DataContext(options);
-
-            int result = 0;
-
-            var auths = dataContext.SaleSellerAuth.OrderBy(p => p.Id).ToList();
-            foreach (var auth in auths)
-            {
-                var nums = auth.Number;
-
-                int result_nums = 0;
-                for (var i = 0; i < nums; i++)
-                {
-                    var used_productids = dataContext.SaleSellerAuthDetail.Select(p => p.Productid).ToList();
-
-                    var product = (from p in dataContext.PdProduct
-                                    where p.Batcode == auth.Batcode
-                                    && p.Lengthtype == (int)EnumList.ProductQualityLevel.定尺
-                                    && !used_productids.Contains(p.Id)
-                                    select p).FirstOrDefault();
-                    if (product != null)
-                    {
-                        var detail = new SaleSellerAuthDetail();
-                        detail.AuthId = auth.Id;
-                        detail.Productid = product.Id;
-                        detail.Classid = product.Classid;
-                        detail.Materialid = product.Materialid;
-                        detail.Specid = product.Specid;
-                        detail.Batcode = product.Batcode;
-
-                        dataContext.SaleSellerAuthDetail.Add(detail);
-
-                        if (dataContext.SaveChanges() > 0)
-                        {
-                            result_nums++;
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception("["+auth.Id+"]"+auth.Batcode+"找不到产品了！！！");
-                    }
-                }
-
-                if(result_nums == nums)
-                {
-                    result++;
-                }
-            }
-
-            Assert.True(result == auths.Count);
         }
     }
 }
