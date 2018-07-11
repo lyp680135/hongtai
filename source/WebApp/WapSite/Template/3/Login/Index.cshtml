@@ -1,13 +1,54 @@
-@page
+﻿@page
 @inject ICMSService _cmsService
-@section head{
-}
 @{
-    ViewData["Tag"] = 5;
-    ViewData["Title"] = "��¼";
-    ViewData["Desc"] = "��¼";
+    ViewData["Tag"] = 2;
+    ViewData["Title"] = "生产管理者登录";
+    ViewData["Desc"] = "生产管理者登录";
     var siteBasic = _cmsService.GetBasic();
     var mngSetting = _cmsService.GetSetting();
     ViewBag.SiteBasic = siteBasic;
     ViewBag.SiteSetting = mngSetting;
 }
+@section head{
+    <link href="/Content/css/login.css" rel="stylesheet" />
+    <script src="/Content/js/layui/layui.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/Content/js/login.js?v=2"></script>
+}
+<div class="container-fluid login">
+    <div class="row title">
+        <div class="col-xs-6 text-left">
+            <a class="current" href="#">生产管理登录</a>
+        </div>
+        <div class="col-xs-6 text-right">
+            <a class="" href="/Login/SaleSeller">经销商登录</a>
+        </div>
+    </div>
+    <div class="row login">
+        <div class="col-xs-12">
+            <div class="print-cert-form">
+                <div class="form-group">
+                    <div class="text-left">
+                        <span>登录名</span>
+                    </div>
+                    <div>
+                        <input type="text" id="UserName" name="UserName" placeholder="手机号码或者用户名">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="text-left">
+                        <span>密&nbsp;&nbsp;码</span>
+                    </div>
+                    <div>
+                        <input type="password" id="Pwd" name="Pwd" placeholder="请输入密码">
+                    </div>
+                </div>
+                <p>
+                    <a href="/Login/ByPhone">首次登录/忘记密码</a>
+                </p>
+                <button type="submit" id="btnLogin_ByUserName" class="btn btn-primary btn-lg btn-block query">确定</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+

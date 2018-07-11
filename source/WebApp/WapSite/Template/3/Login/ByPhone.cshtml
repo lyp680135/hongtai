@@ -1,0 +1,54 @@
+﻿@page
+@inject ICMSService _cmsService
+@{
+    ViewData["Tag"] = 2;
+    ViewData["Title"] = "手机号登录";
+    ViewData["Desc"] = "手机号登录";
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteBasic = siteBasic;
+    ViewBag.SiteSetting = mngSetting;
+}
+
+@section head
+    {
+    <link rel="stylesheet" type="text/css" href="/Content/css/first_login.css">
+    <link rel="stylesheet" type="text/css" href="/Content/css/login.css">
+    <script type="text/javascript" src="/Content/js/layui/layui.js"></script>
+    <script type="text/javascript" src="/Content/js/login.js?v=2"></script>
+}
+    <div class="container-fluid login">
+        <div class="row title">
+            <div class="col-xs-12 text-left">
+                <a class="current" href="#">手机登录</a>
+            </div>
+        </div>
+        <div class="row login">
+            <div class="col-xs-12">
+                <div class="print-cert-form">
+                    <div class="form-group">
+                        <div class="text-left">
+                            <span>手机号</span>
+                        </div>
+                        <div>
+                            <input type="text" maxlength="11" id="UserName" name="UserName" placeholder="请输入手机号">
+                        </div>
+                        <div>
+                            <button id="sendcode" class="btn btn-primary btn_code">发送验证码</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="text-left">
+                            <span>验证码</span>
+                        </div>
+                        <div>
+                            <input type="text" maxlength="4" id="Code" name="Code" placeholder="请输入验证码">
+                        </div>
+                    </div>
+                    <input type="hidden" name="SystemMemberType" id="SystemMemberType" value="@Convert.ToInt32(DataLibrary.EnumList.SystemMemberType.Manage)" />
+                    <button type="submit" id="btnLogin_ByPhone" class="btn btn-primary btn-lg btn-block query">确定</button>
+                </div>
+            </div>
+        </div>
+
+    </div>

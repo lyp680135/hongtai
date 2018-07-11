@@ -183,7 +183,7 @@
             data: $("#form1").serialize(),
             success: function (re) {
                 if (re == "success") {
-                    window.location.href = "/Service/search_result?batcode=" + $("#batcode").val() + "&validcode=" + $("#validcode").val();
+                    window.location.href = "/Service/Detail?batcode=" + $("#batcode").val() + "&validcode=" + $("#validcode").val();
                 } else {
                     layer.msg(re);
                 }

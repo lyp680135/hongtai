@@ -75,11 +75,11 @@
                                 {
                                     ViewData["Title"] = "首页";
                                 }
-                                else if (int.Parse(ViewData["Tag"].ToString()) == 2)
+                                @if (int.Parse(ViewData["Tag"].ToString()) == 4)
                                 {
                                     ViewData["Title"] = "产品查询";
                                 }
-                                else if (int.Parse(ViewData["Tag"].ToString()) == 4)
+                                else if (ViewData["Title"].ToString() == "服务")
                                 {
                                     ViewData["Title"] = "产品查询";
                                 }
@@ -116,18 +116,15 @@
                             {
                                 <img src="/Content/images/products_banner.jpg" alt="First slide" />
                             }
-                            else if (int.Parse(ViewData["Tag"].ToString()) == 2)
-                            {
-                                <img src="/Content/images/services_banner.jpg" alt="First slide" />
-                            }
-                            else if (int.Parse(ViewData["Tag"].ToString()) == 4)
-                            {
-                                <img src="/Content/images/services_banner.jpg" alt="First slide" />
-                            }
                             else if (int.Parse(ViewData["Tag"].ToString()) == 3)
                             {
                                 <img src="/Content/images/sales_banner.jpg" alt="First slide" />
                             }
+                            else
+                            {
+                                <img src="/Content/images/services_banner.jpg" alt="First slide" />
+                            }
+
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,57 @@
+﻿@page
+@inject ICMSService _cmsService
+@{
+    ViewData["Title"] = "经销商登录";
+    ViewData["Desc"] = "经销商登录";
+    ViewData["Tag"] = 2;
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteBasic = siteBasic;
+    ViewBag.SiteSetting = mngSetting;
+}
+
+@section head
+    {
+    <link rel="stylesheet" type="text/css" href="/Content/css/first_login.css">
+    <link rel="stylesheet" type="text/css" href="/Content/css/login.css">
+    <script type="text/javascript" src="/Content/js/layui/layui.js"></script>
+    <script type="text/javascript" src="/Content/js/login.js?v=2"></script>
+}
+    <div class="container-fluid login">
+        <div class="row title">
+            <div class="col-xs-6 text-left">
+                <a class="" href="/Login">生产管理登录</a>
+            </div>
+            <div class="col-xs-6 text-right">
+                <a class="current" href="#">经销商登录</a>
+            </div>
+        </div>
+        <div class="row login">
+            <div class="col-xs-12">
+                <div class="print-cert-form">
+                    <div class="form-group">
+                        <div class="text-left">
+                            <span>手机号</span>
+                        </div>
+                        <div>
+                            <input type="text" maxlength="11" id="UserName" name="UserName" placeholder="请输入手机号">
+                        </div>
+                        <div>
+                            <button id="sendcode" class="btn btn-primary btn_code">发送验证码</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="text-left">
+                            <span>验证码</span>
+                        </div>
+                        <div>
+                            <input type="text" maxlength="4" id="Code" name="Code" placeholder="请输入验证码">
+                        </div>
+                    </div>
+                    <input type="hidden" name="SystemMemberType" id="SystemMemberType" value="@Convert.ToInt32(DataLibrary.EnumList.SystemMemberType.Seller)" />
+                    <button type="submit" class="btn btn-primary btn-lg btn-block query" id="btnLogin_ByPhone">确定</button>
+                </div>
+            </div>
+        </div>
+
+    </div>

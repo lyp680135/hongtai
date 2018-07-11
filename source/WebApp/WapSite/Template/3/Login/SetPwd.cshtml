@@ -1,0 +1,115 @@
+﻿@page
+@using System.Web;
+@inject ICMSService _cmsService
+@inject DataLibrary.DataContext Db
+@{
+    ViewData["Title"] = "设置密码";
+    ViewData["Desc"] = "设置密码";
+    ViewData["Tag"] = 2;
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteBasic = siteBasic;
+    ViewBag.SiteSetting = mngSetting;
+}
+@functions{
+    /// <summary>
+    /// Gets or sets 页面提示
+    /// </summary>
+    public string Msg { get; set; }
+
+    [BindProperty]
+    public string SetPwd { get; set; }
+
+    [BindProperty]
+    public string SetPwd2 { get; set; }
+
+    /// <summary>
+    /// Gets or sets 认证Token
+    /// </summary>
+    [BindProperty]
+    public string S { get; set; }
+
+    public void OnGet()
+    {
+        if (!this._cmsService.IuserService.IsAuth || !this._cmsService.IuserService.IsManageMember)
+        {
+            this.Response.Redirect(_cmsService.GetSetting().Domain_WAP);
+        }
+    }
+
+    public void OnPost()
+    {
+        if (this.SetPwd.Length < 6)
+        {
+            this.Msg = "密码长度应不少于6位";
+            return;
+        }
+        else if (this.SetPwd != this.SetPwd2)
+        {
+            this.Msg = "两次输入的密码不致";
+            return;
+        }
+        else
+        {
+            var mngAdmin = this._cmsService.IuserService.ApplicationUser.Mng_admin;
+            mngAdmin.Password = Util.Helpers.Encrypt.Md5By32(this.SetPwd);
+
+            Db.MngAdmin.Update(mngAdmin);
+            Db.SaveChanges();
+
+            this.Response.Redirect($"{this._cmsService.GetSetting().Domain_WAPManage}SetAuth?s={this.S}");
+        }
+    }
+
+
+}
+@section head{
+
+    <link href="/Content/css/setpwd.css" rel="stylesheet" />
+    <script type="text/javascript" src="/Content/js/layui/layui.js"></script>
+    <script type="text/javascript" src="/Content/js/login.js"></script>
+}
+<div class="container-fluid login">
+    <div class="row title">
+        <div class="col-xs-12 text-left">
+            <a class="current">设置您的密码</a>
+        </div>
+    </div>
+    <div class="row login">
+        <div class="col-xs-12">
+            <form class="print-cert-form" method="post" id="form1">
+                <div class="form-group">
+                    <div class="text-left">
+                        <span>密码</span>
+                    </div>
+                    <div>
+                        <input type="password" id="SetPwd" name="SetPwd" placeholder="设置您的密码">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="text-left">
+                        <span>确认密码</span>
+                    </div>
+                    <div>
+                        <input type="password" id="SetPwd2" name="SetPwd2" placeholder="再输入一遍进行确认">
+                    </div>
+                </div>
+                <p>设置密码后，下次可以使用手机号与密码登录</p>
+                <button type="submit" class="btn btn-primary btn-lg btn-block query" id="btn_SetPwd">确定</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*@section foot{
+        @if(!string.IsNullOrEmpty(Model.Msg))
+        {
+            <script type="text/javascript">
+                layui.use('layer', function () {
+                    var $ = layui.jquery, layer = layui.layer;
+
+                      layer.msg("@Html.Raw(Model.Msg)", { icon: 2 });
+                });
+            </script>
+        }
+    }*@
