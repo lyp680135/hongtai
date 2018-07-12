@@ -278,6 +278,9 @@
                     // 质量图标
                     info.Add("QualityIcon", "qs.png");
 
+                    // 附加的质量图标（鸿泰特有）
+                    info.Add("QualityIcon2", "qs2.png");
+
                     // 生产许可证号
                     info.Add("PermitNo", "XK05-001-00075");
 
@@ -733,6 +736,10 @@
                     html = html.Replace("{{data.Logo}}", template_image_path + "/qualitypics/template/images/" + jobj["Logo"].ToString());
                     html = html.Replace("{{data.TitleIcon}}", template_image_path + "/qualitypics/template/images/" + jobj["TitleIcon"].ToString());
                     html = html.Replace("{{data.QualityIcon}}", template_image_path + "/qualitypics/template/images/" + jobj["QualityIcon"].ToString());
+
+                    // 附加的质量图标（鸿泰特有）
+                    html = html.Replace("{{data.QualityIcon2}}", template_image_path + "/qualitypics/template/images/" + jobj["QualityIcon2"].ToString());
+
                     html = html.Replace("{{data.Brand}}", template_image_path + "/qualitypics/template/images/" + jobj["Brand"].ToString());
                     html = html.Replace("{{data.PrintNo}}", printno);
                     html = html.Replace("{{data.DeliveryCompany}}", jobj["DeliveryCompany"].ToString());
