@@ -17,20 +17,23 @@
         var Product = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰产品", 1, 4);
         if (Product != null)
         {
-            for (int i = 0; i < Product.Count; i++)
+            foreach (var P in Product)
             {
                 <div>
                     <div class="row product_column">
-                        <div class="col-xs-6">
-                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Product[i]["Image"].ToString().Split(',')[0]" />
-                        </div>
-                        <div class="col-xs-6">
-                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Product[i]["Image"].ToString().Split(',')[1]" />
-                        </div>
+                        @if (P["Image"].SafeString() != string.Empty)
+                        {
+                            foreach (var imgItem in P["Image"].ToString().Split(','))
+                            {
+                                <div class="col-xs-6">
+                                    <img class="ImgClass" alt="@Html.Raw(P["Description"])" src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@imgItem" />
+                                </div>
+                            }
+                        }
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
-                            <h3>@Html.Raw(Product[i]["Title"])@Html.Raw(Product[i]["Description"])</h3>
+                            <h3>@Html.Raw(P["Title"])@Html.Raw(P["Description"])</h3>
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,12 @@
 ﻿@inject Common.IService.IUserService _userService
+@inject Common.IService.ICMSService _cmsService
+@inject Common.IService.IContentGroupService _contentService
+@{
+    var SiteBasic = _cmsService.GetBasic();
+    var Tag = ViewData["Tag"] as string;
+    var mngSetting = _cmsService.GetSetting();
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,8 +46,8 @@
                 <div class="container-fluid top header">
                     <div class="row">
                         <div class="col-xs-9">
-                            <img src="/Content/images/logo.png" width="129" />
-                            <span class="service_hotline">诚信立足.稳健经营</span>
+                            <img src="@SiteBasic.Logo" width="129" />
+                            <span class="service_hotline">@SiteBasic.LogoText</span>
                         </div>
                         <div class="col-xs-3 text-right right">
                             @if (_userService.IsAuth)
@@ -139,8 +147,8 @@
                 <div class="container-fluid top header">
                     <div class="row">
                         <div class="col-xs-9">
-                            <img src="/Content/images/logo.png" width="129" />
-                            <span class="service_hotline">诚信立足.稳健经营</span>
+                            <img src="@SiteBasic.Logo" width="129" />
+                            <span class="service_hotline">@SiteBasic.LogoText</span>
                         </div>
                         <div class="col-xs-3 text-right right">
                             @if (_userService.IsAuth)
@@ -211,23 +219,23 @@
                         <div class="item active">
                             @if (int.Parse(ViewData["Tag"].ToString()) == 0)
                             {
-                                <img src="/Content/images/banner.jpg" alt="First slide" />
+                                <img src="/Content/images/banner.jpg" alt="First slide" width="100%" />
                             }
                             else if (int.Parse(ViewData["Tag"].ToString()) == 1)
                             {
-                                <img src="/Content/images/products_banner.jpg" alt="First slide" />
+                                <img src="/Content/images/products_banner.jpg" alt="First slide" width="100%" />
                             }
                             else if (int.Parse(ViewData["Tag"].ToString()) == 2)
                             {
-                                <img src="/Content/images/services_banner.jpg" alt="First slide" />
+                                <img src="/Content/images/services_banner.jpg" alt="First slide" width="100%" />
                             }
                             else if (int.Parse(ViewData["Tag"].ToString()) == 4)
                             {
-                                <img src="/Content/images/services_banner.jpg" alt="First slide" />
+                                <img src="/Content/images/services_banner.jpg" alt="First slide" width="100%" />
                             }
                             else if (int.Parse(ViewData["Tag"].ToString()) == 3)
                             {
-                                <img src="/Content/images/sales_banner.jpg" alt="First slide" />
+                                <img src="/Content/images/sales_banner.jpg" alt="First slide" width="100%" />
                             }
                             else
                             {

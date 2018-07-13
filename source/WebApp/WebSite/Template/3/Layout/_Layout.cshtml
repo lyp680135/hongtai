@@ -1,0 +1,188 @@
+﻿@inject Common.IService.ICMSService _cmsService
+@inject Common.IService.IContentGroupService _contentService
+@{
+    var SiteBasic = _cmsService.GetBasic();
+    var Tag = ViewData["Tag"] as string;
+    var mngSetting = _cmsService.GetSetting();
+}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    @if (ViewData["Title"] == null)
+    {
+        <title>@Html.Raw(SiteBasic.SiteTitle)</title>
+    }
+    else
+    {
+        <title>@Html.Raw(ViewData["Title"] + "-" + SiteBasic.CompName)</title>
+    }
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @if (ViewData["Desc"] == null)
+    {
+        <meta name="description" content="@Html.Raw(SiteBasic.SiteDesc)" />
+    }
+    else
+    {
+        <meta name="description" content="@Html.Raw(ViewData["Desc"]+"-"+SiteBasic.CompName)" />
+    }
+
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/Content/css/base.css" rel="stylesheet" />
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    @RenderSection("head", required: false)
+
+</head>
+<body>
+    <!--------------------------顶部导航------------------------------>
+    <div class="top_nav">
+        <div class="nav_box">
+            <a href="/"><img src="@SiteBasic.Logo" alt="@SiteBasic.CompName" /></a>
+            <a href="#" class="pic cssr_login"></a>
+            <div class="nav">
+                <a href="#" class="current">首页</a>
+                <a href="#">公司简介</a>
+                <a href="#">公司荣誉</a>
+                <a href="#">新闻中心</a>
+                <a href="#">产品中心</a>
+                <a href="#">营销网络</a>
+                <a href="#">服务中心</a>
+                <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <!--------------------------banner------------------------------>
+    <div class="banner">
+        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
+                <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
+            </ol>
+            <div class="carousel-inner" role="listbox">
+
+                @if (SiteBasic.CarouselImage.SafeString() != string.Empty)
+                {
+                    for (var i = 0; i < SiteBasic.CarouselImage.Object.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            <div class="item active">
+                                <div class="main_figure">
+                                    <img src="/Content/images/main_figure1.png" />
+                                </div>
+                                <img class="homebanner" src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@SiteBasic.CarouselImage.Object[i]" width="100%" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="item">
+                                <div class="main_figure">
+                                    <img src="/Content/images/main_figure1.png" />
+                                </div>
+                                <img class="homebanner" src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@SiteBasic.CarouselImage.Object[i]" width="100%" />
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    @RenderBody()
+
+    <!--------------------------页脚------------------------------>
+    <div class="footer">
+        <img class="footer_backdrop" src="/Content/images/footer.jpg" />
+        <div class="footer_box">
+            <div class="footer_content">
+                <div class="footer_nav">
+                    <a href="#" class="big_title">关于鸿泰</a>
+                    <a href="#">公司简介</a>
+                    <a href="#">公司荣誉</a>
+                    <a href="#">产品中心</a>
+                    <a href="#">营销网络</a>
+                </div>
+                <div class="footer_nav">
+                    <a href="#" class="big_title">新闻中心</a>
+                    <a href="#">公司新闻</a>
+                    <a href="#">行业动态</a>
+                    <a href="#">本周热点</a>
+                </div>
+                <div class="footer_nav">
+                    <a href="#" class="big_title">公司风采</a>
+                    <a href="#">生产设备</a>
+                    <a href="#">配套设施</a>
+                    <a href="#">产品移送和储存</a>
+                    <a href="#">电子质保书查询</a>
+                </div>
+
+                <div class="footer_nav">
+                    <div class="big_title big_title1">关注我们</div>
+
+                    @{
+                        var Follows = _cmsService.IcontentColumnDataService.GetContentColumnDataList("关注鸿泰", 1, 1);
+                        if (Follows != null)
+                        {
+                            foreach (var Follow in Follows)
+                            {
+                                <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Follow["Image"].ToString()" />
+                                var Tle =Util.Extensions.RemoveHtml(Follow["Title"].ToString());
+                                if (!string.IsNullOrEmpty(Tle))
+                                {
+                                    if (Tle.Length > 6)
+                                    {
+                                        Tle = Tle.Substring(0, 5);
+                                    }
+                                }
+                                <span class="qr_code">@Html.Raw(Tle)</span>
+                            }
+                        }
+                    }
+                </div>
+                <div class="footer_nav">
+                    <div class="big_title big_title1">联系我们</div>
+                    @{
+                        var Phones = _cmsService.IcontentColumnDataService.GetContentColumnDataList("联系鸿泰", 1, 1);
+                        foreach (var Phone in Phones)
+                        {
+                            <div class="footer_row">
+                                <span class="pic cssr_address"></span>
+                                <span>@Html.Raw(Phone["Address"])</span>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="footer_row">
+                                <span class="pic cssr_telephone"></span>
+                                <span>@Html.Raw(Phone["Phone"])</span>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="footer_row">
+                                <span class="pic cssr_printer"></span>
+                                <span>@Html.Raw(Phone["Fax"])</span>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="footer_row">
+                                <span class="pic cssr_email"></span>
+                                <span>@Html.Raw(Phone["Email"])</span>
+                                <div class="clearfix"></div>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <span class="copyright">@Html.Raw(SiteBasic.Copyright)</span>
+        </div>
+    </div>
+
+
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>
+

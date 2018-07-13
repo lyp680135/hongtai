@@ -1,0 +1,179 @@
+﻿@page
+@inject ICMSService _cmsService
+@using System.Text.RegularExpressions;
+@using Microsoft.AspNetCore.Http;
+@{
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    string strUserAgent = this.Request.Headers["User-Agent"].ToString().ToLower();
+
+    if (strUserAgent.Contains("mobile"))
+    {
+        this.Response.Redirect(mngSetting.Domain_WAP, false);
+    }
+}
+@section head{
+    <link href="/Content/css/index.css" rel="stylesheet" />
+}
+@functions{
+    public bool IsFirstLogin { get; set; }
+
+    public void OnGet(string t)
+    {
+        if (!string.IsNullOrWhiteSpace(t) && t.ToLower() == "first")
+        {
+            this.IsFirstLogin = true;
+        }
+        else
+        {
+            this.IsFirstLogin = false;
+        }
+    }
+}
+
+
+
+<!--------------------------关于我们------------------------------>
+<div class="about">
+    <img class="about_backdrop" src="/Content/images/aboutus.jpg" />
+    <div class="share_title">
+        <span class="pic cssr_home_about"></span>
+    </div>
+    <a href="#" class="about_box">
+        @{
+            var Abount = _cmsService.GetSinglePage("关于鸿泰");
+            if (Abount != null)
+            {
+                var Con = Util.Extensions.RemoveHtml(Abount.Content);
+                if (Con.Length > 300)
+                {
+                    Con = Con.Substring(0, 300) + "...";
+                }
+                <div class="about_content">
+                    <p>@Html.Raw(Con)</p>
+                    <div class="more1"><span class="pic cssr_more1"></span></div>
+                </div>
+                <img src="/Content/images/home_about.png" />
+                <div class="clearfix">
+                </div>
+            }
+        }
+
+    </a>
+</div>
+
+<!--------------------------新闻中心------------------------------>
+<div class="news">
+    <div class="share_title">
+        <span class="pic cssr_home_news"></span>
+    </div>
+    <div class="news_box">
+        <img src="/Content/images/home_news.jpg" />
+        <div class="news_content">
+
+            @{
+                var News = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰新闻", 1, 4);
+                if (News != null)
+                {
+                    for (int i = 0; i < News.Count; i++)
+                    {
+                        var Con = Util.Extensions.RemoveHtml(News[i]["Content"].ToString());
+                        if (!string.IsNullOrEmpty(Con))
+                        {
+                            if (Con.Length > 30)
+                            {
+                                Con = Con.Substring(0, 30) + "...";
+                            }
+                        }
+                        <a href="#" class="news_row">
+                            <div class="date">
+                                <span>@Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(News[i]["CreateTime"])).ToString("MM-dd")</span>
+                                <span>@Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(News[i]["CreateTime"])).ToString("yyyy")</span>
+                            </div>
+                            <div class="specific_news">
+                                <h2>@Html.Raw(News[i]["Title"])</h2>
+                                <p>@Html.Raw(Con)</p>
+                            </div>
+                            <div class="clearfix"></div>
+                        </a>
+                    }
+                }
+            }
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!--------------------------公司风采------------------------------>
+<div class="mien">
+    <div class="share_title">
+        <span class="pic cssr_home_mien"></span>
+    </div>
+    <div class="mien_box">
+        @{
+            var Sence = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰风采", 1, 10);
+            if (Sence != null)
+            {
+                for (int i = 0; i < Sence.Count; i++)
+                {
+                    if (i % 2 == 0)
+                    {
+                        <a href="#" class="mien_box2">
+                            <div class="mien_content">
+                                <h2>@Html.Raw(Sence[i]["Title"])</h2>
+                                <span class="span1"></span>
+                                <small>@Html.Raw(Sence[i]["Titledes"])</small>
+                                <p>@Html.Raw(Sence[i]["Content"])</p>
+                                <div class="more1"><span class="pic cssr_more1"></span></div>
+                            </div>
+                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Sence[i]["Image"]" />
+                            <div class="clearfix"></div>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="#" class="mien_box1">
+                            <div class="mien_content">
+                                <h2>@Html.Raw(Sence[i]["Title"])</h2>
+                                <span class="span1"></span>
+                                <small>@Html.Raw(Sence[i]["Titledes"])</small>
+                                <p>@Html.Raw(Sence[i]["Content"])</p>
+                                <div class="more1"><span class="pic cssr_more1"></span></div>
+                            </div>
+                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Sence[i]["Image"]" />
+                            <div class="clearfix"></div>
+                        </a>
+                    }
+                }
+            }
+        }
+    </div>
+</div>
+<!--------------------------产品中心------------------------------>
+<div class="product">
+    <div class="share_title">
+        <span class="pic cssr_home_product"></span>
+    </div>
+    <div class="product_box">
+        <p></p>
+        <div class="product_content">
+            @{
+                var Product = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰产品", 1, 3);
+                if (Product != null)
+                {
+                    for (int i = 0; i < Product.Count; i++)
+                    {
+                        <a href="#">
+                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Product[i]["Image"]" />
+                            <div class="shade_box">
+                                <h2>@Html.Raw(Product[i]["Title"])@Html.Raw(Product[i]["Description"])</h2>
+                                <div class="more1"><span class="pic cssr_more2"></span></div>
+                            </div>
+                        </a>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>
+
+
