@@ -87,8 +87,8 @@
                         }
                         <a href="#" class="news_row">
                             <div class="date">
-                                <span>@Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(News[i]["CreateTime"])).ToString("MM-dd")</span>
-                                <span>@Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(News[i]["CreateTime"])).ToString("yyyy")</span>
+                                <span>@Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(News[i]["Createtime"])).ToString("MM-dd")</span>
+                                <span>@Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(News[i]["Createtime"])).ToString("yyyy")</span>
                             </div>
                             <div class="specific_news">
                                 <h2>@Html.Raw(News[i]["Title"])</h2>

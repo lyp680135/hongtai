@@ -1,7 +1,7 @@
 ﻿@charset "utf-8";
 /* CSS Document */
 /*---------------------------banner-------------------------- */
-body *{
+body * {
     color: #4c4c4c;
 }
 .container-fluid.content{
@@ -34,6 +34,9 @@ body *{
 .introduce_details .div_img{
     position: relative;
 }
+.introduce_details .div_img img{
+   width: 100%;
+}
 .div_img .slogan{
     position:absolute;
     bottom: -3px;
@@ -62,26 +65,8 @@ body *{
     -webkit-box-orient: vertical;
 }
 /*---------------------------新闻中心-------------------------- */
-.row.news_list a{
-    display: block;
-    padding: 15px 0;
-    border-bottom: 1px solid #e5e5e5;
-}
-.news_time{
-    float: left;
-    width: 50px;
-    height: 25px;
-    line-height: 25px;
-    background: #ebebeb;
-    text-align: center;
-}
-.news_details{
-    float: right;
-    width: 80%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    line-height: 25px;
+.news_img img{
+    width: 100%;
 }
 /*---------------------------公司风采-------------------------- */
 .content.mien{
@@ -118,6 +103,9 @@ body *{
     line-height: 24px;
     margin-bottom: 12px;
 }
+.mien_list img{
+    width: 100%;
+}
 /*---------------------------产品中心-------------------------- */
 .container-fluid.product .row>div:first-child{
     padding-left: 12px;
@@ -131,8 +119,9 @@ body *{
     line-height: 24px;
     margin-bottom: 12px;
 }
-.product_list img{
+.product_list>img{
     vertical-align: middle;
+    width: 100%;
 }
 .mask{
     background: rgba(0,0,0,0.3);

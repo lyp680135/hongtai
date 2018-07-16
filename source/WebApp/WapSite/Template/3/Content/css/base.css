@@ -2,58 +2,48 @@
 /* CSS Document */
 /*---------------------------基本设置-------------------------- */
 @media screen and (max-width: 320px) {
-    .top.header .row .service_hotline {
+    .top.header .row .service_hotline{
         padding-left: 0;
         font-size: 12px;
     }
 }
-
-body {
-    margin: 0;
-    padding-bottom: 56px;
+body{
+margin:0;
+padding-bottom: 55px;
 }
-
-    body * {
-        font-family: "微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-
-.clearfix {
-    clear: both;
+body *{
+font-family:"微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif;
+margin:0;
+padding:0;
 }
-
-ul li {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+.clearfix{
+clear:both;
 }
-
-a {
-    text-decoration: none;
+ul li{
+list-style-type:none;
+margin: 0;
+padding: 0;
 }
-
-    a:focus, a:active, a:hover {
-        text-decoration: none;
-    }
-
+a{
+text-decoration:none;
+}
+a:focus,a:active,a:hover{
+text-decoration:none;
+}
 img {
-    max-width: 100%;
-    height: auto;
-    vertical-align: inherit;
+max-width: 100%;
+height: auto;
+vertical-align:inherit;
 }
 /*---------------------------顶部-------------------------- */
-.header_box {
+.header_box{
     position: relative;
 }
-
-.top_nav_banner {
-    position: fixed;
+.top_nav_banner{
     z-index: 998;
     width: 100%;
 }
-
-.top_box {
+.top_box{
     background: rgba(0,0,0,0.5);
     height: 99px;
     border: none;
@@ -62,74 +52,64 @@ img {
     left: 0;
     z-index: 1000;
 }
-
-.container-fluid.top {
-    vertical-align: middle;
+.container-fluid.top{
+    vertical-align:middle;
     padding: 0 12px 0 12px;
 }
-
-    .container-fluid.top .row {
-        margin-left: -12px;
-        margin-right: -12px;
-    }
-
-        .container-fluid.top .row > div {
-            padding-left: 12px;
-            padding-right: 12px;
-            vertical-align: middle;
-        }
-
-.banner {
+.container-fluid.top .row{
+    margin-left: -12px;
+    margin-right: -12px;
+}
+.container-fluid.top .row>div{
+    padding-left: 12px;
+    padding-right:12px;
+    vertical-align: middle;
+}
+.banner{
     height: 99px;
     z-index: 999;
 }
-
-    .banner .carousel-inner > .item > img {
-        height: 99px;
-        width: 100%;
-    }
-
-.perch {
+.banner .carousel-inner>.item>img{
+    height: 99px;
+    width: 100%;
+}
+.carousel.slide .carousel-inner .item>img{
+    width: 100%;
+}
+.perch{
     height: 99px;
 }
-
-.top.header {
+.top.header{
     height: 57px;
     border-bottom: 1px solid #7f7f7f;
 }
-
-    .top.header .row {
-        margin-top: 11px;
-    }
-
-        .top.header .row span {
-            font-size: 14px;
-            color: #fff;
-            font-family: "楷体";
-            padding-left: 5px;
-        }
-
-.top .row .right {
+.top.header .row{
+    margin-top: 11px;
+}
+.top.header .row span{
+    font-size: 14px;
+    color: #fff;
+    font-family: "楷体";
+    padding-left: 15px;
+}
+.top .row .right{
     margin-top: 7px
 }
 /*---------------------------弹出导航-------------------------- */
-.top.submenu {
+.top.submenu{
     height: 42px;
     line-height: 42px;
 }
-
-    .top.submenu div {
-        font-size: 14px;
-        color: #fff;
-    }
-
-.rightsidebar {
+.top.submenu div{
+    font-size: 14px;
+    color: #fff;
+}
+.rightsidebar{
     position: absolute;
     right: 12px;
     top: 5px;
 }
-
-.dropdown_menu {
+.dropdown_menu{
     width: 185px;
     background-color: #212121;
     float: right;
@@ -138,93 +118,102 @@ img {
     position: relative;
 }
 
-    .dropdown_menu div a {
-        color: #fff;
-        font-size: 15px;
-    }
-
-    .dropdown_menu div {
-        border-bottom: 1px solid #7c7c7c;
-        margin: 0 10px;
-    }
-
-    .dropdown_menu > div:last-child {
-        border-bottom: none;
-    }
-
-.triangle_border_top {
-    display: none;
-    width: 0;
-    height: 0;
-    border-width: 0 8px 8px;
-    border-style: solid;
-    border-color: transparent transparent #212121;
-    position: relative;
+.dropdown_menu div a{
+    color: #fff;
+    font-size: 15px;
+}
+.dropdown_menu div{
+    border-bottom: 1px solid #7c7c7c;
+    margin: 0 10px;
+}
+.dropdown_menu>div:last-child{
+    border-bottom: none;
+}
+.triangle_border_top{
+    display:none;
+    width:0;
+    height:0;
+    border-width:0 8px 8px;
+    border-style:solid;
+    border-color:transparent transparent #212121;
+    position:relative;
     float: right;
     right: 5px;
-    top: 10px;
+    top:10px;
 }
 /*---------------------------主导航-------------------------- */
-.container-fluid.nav-bottom {
-    vertical-align: middle;
+.container-fluid.nav-bottom{
+    vertical-align:middle;
     padding: 0
 }
-
-    .container-fluid.nav-bottom .row {
-        margin-left: 0;
-        margin-right: 0;
-    }
-
-        .container-fluid.nav-bottom .row > div {
-            padding-left: 0;
-            padding-right: 0;
-            vertical-align: middle;
-        }
-
-.nav-bottom {
+.container-fluid.nav-bottom .row{
+    margin-left: 0;
+    margin-right:0;
+}
+.container-fluid.nav-bottom .row>div{
+    padding-left: 0;
+    padding-right:0;
+    vertical-align: middle;
+}
+.nav-bottom{
     height: 55px;
 }
-
-    .nav-bottom ul li {
-        float: left;
-        background: #353535;
-        width: 25%;
-        height: 55px;
-    }
-
-        .nav-bottom ul li a {
-            display: block;
-            margin-top: 7.5px
-        }
-
-    .nav-bottom h1 {
-        font-size: 14px;
-        color: #fff;
-    }
-
-    .nav-bottom ul .current {
-        background: #212121;
-    }
+.nav-bottom ul li{
+    float: left;
+    background: #353535;
+    width: 25%;
+    height: 55px;
+}
+.nav-bottom ul li a{
+    display: block;
+    margin-top: 7.5px
+}
+.nav-bottom h1{
+    font-size: 14px;
+    color: #fff;
+}
+.nav-bottom ul .current{
+    background: #212121;
+}
 /*---------------------------页脚-------------------------- */
-.container-fluid.footer {
-    vertical-align: middle;
+.container-fluid.footer{
+    vertical-align:middle;
     padding: 12px;
     background-color: #e6e6e6;
     height: 80px;
 }
-
-    .container-fluid.footer .row {
-        margin-left: -12px;
-        margin-right: -12px;
-    }
-
-        .container-fluid.footer .row > div {
-            padding-left: 12px;
-            padding-right: 12px;
-            vertical-align: middle;
-        }
-
-.footer p {
+.container-fluid.footer .row{
+    margin-left: -12px;
+    margin-right: -12px;
+}
+.container-fluid.footer .row>div{
+    padding-left: 12px;
+    padding-right:12px;
+    vertical-align: middle;
+}
+.footer p{
     color: #333;
     line-height: 28px;
+}
+/*---------------------------新闻中心-------------------------- */
+.row.news_list a{
+    display: block;
+    padding: 15px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+.news_time{
+    float: left;
+    width: 50px;
+    height: 25px;
+    line-height: 25px;
+    background: #ebebeb;
+    text-align: center;
+}
+.news_details{
+    float: right;
+    width: 80%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 25px;
 }

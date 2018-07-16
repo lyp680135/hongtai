@@ -18,15 +18,15 @@
 <div class="container-fluid matter">
     <div class="row news_nav">
         <div class="col-xs-12">
-            <a href="/News" class="current">企业新闻</a>
+            <a href="/News">企业新闻</a>
             <a href="/News/Dynamic">行业动态</a>
-            <a href="/News/Hotspot">本周热点</a>
+            <a href="/News/Hotspot" class="current">本周热点</a>
         </div>
     </div>
     <div class="row news_list">
         <div class="col-xs-12">
             @{
-                var News = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰新闻", 1, 100);
+                var News = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰热点", 1, 100);
                 if (News != null)
                 {
                     for (int i = 0; i < News.Count; i++)

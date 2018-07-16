@@ -39,215 +39,100 @@
     @Html.Raw(ViewBag.SiteBasic.StatsCode)
 </head>
 <body>
-    @if (int.Parse(ViewData["Tag"].ToString()) == 2)
-    {
-        <div class="top_nav_banner">
-            <nav class="navbar navbar-default top_box ">
-                <div class="container-fluid top header">
-                    <div class="row">
-                        <div class="col-xs-9">
-                            <img src="@SiteBasic.Logo" width="129" />
-                            <span class="service_hotline">@SiteBasic.LogoText</span>
-                        </div>
-                        <div class="col-xs-3 text-right right">
-                            @if (_userService.IsAuth)
-                            {
-                                <a href="@ViewBag.SiteSetting.Domain_WAPManage">
-                                    <img src="/Content/images/head_portrait_before.png" width="21" />
-                                    @if (_userService.IsManageMember && _userService.ApplicationUser.Mng_admin != null)
-                                    {
-                                        <span>@Html.Raw(_userService.ApplicationUser.Mng_admin.RealName)</span>
-                                    }
-                                    else
-                                    {
-                                        <span>@Html.Raw(_userService.SaleSellerUser.Name)</span>
-                                    }
-                                </a>
-                            }
-                            else
-                            {
-                                <a href="/Login">
-                                    <span>登录</span>
-                                    <img src="/Content/images/head_portrait_before.png" width="21" />
+    <div class="header_box">
+        <nav class="navbar top_box">
+            <div class="container-fluid top header">
+                <div class="row">
+                    <div class="col-xs-9">
+                        <img src="@SiteBasic.Logo" width="129" />
+                        <span class="service_hotline">@SiteBasic.LogoText</span>
+                    </div>
+                    <div class="col-xs-3 text-right right">
+                        @if (_userService.IsAuth)
+                        {
+                            <a href="@ViewBag.SiteSetting.Domain_WAPManage">
+                                <img src="/Content/images/head_portrait_before.png" width="21" />
+                                @if (_userService.IsManageMember && _userService.ApplicationUser.Mng_admin != null)
+                                {
+                                    <span>@Html.Raw(_userService.ApplicationUser.Mng_admin.RealName)</span>
+                                }
+                                else
+                                {
+                                    <span>@Html.Raw(_userService.SaleSellerUser.Name)</span>
+                                }
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="/Login">
+                                <span>登录</span>
+                                <img src="/Content/images/head_portrait_before.png" width="21" />
 
-                                </a>
-                            }
-                        </div>
+                            </a>
+                        }
                     </div>
                 </div>
-                <div class="container-fluid top submenu">
-                    <div class="row">
-                        <div class="col-xs-12 text-center">
-                            <div>
-                                @if (int.Parse(ViewData["Tag"].ToString()) == 0)
-                                {
-                                    ViewData["Title"] = "首页";
-                                }
-                                @if (int.Parse(ViewData["Tag"].ToString()) == 4)
-                                {
-                                    ViewData["Title"] = "产品查询";
-                                }
-                                else if (ViewData["Title"].ToString() == "服务")
-                                {
-                                    ViewData["Title"] = "产品查询";
-                                }
-                                @ViewData["Title"]
-                            </div>
-                            <div class="collapsed rightsidebar" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
-                                <img src="/Content/images/nav.png" width="27.5" />
-                            </div>
-                            <span class="triangle_border_top"></span>
-                            <div class="clearfix"></div>
-                            <div class="collapse dropdown_menu" id="nav-collapse">
-                                <div><a href="/">首页</a></div>
-                                <div><a href="#">公司简介</a></div>
-                                <div><a href="#">公司荣誉</a></div>
-                                <div><a href="#">新闻中心</a></div>
-                                <div><a href="/Product">产品中心</a></div>
-                                <div><a href="/Sales">营销网络</a></div>
-                                <div><a href="/Service">服务中心</a></div>
-                            </div>
+            </div>
+            <div class="container-fluid top submenu">
+                <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <div>
+                            @if (int.Parse(ViewData["Tag"].ToString()) == 2)
+                            {
+                                ViewData["Title"] = "产品查询";
+                            }
+                            else if (int.Parse(ViewData["Tag"].ToString()) == 4)
+                            {
+                                ViewData["Title"] = "产品查询";
+                            }
+                            @ViewData["Title"]
                         </div>
-                    </div>
-                </div>
-            </nav>
-            <!--------------------------banner------------------------------>
-            <div class="banner">
-                <div id="myCarousel" class="carousel slide">
-                    <div class="carousel-inner">
-                        <div class="item active">
-                            @if (int.Parse(ViewData["Tag"].ToString()) == 0)
-                            {
-                                <img src="/Content/images/banner.jpg" alt="First slide" />
-                            }
-                            else if (int.Parse(ViewData["Tag"].ToString()) == 1)
-                            {
-                                <img src="/Content/images/products_banner.jpg" alt="First slide" />
-                            }
-                            else if (int.Parse(ViewData["Tag"].ToString()) == 3)
-                            {
-                                <img src="/Content/images/sales_banner.jpg" alt="First slide" />
-                            }
-                            else
-                            {
-                                <img src="/Content/images/services_banner.jpg" alt="First slide" />
-                            }
-
+                        <div class="collapsed rightsidebar" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
+                            <img src="/Content/images/nav.png" width="27.5" />
+                        </div>
+                        <span class="triangle_border_top"></span>
+                        <div class="clearfix"></div>
+                        <div class="collapse dropdown_menu" id="nav-collapse">
+                            <div><a href="/">首页</a></div>
+                            <div><a href="/Abount_us">公司简介</a></div>
+                            <div><a href="/Honor">公司荣誉</a></div>
+                            <div><a href="/News">新闻中心</a></div>
+                            <div><a href="/Product">产品中心</a></div>
+                            <div><a href="/Sales">营销网络</a></div>
+                            <div><a href="/Service">服务中心</a></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="perch"></div>
-    }
-    else
-    {
-        <div class="header_box">
-            <nav class="navbar top_box">
-                <div class="container-fluid top header">
-                    <div class="row">
-                        <div class="col-xs-9">
-                            <img src="@SiteBasic.Logo" width="129" />
-                            <span class="service_hotline">@SiteBasic.LogoText</span>
-                        </div>
-                        <div class="col-xs-3 text-right right">
-                            @if (_userService.IsAuth)
-                            {
-                                <a href="@ViewBag.SiteSetting.Domain_WAPManage">
-                                    <img src="/Content/images/head_portrait_before.png" width="21" />
-                                    @if (_userService.IsManageMember && _userService.ApplicationUser.Mng_admin != null)
-                                    {
-                                        <span>@Html.Raw(_userService.ApplicationUser.Mng_admin.RealName)</span>
-                                    }
-                                    else
-                                    {
-                                        <span>@Html.Raw(_userService.SaleSellerUser.Name)</span>
-                                    }
-                                </a>
-                            }
-                            else
-                            {
-                                <a href="/Login">
-                                    <span>登录</span>
-                                    <img src="/Content/images/head_portrait_before.png" width="21" />
-
-                                </a>
-                            }
-                        </div>
-                    </div>
-                </div>
-                <div class="container-fluid top submenu">
-                    <div class="row">
-                        <div class="col-xs-12 text-center">
-                            <div>
-                                @if (int.Parse(ViewData["Tag"].ToString()) == 0)
-                                {
-                                    ViewData["Title"] = "首页";
-                                }
-                                else if (int.Parse(ViewData["Tag"].ToString()) == 2)
-                                {
-                                    ViewData["Title"] = "产品查询";
-                                }
-                                else if (int.Parse(ViewData["Tag"].ToString()) == 4)
-                                {
-                                    ViewData["Title"] = "产品查询";
-                                }
-                                @ViewData["Title"]
-                            </div>
-                            <div class="collapsed rightsidebar" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
-                                <img src="/Content/images/nav.png" width="27.5" />
-                            </div>
-                            <span class="triangle_border_top"></span>
-                            <div class="clearfix"></div>
-                            <div class="collapse dropdown_menu" id="nav-collapse">
-                                <div><a href="/">首页</a></div>
-                                <div><a href="#">公司简介</a></div>
-                                <div><a href="#">公司荣誉</a></div>
-                                <div><a href="#">新闻中心</a></div>
-                                <div><a href="/Product">产品中心</a></div>
-                                <div><a href="/Sales">营销网络</a></div>
-                                <div><a href="/Service">服务中心</a></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <!--------------------------banner------------------------------>
+        </nav>
+        <!--------------------------banner------------------------------>
+        @if (int.Parse(ViewData["Tag"].ToString()) == 0)
+        {
             <div>
                 <div id="myCarousel" class="carousel slide">
                     <div class="carousel-inner">
                         <div class="item active">
-                            @if (int.Parse(ViewData["Tag"].ToString()) == 0)
-                            {
-                                <img src="/Content/images/banner.jpg" alt="First slide" width="100%" />
-                            }
-                            else if (int.Parse(ViewData["Tag"].ToString()) == 1)
-                            {
-                                <img src="/Content/images/products_banner.jpg" alt="First slide" width="100%" />
-                            }
-                            else if (int.Parse(ViewData["Tag"].ToString()) == 2)
-                            {
-                                <img src="/Content/images/services_banner.jpg" alt="First slide" width="100%" />
-                            }
-                            else if (int.Parse(ViewData["Tag"].ToString()) == 4)
-                            {
-                                <img src="/Content/images/services_banner.jpg" alt="First slide" width="100%" />
-                            }
-                            else if (int.Parse(ViewData["Tag"].ToString()) == 3)
-                            {
-                                <img src="/Content/images/sales_banner.jpg" alt="First slide" width="100%" />
-                            }
-                            else
-                            {
-                                <img src="/Content/images/sales_banner.jpg" alt="First slide" />
-                            }
+                            <img src="/Content/images/banner.jpg" alt="First slide" />
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    }
 
+        }
+        else
+        {
+        <div class="banner">
+            <div id="myCarousel" class="carousel slide">
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <img src="/Content/images/services_banner.jpg" alt="First slide" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+
+    </div>
     <!--------------------------导航------------------------------>
     <nav class="navbar navbar-fixed-bottom">
         <div class="container-fluid nav-bottom">
