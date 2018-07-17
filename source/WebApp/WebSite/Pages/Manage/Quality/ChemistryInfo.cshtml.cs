@@ -62,6 +62,19 @@ namespace WarrantyManage.Pages.Manage.Quality
                     this.ListQualityStandards = this.Db.BaseQualityStandard.Where(w => w.Materialid == currentInfo.MaterialId && w.Status == 0 && w.TargetCategory == targetCategory).ToList();
                 }
             }
+
+            if (id.HasValue && id.Value > 0)
+            {
+                this.PdQuality = this.Db.PdQuality.FirstOrDefault(c => c.Id == id);
+                if (this.PdQuality == null)
+                {
+                    this.RedirectToError();
+                }
+                else if (this.PdQuality.CheckStatus != DataLibrary.EnumList.CheckStatus_PdQuality.µÈ´ýÉóºË)
+                {
+                    this.RedirectToError();
+                }
+            }
         }
     }
 }

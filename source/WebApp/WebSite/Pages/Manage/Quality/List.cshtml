@@ -168,7 +168,7 @@ CheckStatus_PdQuality.审核不通过
                                 @if (qua.CheckStatus == DataLibrary.EnumList.CheckStatus_PdQuality.等待审核 && (groupIds.Contains((int)DataLibrary.EnumList.GroupManage.品质主管)|| groupIds.Contains((int)DataLibrary.EnumList.GroupManage.质量员)))
                                 {
                                     <label>
-                                        <a href="/Manage/Quality/Info?id=@qua.Id" class="layui-btn layui-btn-sm layui-btn-normal">编辑</a>
+                                        <a href="/Manage/Quality/physicsInfo?id=@qua.Id" class="layui-btn layui-btn-sm layui-btn-normal">编辑</a>
                                     </label>
                                 }
                             </div>

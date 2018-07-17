@@ -1,7 +1,14 @@
 ﻿@page
+@inject DataLibrary.DataContext _db
 @model WarrantyManage.Pages.Manage.Quality.ChemistryInfoModel
 @using DataLibrary;
 @{
+    var smcode = string.Empty;
+    if (Model.PdQuality.Id > 0)
+    {
+        smcode = _db.PdSmeltCode.FirstOrDefault(f => f.Qid == Model.PdQuality.Id).SmeltCode;
+    }
+
     Layout = null;
 }
 
@@ -92,10 +99,14 @@
                         <input type="text" name="YLCode" id="YLCode" lay-verify="YLCode" autocomplete="off" placeholder="请输入冶炼炉号" class="validate[required] layui-input" />
                     </div>
                 }
+
                 else
                 {
-
+                    <div class="layui-input-inline">
+                        <input type="text" name="YLCode" id="YLCode" lay-verify="YLCode" autocomplete="off" placeholder="请输入冶炼炉号" class="validate[required] layui-input" value="@smcode" disabled="disabled" />
+                    </div>
                 }
+
             </div>
             @if (Model.ListQualityStandards != null)
             {
@@ -449,7 +460,7 @@
             {
                 var loadLayer = layer.load(1);
                 $.ajax({
-                    type: "POST", url: '/Quality/Edit?pId=' + pId,
+                    type: "POST", url: '/Quality/ChemistryEdit?qId=' + pId,
                     data: $("#form1").serialize(),
                     success: function (re) {
                         if (re.toString() == 'true') {
@@ -474,7 +485,7 @@
                 var pass = $("#form1").validationEngine("validate");
                 if (pass) {
                     $.ajax({
-                        type: "POST", url: '/Quality/Check',
+                        type: "POST", url: '/Quality/Check?pId='+pId,
                         data: $("#form1").serialize(),
                         success: function (re) {
                             //如果校验通过就直接添加

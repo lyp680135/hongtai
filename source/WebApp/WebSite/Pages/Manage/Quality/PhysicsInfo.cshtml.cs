@@ -21,15 +21,17 @@ namespace WarrantyManage.Pages.Manage.Quality
 
         public List<DataLibrary.PdWorkshop> List_workShop { get; set; }
 
-        public List<DataLibrary.PdSmeltCode> PdSmeltCode { get; set; }
+        public List<DataLibrary.PdSmeltCode> PdSmeltCodeList { get; set; }
 
         public List<DataLibrary.BaseQualityStandard> ListQualityStandards { get; set; }
 
         public DataLibrary.PdQuality PdQuality { get; set; } = new DataLibrary.PdQuality();
 
+        public DataLibrary.PdSmeltCode PdSmeltCode { get; set; } = new DataLibrary.PdSmeltCode();
+
         public string BatCode { get; set; }
 
-        public void OnGet(int? id)
+        public void OnGet(int? id, int smeltCode = 0)
         {
             var userId = this.userService.ApplicationUser.Mng_admin.Id;
             var targetCategory = EnumList.TargetCategory.物理指标;
@@ -48,7 +50,8 @@ namespace WarrantyManage.Pages.Manage.Quality
                             this.ListQualityStandards = this.Db.BaseQualityStandard.Where(w => w.Materialid == productInfo.Materialid && w.Status == 0 && w.TargetCategory == targetCategory).ToList();
                         }
                     }
-                    BatCode = currentInfo.Batcode;
+
+                    this.BatCode = currentInfo.Batcode;
                 }
                 else
                 {
@@ -60,8 +63,30 @@ namespace WarrantyManage.Pages.Manage.Quality
 
                     this.ListQualityStandards = this.Db.BaseQualityStandard.Where(w => w.Materialid == currentInfo.MaterialId && w.Status == 0 && w.TargetCategory == targetCategory).ToList();
                 }
+                if (smeltCode <= 0)
+                {
+                    this.PdSmeltCode = this.Db.PdSmeltCode.LastOrDefault();
+                }
+                else
+                {
+                    this.PdSmeltCode = this.Db.PdSmeltCode.FirstOrDefault(f => f.Id == smeltCode);
+                }
             }
-            this.PdSmeltCode = this.Db.PdSmeltCode.OrderByDescending(o => o.Id).Take(100).ToList();
+
+            this.PdSmeltCodeList = this.Db.PdSmeltCode.OrderByDescending(o => o.Id).Take(100).ToList();
+
+            if (id.HasValue && id.Value > 0)
+            {
+                this.PdQuality = this.Db.PdQuality.FirstOrDefault(c => c.Id == id);
+                if (this.PdQuality == null)
+                {
+                    this.RedirectToError();
+                }
+                else if (this.PdQuality.CheckStatus != DataLibrary.EnumList.CheckStatus_PdQuality.等待审核)
+                {
+                    this.RedirectToError();
+                }
+            }
         }
     }
 }

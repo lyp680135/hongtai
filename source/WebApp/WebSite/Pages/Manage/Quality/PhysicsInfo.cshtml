@@ -51,6 +51,14 @@
         .bgcolor {
             background: red;
         }
+
+        h3.title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            text-align: left;
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -72,7 +80,7 @@
     </div>
 
     <div class="rightinfo">
-        <form id="form1" class="layui-form" method="post" onsubmit="javascript: return false;">
+        <form id="form1" class="layui-form" method="get">
             <div class="layui-form-item">
                 @*<label class="layui-form-label" style="font-size:16px;">炉批号</label>*@
                 @if (Model.PdQuality.Id == 0 && Model.List_workShop != null && Model.List_workShop.Count > 0)
@@ -86,11 +94,11 @@
                         </select>
                     </div>
                 }
-                @if (Model.PdQuality.Id == 0 && Model.PdSmeltCode != null && Model.PdSmeltCode.Count > 0)
+                @if (Model.PdQuality.Id == 0 && Model.PdSmeltCodeList != null && Model.PdSmeltCodeList.Count > 0)
                 {
                     <div class="layui-input-inline" style="width:150px;">
                         <select id="SmeltCode" name="SmeltCode" lay-filter="SmeltCode">
-                            @foreach (var item in Model.PdSmeltCode)
+                            @foreach (var item in Model.PdSmeltCodeList)
                             {
                                 <option value="@item.Id">@item.SmeltCode</option>
                             }
@@ -102,15 +110,66 @@
                     <div class="layui-input-inline">
                         <input type="text" name="BatCode" id="BatCode" lay-verify="BatCode" autocomplete="off" placeholder="请输入冶炼炉号" class="validate[required] layui-input" value="@Model.BatCode" />
                     </div>
+                    <div class="layui-input-inline" style="height: 38px;line-height: 38px;width: 100px;" id="ChangeBatCode">
+                        <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="ChangeBatCode(this,1); return false;">
+                            <i class="layui-icon">&#xe61a;</i>
+                        </a>
+                        <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="ChangeBatCode(this, -1);return false;">
+
+                            <i class="layui-icon">&#xe619;</i>
+                        </a>
+                    </div>
                 }
                 else
                 {
-
+                    <div class="layui-input-inline">
+                        <input type="text" name="BatCode" id="BatCode" lay-verify="BatCode" autocomplete="off" placeholder="请输入冶炼炉号" class="validate[required] layui-input" value="@Model.PdQuality.Batcode" disabled="disabled" />
+                    </div>
                 }
+
+                <button type="submit" class="layui-btn layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button>
+            </div>
+            @*化学数据*@
+            <div class="layui-form-item">
+                <h3 class="title">化学数据</h3>
+                <table class="tbData">
+                    @{
+                        if (Model.PdSmeltCode != null)
+                        {
+                            var Chemistry = (Newtonsoft.Json.Linq.JObject)Model.PdSmeltCode.Chemistry.Object;
+                            <thead>
+                                <tr>
+                                    @foreach (var item in Chemistry)
+                                    {
+                                        <th>@item.Key</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    @foreach (var item in Chemistry)
+                                    {
+                                        var val = item.Value;
+                                        if (val.SafeString() != string.Empty)
+                                        {
+                                            <th>@val</th>
+                                        }
+                                        else
+                                        {
+                                            <th></th>
+                                        }
+                                    }
+                                </tr>
+                            </tbody>
+                        }
+                    }
+                </table>
             </div>
             @if (Model.ListQualityStandards != null)
             {
+
                 <div class="layui-form-item">
+                    <h3 class="title">物理数据</h3>
                     <table class="tbData">
                         <thead>
                             <tr>
@@ -324,23 +383,18 @@
 
 
         function ChangeBatCode(obj, offset) {
-            if ($(obj).hasClass("layui-btn-disabled")) {
-                return false;
-            } else {
-                var currCode = $("#BatCode").val();
-                GetBatCode(currCode, offset, true)
-            }
+
+            var currCode = $("#BatCode").val();
+            GetBatCode(currCode, offset)
             return false;
         }
 
-        function GetBatCode(currCode, offset, isShowTips) {
-            var WorkShopCode = $("#WorkShopCode").val();
-            $("#ChangeBatCode button").addClass("layui-btn-disabled");
+        function GetBatCode(currCode, offset) {
             var index = layer.load(1, {
                 shade: [0.1, '#fff'] //0.1透明度的白色背景
             });
             $.ajax({
-                type: "POST", url: '/Quality/GetPatCode', data: "curcode=" + currCode + "&offset=" + offset + "&WorkShopCode=" + (WorkShopCode != undefined ? WorkShopCode : ''),
+                type: "POST", url: '/Quality/GetPatCodeNew', data: "curcode=" + currCode + "&offset=" + offset,
                 success: function (re) {
                     var json = JSON.parse(re);
 
@@ -348,10 +402,10 @@
                         if (json.data != '') {
                             $("#BatCode").val(json.Data);
                             $("#ChangeBatCode button").removeClass("layui-btn-disabled");
-                            if (isShowTips) {
-                                layer.msg("炉批号获取完成");
-                            }
-                            CheckBatCode(json.Data);
+                        
+                            layer.msg("炉批号获取完成");
+
+                            //CheckBatCode(json.Data);
                         }
                     } else {
                         layer.msg(json.Msg, { icon: 2 });
@@ -392,11 +446,11 @@
             //    });
 
 
-            $("#form1").validationEngine({
-                validationEventTriggers: "blur",
-                inlineValidation: true,
-                success: false,
-            });
+            //$("#form1").validationEngine({
+            //    validationEventTriggers: "blur",
+            //    inlineValidation: true,
+            //    success: false,
+            //});
 
             //保存数据
             $("#btnSubmit").click(function () {
@@ -463,7 +517,7 @@
             {
                 var loadLayer = layer.load(1);
                 $.ajax({
-                    type: "POST", url: '/Quality/Edit?pId=' + pId,
+                    type: "POST", url: '/Quality/PhysicsEdit?qId=' + pId,
                     data: $("#form1").serialize(),
                     success: function (re) {
                         if (re.toString() == 'true') {
@@ -488,7 +542,7 @@
                 var pass = $("#form1").validationEngine("validate");
                 if (pass) {
                     $.ajax({
-                        type: "POST", url: '/Quality/Check',
+                        type: "POST", url: '/Quality/Check?pId=' + pId,
                         data: $("#form1").serialize(),
                         success: function (re) {
                             //如果校验通过就直接添加
