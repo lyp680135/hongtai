@@ -16,37 +16,45 @@
     </style>
 </head>
 <body style="padding:5px;">
-    @*<div class="place">
-            <span>位置：</span>
-            <ul class="placeul">
-                <li>模型管理</li>
-                <li>模型详情</li>
-            </ul>
-        </div>*@
-    <table class="layui-table">
-        <thead>
-            <tr>
-                <td>Id</td>
-                <td>冶炼炉号</td>
-                <td>化学数据</td>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                if (Model.ManageModels.Count > 0)
-                {
-                    foreach (var item in Model.ManageModels)
+    <form>
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <td>创建时间</td>
+                    <td>冶炼炉号</td>
+                    <td>化学数据</td>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    if (Model.ManageModels.Count > 0)
                     {
-                        <tr>
-                            <td>@item.Id</td>
-                            <td>@item.SmeltCode</td>
-                            <td>@item.Chemistry.Object.ToString()</td>
-                        </tr>
+                        foreach (var item in Model.ManageModels)
+                        {
+                            <tr>
+                                <td>@Util.Extensions.GetDateTimeFromUnixTime(item.Createtime.ToLong()).ToString("yyyy/MM/dd")</td>
+                                <td>@item.SmeltCode</td>
+                                <td>@item.Chemistry.Object.ToString()</td>
+                            </tr>
+                        }
+
                     }
 
                 }
-            }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+        @await Component.InvokeAsync("PageList", new
+        {
+            PageSize = Model.PageSize,
+            PageIndex = Model.PageIndex,
+            PageCount = Model.PageCount,
+            PageUrl = Request.GetAbsoluteUri(new List<KeyValuePair<string, string>>() {
+                                                                                                                                 new KeyValuePair<string, string>("pg","{0}")
+                                                                                                                           }),
+            PageText = "{0}",
+            ShowCount = 6,
+            ShowAll = false
+        })
+    </form>
 </body>
 </html>

@@ -329,15 +329,15 @@
             }
             else
             {
-                if (smeltCode > 0)
-                {
-                    var smeltInfo = this.db.PdSmeltCode.FirstOrDefault(f => f.Id == smeltCode);
-                    if (smeltInfo != null)
-                    {
-                        var pdquality = this.db.PdQuality.FirstOrDefault(f => f.Id == smeltInfo.Qid);
-                        materialid = pdquality.MaterialId.ToInt();
-                    }
-                }
+                //if (smeltCode > 0)
+                //{
+                //    var smeltInfo = this.db.PdSmeltCode.FirstOrDefault(f => f.Id == smeltCode);
+                //    if (smeltInfo != null)
+                //    {
+                //        var pdquality = this.db.PdQuality.FirstOrDefault(f => f.Id == smeltInfo.Qid);
+                //        materialid = pdquality.MaterialId.ToInt();
+                //    }
+                //}
 
                 listQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 0 && w.Status == 0 && w.Materialid == materialid).ToList();
                 dxQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 1 && w.Status == 0 && w.Materialid == materialid).ToList();
@@ -806,7 +806,9 @@
                 this.db.PdSmeltCode.Add(new PdSmeltCode
                 {
                     SmeltCode = yLCode,
-                    Chemistry = keyValuePairs
+                    Chemistry = keyValuePairs,
+                    Createtime = (int)Util.Extensions.GetCurrentUnixTime(),
+                    EntryPerson = this.userService.ApplicationUser.Mng_admin.Id
                 });
 
                 this.db.SaveChanges();
@@ -820,80 +822,80 @@
         /// </summary>
         /// <param name="qId">质量数据Id</param>
         /// <returns>string</returns>
-        public string ChemistryEdit(int qId)
-        {
-            var pdQuality = this.db.PdQuality.FirstOrDefault(f => f.Id == qId);
-            var pdSmelt = this.db.PdSmeltCode.FirstOrDefault(f => f.Qid == qId);
-            if (pdQuality == null || pdSmelt == null)
-            {
-                return "不存在质量数据,无法编辑";
-            }
+        //public string ChemistryEdit(int qId)
+        //{
+        //    var pdQuality = this.db.PdQuality.FirstOrDefault(f => f.Id == qId);
+        //    var pdSmelt = this.db.PdSmeltCode.FirstOrDefault(f => f.Qid == qId);
+        //    if (pdQuality == null || pdSmelt == null)
+        //    {
+        //        return "不存在质量数据,无法编辑";
+        //    }
 
-            var listQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 0 && w.Status == 0 && w.Materialid == pdQuality.MaterialId && w.TargetCategory == EnumList.TargetCategory.化学指标).ToList();
-            if (listQualityStandards == null || listQualityStandards.Count <= 0)
-            {
-                return "该批号下的产品没有设置好可以参考的单样本质量指标";
-            }
-            Dictionary<string, double> keyValuePairs = new Dictionary<string, double>();
-            if (listQualityStandards.Count > 0)
-            {
-                foreach (var item in listQualityStandards)
-                {
-                    keyValuePairs.Add(item.TargetName, this.Request.Form[item.TargetName].ToDouble());
-                }
+        //    var listQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 0 && w.Status == 0 && w.Materialid == pdQuality.MaterialId && w.TargetCategory == EnumList.TargetCategory.化学指标).ToList();
+        //    if (listQualityStandards == null || listQualityStandards.Count <= 0)
+        //    {
+        //        return "该批号下的产品没有设置好可以参考的单样本质量指标";
+        //    }
+        //    Dictionary<string, double> keyValuePairs = new Dictionary<string, double>();
+        //    if (listQualityStandards.Count > 0)
+        //    {
+        //        foreach (var item in listQualityStandards)
+        //        {
+        //            keyValuePairs.Add(item.TargetName, this.Request.Form[item.TargetName].ToDouble());
+        //        }
 
-                List<string> targetList = new List<string>()
-                    {
-                        "C", "Mn", "V", "Mo", "Cu", "Ni",
-                    };
-                var keyPairs = keyValuePairs.Keys.ToList();
-                List<string> targetName = new List<string>();
-                foreach (var item in targetList)
-                {
-                    // 判断是否缺少元素
-                    if (!keyPairs.Any(x => x == item))
-                    {
-                        targetName.Add(item);
-                    }
-                }
+        //        List<string> targetList = new List<string>()
+        //            {
+        //                "C", "Mn", "V", "Mo", "Cu", "Ni",
+        //            };
+        //        var keyPairs = keyValuePairs.Keys.ToList();
+        //        List<string> targetName = new List<string>();
+        //        foreach (var item in targetList)
+        //        {
+        //            // 判断是否缺少元素
+        //            if (!keyPairs.Any(x => x == item))
+        //            {
+        //                targetName.Add(item);
+        //            }
+        //        }
 
-                double ceq = 0;
+        //        double ceq = 0;
 
-                // 如果少指标就返回
-                if (targetName.Count > 0)
-                {
-                    keyValuePairs.Add("Ceq", ceq);
-                }
-                else
-                {
-                    ceq = (keyValuePairs["C"] + (keyValuePairs["Mn"] / 6) +
-                    ((keyValuePairs["C"] + keyValuePairs["V"] + keyValuePairs["Mo"]) / 5) +
-                    ((keyValuePairs["Cu"] = keyValuePairs["Ni"]) / 15)).ToDouble(2);
-                    keyValuePairs.Add("Ceq", ceq);
-                }
+        //        // 如果少指标就返回
+        //        if (targetName.Count > 0)
+        //        {
+        //            keyValuePairs.Add("Ceq", ceq);
+        //        }
+        //        else
+        //        {
+        //            ceq = (keyValuePairs["C"] + (keyValuePairs["Mn"] / 6) +
+        //            ((keyValuePairs["C"] + keyValuePairs["V"] + keyValuePairs["Mo"]) / 5) +
+        //            ((keyValuePairs["Cu"] = keyValuePairs["Ni"]) / 15)).ToDouble(2);
+        //            keyValuePairs.Add("Ceq", ceq);
+        //        }
 
-                // 修改关系表数据
-                pdSmelt.Chemistry = keyValuePairs;
-                this.db.Update(pdSmelt);
-                this.db.SaveChanges();
-                var chemistry = (JObject)pdQuality.Qualityinfos.Object;
-                var allKeys = keyValuePairs.Keys.ToList();
-                foreach (var item in chemistry)
-                {
-                    if (!allKeys.Any(o => o == item.Key))
-                    {
-                        keyValuePairs.Add(item.Key, item.Value.ToDouble());
-                    }
-                }
+        //        // 修改关系表数据
+        //        pdSmelt.Chemistry = keyValuePairs;
+        //        this.db.Update(pdSmelt);
+        //        this.db.SaveChanges();
+        //        var chemistry = (JObject)pdQuality.Qualityinfos.Object;
+        //        var allKeys = keyValuePairs.Keys.ToList();
+        //        foreach (var item in chemistry)
+        //        {
+        //            if (!allKeys.Any(o => o == item.Key))
+        //            {
+        //                keyValuePairs.Add(item.Key, item.Value.ToDouble());
+        //            }
+        //        }
 
-                // 先修改质量数据表
-                pdQuality.Qualityinfos = keyValuePairs;
-                this.db.Update(pdQuality);
-                this.db.SaveChanges();
-            }
+        //        // 先修改质量数据表
+        //        pdQuality.Qualityinfos = keyValuePairs;
+        //        this.db.Update(pdQuality);
+        //        this.db.SaveChanges();
+        //    }
 
-            return "true";
-        }
+        //    return "true";
+        //}
 
         /// <summary>
         /// 添加物理数据
@@ -1896,6 +1898,11 @@
                     return this.AjaxResult(false, "该质保书未生成，不可撤回");
                 }
 
+                var createTime = modelPrint.Createtime.ToLong().GetDateTimeFromUnixTime().Date;
+                if (DateTime.Now.Date > createTime.AddMonths(1))
+                {
+                    return this.AjaxResult(false, "质保书撤回时间限制为30天");
+                }
                 using (var tran = this.db.Database.BeginTransaction())
                 {
                     // 标识质保书状态

@@ -6,7 +6,7 @@
     var smcode = string.Empty;
     if (Model.PdQuality.Id > 0)
     {
-        smcode = _db.PdSmeltCode.FirstOrDefault(f => f.Qid == Model.PdQuality.Id).SmeltCode;
+        smcode = Model.PdQuality.Batcode;
     }
 
     Layout = null;
@@ -106,7 +106,7 @@
                         <input type="text" name="YLCode" id="YLCode" lay-verify="YLCode" autocomplete="off" placeholder="请输入冶炼炉号" class="validate[required] layui-input" value="@smcode" disabled="disabled" />
                     </div>
                 }
-                <button type="button" class="layui-btn layui-btn-normal" onclick="locationHref(); return false;"><i class="layui-icon">&#xe615;</i>历史记录</button>
+                <button type="button" class="layui-btn layui-btn-normal" style="float:right;margin-right:20%;" onclick="locationHref(); return false;"><i class="layui-icon">&#xe615;</i>历史记录</button>
             </div>
             @if (Model.ListQualityStandards != null)
             {
@@ -419,34 +419,7 @@
                 var YLCode = $("#YLCode").val();
                 var pass = $("#form1").validationEngine("validate");
                 if (pass) {
-                        $.ajax({
-                            type: "POST", url: '/Quality/Check?materialid='+@Model.Mid,
-                            data: $("#form1").serialize(),
-                            success: function (re) {
-                            //如果校验通过就直接添加
-                            if (re.flag=="true") {
-                                Add(YLCode);
-                            }
-                            else if (re.flag == 2) {
-                                layer.msg(re.msg);
-                             }
-                            //否则提示
-                            else {
-                                $.each(re.msg, function (key, val) {
-                                    //$('.' + val + '').css({ 'background':'red'});
-                                    $('input[name=' + val + ']').addClass('bgcolor');
-                                });
-                                layer.confirm('系统检测到录入数据中有不合格数据，请确认是否继续保存？', { icon: 3, title: '提示' }, function (index) {
-
-                                    Add(YLCode);
-                                    layer.close(index);
-                                });
-                            }
-                        }, error: function () {
-                            layer.close(loadLayer);
-                            layer.msg('添加失败，系统出现未知错误', { icon: 2 });
-                        }
-                    });
+                    Add(YLCode);
                  }
             });
             //添加

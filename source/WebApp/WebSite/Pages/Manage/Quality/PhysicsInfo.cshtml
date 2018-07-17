@@ -177,7 +177,7 @@
                     </div>
                 }
 
-                <button type="button" id="searchBtn" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button>
+               @* <button type="button" id="searchBtn" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button>*@
             </div>
             @*化学数据*@
             <div class="layui-form-item">
@@ -487,7 +487,7 @@
         }
 
         $(document).ready(function () {
-            $('#searchBtn').click(function () {
+            $('#SmeltCode').change(function () {
                 var Sid = $('#SmeltCode').val();
                 var currCode = $("#BatCode").val();
                 window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + Sid + '&batcode=' + currCode;

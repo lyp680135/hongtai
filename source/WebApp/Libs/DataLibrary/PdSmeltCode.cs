@@ -14,8 +14,9 @@
 
         public string SmeltCode { get; set; }
 
-        [NotMapped]
-        public int Qid { get; set; }
+        public int EntryPerson { get; set; }
+
+        public int Createtime { get; set; }
 
         /// <summary>
         /// Gets or sets 产品质量数据- 化学
