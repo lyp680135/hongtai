@@ -239,5 +239,14 @@
             已下载 = 1,
             已撤回 = 10
         }
+
+        /// <summary>
+        /// 指标类别
+        /// </summary>
+        public enum TargetCategory
+        {
+            化学指标 = 1,
+            物理指标 = 2
+        }
     }
 }
