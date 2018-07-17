@@ -14,6 +14,12 @@
 
         public string SmeltCode { get; set; }
 
+        [NotMapped]
         public int Qid { get; set; }
+
+        /// <summary>
+        /// Gets or sets 产品质量数据- 化学
+        /// </summary>
+        public JsonObject<object> Chemistry { get; set; }
     }
 }
