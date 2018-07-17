@@ -18,7 +18,7 @@
                 </div>
                 <div>
                     <mt-button size="small" class="calcbtn" type="default"  @click.native="minus(index)">-</mt-button>  
-                    <input class="number"  type="number" v-model="item.SelectedNumber" @blur="calc(index)"/>
+                    <input class="number"  type="number" v-model="item.NumberCount" @blur="calc(index)"/>
                     <mt-button size="small" class="calcbtn"  type="default" @click.native="plus(index)">+</mt-button>
                     件
                 </div>
@@ -70,26 +70,26 @@ export default {
       })
     },
     minus: function (index) {
-      if (this.list[index].SelectedNumber > 0) {
-        this.list[index].SelectedNumber = parseInt(this.list[index].SelectedNumber) - 1
+      if (this.list[index].NumberCount > 0) {
+        this.list[index].NumberCount = parseInt(this.list[index].NumberCount) - 1
       }
     },
     calc: function (index) {
       try {
-        this.list[index].SelectedNumber = parseInt(this.list[index].SelectedNumber)
+        this.list[index].NumberCount = parseInt(this.list[index].NumberCount)
         var num = this.list[index].Number - this.list[index].AuthNumber
-        if (this.list[index].SelectedNumber > num) {
+        if (this.list[index].NumberCount > num) {
           this.$toast({message: '授权件数不能大于剩余件数', position: 'bottom'})
-          this.list[index].SelectedNumber = num
+          this.list[index].NumberCount = num
         }
       } catch (e) {
-        this.list[index].SelectedNumber = 0
+        this.list[index].NumberCount = 0
       }
     },
     plus: function (index) {
       var num = this.list[index].Number - this.list[index].AuthNumber
-      if (this.list[index].SelectedNumber < num) {
-        this.list[index].SelectedNumber = parseInt(this.list[index].SelectedNumber) + 1
+      if (this.list[index].NumberCount < num) {
+        this.list[index].NumberCount = parseInt(this.list[index].NumberCount) + 1
       }
     }
   },
@@ -97,6 +97,7 @@ export default {
     var data = xyHelper.tryParseJson(localStorage.GenWarrantylist)
     if (data) {
       this.list = data
+      console.log(data)
     }
   }
 }

@@ -402,6 +402,7 @@ export default {
       }
       var array = []
       var msg = ''
+      // var firstNum = 0
       for (var i = 0; i < this.list.length; i++) {
         for (var j = 0; j < this.list[i].list.length; j++) {
           var item = this.list[i].list[j]
@@ -423,17 +424,22 @@ export default {
                     array[k].Specid === item.Specid &&
                     array[k].Batcode === item.Batcode
                   ) {
-                    array[k].SelectedNumber += item.SelectedNumber
+                    array[k].NumberCount += item.SelectedNumber
+
                     find = true
                     break
                   }
                 }
+                // this.list[i].list[0].SelectedNumber = firstNum
                 if (!find) {
+                  item.NumberCount = item.SelectedNumber
                   array.push(item)
                 }
               }
             } else {
+              item.NumberCount = item.SelectedNumber
               array.push(item)
+              // firstNum = item.SelectedNumber
             }
           }
         }
@@ -446,6 +452,7 @@ export default {
         })
         return
       }
+
       localStorage.GenWarrantylist = JSON.stringify(array)
       // 生成质保书
       this.$router.push('/TemplatPreView')

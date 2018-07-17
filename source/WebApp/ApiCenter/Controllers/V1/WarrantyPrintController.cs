@@ -62,7 +62,7 @@ namespace WarrantyApiCenter.Controllers.V1
                 resList = dicList.GroupBy(o => o.PrintNo).ToList().Select(s => new ResModel
                 {
                     PrintNo = s.FirstOrDefault().PrintNo,
-                    Createtime = s.FirstOrDefault().Createtime.ToLong().GetDateTimeFromUnixTime().ToString("yyyy年MM月dd日"),
+                    Createtime = s.FirstOrDefault().Createtime.ToLong().GetDateTimeFromUnixTime().ToString("yyyy/MM/dd"),
                     Consignor = s.FirstOrDefault().Consignor,
                     Number = s.Sum(m => m.Number)
                 }).ToList();
