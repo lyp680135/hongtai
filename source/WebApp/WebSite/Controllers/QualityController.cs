@@ -981,6 +981,11 @@
             List<object> keyValues = new List<object>();
             var dxQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 1 && w.Status == 0 && w.Materialid == pdquatulyInfo.Materialid && w.TargetCategory == EnumList.TargetCategory.物理指标).ToList();
             var listQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 0 && w.Status == 0 && w.Materialid == pdquatulyInfo.Materialid && w.TargetCategory == EnumList.TargetCategory.物理指标).ToList();
+            if (listQualityStandards.Count <= 0)
+            {
+                return "该材质下没有设置物理指标";
+            }
+
             if (listQualityStandards.Count > 0)
             {
                 Dictionary<string, double> keyValuePairs = new Dictionary<string, double>();
@@ -997,6 +1002,10 @@
                 }
 
                 pdquatuly.Qualityinfos = keyValuePairs;
+            }
+            else
+            {
+                pdquatuly.Qualityinfos = pdsmelcodeInfo.Chemistry;
             }
 
             if (dxQualityStandards.Count > 0)
@@ -1072,6 +1081,7 @@
                 }
                 pdquatuly.Qualityinfos_Dynamics = keyValues;
             }
+
             pdquatuly.CreateFlag = 0;
             pdquatuly.Batcode = batCode;
             pdquatuly.CheckStatus = EnumList.CheckStatus_PdQuality.等待审核;

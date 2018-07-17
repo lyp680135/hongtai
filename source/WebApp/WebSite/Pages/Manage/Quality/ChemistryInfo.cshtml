@@ -106,7 +106,7 @@
                         <input type="text" name="YLCode" id="YLCode" lay-verify="YLCode" autocomplete="off" placeholder="请输入冶炼炉号" class="validate[required] layui-input" value="@smcode" disabled="disabled" />
                     </div>
                 }
-
+                <button type="button" class="layui-btn layui-btn-normal" onclick="locationHref(); return false;"><i class="layui-icon">&#xe615;</i>历史记录</button>
             </div>
             @if (Model.ListQualityStandards != null)
             {
@@ -296,6 +296,24 @@
     </div>
 
     <script type="text/javascript">
+        //查看详情
+        function locationHref() {           
+            var index = layer.open({
+                title: '历史记录',
+                type: 2,
+                shadeClose: true, //点击遮罩关闭层
+                area: ['90%', '75%'],//大小
+                content: '/Manage/quality/SmeltList',//url
+                anim: '5',//动画效果
+                offset: '50px',//弹出层位置
+                shadeClose: true,
+                // maxmin: true,//最大化,最小化
+                btn: ['关闭'],
+                yes: function (index, layero) {
+                    layer.close(index);
+                }
+            });
+        }
         //按回车移动光标
         function focusNextInput(thisInput) {
             var inputs = document.getElementsByTagName("input");
@@ -389,11 +407,11 @@
             //    });
 
 
-            $("#form1").validationEngine({
-                validationEventTriggers: "blur",
-                inlineValidation: true,
-                success: false,
-            });
+            //$("#form1").validationEngine({
+            //    validationEventTriggers: "blur",
+            //    inlineValidation: true,
+            //    success: false,
+            //});
 
             //保存数据
             $("#btnSubmit").click(function () {

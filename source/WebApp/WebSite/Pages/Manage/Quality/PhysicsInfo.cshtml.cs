@@ -31,10 +31,13 @@ namespace WarrantyManage.Pages.Manage.Quality
 
         public string BatCode { get; set; }
 
-        public void OnGet(int? id, int smeltCode = 0)
+        public int SmeltCode { get; set; }
+
+        public void OnGet(int? id, string batCode, int smeltCode = 0)
         {
             var userId = this.userService.ApplicationUser.Mng_admin.Id;
             var targetCategory = EnumList.TargetCategory.物理指标;
+
             this.List_workShop = this.Db.PdWorkshop.AsEnumerable().Where(c => c.QAInputer.Split(',').Contains(userId.ToString())).ToList();
             if (this.List_workShop.Count > 0)
             {
@@ -52,6 +55,11 @@ namespace WarrantyManage.Pages.Manage.Quality
                     }
 
                     this.BatCode = currentInfo.Batcode;
+                    if (!string.IsNullOrEmpty(batCode))
+                    {
+                        this.BatCode = batCode;
+                    }
+
                 }
                 else
                 {
@@ -63,6 +71,7 @@ namespace WarrantyManage.Pages.Manage.Quality
 
                     this.ListQualityStandards = this.Db.BaseQualityStandard.Where(w => w.Materialid == currentInfo.MaterialId && w.Status == 0 && w.TargetCategory == targetCategory).ToList();
                 }
+
                 if (smeltCode <= 0)
                 {
                     this.PdSmeltCode = this.Db.PdSmeltCode.LastOrDefault();
@@ -70,6 +79,7 @@ namespace WarrantyManage.Pages.Manage.Quality
                 else
                 {
                     this.PdSmeltCode = this.Db.PdSmeltCode.FirstOrDefault(f => f.Id == smeltCode);
+                    this.SmeltCode = smeltCode;
                 }
             }
 

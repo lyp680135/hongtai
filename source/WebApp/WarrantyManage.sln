@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{AD0DA707-8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTest", "UnitTest", "{3C9FD009-FD4C-408C-81CE-044F61348D21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceXUnit.Test", "UnitTest\ServiceXUnit.Test\ServiceXUnit.Test.csproj", "{6C2087B5-2390-49B2-B504-29F9022EBB2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceXUnit.Test", "UnitTest\ServiceXUnit.Test\ServiceXUnit.Test.csproj", "{6C2087B5-2390-49B2-B504-29F9022EBB2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
