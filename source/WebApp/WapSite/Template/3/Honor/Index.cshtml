@@ -1,0 +1,44 @@
+﻿@page
+@inject ICMSService _cmsService
+@section head{
+    <link href="/Content/css/honor.css" rel="stylesheet" />
+}
+@{
+    ViewData["Tag"] = 5;
+    ViewData["Title"] = "公司荣誉";
+    ViewData["Desc"] = "公司荣誉";
+    var siteBasic = _cmsService.GetBasic();
+    ViewBag.SiteBasic = siteBasic;
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteSetting = mngSetting;
+
+}
+@{
+    var Honor = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰荣誉", 1, 100);
+    if (Honor != null)
+    {
+        foreach (var H in Honor)
+        {
+            <div class="container-fluid matter">
+                <div class="row honor_column">
+
+                    <h3 style="text-align:center;margin-bottom:20px">@Html.Raw(H["Title"])</h3>
+                    @if (H["Image"].SafeString() != string.Empty)
+                    {
+                        foreach (var imgItem in H["Image"].ToString().Split(','))
+                        {
+                            <div class="col-xs-6 text-center" style="margin-bottom:20px">
+                                <div>
+                                    <div class="img_box">
+                                        <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@imgItem" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+        }
+    }
+}

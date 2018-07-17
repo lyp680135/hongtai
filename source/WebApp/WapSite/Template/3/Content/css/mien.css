@@ -1,0 +1,32 @@
+@charset "utf-8";
+/* CSS Document */
+/*---------------------------内容-------------------------- */
+.container-fluid.matter{
+    vertical-align:middle;
+    padding: 0 12px 0 12px;
+    margin: 20px 0 35px 0;
+}
+.container-fluid.matter .row{
+    margin-left: 0;
+    margin-right: 0;
+}
+.container-fluid.matter .row>div{
+    padding-left: 0;
+    padding-right:0;
+    vertical-align: middle;
+}
+.container-fluid.matter .row.mien_column>div:first-child{
+    padding-right: 6px;
+}
+.container-fluid.matter .row.mien_column>div:last-child{
+    padding-left: 6px;
+}
+.mien_content{
+    margin-bottom: 10px;
+}
+.mien_content p{
+    line-height: 24px;
+}
+.mien_content img{
+    width: 100%;
+}

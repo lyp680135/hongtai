@@ -9,7 +9,6 @@
 }
 body{
 margin:0;
-padding-bottom: 55px;
 }
 body *{
 font-family:"微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -185,6 +184,7 @@ vertical-align:inherit;
 .container-fluid.footer .row{
     margin-left: -12px;
     margin-right: -12px;
+    padding-bottom:55px;
 }
 .container-fluid.footer .row>div{
     padding-left: 12px;

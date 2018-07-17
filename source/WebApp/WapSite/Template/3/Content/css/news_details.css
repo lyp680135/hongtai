@@ -1,0 +1,47 @@
+@charset "utf-8";
+/* CSS Document */
+/*---------------------------内容-------------------------- */
+.container-fluid.matter{
+    vertical-align:middle;
+    padding: 0 12px 0 12px;
+    margin: 20px 0 45px 0;
+}
+.container-fluid.matter .row{
+    margin-left: 0;
+    margin-right: 0;
+}
+.container-fluid.matter .row>div{
+    padding-left: 0;
+    padding-right:0;
+    vertical-align: middle;
+}
+.news_nav{
+    border-bottom: 1px solid #e5e5e5;
+}
+.news_nav a{
+    display: inline-block;
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+    padding-bottom: 5px;
+    margin-right: 10px;
+}
+.current{
+    border-bottom: 2px solid #e60112;
+}
+.news_content h3{
+    font-size: 15px;
+    margin: 21px 0 5px 0;
+    font-weight: 600;
+    line-height: 22px;
+}
+.news_content span{
+    font-size: 12px;
+    color: #999999;
+}
+.news_content p{
+    line-height: 24px;
+    margin-top: 10px;
+    text-indent: 2em;
+    text-align: left;
+}

@@ -1,5 +1,6 @@
-﻿@page
+﻿@page "{tid:int}-{p:int}.html"
 @inject ICMSService _cmsService
+@inject IContentGroupService _contentService
 @{
     ViewData["Tag"] = 5;
     ViewData["Title"] = "新闻中心";
@@ -15,18 +16,41 @@
     <link href="/Content/css/news.css" rel="stylesheet" />
 }
 
+@functions{
+    private int pageSize = 10;
+
+    public int NewsTypeId { get; set; }
+
+    public int PageIndex { get; set; }
+
+    public int PageCount { get; set; }
+
+    public List<Dictionary<string, object>> dict { get; set; }
+
+    public List<DataLibrary.SiteModelColumn> NewsType { get; set; }
+
+    public new int Page { get; set; }
+
+    public void OnGet(int? tid, int? p)
+    {
+        this.Page = p ?? 1;
+        this.PageCount = _cmsService.IcontentColumnDataService.GetContentCount("鸿泰动态");
+        int Cid = _contentService.GetSiteCategoryByName("鸿泰动态").Id;
+    }
+}
+
 <div class="container-fluid matter">
     <div class="row news_nav">
         <div class="col-xs-12">
-            <a href="/News">企业新闻</a>
-            <a href="/News/Dynamic" class="current">行业动态</a>
-            <a href="/News/Hotspot">本周热点</a>
+            <a href="/News/0-1.html">企业新闻</a>
+            <a href="/News/Dynamic/0-1.html" class="current">行业动态</a>
+            <a href="/News/Hotspot/0-1.html">本周热点</a>
         </div>
     </div>
     <div class="row news_list">
         <div class="col-xs-12">
             @{
-                var News = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰动态", 1, 100);
+                var News = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰动态", Page, pageSize);
                 if (News != null)
                 {
                     for (int i = 0; i < News.Count; i++)
@@ -41,6 +65,9 @@
                     }
                 }
             }
+        </div>
+        <div id="Pagination">
+            @await Component.InvokeAsync("PageList", new { PageSize = this.pageSize, PageIndex = this.Page, PageCount = this.PageCount, PageUrl = Model.NewsTypeId + "-{0}.html", PageText = "{0}", ShowCount = 5, ShowAll = false })
         </div>
     </div>
 

@@ -1,0 +1,31 @@
+@charset "utf-8";
+/* CSS Document */
+/*---------------------------内容-------------------------- */
+.container-fluid.matter{
+    vertical-align:middle;
+    padding: 0 12px 0 12px;
+    margin: 20px 0 25px 0;
+}
+.container-fluid.matter .row{
+    margin-left: 0;
+    margin-right: 0;
+}
+.container-fluid.matter .row>div{
+    padding-left: 5px;
+    padding-right:5px;
+    vertical-align: middle;
+}
+.container-fluid.matter .honor_column img{
+   vertical-align: middle;
+    width: 100%;
+}
+.matter .honor_column {
+    margin-bottom: 25px;
+}
+.container-fluid.matter .honor_column>div>div{
+    border: 1px solid #e3e4e5;
+    padding: 3px 4px;
+}
+.matter .honor_column .img_box{
+    box-shadow:0 1px 3px #aaaaaa;
+}

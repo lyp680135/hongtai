@@ -1,6 +1,9 @@
-@charset "utf-8";
+﻿@charset "utf-8";
 /* CSS Document */
 /*---------------------------banner-------------------------- */
+body {
+    padding-bottom: 55px;
+}
 .content{
     background: #edeeef;
 }

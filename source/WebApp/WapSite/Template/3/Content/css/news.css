@@ -1,0 +1,166 @@
+﻿@charset "utf-8";
+/* CSS Document */
+/*---------------------------内容-------------------------- */
+a {
+    color: #4c4c4c;
+}
+.container-fluid.matter{
+    vertical-align:middle;
+    padding: 0 12px 0 12px;
+    margin: 20px 0 45px 0;
+}
+.container-fluid.matter .row{
+    margin-left: 0;
+    margin-right: 0;
+}
+.container-fluid.matter .row>div{
+    padding-left: 0;
+    padding-right:0;
+    vertical-align: middle;
+}
+.news_nav{
+    border-bottom: 1px solid #e5e5e5;
+}
+.news_nav a{
+    display: inline-block;
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+    padding-bottom: 5px;
+    margin-right: 10px;
+}
+.current{
+    border-bottom: 2px solid #e60112;
+}
+
+/*---------------------------分页-------------------------- */
+.pagenumber_box {
+    padding: 0px 0px 10px 2px;
+}
+
+    .pagenumber_box a {
+        border: 1px solid #e5e5e5;
+        background: #fff;
+        box-shadow: none;
+        margin-bottom: 0;
+        padding: 0;
+    }
+
+    .pagenumber_box * {
+        font-size: 16px;
+    }
+
+    .pagenumber_box .total {
+        float: left;
+        line-height: 50px;
+    }
+
+    .pagenumber_box a:focus, .pagenumber_box a:active, .pagenumber_box a:hover {
+        border: 1px solid #e50011;
+        background: #e50011;
+        color: #fff;
+    }
+
+    .pagenumber_box .pagenumber {
+        float: right;
+        margin: 5px 36px 0 0;
+    }
+
+.pagenumber a {
+    width: 38px;
+    height: 38px;
+    border-radius: 2px;
+    color: #999;
+    margin-left: 9px;
+    border: 1px solid #e5e5e5;
+    background: #fff;
+    box-shadow: none;
+    margin-bottom: 0;
+    padding: 0;
+    display: block;
+    float: left;
+    line-height: 10px;
+    text-align: center;
+}
+
+.pagenumber .ellipsis {
+    float: left;
+    margin-left: 9px;
+    line-height: 36px;
+}
+
+.pagenumber span {
+    color: #999;
+}
+
+.pagenumber a span {
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-right: 7px solid #b3b3b3;
+    border-bottom: 5px solid transparent;
+    font-size: 0px;
+    margin: 13px 10px 12px 15px;
+    vertical-align: middle;
+}
+
+.pagenumber_box a:focus > span, .pagenumber_box a:active > span, .pagenumber_box a:hover > span {
+    border-right: 7px solid #fff;
+}
+
+.pagenumber_box a:focus > .span_right, .pagenumber_box a:active > .span_right, .pagenumber_box a:hover > .span_right {
+    border-right: 0;
+    border-left: 7px solid #fff;
+}
+
+.pagenumber a .span_right {
+    border-right: none;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 7px solid #b3b3b3;
+    margin: 15px 0 0 17px;
+}
+
+.pagenumber .selected {
+    border: 1px solid #ffa0a7;
+    color: #ff505d;
+    background: #fff3f4;
+}
+
+.pagenumber_box .jump {
+    float: right;
+    width: 200px;
+}
+
+    .pagenumber_box .jump input {
+        border: 1px solid #e5e5e5;
+        width: 36px;
+        height: 28px;
+        border-radius: 2px;
+        text-align: center;
+        font-size: 16px;
+    }
+
+        .pagenumber_box .jump input:focus, .pagenumber_box .jump input:hover, .pagenumber_box .jump input:active {
+            border: 1px solid #e5e5e5;
+        }
+
+.jump span {
+    line-height: 50px;
+    float: left;
+    margin-left: 30px;
+}
+
+.jump a {
+    width: 40px;
+    height: 40px;
+    border-radius: 2px;
+    display: inline-block;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    line-height: 10px;
+    text-align: center;
+    color: #999;
+    float: right;
+    margin-top: 5px;
+}
