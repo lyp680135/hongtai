@@ -75,6 +75,38 @@
         }
 
         /// <summary>
+        /// 获取炉批号
+        /// </summary>
+        /// <param name="curcode">当前炉批号</param>
+        /// <param name="offset">偏移量</param>
+        /// <returns>stirng</returns>
+        public string GetPatCodeNew(string curcode, int offset)
+        {
+            var batcode = curcode;
+
+            var current = this.db.PdBatcode.FirstOrDefault(f => f.Batcode == curcode);
+            if (current != null)
+            {
+                var productInfo = new PdBatcode();
+                var id = current.Id;
+                if (offset > 0)
+                {
+                    productInfo = this.db.PdBatcode.OrderBy(o => o.Id).FirstOrDefault(f => f.Id > id);
+                }
+                else
+                {
+                    productInfo = this.db.PdBatcode.OrderBy(o => o.Id).LastOrDefault(f => f.Id < id);
+                }
+
+                if (productInfo != null)
+                {
+                    batcode = productInfo.Batcode;
+                }
+            }
+            return JsonConvert.SerializeObject(new ResponseModel(EnumList.ApiResponseStatus.Success, string.Empty, batcode));
+        }
+
+        /// <summary>
         /// 获取炉批号(炉批号生成算法)
         /// </summary>
         /// <param name="curcode">当前炉批号，无则传空</param>
@@ -727,12 +759,6 @@
                 return "冶炼炉号不能为空";
             }
 
-            var stCode = this.db.PdSmeltCode.FirstOrDefault(f => f.SmeltCode == yLCode);
-            if (stCode != null)
-            {
-                return "已存在该冶炼炉号,不能重复添加";
-            }
-
             var listQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 0 && w.Status == 0 && w.Materialid == mId && w.TargetCategory == EnumList.TargetCategory.化学指标).ToList();
             if (listQualityStandards == null || listQualityStandards.Count <= 0)
             {
@@ -777,27 +803,92 @@
                     keyValuePairs.Add("Ceq", ceq);
                 }
 
-                this.db.PdQuality.Add(new PdQuality()
-                {
-                    Batcode = string.Empty,
-                    CheckStatus = EnumList.CheckStatus_PdQuality.等待审核,
-                    MaterialId = mId,
-                    Createtime = (int)Util.Extensions.GetCurrentUnixTime(),
-                    EntryPerson = this.userService.ApplicationUser.Mng_admin.Id,
-                    CreateFlag = 0,
-                    Qualityinfos = keyValuePairs,
-                    Qualityinfos_Dynamics = null
-                });
-                this.db.SaveChanges();
-
-                var lastQuality = this.db.PdQuality.Last();
-
                 this.db.PdSmeltCode.Add(new PdSmeltCode
                 {
                     SmeltCode = yLCode,
-                    Qid = lastQuality.Id
+                    Chemistry = keyValuePairs
                 });
 
+                this.db.SaveChanges();
+            }
+
+            return "true";
+        }
+
+        /// <summary>
+        /// 化学数据修改
+        /// </summary>
+        /// <param name="qId">质量数据Id</param>
+        /// <returns>string</returns>
+        public string ChemistryEdit(int qId)
+        {
+            var pdQuality = this.db.PdQuality.FirstOrDefault(f => f.Id == qId);
+            var pdSmelt = this.db.PdSmeltCode.FirstOrDefault(f => f.Qid == qId);
+            if (pdQuality == null || pdSmelt == null)
+            {
+                return "不存在质量数据,无法编辑";
+            }
+
+            var listQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 0 && w.Status == 0 && w.Materialid == pdQuality.MaterialId && w.TargetCategory == EnumList.TargetCategory.化学指标).ToList();
+            if (listQualityStandards == null || listQualityStandards.Count <= 0)
+            {
+                return "该批号下的产品没有设置好可以参考的单样本质量指标";
+            }
+            Dictionary<string, double> keyValuePairs = new Dictionary<string, double>();
+            if (listQualityStandards.Count > 0)
+            {
+                foreach (var item in listQualityStandards)
+                {
+                    keyValuePairs.Add(item.TargetName, this.Request.Form[item.TargetName].ToDouble());
+                }
+
+                List<string> targetList = new List<string>()
+                    {
+                        "C", "Mn", "V", "Mo", "Cu", "Ni",
+                    };
+                var keyPairs = keyValuePairs.Keys.ToList();
+                List<string> targetName = new List<string>();
+                foreach (var item in targetList)
+                {
+                    // 判断是否缺少元素
+                    if (!keyPairs.Any(x => x == item))
+                    {
+                        targetName.Add(item);
+                    }
+                }
+
+                double ceq = 0;
+
+                // 如果少指标就返回
+                if (targetName.Count > 0)
+                {
+                    keyValuePairs.Add("Ceq", ceq);
+                }
+                else
+                {
+                    ceq = (keyValuePairs["C"] + (keyValuePairs["Mn"] / 6) +
+                    ((keyValuePairs["C"] + keyValuePairs["V"] + keyValuePairs["Mo"]) / 5) +
+                    ((keyValuePairs["Cu"] = keyValuePairs["Ni"]) / 15)).ToDouble(2);
+                    keyValuePairs.Add("Ceq", ceq);
+                }
+
+                // 修改关系表数据
+                pdSmelt.Chemistry = keyValuePairs;
+                this.db.Update(pdSmelt);
+                this.db.SaveChanges();
+                var chemistry = (JObject)pdQuality.Qualityinfos.Object;
+                var allKeys = keyValuePairs.Keys.ToList();
+                foreach (var item in chemistry)
+                {
+                    if (!allKeys.Any(o => o == item.Key))
+                    {
+                        keyValuePairs.Add(item.Key, item.Value.ToDouble());
+                    }
+                }
+
+                // 先修改质量数据表
+                pdQuality.Qualityinfos = keyValuePairs;
+                this.db.Update(pdQuality);
                 this.db.SaveChanges();
             }
 
@@ -875,12 +966,170 @@
                 return "不存在关系数据";
             }
 
-            var pdquatulyInfo = this.db.PdQuality.FirstOrDefault(f => f.Id == pdsmelcodeInfo.Qid);
+            var pdquatulyInfo = this.db.PdProduct.FirstOrDefault(f => f.Batcode == batCode);
             if (pdquatulyInfo == null)
             {
-                return "请先添加化学指标,再添加物理指标";
+                return "不存在该炉批号产品";
             }
 
+            if (pdquatulyInfo.Materialid == 0 || !pdquatulyInfo.Materialid.HasValue)
+            {
+                return "该炉批号无材质ID";
+            }
+
+            PdQuality pdquatuly = new PdQuality();
+            List<object> keyValues = new List<object>();
+            var dxQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 1 && w.Status == 0 && w.Materialid == pdquatulyInfo.Materialid && w.TargetCategory == EnumList.TargetCategory.物理指标).ToList();
+            var listQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 0 && w.Status == 0 && w.Materialid == pdquatulyInfo.Materialid && w.TargetCategory == EnumList.TargetCategory.物理指标).ToList();
+            if (listQualityStandards.Count > 0)
+            {
+                Dictionary<string, double> keyValuePairs = new Dictionary<string, double>();
+
+                foreach (var item in listQualityStandards)
+                {
+                    keyValuePairs.Add(item.TargetName, this.Request.Form[item.TargetName].ToDouble());
+                }
+
+                var dicNew = (JObject)pdsmelcodeInfo.Chemistry.Object;
+                foreach (var item in dicNew)
+                {
+                    keyValuePairs.Add(item.Key, item.Value.ToDouble());
+                }
+
+                pdquatuly.Qualityinfos = keyValuePairs;
+            }
+
+            if (dxQualityStandards.Count > 0)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    if (dxQualityStandards == null || dxQualityStandards.Count <= 0)
+                    {
+                        return "该批号下的产品没有设置好可以参考的多样本质量指标";
+                    }
+
+                    Dictionary<string, object> keyValue = new Dictionary<string, object>();
+                    foreach (var item in dxQualityStandards)
+                    {
+                        keyValue.Add(item.TargetName, this.Request.Form[item.TargetName + i].ToDouble(2));
+                    }
+
+                    // 多行元素必要字段校验
+                    List<string> targetdxList = new List<string>()
+                            {
+                                "下屈服强度", "抗拉强度", "伸长率A", "伸长率Agt"
+                            };
+                    var keyS = keyValue.Keys.ToList();
+                    List<string> targetdxName = new List<string>();
+                    foreach (var item in targetdxList)
+                    {
+                        // 判断是否缺少元素
+                        if (!keyS.Any(x => x == item))
+                        {
+                            targetdxName.Add(item);
+                        }
+                    }
+
+                    double qqb = 0;
+                    double qb = 0;
+
+                    // 如果少指标就返回
+                    if (targetdxName.Count > 0)
+                    {
+                        if (list_ma_spec[0].ToUpper().EndsWith("E"))
+                        {
+                            if (!keyValue.Keys.Any(a => a == "强屈比"))
+                            {
+                                keyValue.Add("强屈比", qqb);
+                            }
+
+                            if (!keyValue.Keys.Any(b => b == "屈屈比"))
+                            {
+                                keyValue.Add("屈屈比", qb);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (list_ma_spec[0].ToUpper().EndsWith("E"))
+                        {
+                            if (!keyValue.Keys.Any(a => a == "屈屈比"))
+                            {
+                                qqb = (keyValue["抗拉强度"].ToDouble() / keyValue["下屈服强度"].ToDouble()).ToDouble(2);
+                                keyValue.Add("屈屈比", qqb);
+                            }
+
+                            // 屈屈比计算公式
+                            if (!keyValue.Keys.Any(b => b == "强屈比"))
+                            {
+                                qb = (keyValue["下屈服强度"].ToDouble() / materialNameNum).ToDouble(2);
+                                keyValue.Add("强屈比", qb);
+                            }
+                        }
+                    }
+
+                    keyValues.Add(keyValue);
+                }
+                pdquatuly.Qualityinfos_Dynamics = keyValues;
+            }
+            pdquatuly.CreateFlag = 0;
+            pdquatuly.Batcode = batCode;
+            pdquatuly.CheckStatus = EnumList.CheckStatus_PdQuality.等待审核;
+            pdquatuly.MaterialId = pdquatulyInfo.Materialid;
+            pdquatuly.Createtime = (int)Util.Extensions.GetCurrentUnixTime();
+            pdquatuly.EntryPerson = this.userService.ApplicationUser.Mng_admin.Id;
+            this.db.Add(pdquatuly);
+            this.db.SaveChanges();
+            return "true";
+        }
+
+        /// <summary>
+        /// 编辑物理数据
+        /// </summary>
+        /// <param name="qId">质量数据id</param>
+        /// <returns>string</returns>
+        public string PhysicsEdit(int qId)
+        {
+            var pdquatulyInfo = this.db.PdQuality.FirstOrDefault(f => f.Id == qId);
+            if (pdquatulyInfo == null)
+            {
+                return "不存在质量数据,无法编辑";
+            }
+            List<string> list_ma_spec = this.GetMaterialSpecNameByBatCode(pdquatulyInfo.Batcode);
+            if (list_ma_spec == null)
+            {
+                return "修改失败，该炉批号找不到生产纪录";
+            }
+
+            if (string.IsNullOrEmpty(list_ma_spec[0]))
+            {
+                return "修改失败，找不到该炉批号生产产品的材质基础数据";
+            }
+
+            var modelSpec = this.GetSpecById(System.Convert.ToInt32(list_ma_spec[1]));
+            if (modelSpec == null)
+            {
+                return "修改失败，找不到该炉批号生产产品的规格基础数据";
+            }
+
+            if (!modelSpec.Coldratio.HasValue || modelSpec.Coldratio.Value == 0
+                || !modelSpec.Reverseratio.HasValue || modelSpec.Reverseratio.Value == 0)
+            {
+                return "修改失败，该炉批号生产产品的规格基础数据有误 （冷弯或反弯无数据）";
+            }
+
+            Regex regNum = new Regex("\\d+");
+            int materialNameNum = 0; // list_ma_spec
+            int specnameNum = 0;
+            if (regNum.IsMatch(list_ma_spec[0]) && regNum.IsMatch(modelSpec.Specname))
+            {
+                materialNameNum = regNum.Match(list_ma_spec[0]).Value.ToInt();
+                specnameNum = regNum.Match(modelSpec.Specname).Value.ToInt();
+            }
+            else
+            {
+                return "添加失败，材质或规格提取数字失败";
+            }
             List<object> keyValues = new List<object>();
             var dxQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 1 && w.Status == 0 && w.Materialid == pdquatulyInfo.MaterialId && w.TargetCategory == EnumList.TargetCategory.物理指标).ToList();
             var listQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 0 && w.Status == 0 && w.Materialid == pdquatulyInfo.MaterialId && w.TargetCategory == EnumList.TargetCategory.物理指标).ToList();
@@ -894,9 +1143,13 @@
                 }
 
                 var dicNew = (JObject)pdquatulyInfo.Qualityinfos.Object;
+
                 foreach (var item in dicNew)
                 {
-                    keyValuePairs.Add(item.Key, item.Value.ToDouble());
+                    if (!keyValuePairs.Keys.ToList().Any(o => o == item.Key))
+                    {
+                        keyValuePairs.Add(item.Key, item.Value.ToDouble());
+                    }
                 }
 
                 pdquatulyInfo.Qualityinfos = keyValuePairs;
@@ -973,16 +1226,13 @@
 
                     keyValues.Add(keyValue);
                 }
+
                 pdquatulyInfo.Qualityinfos_Dynamics = keyValues;
+                this.db.SaveChanges();
             }
 
-            pdquatulyInfo.Batcode = batCode;
-
-            this.db.PdQuality.Update(pdquatulyInfo);
-            this.db.SaveChanges();
             return "true";
         }
-
         /// <summary>
         /// 添加数据
         /// </summary>
