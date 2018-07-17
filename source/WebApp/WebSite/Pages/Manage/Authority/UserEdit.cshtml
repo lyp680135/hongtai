@@ -109,7 +109,7 @@
                         {
                             if (admin.GroupManage.Object.Contains(re.Id))
                             {
-                                 if (re.GroupName == "质量员" || re.GroupName == "入库操作员" || re.GroupName == "出库操作员" || re.GroupName == "炉号工")
+                                if (re.GroupName == "质量员-物理" || re.GroupName == "质量员-化学" || re.GroupName == "入库操作员" || re.GroupName == "出库操作员" || re.GroupName == "炉号工")
                                 {
                                     <label class="Managebox"><input type="checkbox" onclick=" javascript:layer.msg('该角色需前往车间管理设置');return false;" checked="checked" value="@re.Id" name="GroupManage" />@re.GroupName</label>
                                 }
@@ -119,7 +119,7 @@
                             }
                             else
                             {
-                                if (re.GroupName == "质量员" || re.GroupName == "入库操作员" || re.GroupName == "出库操作员" || re.GroupName == "炉号工")
+                                if (re.GroupName == "质量员-物理" || re.GroupName == "质量员-化学" || re.GroupName == "入库操作员" || re.GroupName == "出库操作员" || re.GroupName == "炉号工")
                                 {
                                     <label class="Managebox"><input type="checkbox" onclick="javascript: layer.msg('该角色需前往车间管理设置');return false;"  value="@re.Id" name="GroupManage" />@re.GroupName</label>
                                 }

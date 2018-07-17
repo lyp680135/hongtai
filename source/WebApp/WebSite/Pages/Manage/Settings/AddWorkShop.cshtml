@@ -32,11 +32,24 @@
     </script>
     <style>
         .inputspan {
-            width:70%;
+            width: 70%;
             height: auto;
             display: inline-block;
             word-wrap: break-word;
             white-space: normal;
+        }
+        select {
+            opacity: 1;
+            filter: alpha(opacity=100);
+            border: 1px solid #9c9c9c;
+            width: 50px;
+            height: 32px;
+            line-height: 32px;
+        }
+
+        #form1 select {
+            border: solid 1px #a7b5bc;
+            width: 130px;
         }
 
         .tipinfo span {
@@ -53,9 +66,9 @@
             margin-left: 20px;
         }
 
-        .forminfo li label {
+        /*.forminfo li label {
             width: 50px;
-        }
+        }*/
 
         body {
             min-width: inherit;
@@ -73,6 +86,11 @@
         .deleclass {
             cursor: pointer;
             margin-left: 10px;
+        }
+
+        .checklabel {
+            float: none;
+            display: inline-block;
         }
     </style>
 </head>
@@ -123,13 +141,19 @@
                         <span class="inputspan">
                             <input placeholder="姓名" name="luruName" type="text" value="" class="validate[required] scinput" style="width:100px" />
                             <input placeholder="手机号" name="ruluTel" type="text" class="validate[required] scinput validate[custom[MobilePhone]] " maxlength="11" value="" style="width:100px" />
+                            @*<label style=" float: none;display: inline-block;"><input type="radio" name="wuliorhuaxue" value="1" checked="checked" />物理</label><label style=" float: none;display: inline-block;"><input type="radio" name="wuliorhuaxue" value="2" />化学</label><label style=" float: none;display: inline-block;"><input type="radio" name="wuliorhuaxue" value="3" />物理和化学</label>*@
+                            <select name="wuliorhuaxue" class="validate[required] scinput" style="width:70px;">
+                                <option value="1" selected="selected">物理</option>
+                                <option value="2">化学</option> 
+                                <option value="3">全部</option>
+                            </select>
                             <a onclick="addquanlityin(this)" class="addclass">添加</a><a onclick="deleteRow(this)" class="deleclass">删除</a>
                         </span>
                         <br />
                     </li>
                     <li>
                     </li>
-                    <li style="line-height: 34px;" class="luruli">
+                    @*<li style="line-height: 34px; display:none;" class="luruli">
                         <label style="width:70px;">炉号工</label>
                         <span class="inputspan">
                             <input placeholder="姓名" name="luhaoName" type="text" value="" class="validate[required] scinput" style="width:100px" />
@@ -137,7 +161,7 @@
                             <a onclick="addluhao(this)" class="addclass">添加</a><a onclick="deleteRow(this)" class="deleclass">删除</a>
                         </span>
                         <br />
-                    </li>
+                    </li>*@
                     <li>
                     </li>
                 </ul>
@@ -151,46 +175,55 @@
     </div>
     <script type="text/javascript">
         var addformhtml = $("#addbox").html();
-        @*var IsSuccess = @Model.IsSuccess.ToString().ToLower();
-        var Msg =@Html.Raw("'"+Model.Msg+"'");
-        if (Msg != "") {
-            layer.msg(Msg, {icon :2});
-        }
-        if(IsSuccess) {
-            layer.msg('添加成功', { icon: 1 });
-            setTimeout(function () { parent.window.location.reload(); }, 2000);
-        }*@
         function submitData(obj) {
             if (checkValid(obj)) {
-                $.ajax({
-                    type: "POST", url: '/WorkShop/Add',
-                    data: $("#form2").serialize(),
-                    success: function (re) {
-                        if (re.state) {
-                            layer.msg('新增成功', { icon: 1 });
-                            setTimeout(function () { parent.window.location.reload(); }, 1000);
-                        } else {
-                            layer.msg(re.content, { icon: 2 });
-                        }
-                        setTimeout(function () {
-                            layer.closeAll();
-                        }, 2000);
+                //if (!checkLichecked()) {
+                //    layer.msg('您还有质量录入员没有设置！');
+                //    setTimeout(function () { layer.closeAll(); }, 1000);
+                //    return false;
+                //}
+                //else {
+                    $.ajax({
+                        type: "POST",
+                        url: '/WorkShop/Add',
+                        data: $("#form2").serialize(),
+                        success: function (re) {
+                            if (re.state) {
+                                layer.msg('新增成功', { icon: 1 });
+                                setTimeout(function () { parent.window.location.reload(); }, 1000);
+                            } else {
+                                layer.msg(re.content, { icon: 2 });
+                            }
+                            setTimeout(function () {
+                                layer.closeAll();
+                            }, 2000);
 
 
-                    }, error: function (err) {
-                        if (err.status == 401) {
-                            layer.msg("暂无权限", { icon: 2 });
-                        } else {
-                            layer.msg("操作失败，系统出现错误！", { icon: 2 });
+                        }, error: function (err) {
+                            if (err.status == 401) {
+                                layer.msg("暂无权限", { icon: 2 });
+                            } else {
+                                layer.msg("操作失败，系统出现错误！", { icon: 2 });
+                            }
+                            setTimeout(function () {
+                                layer.closeAll();
+                            }, 2000);
                         }
-                        setTimeout(function () {
-                            layer.closeAll();
-                        }, 2000);
-                    }
-                });
+                    });
+                //}
             }
         }
 
+        function checkLichecked(){ 
+            $("ul>li").each(function (index) {
+                if ($("input[type='checkbox'] :checked").length < 1 && $("input[type='checkbox']") != null)
+                {
+                    return false;
+                }
+
+            });
+            return true;
+        }
 
         function addworkin(obj) {
 
@@ -203,15 +236,15 @@
 
         }
         function addquanlityin(obj) {
-            var html = '<span class="inputspan" style="margin-left:70px;"><input placeholder="姓名" name="luruName"  type="text"  value="" class="validate[required] scinput " style="width:100px;" />  <input placeholder="手机号" name="ruluTel" type="text" class="validate[required] scinput validate[custom[MobilePhone]]" maxlength="11" value="" style="width:100px" /><a onclick="addquanlityin(this)" class="addclass">添加</a><a onclick="deleteRow(this)" class="deleclass">删除</a></span>';
+            var html = '<span class="inputspan" style="margin-left:70px;"><input placeholder="姓名" name="luruName"  type="text"  value="" class="validate[required] scinput " style="width:100px;" />  <input placeholder="手机号" name="ruluTel" type="text" class="validate[required] scinput validate[custom[MobilePhone]]" maxlength="11" value="" style="width:100px" /> <select name="wuliorhuaxue" class="validate[required] scinput" style="width:70px;"><option value="1" selected="selected">物理</option><option value="2">化学</option><option value="3">全部</option> </select ><a onclick="addquanlityin(this)" class="addclass">添加</a><a onclick="deleteRow(this)" class="deleclass">删除</a></span>';
             $(obj).parent().parent().append(html);
 
         }
-        function addluhao(obj) {
-            var html = '<span class="inputspan" style="margin-left:70px;"><input placeholder="姓名" name="luhaoName"  type="text"  value="" class="validate[required] scinput " style="width:100px;" />  <input placeholder="手机号" name="luhaoTel" type="text" class="validate[required] scinput validate[custom[MobilePhone]]" maxlength="11" value="" style="width:100px" /><a onclick="addluhao(this)" class="addclass">添加</a> <a onclick="deleteRow(this)" class="deleclass">删除</a></span>';
-            $(obj).parent().parent().append(html);
+        //function addluhao(obj) {
+        //    var html = '<span class="inputspan" style="margin-left:70px;"><input placeholder="姓名" name="luhaoName"  type="text"  value="" class="validate[required] scinput " style="width:100px;" />  <input placeholder="手机号" name="luhaoTel" type="text" class="validate[required] scinput validate[custom[MobilePhone]]" maxlength="11" value="" style="width:100px" /><a onclick="addluhao(this)" class="addclass">添加</a> <a onclick="deleteRow(this)" class="deleclass">删除</a></span>';
+        //    $(obj).parent().parent().append(html);
 
-        }
+        //}
 
 
 

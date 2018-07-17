@@ -1,7 +1,9 @@
 ﻿@page
+
 @using Newtonsoft.Json
 @model WarrantyManage.Pages.Manage.Settings.EditWorkShopModel
 @inject DataLibrary.DataContext db
+@inject Common.IService.IUserService userService
 @{
     ViewData["Title"] = "UpdWorkShop";
 }
@@ -35,9 +37,23 @@
             margin-left: 20px;
         }
 
-        .forminfo li label {
+        select {
+            opacity: 1;
+            filter: alpha(opacity=100);
+            border: 1px solid #9c9c9c;
             width: 50px;
+            height: 32px;
+            line-height: 32px;
         }
+
+        #form1 select {
+            border: solid 1px #a7b5bc;
+            width: 130px;
+        }
+
+        /*.forminfo li label {
+            width: 50px;
+        }*/
 
         body {
             min-width: inherit;
@@ -160,6 +176,26 @@
                                     <span class="inputspan" @Html.Raw(i > 0 ? "style='margin-left:70px;'" : "")>
                                         <input placeholder="姓名" name="luruName" type="text" value="@resultOperator3[i].RealName" class="validate[required] scinput" style="width:100px" />
                                         <input placeholder="手机号" name="ruluTel" type="text" class="validate[required] scinput validate[custom[MobilePhone]]" value="@resultOperator3[i].UserName" style="width:100px" />
+                                        <select name="wuliorhuaxue" class="validate[required] scinput" style="width:70px;">
+                                            @if (userService.IsHaveRole("质量员-物理", resultOperator3[i].Id) && userService.IsHaveRole("质量员-化学", resultOperator3[i].Id))
+                                            {
+                                                <option value="1">物理</option>
+                                                <option value="2">化学</option>
+                                                <option value="3" selected="selected">全部</option>
+                                            }
+                                            else if (userService.IsHaveRole("质量员-物理", resultOperator3[i].Id))
+                                            {
+                                                <option value="1" selected="selected">物理</option>
+                                                <option value="2">化学</option>
+                                                <option value="3">全部</option>}
+                                            else if (userService.IsHaveRole("质量员-化学", resultOperator3[i].Id))
+                                            {
+                                                <option value="1">物理</option>
+                                                <option value="2" selected="selected">化学</option>
+                                                <option value="3">全部</option>
+                                            }
+
+                                        </select>
                                         <a onclick="addquanlityin(this)" class="addclass">添加</a><a onclick="deleteRow(this,@resultOperator3[i].Id,'luru')" class="deleclass">删除</a>
                                     </span>
 
@@ -168,7 +204,7 @@
                             }
                         }
                     </li>
-                    <li style="line-height: 34px;" class="luruli">
+                    <li style="line-height: 34px;display:none" class="luruli">
                         <label style="width:70px;">炉号工</label>
                         @{
                             if (!string.IsNullOrEmpty(list.Furnacer))
@@ -214,15 +250,15 @@
 
         }
         function addquanlityin(obj) {
-            var html = '<span class="inputspan" style="margin-left:70px;"><input placeholder="姓名" name="luruName"  type="text"  value="" class="validate[required] scinput " style="width:100px;" />  <input placeholder="手机号" name="ruluTel" type="text" class="validate[required] scinput validate[custom[MobilePhone]]" value="" style="width:100px" /><a onclick="addquanlityin(this)" class="addclass">添加</a><a onclick="deleteRow(this)" class="deleclass">删除</a></span>';
+            var html = '<span class="inputspan" style="margin-left:70px;"><input placeholder="姓名" name="luruName"  type="text"  value="" class="validate[required] scinput " style="width:100px;" />  <input placeholder="手机号" name="ruluTel" type="text" class="validate[required] scinput validate[custom[MobilePhone]]" value="" style="width:100px" /> <select name="wuliorhuaxue" class="validate[required] scinput" style="width:70px;"><option value = "1" selected = "selected" > 物理</option><option value="2">化学</option><option value="3">全部</option></select ><a onclick="addquanlityin(this)" class="addclass">添加</a><a onclick="deleteRow(this)" class="deleclass">删除</a></span>';
             $(obj).parent().parent().append(html);
 
         }
-        function addluhao(obj) {
-            var html = '<span class="inputspan" style="margin-left:70px;"><input placeholder="姓名" name="luhaoName"  type="text"  value="" class="validate[required] scinput " style="width:100px;" />  <input placeholder="手机号" name="luhaoTel" type="text" class="validate[required] scinput validate[custom[MobilePhone]]" value="" style="width:100px" /><a onclick="addluhao(this)" class="addclass">添加</a> <a onclick="deleteRow(this)" class="deleclass">删除</a></span>';
-            $(obj).parent().parent().append(html);
+        //function addluhao(obj) {
+        //    var html = '<span class="inputspan" style="margin-left:70px;"><input placeholder="姓名" name="luhaoName"  type="text"  value="" class="validate[required] scinput " style="width:100px;" />  <input placeholder="手机号" name="luhaoTel" type="text" class="validate[required] scinput validate[custom[MobilePhone]]" value="" style="width:100px" /><a onclick="addluhao(this)" class="addclass">添加</a> <a onclick="deleteRow(this)" class="deleclass">删除</a></span>';
+        //    $(obj).parent().parent().append(html);
 
-        }
+        //}
 
 
 

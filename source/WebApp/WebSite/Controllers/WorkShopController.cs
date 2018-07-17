@@ -19,9 +19,12 @@
     {
         private DataLibrary.DataContext db;
 
-        public WorkShopController(DataLibrary.DataContext db)
+        private Common.IService.IUserService userService;
+
+        public WorkShopController(DataLibrary.DataContext db, Common.IService.IUserService userService)
         {
             this.db = db;
+            this.userService = userService;
         }
 
         [HttpPost]
@@ -72,7 +75,7 @@
         }
 
         [HttpPost]
-        public ActionResult Add(string workShopName, string code, string[] rukuName, string[] rukuTel, string[] chukuName, string[] chukuTel, string[] luruName, string[] ruluTel, string[] luhaoName, string[] luhaoTel)
+        public ActionResult Add(string workShopName, string code, string[] rukuName, string[] rukuTel, string[] chukuName, string[] chukuTel, string[] luruName, string[] ruluTel, int[] wuliorhuaxue)
         {
             List<int> warehousingoperatorids = new List<int>();
             List<int> outboundoperatorids = new List<int>();
@@ -80,10 +83,10 @@
             string sameName = string.Empty;
 
             // 炉号工ID集合
-            List<int> furnacemanids = new List<int>();
-
+            // List<int> furnacemanids = new List<int>();
             var tempClass = this.db.PdWorkshop.FirstOrDefault(c => c.Name == workShopName);
             var tempClass2 = this.db.PdWorkshop.FirstOrDefault(c => c.Code == code);
+            var quanlityhuaxue = this.db.MngPermissiongroup.FirstOrDefault(c => c.GroupName == "质量员-化学");
             if (tempClass != null)
             {
                 return this.AjaxResult(false, "您已添加该车间，请勿重复添加");
@@ -211,8 +214,46 @@
                     DataLibrary.MngAdmin ruluperson = this.db.MngAdmin.FirstOrDefault(c => c.UserName == ruluTel[i]);
                     if (ruluperson != null)
                     {
-                        // 如果原有用户没有出库操作员角色，则多赋予出库操作员角色权限
-                        if (!ruluperson.GroupManage.Object.Contains((int)GroupManage.质量员))
+                        // 首先移除掉所有质量员角色
+                        ruluperson.GroupManage.Object.Remove((int)GroupManage.质量员);
+                        ruluperson.GroupManage.Object.Remove(quanlityhuaxue.Id);
+
+                        // 如果原有用户没有质量员角色，则多赋予质量员角色权限
+                        if (wuliorhuaxue[i] == 1)
+                        {
+                            if (!ruluperson.GroupManage.Object.Contains((int)GroupManage.质量员))
+                            {
+                                List<int> gmanage = new List<int>();
+                                foreach (var group in ruluperson.GroupManage.Object)
+                                {
+                                    gmanage.Add(group);
+                                }
+
+                                gmanage.Add((int)GroupManage.质量员);
+                                ruluperson.GroupManage = gmanage;
+                            }
+                        }
+
+                        if (wuliorhuaxue[i] == 2)
+                        {
+                            if (!this.userService.IsHaveRole("质量员-化学", ruluperson.Id))
+                            {
+                                List<int> gmanage = new List<int>();
+                                foreach (var group in ruluperson.GroupManage.Object)
+                                {
+                                    gmanage.Add(group);
+                                }
+
+                                if (quanlityhuaxue != null)
+                                {
+                                    gmanage.Add(quanlityhuaxue.Id);
+                                }
+
+                                ruluperson.GroupManage = gmanage;
+                            }
+                        }
+
+                        if (wuliorhuaxue[i] == 3)
                         {
                             List<int> gmanage = new List<int>();
                             foreach (var group in ruluperson.GroupManage.Object)
@@ -220,7 +261,19 @@
                                 gmanage.Add(group);
                             }
 
-                            gmanage.Add((int)GroupManage.质量员);
+                            if (!this.userService.IsHaveRole("质量员-化学", ruluperson.Id))
+                            {
+                                if (quanlityhuaxue != null)
+                                {
+                                    gmanage.Add(quanlityhuaxue.Id);
+                                }
+                            }
+
+                            if (!ruluperson.GroupManage.Object.Contains((int)GroupManage.质量员))
+                            {
+                                gmanage.Add((int)GroupManage.质量员);
+                            }
+
                             ruluperson.GroupManage = gmanage;
                         }
 
@@ -230,70 +283,112 @@
                     }
                     else
                     {
-                        var tempadmin = this.db.MngAdmin.Add(
-                                new DataLibrary.MngAdmin()
-                                {
-                                    DepartId = 1,
-                                    FirstChar = string.Empty,
-                                    GroupManage = (new int[] { (int)GroupManage.质量员 }).ToList(),
-                                    InJob = true,
-                                    Password = string.Empty,
-                                    RealName = luruName[i],
-                                    Sex = true,
-                                    UserName = ruluTel[i]
-                                });
-                        this.db.SaveChanges();
-                        qualityentryclerkids.Add(tempadmin.Entity.Id);
-                    }
-                }
-
-                // 循环炉号工
-                for (var i = 0; i < luhaoName.Length; i++)
-                {
-                    // 判断是否存在姓名重复
-                    DataLibrary.MngAdmin same = this.db.MngAdmin.FirstOrDefault(c => c.RealName == luhaoName[i] && c.UserName != luhaoTel[i]);
-                    if (same != null)
-                    {
-                        return this.AjaxResult(false, same.RealName + "已存在，请加上识别标识,如张三(A车间)");
-                    }
-
-                    DataLibrary.MngAdmin luhaoperson = this.db.MngAdmin.FirstOrDefault(c => c.UserName == luhaoTel[i]);
-                    if (luhaoperson != null)
-                    {
-                        // 如果原有用户没有炉号工角色，则多赋予炉号工角色权限
-                        if (!luhaoperson.GroupManage.Object.Contains((int)GroupManage.炉号工))
+                        // 如果原有用户没有质量员角色，则多赋予质量员角色权限
+                        if (wuliorhuaxue[i] == 1)
                         {
-                            List<int> gmanage = new List<int>();
-                            foreach (var group in luhaoperson.GroupManage.Object)
-                            {
-                                gmanage.Add(group);
-                            }
-
-                            gmanage.Add((int)GroupManage.炉号工);
-                            luhaoperson.GroupManage = gmanage;
-                        }
-
-                        luhaoperson.RealName = luruName[i];
-                        furnacemanids.Add(luhaoperson.Id);
-                        this.db.SaveChanges();
-                    }
-                    else
-                    {
-                        var tempadmin = this.db.MngAdmin.Add(
+                            var tempadmin = this.db.MngAdmin.Add(
                                new DataLibrary.MngAdmin()
                                {
                                    DepartId = 1,
                                    FirstChar = string.Empty,
-                                   GroupManage = (new int[] { (int)GroupManage.炉号工 }).ToList(),
+                                   GroupManage = (new int[] { (int)GroupManage.质量员 }).ToList(),
                                    InJob = true,
                                    Password = string.Empty,
-                                   RealName = luhaoName[i],
+                                   RealName = luruName[i],
                                    Sex = true,
-                                   UserName = luhaoTel[i]
+                                   UserName = ruluTel[i]
                                });
-                        this.db.SaveChanges();
-                        furnacemanids.Add(tempadmin.Entity.Id);
+                            this.db.SaveChanges();
+                            qualityentryclerkids.Add(tempadmin.Entity.Id);
+                        }
+
+                        if (wuliorhuaxue[i] == 2)
+                        {
+                            var tempadmin = this.db.MngAdmin.Add(
+                              new DataLibrary.MngAdmin()
+                              {
+                                  DepartId = 1,
+                                  FirstChar = string.Empty,
+                                  GroupManage = (new int[] { quanlityhuaxue != null ? quanlityhuaxue.Id : 0 }).ToList(),
+                                  InJob = true,
+                                  Password = string.Empty,
+                                  RealName = luruName[i],
+                                  Sex = true,
+                                  UserName = ruluTel[i]
+                              });
+                            // var tempadmin = this.db.MngAdmin.FirstOrDefault();
+                            this.db.SaveChanges();
+                            qualityentryclerkids.Add(tempadmin.Entity.Id);
+                        }
+                        if (wuliorhuaxue[i] == 3)
+                        {
+                            var tempadmin = this.db.MngAdmin.Add(
+                              new DataLibrary.MngAdmin()
+                              {
+                                  DepartId = 1,
+                                  FirstChar = string.Empty,
+                                  GroupManage = (new int[] { quanlityhuaxue != null ? quanlityhuaxue.Id : 0 , (int)GroupManage.质量员 }).ToList(),
+                                  InJob = true,
+                                  Password = string.Empty,
+                                  RealName = luruName[i],
+                                  Sex = true,
+                                  UserName = ruluTel[i]
+                              });
+                            // var tempadmin = this.db.MngAdmin.FirstOrDefault();
+                            this.db.SaveChanges();
+                            qualityentryclerkids.Add(tempadmin.Entity.Id);
+                        }
                     }
+                    #region 隐藏炉号工代码
+                    //// 循环炉号工
+                    // for (var i = 0; i < luhaoName.Length; i++)
+                    // {
+                    //    // 判断是否存在姓名重复
+                    //    DataLibrary.MngAdmin same = this.db.MngAdmin.FirstOrDefault(c => c.RealName == luhaoName[i] && c.UserName != luhaoTel[i]);
+                    //    if (same != null)
+                    //    {
+                    //        return this.AjaxResult(false, same.RealName + "已存在，请加上识别标识,如张三(A车间)");
+                    //    }
+
+                    // DataLibrary.MngAdmin luhaoperson = this.db.MngAdmin.FirstOrDefault(c => c.UserName == luhaoTel[i]);
+                    //    if (luhaoperson != null)
+                    //    {
+                    //        // 如果原有用户没有炉号工角色，则多赋予炉号工角色权限
+                    //        if (!luhaoperson.GroupManage.Object.Contains((int)GroupManage.炉号工))
+                    //        {
+                    //            List<int> gmanage = new List<int>();
+                    //            foreach (var group in luhaoperson.GroupManage.Object)
+                    //            {
+                    //                gmanage.Add(group);
+                    //            }
+
+                    // gmanage.Add((int)GroupManage.炉号工);
+                    //            luhaoperson.GroupManage = gmanage;
+                    //        }
+
+                    // luhaoperson.RealName = luruName[i];
+                    //        furnacemanids.Add(luhaoperson.Id);
+                    //        this.db.SaveChanges();
+                    //    }
+                    //    else
+                    //    {
+                    //        var tempadmin = this.db.MngAdmin.Add(
+                    //               new DataLibrary.MngAdmin()
+                    //               {
+                    //                   DepartId = 1,
+                    //                   FirstChar = string.Empty,
+                    //                   GroupManage = (new int[] { (int)GroupManage.炉号工 }).ToList(),
+                    //                   InJob = true,
+                    //                   Password = string.Empty,
+                    //                   RealName = luhaoName[i],
+                    //                   Sex = true,
+                    //                   UserName = luhaoTel[i]
+                    //               });
+                    //        this.db.SaveChanges();
+                    //        furnacemanids.Add(tempadmin.Entity.Id);
+                    //    }
+                    // }
+                    #endregion
                 }
 
                 var wsclass = new DataLibrary.PdWorkshop()
@@ -303,7 +398,8 @@
                     Inputer = string.Join(",", warehousingoperatorids),
                     Outputer = string.Join(",", outboundoperatorids),
                     QAInputer = string.Join(",", qualityentryclerkids),
-                    Furnacer = string.Join(",", furnacemanids),
+
+                    // Furnacer = string.Join(",", furnacemanids),
                 };
                 this.db.PdWorkshop.Add(wsclass);
                 this.db.SaveChanges();
@@ -312,7 +408,7 @@
         }
 
         [HttpPost]
-        public ActionResult Edit(int hiddId, string workShopName, string code, string[] rukuName, string[] rukuTel, string[] chukuName, string[] chukuTel, string[] luruName, string[] ruluTel, string[] luhaoName, string[] luhaoTel)
+        public ActionResult Edit(int hiddId, string workShopName, string code, string[] rukuName, string[] rukuTel, string[] chukuName, string[] chukuTel, string[] luruName, string[] ruluTel, string[] luhaoName, string[] luhaoTel, int[] wuliorhuaxue)
         {
             List<int> warehousingoperatorids = new List<int>();
             List<int> outboundoperatorids = new List<int>();
@@ -320,7 +416,7 @@
 
             // 炉号工ID集合
             List<int> furnacemanids = new List<int>();
-
+            var quanlityhuaxue = this.db.MngPermissiongroup.FirstOrDefault(c => c.GroupName == "质量员-化学");
             if (this.db.PdWorkshop.FirstOrDefault(c => c.Name == workShopName && c.Id != hiddId) != null)
             {
                 return this.AjaxResult(false, "您已添加该车间，请勿重复添加");
@@ -468,12 +564,67 @@
 
                         if (ruluperson != null)
                         {
-                            if (!ruluperson.GroupManage.Object.Contains((int)GroupManage.质量员))
-                            {
-                                List<int> list_temp = ruluperson.GroupManage.Object;
-                                list_temp.Add((int)GroupManage.质量员);
+                            // 首先移除掉所有质量员角色
+                            ruluperson.GroupManage.Object.Remove((int)GroupManage.质量员);
+                            ruluperson.GroupManage.Object.Remove(quanlityhuaxue.Id);
 
-                                ruluperson.GroupManage = list_temp;
+                            // 如果原有用户没有质量员角色，则多赋予质量员角色权限
+                            if (wuliorhuaxue[i] == 1)
+                            {
+                                if (!ruluperson.GroupManage.Object.Contains((int)GroupManage.质量员))
+                                {
+                                    List<int> gmanage = new List<int>();
+                                    foreach (var group in ruluperson.GroupManage.Object)
+                                    {
+                                        gmanage.Add(group);
+                                    }
+
+                                    gmanage.Add((int)GroupManage.质量员);
+                                    ruluperson.GroupManage = gmanage;
+                                }
+                            }
+
+                            if (wuliorhuaxue[i] == 2)
+                            {
+                                if (!this.userService.IsHaveRole("质量员-化学", ruluperson.Id))
+                                {
+                                    List<int> gmanage = new List<int>();
+                                    foreach (var group in ruluperson.GroupManage.Object)
+                                    {
+                                        gmanage.Add(group);
+                                    }
+
+                                    if (quanlityhuaxue != null)
+                                    {
+                                        gmanage.Add(quanlityhuaxue.Id);
+                                    }
+
+                                    ruluperson.GroupManage = gmanage;
+                                }
+                            }
+
+                            if (wuliorhuaxue[i] == 3)
+                            {
+                                List<int> gmanage = new List<int>();
+                                foreach (var group in ruluperson.GroupManage.Object)
+                                {
+                                    gmanage.Add(group);
+                                }
+
+                                if (!this.userService.IsHaveRole("质量员-化学", ruluperson.Id))
+                                {
+                                    if (quanlityhuaxue != null)
+                                    {
+                                        gmanage.Add(quanlityhuaxue.Id);
+                                    }
+                                }
+
+                                if (!ruluperson.GroupManage.Object.Contains((int)GroupManage.质量员))
+                                {
+                                    gmanage.Add((int)GroupManage.质量员);
+                                }
+
+                                ruluperson.GroupManage = gmanage;
                             }
 
                             ruluperson.RealName = luruName[i];
@@ -482,20 +633,60 @@
                         }
                         else
                         {
-                            var tempadmin = this.db.MngAdmin.Add(
-                                new DataLibrary.MngAdmin()
-                                {
-                                    DepartId = 1,
-                                    FirstChar = string.Empty,
-                                    GroupManage = (new int[] { (int)GroupManage.质量员 }).ToList(),
-                                    InJob = true,
-                                    Password = string.Empty,
-                                    RealName = luruName[i],
-                                    Sex = true,
-                                    UserName = ruluTel[i]
-                                });
-                            this.db.SaveChanges();
-                            qualityentryclerkids.Add(tempadmin.Entity.Id);
+                            // 如果原有用户没有质量员角色，则多赋予质量员角色权限
+                            if (wuliorhuaxue[i] == 1)
+                            {
+                                var tempadmin = this.db.MngAdmin.Add(
+                                   new DataLibrary.MngAdmin()
+                                   {
+                                       DepartId = 1,
+                                       FirstChar = string.Empty,
+                                       GroupManage = (new int[] { (int)GroupManage.质量员 }).ToList(),
+                                       InJob = true,
+                                       Password = string.Empty,
+                                       RealName = luruName[i],
+                                       Sex = true,
+                                       UserName = ruluTel[i]
+                                   });
+                                this.db.SaveChanges();
+                                qualityentryclerkids.Add(tempadmin.Entity.Id);
+                            }
+
+                            if (wuliorhuaxue[i] == 2)
+                            {
+                                var tempadmin = this.db.MngAdmin.Add(
+                                  new DataLibrary.MngAdmin()
+                                  {
+                                      DepartId = 1,
+                                      FirstChar = string.Empty,
+                                      GroupManage = (new int[] { quanlityhuaxue != null ? quanlityhuaxue.Id : 0 }).ToList(),
+                                      InJob = true,
+                                      Password = string.Empty,
+                                      RealName = luruName[i],
+                                      Sex = true,
+                                      UserName = ruluTel[i]
+                                  });
+                                this.db.SaveChanges();
+                                qualityentryclerkids.Add(tempadmin.Entity.Id);
+                            }
+
+                            if (wuliorhuaxue[i] == 3)
+                            {
+                                var tempadmin = this.db.MngAdmin.Add(
+                                  new DataLibrary.MngAdmin()
+                                  {
+                                      DepartId = 1,
+                                      FirstChar = string.Empty,
+                                      GroupManage = (new int[] { quanlityhuaxue != null ? quanlityhuaxue.Id : 0, (int)GroupManage.质量员 }).ToList(),
+                                      InJob = true,
+                                      Password = string.Empty,
+                                      RealName = luruName[i],
+                                      Sex = true,
+                                      UserName = ruluTel[i]
+                                  });
+                                this.db.SaveChanges();
+                                qualityentryclerkids.Add(tempadmin.Entity.Id);
+                            }
                         }
                     }
 
