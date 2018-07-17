@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using static DataLibrary.EnumList;
 
     [Table("basequalitystandard")]
     public partial class BaseQualityStandard
@@ -59,5 +60,10 @@
         ///  Gets or sets 指标类型：0.不必填 1.必填
         /// </summary>
         public int? TargetIsNull { get; set; }
+
+        /// <summary>
+        ///  Gets or sets 指标类别
+        /// </summary>
+        public TargetCategory TargetCategory { get; set; }
     }
 }
