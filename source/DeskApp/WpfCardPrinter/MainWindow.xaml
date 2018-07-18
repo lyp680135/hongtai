@@ -127,7 +127,7 @@
             <StackPanel DockPanel.Dock="Bottom" Margin="0 20px 0 10px">
                 <Canvas Name="panelLabel" Width="370px" Height="230px" MaxWidth="370px" MaxHeight="370px">
                     <Canvas.Background>
-                        <ImageBrush ImageSource="/WpfCardPrinter;component/Resources/hongtai.png" Stretch="Uniform" TileMode="None"  />
+                        <ImageBrush ImageSource="/WpfCardPrinter;component/Resources/zhi.jpg" Stretch="Uniform" TileMode="None"  />
                     </Canvas.Background>
 
                     <Label Name="lbLabelProductClass" Canvas.Top="0" Canvas.Left="0" Content="" />
