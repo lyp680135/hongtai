@@ -121,7 +121,7 @@
         /// <returns>登录是否成功状态</returns>
         public bool LoginBySaleSeller(string mobile, string code, ref string msg, ref SaleSeller saleSeller)
         {
-            var saleSeller1 = this.db.SaleSeller.FirstOrDefault(c => c.Mobile == mobile);
+            var saleSeller1 = this.db.SaleSeller.FirstOrDefault(c => c.Mobile.Contains(mobile));
             if (saleSeller1 != null)
             {
                 var model_code = this.db.BaseMobileCode.OrderByDescending(c => c.Sendtime).FirstOrDefault(c => c.Mobile == mobile && c.Code == code
@@ -194,7 +194,7 @@
                 }
                 else if (systemMemberType == SystemMemberType.Seller)
                 {
-                    var saleSeller = this.db.SaleSeller.FirstOrDefault(c => c.Mobile == mobile);
+                    var saleSeller = this.db.SaleSeller.FirstOrDefault(c => c.Mobile.Contains(mobile));
                     if (saleSeller != null)
                     {
                         // 执行发送操作

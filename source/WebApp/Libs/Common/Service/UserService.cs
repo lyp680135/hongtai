@@ -83,10 +83,75 @@
         }
 
         /// <summary>
-        /// 获得当前钢厂人员登录的用户及权限
+        /// 根据角色名称判断是否有该角色
         /// </summary>
-        /// <returns>当前钢厂人员实体</returns>
-        private ApplicationUser GetCurrentUser()
+        /// <param name="roleName">角色名称</param>
+        /// <returns>是否</returns>
+        public bool IsHaveRole(string roleName)
+        {
+            var appUser = this.GetCurrentUser();
+            if (appUser.Mng_admin != null)
+            {
+                var model_pmg = this.db.MngPermissiongroup.FirstOrDefault(c => c.GroupName == roleName);
+
+                if (model_pmg != null)
+                {
+                    if (appUser.Mng_admin.GroupManage.Object.Contains(model_pmg.Id))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 根据角色名称和Id判断是否有该角色
+        /// </summary>
+        /// <param name="roleName">角色名称</param>
+        /// <param name="userId">用户Id</param>
+        /// <returns>是否</returns>
+        public bool IsHaveRole(string roleName, int userId)
+        {
+            var mng_admin = this.db.MngAdmin.FirstOrDefault(c => c.Id == userId);
+            if (mng_admin != null)
+            {
+                var model_pmg = this.db.MngPermissiongroup.FirstOrDefault(c => c.GroupName == roleName);
+
+                if (model_pmg != null)
+                {
+                    if (mng_admin.GroupManage.Object.Contains(model_pmg.Id))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+            /// <summary>
+            /// 获得当前钢厂人员登录的用户及权限
+            /// </summary>
+            /// <returns>当前钢厂人员实体</returns>
+            private ApplicationUser GetCurrentUser()
         {
             var user1 = this.accessor.HttpContext.User;
             this.IsAuth = user1.Identity.IsAuthenticated;

@@ -40,5 +40,9 @@
         /// <param name="permissionId">权限ID</param>
         /// <returns>有权限 true,无权限 false</returns>
         bool IshavePermission(int permissionId);
+
+        bool IsHaveRole(string roleName);
+
+        bool IsHaveRole(string roleName, int userId);
     }
 }
