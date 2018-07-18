@@ -14,9 +14,9 @@ namespace WarrantyManage.Pages.Manage.Quality {
 
     public class SmeltListModel : AuthorizeModel
     {
-        private IBaseService<PdqualityPdSmeltCode> pdSmeltCode;
+        private IBaseService<PdqualitySmeltCode> pdSmeltCode;
 
-        public SmeltListModel(DataContext db, IBaseService<PdqualityPdSmeltCode> pdSmeltCode)
+        public SmeltListModel(DataContext db, IBaseService<PdqualitySmeltCode> pdSmeltCode)
           : base(db)
         {
             this.pdSmeltCode = pdSmeltCode;
@@ -27,7 +27,7 @@ namespace WarrantyManage.Pages.Manage.Quality {
             get { return 10; }
         }
 
-        public List<DataLibrary.PdqualityPdSmeltCode> ManageModels { get; set; }
+        public List<DataLibrary.PdqualitySmeltCode> ManageModels { get; set; }
 
         public int PageIndex { get; set; }
 
@@ -40,7 +40,7 @@ namespace WarrantyManage.Pages.Manage.Quality {
         public void OnGet(int pg = 1)
         {
             this.PageIndex = pg;
-            var predicate = PredicateBuilder.New<PdqualityPdSmeltCode>(true);
+            var predicate = PredicateBuilder.New<PdqualitySmeltCode>(true);
             int total = 0;
             this.ManageModels = this.pdSmeltCode.Page<int>(ref total, this.PageIndex, this.PageSize, p => p.Id, predicate, false);
             this.PageCount = total;
