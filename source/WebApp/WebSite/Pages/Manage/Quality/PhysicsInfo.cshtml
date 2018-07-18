@@ -226,7 +226,7 @@
                         </table>
                     </div>
                 }
-                else
+                @if (Model.PdSmeltCode != null && Model.PdSmeltCode.Id > 0 && Model.PdQuality.Id == 0)
                 {
                     <h1 class="element">请选择冶炼炉号,输入炉批号进行搜索</h1>
                 }
