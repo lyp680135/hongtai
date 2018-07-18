@@ -20,9 +20,19 @@
         <table class="layui-table">
             <thead>
                 <tr>
-                    <td>创建时间</td>
-                    <td>冶炼炉号</td>
-                    <td>化学数据</td>
+                    @{
+                        if (Model.ManageModels.Count > 0)
+                        {
+                            <td>创建时间</td>
+                            <td>冶炼炉号</td>
+                            var obj = Model.ManageModels.FirstOrDefault();
+                            var jobj = (Newtonsoft.Json.Linq.JObject)obj.Chemistry.Object;
+                            foreach (var item in jobj)
+                            {
+                                <td>@item.Key</td>
+                            }
+                        }
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -34,7 +44,22 @@
                             <tr>
                                 <td>@Util.Extensions.GetDateTimeFromUnixTime(item.Createtime.ToLong()).ToString("yyyy/MM/dd")</td>
                                 <td>@item.SmeltCode</td>
-                                <td>@item.Chemistry.Object.ToString()</td>
+                                @{
+                                    var valobj = (Newtonsoft.Json.Linq.JObject)item.Chemistry.Object;
+                                    foreach (var jobject in valobj)
+                                    {
+                                        var val = jobject.Value.ToString();
+                                        if (val.SafeString() != string.Empty)
+                                        {
+                                            <td>@val</td>
+                                        }
+                                        else
+                                        {
+                                            <td>-</td>
+
+                                        }
+                                    }
+                                }
                             </tr>
                         }
 
@@ -49,8 +74,8 @@
             PageIndex = Model.PageIndex,
             PageCount = Model.PageCount,
             PageUrl = Request.GetAbsoluteUri(new List<KeyValuePair<string, string>>() {
-                                                                                                                                 new KeyValuePair<string, string>("pg","{0}")
-                                                                                                                           }),
+                                                                                                         new KeyValuePair<string, string>("pg","{0}")
+                                                                                                   }),
             PageText = "{0}",
             ShowCount = 6,
             ShowAll = false
