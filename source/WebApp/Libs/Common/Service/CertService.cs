@@ -258,12 +258,11 @@
             }
 
             // 根据打印编号查出打印的授权产品
-            var prints = this.db.SalePrintlog.Where(x => x.Printno == printno);
-            if (prints != null && prints.Count() > 0)
+            var printFirst = this.db.SalePrintlog.FirstOrDefault(x => x.Printno == printno);
+            if (printFirst != null)
             {
                 var mngsetting = this.db.MngSetting.FirstOrDefault();
                 var sitebasic = this.db.SiteBasic.FirstOrDefault();
-                var printFirst = prints.FirstOrDefault();
                 JObject info = new JObject();
                 if (mngsetting != null)
                 {
@@ -302,7 +301,7 @@
                 info.Add("SignetAngle", printFirst.Signetangle);
 
                 // 经销商授权表
-                int printId = prints.FirstOrDefault().Id;
+                int printId = printFirst.Id;
                 List<int> list_AuthId = this.db.SalePrintLogDetail.Where(c => c.PrintId == printId).Select(c => c.Authid).ToList();
 
                 var sellerauth = this.db.SaleSellerAuth.FirstOrDefault(x => x.Id == list_AuthId.FirstOrDefault());
@@ -333,8 +332,18 @@
                                 checkPerson = this.db.MngAdmin.FirstOrDefault(c => c.Id == pdquality.CheckPerson).RealName;
                             }
 
+                            string entryPerson = string.Empty;
+                            if (printFirst.Adder.HasValue)
+                            {
+                                entryPerson = this.db.MngAdmin.FirstOrDefault(c => c.Id == printFirst.Adder).RealName;
+                            }
+                            else
+                            {
+                                entryPerson = this.db.MngAdmin.FirstOrDefault(c => c.Id == pdquality.EntryPerson).RealName;
+                            }
+
                             info.Add("CheckPerson", checkPerson);  // 审核人
-                            info.Add("EntryPerson", this.db.MngAdmin.FirstOrDefault(c => c.Id == pdquality.EntryPerson).RealName);  // 录入人
+                            info.Add("EntryPerson", entryPerson);  // 录入人
                             info.Add("OutDate", Util.Extensions.GetDateTimeFromUnixTime(pdquality.Createtime).ToString("yyyy-MM-dd")); // 出证日期
                         }
                     }
