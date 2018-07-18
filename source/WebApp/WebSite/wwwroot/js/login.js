@@ -55,6 +55,7 @@ $(document).ready(function () {
         var systemMemberType = $("#SystemMemberType");//系统会员类别
         if (isPoneAvailable(moblie.val())) {
 
+
             var index = layer.load(2, {
                 shade: [0.1, '#fff']
             });
