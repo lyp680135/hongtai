@@ -50,8 +50,8 @@
                 // var salerUser = _userService.SaleSellerUser; //经销商实体类
 
                 // 在这里写死菜单按钮
-                ja.Add(new JObject { { "name", "授权资源" }, { "url", "/WarrantyAuth" } });
                 ja.Add(new JObject { { "name", "质保书打印" }, { "url", "/WarrantyPrint" } });
+                ja.Add(new JObject { { "name", "授权资源" }, { "url", "/WarrantyAuth" } });
             }
 
             return new ResponseModel(DataLibrary.EnumList.ApiResponseStatus.Success, "请求成功", JsonConvert.SerializeObject(ja));
