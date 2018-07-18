@@ -21,13 +21,13 @@
 
         public List<DataLibrary.PdWorkshop> List_workShop { get; set; }
 
-        public List<DataLibrary.PdqualityPdSmeltCode> PdSmeltCodeList { get; set; }
+        public List<DataLibrary.PdqualitySmeltCode> PdSmeltCodeList { get; set; }
 
         public List<DataLibrary.BaseQualityStandard> ListQualityStandards { get; set; }
 
         public DataLibrary.PdQuality PdQuality { get; set; } = new DataLibrary.PdQuality();
 
-        public DataLibrary.PdqualityPdSmeltCode PdSmeltCode { get; set; } = new DataLibrary.PdqualityPdSmeltCode();
+        public DataLibrary.PdqualitySmeltCode PdSmeltCode { get; set; } = new DataLibrary.PdqualitySmeltCode();
 
         public string BatCode { get; set; }
 
