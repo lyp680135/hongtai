@@ -1,4 +1,4 @@
-namespace WarrantyManage.Pages.Manage.Quality
+锘縩amespace WarrantyManage.Pages.Manage.Quality
 {
     using System;
     using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace WarrantyManage.Pages.Manage.Quality
         public void OnGet(int? id)
         {
             var userId = this.userService.ApplicationUser.Mng_admin.Id;
-            var targetCategory = EnumList.TargetCategory.化学指标;
+            var targetCategory = EnumList.TargetCategory.鍖栧鎸囨爣;
             this.List_workShop = this.Db.PdWorkshop.AsEnumerable().Where(c => c.QAInputer.Split(',').Contains(userId.ToString())).ToList();
             if (this.List_workShop.Count > 0)
             {
@@ -70,7 +70,7 @@ namespace WarrantyManage.Pages.Manage.Quality
                 {
                     this.RedirectToError();
                 }
-                else if (this.PdQuality.CheckStatus != DataLibrary.EnumList.CheckStatus_PdQuality.等待审核)
+                else if (this.PdQuality.CheckStatus != DataLibrary.EnumList.CheckStatus_PdQuality.绛夊緟瀹℃牳)
                 {
                     this.RedirectToError();
                 }
