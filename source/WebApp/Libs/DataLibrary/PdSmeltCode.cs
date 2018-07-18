@@ -6,8 +6,8 @@
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Text;
 
-    [Table("pdqualitypdsmeltcode")]
-    public partial class PdqualityPdSmeltCode
+    [Table("pdqualitysmeltcode")]
+    public partial class PdqualitySmeltCode
     {
         [Key]
         public int Id { get; set; }
