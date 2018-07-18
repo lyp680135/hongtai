@@ -803,7 +803,7 @@
                     keyValuePairs.Add("Ceq", ceq);
                 }
 
-                this.db.PdSmeltCode.Add(new PdSmeltCode
+                this.db.PdSmeltCode.Add(new PdqualitySmeltCode
                 {
                     SmeltCode = yLCode,
                     Chemistry = keyValuePairs,
