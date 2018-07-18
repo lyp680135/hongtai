@@ -48,14 +48,9 @@
                     PdBatcode currentInfo = this.Db.PdBatcode.OrderByDescending(c => c.Id).FirstOrDefault(c => c.Batcode.StartsWith(workInfo.Code)) ?? new PdBatcode();
                     if (currentInfo != null)
                     {
-                        productInfo = this.Db.PdProduct.FirstOrDefault(f => f.Batcode == currentInfo.Batcode);
-                        if (productInfo != null)
-                        {
-                            this.ListQualityStandards = this.Db.BaseQualityStandard.Where(w => w.Materialid == productInfo.Materialid && w.Status == 0 && w.TargetCategory == targetCategory).ToList();
-                        }
+                        this.BatCode = currentInfo.Batcode;
                     }
 
-                    this.BatCode = currentInfo.Batcode;
                     if (!string.IsNullOrEmpty(batCode))
                     {
                         this.BatCode = batCode;

@@ -228,7 +228,7 @@
                 }
                 else
                 {
-                    <h1 class="element">请选冶炼炉号,输入炉批号进行搜索</h1>
+                    <h1 class="element">请选择冶炼炉号,输入炉批号进行搜索</h1>
                 }
             }
 
@@ -510,16 +510,29 @@
             //    window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + Sid + '&batcode=' + currCode;
             //});
 
+            //$('#searchBtn').click(function () {
+            //    var Sid = $('#SmeltCode').val();
+            //    var currCode = $("#BatCode").val();
+            //    var pass = $("#form1").validationEngine("validate");
+            //    if (pass) {
+            //        window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + Sid + '&batcode=' + currCode;
+            //    }
+
+            //});
             $('#searchBtn').click(function () {
-                var Sid = $('#SmeltCode').val();
+                var Sid = $('#SmeltCode').val().trim();
                 var currCode = $("#BatCode").val();
-                var pass = $("#form1").validationEngine("validate");
-                if (pass) {
-                    window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + Sid + '&batcode=' + currCode;
+
+                if (Sid == '') {
+                    layer.msg('请选择冶炼炉号').trim();
+                    return;
                 }
-
+                if (currCode == '') {
+                    layer.msg('请输入炉批号');
+                    return;
+                }
+                window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + Sid + '&batcode=' + currCode;
             });
-
 
             $('#SmeltCode').select2({
                 placeholder: "选择冶炼炉号",
