@@ -85,7 +85,7 @@
 
         public virtual DbSet<SiteCategory> SiteCategory { get; set; }
 
-        public virtual DbSet<PdSmeltCode> PdSmeltCode { get; set; }
+        public virtual DbSet<PdqualityPdSmeltCode> PdSmeltCode { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
