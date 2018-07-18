@@ -432,8 +432,10 @@
                     success: function (re) {
                         if (re.toString() == 'true') {
                             layer.msg('添加成功', { icon: 1 });
-                            $('#form1')[0].reset();
-                            window.location.reload();
+                           
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 2000);
                             //GetBatCode(BatCode, 1, false);
                         } else {
                             layer.msg(re, { icon: 2 });
