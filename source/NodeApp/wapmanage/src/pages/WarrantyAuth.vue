@@ -1,18 +1,18 @@
 <template>
   <div>
         <div class="tabbar">
-            <div class="tabitem" :class="{selected : tabindex == 1}" @click="changeTab(1)">
-                    可授权
-            </div>
-            <div class="tabitem" :class="{selected : tabindex == 2}"  @click="changeTab(2)">
+            <div class="tabitem" :class="{selected : tabindex == 2}" @click="changeTab(2)">
                     已授权
+            </div>
+            <div class="tabitem" :class="{selected : tabindex == 1}"  @click="changeTab(1)">
+                    可授权
             </div>
         </div> 
         <!-- tab-container -->
         <mt-tab-container v-model="tabindex">
           
             <mt-tab-container-item :id="1">
-                <mt-loadmore :top-method="loadTop" :bottom-method="loadBottom" :bottom-all-loaded="disallowBottomLoaded" ref="loadmore">
+                <!-- <mt-loadmore :top-method="loadTop" :bottom-method="loadBottom" :bottom-all-loaded="disallowBottomLoaded" ref="loadmore"> -->
                     <div class="search">
                       <input type="text" placeholder="输入材质、炉批号、车号查询" v-model="condition">
                       <mt-button type="primary" @click="searchClidk()" class="btnsearch">查询</mt-button>
@@ -38,7 +38,7 @@
                         </mt-cell>
                     </div>
 
-                </mt-loadmore>
+                <!-- </mt-loadmore> -->
                 <div class="nodata" v-show="nodataflag">
                     <ul>
                         <li>
@@ -210,7 +210,7 @@ export default {
   data () {
     return {
       title: '经销商授权',
-      tabindex: 1,
+      tabindex: 2,
       nodataflag: false,
       disallowBottomLoaded: false,
       list: [],
@@ -402,8 +402,8 @@ export default {
     }
   },
   mounted: function () {
-    loadOpenPage(this, '')
-    // loadOpenedPage(this)
+    // loadOpenPage(this, '')
+    loadOpenedPage(this, '')
   }
 }
 function totalNum (vue) {
