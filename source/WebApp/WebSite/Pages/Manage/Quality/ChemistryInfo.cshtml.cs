@@ -45,9 +45,8 @@
                         if (productInfo != null)
                         {
                             this.ListQualityStandards = this.Db.BaseQualityStandard.Where(w => w.Materialid == productInfo.Materialid && w.Status == 0 && w.TargetCategory == targetCategory).ToList();
+                            this.Mid = Convert.ToInt32(productInfo.Materialid);
                         }
-
-                        this.Mid = Convert.ToInt32(productInfo.Materialid);
                     }
                 }
                 else
