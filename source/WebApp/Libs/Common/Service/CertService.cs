@@ -333,7 +333,7 @@
                             }
 
                             string entryPerson = string.Empty;
-                            if (printFirst.Adder.HasValue)
+                            if (printFirst.Adder.HasValue && printFirst.Adder > 0)
                             {
                                 entryPerson = this.db.MngAdmin.FirstOrDefault(c => c.Id == printFirst.Adder).RealName;
                             }
