@@ -70,8 +70,8 @@
 #if DEBUG
             var responData = Util.Helpers.HttpHelper.HttpGet(
                 systemMemberType == SystemMemberType.Manage ?
-                $"http://localhost:41178/api/TokenByPhone?phone={mobile}&code={code}" :
-                $"http://localhost:41178/api/TokenBySaler?phone={mobile}&code={code}",
+                $"http://localhost:49134/api/TokenByPhone?phone={mobile}&code={code}" :
+                $"http://localhost:49134/api/TokenBySaler?phone={mobile}&code={code}",
                 System.Text.Encoding.UTF8);
 #else
 
@@ -101,7 +101,8 @@
 #endif
                 if (systemMemberType == SystemMemberType.Seller)
                 {
-                    DataLibrary.SaleSeller saleSeller = this.db.SaleSeller.FirstOrDefault(c => c.Mobile == mobile);
+                    // 用逗号分给得经销商手机号就不能登陆，应先分割逗号再进行登陆
+                    var saleSeller = this.db.SaleSeller.FirstOrDefault(c => c.Mobile.Contains(mobile));
                     this.SetClaimsIdentity(saleSeller.Id.ToString(), saleSeller.Name, saleSeller.Mobile, SystemMemberType.Seller);
                 }
                 else if (systemMemberType == SystemMemberType.Manage)
@@ -131,7 +132,7 @@
             var setting = this.settingService.MngSetting;
 #if DEBUG
             var responData = Util.Helpers.HttpHelper.HttpGet(
-                $"http://localhost:41178/api/Token?userName={userName}&pwd={pwd}",
+                $"http://localhost:49134/api/Token?userName={userName}&pwd={pwd}",
                 System.Text.Encoding.UTF8);
 #else
             var responData = Util.Helpers.HttpHelper.HttpGet(
