@@ -1,0 +1,51 @@
+﻿@page
+@inject ICMSService _cmsServices;
+@{
+    ViewData["Tag"] = 4;
+    var mngSetting = _cmsServices.GetSetting();
+}
+@section head{
+    <link href="/Content/css/product.css" rel="stylesheet" />
+}
+
+<!--------------------------面包屑------------------------------>
+<div class="location_box">
+    <div class="location">
+        <span>&nbsp;产品中心</span>
+        <span>您当前的位置： 首页 > </span>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!--------------------------产品展示------------------------------>
+
+<div class="product_box">
+    @{
+        var Product = _cmsServices.IcontentColumnDataService.GetContentColumnDataList("鸿泰产品", 1, 100);
+        if (Product != null)
+        {
+            foreach (var P in Product)
+            {
+                <div class="product_row">
+                    <div class="product_exhibition product_exhibition1">
+                        @if (P["Image"].SafeString() != string.Empty)
+                        {
+                            @foreach (var Imgitem in P["Image"].ToString().Split(","))
+                            {
+                                <img src="@mngSetting.Domain_PC.Substring(0,mngSetting.Domain_PC.Length-1)@Imgitem" />
+                            }
+                        }
+
+                    </div>
+                    <span>@Html.Raw(P["Title"])@Html.Raw(P["Description"])</span>
+                </div>
+                <div class="clearfix"></div>
+            }
+        }
+    }
+</div>
+
+<style>
+    .product_exhibition {
+        display: inline-flex
+    }
+</style>

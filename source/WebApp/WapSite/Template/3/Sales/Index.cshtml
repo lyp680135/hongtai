@@ -16,12 +16,16 @@
 
     <div class="container-fluid sales">
         @{
-            var Sale = _cmsService.GetSinglePage("鸿泰销售");
+            var Sale = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰销售",1,100);
             if (Sale != null)
             {
-                <div>
-                    @Html.Raw(Sale.Content)
-                </div>
+                foreach (var S in Sale)
+                { 
+                    <div style="margin-bottom:30px">
+                        <h4 style="margin-bottom:10px">@Html.Raw(S["Title"])</h4>
+                        <p>@Html.Raw(S["Content"])</p>
+                    </div>
+                }
             }
         }
         <div class="linkdiv">

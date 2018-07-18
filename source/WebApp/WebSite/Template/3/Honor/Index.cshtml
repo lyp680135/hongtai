@@ -1,0 +1,42 @@
+﻿@page
+@inject ICMSService _cmsServices;
+@{
+    ViewData["Tag"] = 2;
+    var mngSetting = _cmsServices.GetSetting();
+}
+@section head{
+    <link href="/Content/css/honor.css" rel="stylesheet" />
+}
+
+<!--------------------------面包屑------------------------------>
+<div class="location_box">
+    <div class="location">
+        <span>&nbsp;公司荣誉</span>
+        <span>您当前的位置： 首页 > </span>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!--------------------------证书展示------------------------------>
+<div class="honor_box">
+    @{
+        var Honor = _cmsServices.IcontentColumnDataService.GetContentColumnDataList("鸿泰荣誉", 1, 5);
+        if (Honor != null)
+        {
+            foreach (var H in Honor)
+            {
+                <h3 style="text-align:center;margin-bottom:20px">@Html.Raw(H["Title"])</h3>
+                <div class="honor1">
+                    @if (H["Image"].SafeString() != string.Empty)
+                    {
+                        <div class="honor_row">
+                            @foreach (var Imgitem in H["Image"].ToString().Split(","))
+                            {
+                                <img src="@mngSetting.Domain_PC.Substring(0,mngSetting.Domain_PC.Length-1)@Imgitem" />
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        }
+    }
+</div>

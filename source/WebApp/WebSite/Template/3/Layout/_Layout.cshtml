@@ -42,7 +42,7 @@
         <div class="top_nav">
             <div class="nav_box">
                 <a href="/"><img src="@SiteBasic.Logo" alt="@SiteBasic.CompName" style="margin-top:21px" /></a>
-                <a href="#" class="pic cssr_login"></a>
+                <a href="/Manage" class="pic cssr_login"></a>
                 <div class="nav">
                     <a href="/">首页</a>
                     <a href="/About_us">公司简介</a>
@@ -170,28 +170,31 @@
                     <div class="big_title big_title1">联系我们</div>
                     @{
                         var Phones = _cmsService.IcontentColumnDataService.GetContentColumnDataList("联系鸿泰", 1, 1);
-                        foreach (var Phone in Phones)
+                        if (Phones != null)
                         {
-                            <div class="footer_row">
-                                <span class="pic cssr_address"></span>
-                                <span>@Html.Raw(Phone["Address"])</span>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="footer_row">
-                                <span class="pic cssr_telephone"></span>
-                                <span>@Html.Raw(Phone["Phone"])</span>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="footer_row">
-                                <span class="pic cssr_printer"></span>
-                                <span>@Html.Raw(Phone["Fax"])</span>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="footer_row">
-                                <span class="pic cssr_email"></span>
-                                <span>@Html.Raw(Phone["Email"])</span>
-                                <div class="clearfix"></div>
-                            </div>
+                            foreach (var Phone in Phones)
+                            {
+                                <div class="footer_row">
+                                    <span class="pic cssr_address"></span>
+                                    <span>@Html.Raw(Phone["Address"])</span>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="footer_row">
+                                    <span class="pic cssr_telephone"></span>
+                                    <span>@Html.Raw(Phone["Phone"])</span>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="footer_row">
+                                    <span class="pic cssr_printer"></span>
+                                    <span>@Html.Raw(Phone["Fax"])</span>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="footer_row">
+                                    <span class="pic cssr_email"></span>
+                                    <span>@Html.Raw(Phone["Email"])</span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            }
                         }
                     }
                 </div>

@@ -1,6 +1,6 @@
-@charset "utf-8";
+﻿@charset "utf-8";
 /* CSS Document */
-/*--------------------------雪碧图----------------------------*/
+/*--------------------------基本设置----------------------------*/
 body *{
 	margin:0;
 	padding:0;
@@ -25,12 +25,17 @@ a:hover{
 .cssr_home_about {background-position: -310px -27px; width:446px; height:52px; }
 .cssr_home_news {background-position: -768px -26px; width:446px; height:52px; }
 .cssr_logo {background-position: -0px -0px; width:257px; height:112px; }
+.cssr_contact {background-position: -1160px -102px; width:30px; height:30px; }
 /*--------------------------导航----------------------------*/
 .top_nav{
 	background:rgba(0,0,0,0.5);
 	position:fixed;
 	z-index:100;
 	width:100%;
+	top: 0;
+}
+.logo{
+	font-size:0;
 }
 .nav_box{
 	width:1180px;
@@ -59,4 +64,98 @@ a:hover{
 .cssr_login{
 	float:right;
 	margin:43px 0 0 36px;
+}
+.nav_img {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 112px;
+}
+.top_nav1 .nav_box{
+	position:relative;
+}
+/*--------------------------面包屑----------------------------*/
+.location_box{
+	background:#eeeded;
+	margin-top:112px;
+}
+.location{
+	width:1180px;
+	margin:auto;
+}
+.location span{
+	float:right;
+	color:#4c4c4c;
+	line-height:40px;
+	font-size:16px;
+}
+.location span:first-of-type{
+	color:#1a1a1a;
+}
+/*--------------------------页脚----------------------------*/
+.footer{
+	background:#292929;
+	height:300px;
+}
+.footer *{
+	color:#fff;
+	font-size:16px;
+}
+.footer a:hover{
+	color:#e60112;
+}
+.footer_backdrop{
+	position:absolute;
+	left:50%;
+	margin-left:-630px;
+}
+.footer_content{
+	padding:48px 0 26px;
+	border-bottom:1px solid #fff;
+}
+.footer_box{
+	position:relative;
+	margin:auto;
+	width:1180px;
+}
+.footer_nav{
+	float:left;
+	margin-right:142px;
+}
+.footer_nav:nth-last-child(2){
+	margin-right:0;
+}
+.footer_nav a{
+	display:block;
+	line-height:36px;
+}
+.footer_nav .big_title{
+	font-size:18px;
+	font-weight:600;
+	line-height:1;
+	margin-bottom:14px;
+}
+.footer_row{
+	margin-bottom:12px;
+}
+.footer_row span{
+	float:left;
+}
+.footer_row span:first-of-type{
+	margin-right:6px;
+}
+.footer_nav .big_title1{
+	margin-bottom:23px;
+}
+.footer_nav .qr_code{
+	font-size:14px;
+	display:block;
+	margin-top:6px;
+	text-align:center;
+}
+.copyright{
+	text-align:center;
+	font-size:14px;
+	display:block;
+	line-height:46px;
 }

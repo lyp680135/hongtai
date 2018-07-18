@@ -1,0 +1,41 @@
+﻿@page
+@inject ICMSService _cmsServices;
+@{
+    ViewData["Tag"] = 5;
+    var mngSetting = _cmsServices.GetSetting();
+}
+@section head{
+    <link href="/Content/css/sell_network.css" rel="stylesheet" />
+}
+
+<!--------------------------面包屑------------------------------>
+<div class="location_box">
+    <div class="location">
+        <span>&nbsp;销售网络</span>
+        <span>您当前的位置： 首页 > </span>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!--------------------------销售网络------------------------------>
+<div class="product_box">
+    <div class="contact_box">
+        @{
+            var Sales = _cmsServices.IcontentColumnDataService.GetContentColumnDataList("鸿泰销售", 1, 100);
+            if (Sales != null)
+            {
+                foreach (var S in Sales)
+                {
+                    <div class="contact">
+                        <div class="product_title">
+                            <span class="pic cssr_contact"></span>
+                            <h2>@Html.Raw(S["Title"])</h2>
+                            <div class="clearfix"></div>
+                        </div>
+                        <p>@Html.Raw(S["Content"])</p>
+                    </div>
+                }
+            }
+        }
+    </div>
+    <img src="/Content/images/network_map.jpg" />
+</div>

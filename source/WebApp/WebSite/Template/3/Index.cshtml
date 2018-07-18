@@ -42,7 +42,7 @@
     </div>
     <a href="#" class="about_box">
         @{
-            var Abount = _cmsService.GetSinglePage("关于鸿泰");
+            var Abount = _cmsService.GetSinglePage("关于鸿泰1");
             if (Abount != null && !string.IsNullOrEmpty(Abount.Content))
             {
                 var Con = Util.Extensions.RemoveHtml(Abount.Content);
