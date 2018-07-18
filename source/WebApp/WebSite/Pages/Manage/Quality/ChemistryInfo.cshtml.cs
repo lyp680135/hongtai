@@ -41,7 +41,10 @@
                     BaseProductMaterial currentInfo = this.Db.BaseProductMaterial.FirstOrDefault();
                     if (currentInfo != null)
                     {
+
+                        this.ListQualityStandards = this.Db.BaseQualityStandard.Where(w => w.Materialid == currentInfo.Id && w.Status == 0 && w.TargetCategory == targetCategory).ToList();
                         this.Mid = currentInfo.Id;
+
                     }
                 }
                 else
