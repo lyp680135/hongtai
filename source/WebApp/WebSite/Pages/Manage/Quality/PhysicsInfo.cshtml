@@ -80,6 +80,17 @@
         #BatCode {
             height: 32px !important;
         }
+
+        .element {
+            width: 600px;
+            height: 200px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%); /* 50%为自身尺寸的一半 */
+            font-size: 30px;
+            color: #808080;
+        }
     </style>
 </head>
 <body>
@@ -118,8 +129,8 @@
                 @if (Model.PdQuality.Id == 0 && Model.PdSmeltCodeList != null && Model.PdSmeltCodeList.Count > 0)
                 {
                     <div class="layui-input-inline" style="width:150px;">
-                        <select id="SmeltCode" name="SmeltCode" class="select2">
-                            @*<option value=""></option>*@
+                        <select id="SmeltCode" name="SmeltCode" class="select2 validate[required] layui-input">
+                            <option value=""></option>
                             @foreach (var item in Model.PdSmeltCodeList)
                             {
                                 if (item.Id == Model.SmeltCode)
@@ -139,8 +150,7 @@
                 {
 
                     <div class="layui-input-inline" style="width:150px;">
-                        <select id="SmeltCode" name="SmeltCode" class="select2">
-                            @*<option value=""></option>*@
+                        <select id="SmeltCode" name="SmeltCode" class="select2" disabled="disabled">
                             @foreach (var item in Model.PdSmeltCodeList)
                             {
                                 if (item.Id == Model.SmeltCode)
@@ -161,14 +171,14 @@
                         <input type="text" name="BatCode" id="BatCode" lay-verify="BatCode" autocomplete="off" placeholder="请输入冶炼炉号" class="validate[required] layui-input" value="@Model.BatCode" />
                     </div>
                     @*<div class="layui-input-inline" style="height: 32px;line-height: 32px;width: 100px;" id="ChangeBatCode">
-                        <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="ChangeBatCode(this,1); return false;">
-                            <i class="layui-icon">&#xe61a;</i>
-                        </a>
-                        <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="ChangeBatCode(this, -1);return false;">
+                            <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="ChangeBatCode(this,1); return false;">
+                                <i class="layui-icon">&#xe61a;</i>
+                            </a>
+                            <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="ChangeBatCode(this, -1);return false;">
 
-                            <i class="layui-icon">&#xe619;</i>
-                        </a>
-                    </div>*@
+                                <i class="layui-icon">&#xe619;</i>
+                            </a>
+                        </div>*@
                 }
                 else
                 {
@@ -177,16 +187,18 @@
                     </div>
                 }
 
-               @* <button type="button" id="searchBtn" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button>*@
+                <button type="button" id="searchBtn" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button>
             </div>
             @*化学数据*@
-            <div class="layui-form-item">
-                <h3 class="title">化学数据</h3>
-                <table class="tbData">
-                    @{
-                        if (Model.PdSmeltCode != null)
-                        {
-                            var Chemistry = (Newtonsoft.Json.Linq.JObject)Model.PdSmeltCode.Chemistry.Object;
+
+            @{
+                @if (Model.PdSmeltCode != null && Model.PdSmeltCode.Id > 0)
+                {
+                    var Chemistry = (Newtonsoft.Json.Linq.JObject)Model.PdSmeltCode.Chemistry.Object;
+                    <div class="layui-form-item">
+                        <h3 class="title">化学数据</h3>
+                        <table class="tbData">
+
                             <thead>
                                 <tr>
                                     @foreach (var item in Chemistry)
@@ -211,10 +223,15 @@
                                     }
                                 </tr>
                             </tbody>
-                        }
-                    }
-                </table>
-            </div>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <h1 class="element">请选冶炼炉号,输入炉批号进行搜索</h1>
+                }
+            }
+
             @if (Model.ListQualityStandards != null)
             {
 
@@ -487,16 +504,20 @@
         }
 
         $(document).ready(function () {
-            $('#SmeltCode').change(function () {
-                var Sid = $('#SmeltCode').val();
-                var currCode = $("#BatCode").val();
-                window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + Sid + '&batcode=' + currCode;
-            });
+            //$('#SmeltCode').change(function () {
+            //    var Sid = $('#SmeltCode').val();
+            //    var currCode = $("#BatCode").val();
+            //    window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + Sid + '&batcode=' + currCode;
+            //});
 
-            $('#BatCode').blur(function () {
+            $('#searchBtn').click(function () {
                 var Sid = $('#SmeltCode').val();
                 var currCode = $("#BatCode").val();
-                window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + Sid + '&batcode=' + currCode;
+                var pass = $("#form1").validationEngine("validate");
+                if (pass) {
+                    window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + Sid + '&batcode=' + currCode;
+                }
+
             });
 
 

@@ -77,12 +77,9 @@
                     this.ListQualityStandards = this.Db.BaseQualityStandard.Where(w => w.Materialid == currentInfo.MaterialId && w.Status == 0 && w.TargetCategory == targetCategory).ToList();
                 }
 
-                if (smeltCode <= 0)
+                if (smeltCode > 0)
                 {
                     this.PdSmeltCode = this.Db.PdSmeltCode.LastOrDefault();
-                }
-                else
-                {
                     this.PdSmeltCode = this.Db.PdSmeltCode.FirstOrDefault(f => f.Id == smeltCode);
                     this.SmeltCode = smeltCode;
                 }
