@@ -43,7 +43,7 @@
     <a href="#" class="about_box">
         @{
             var Abount = _cmsService.GetSinglePage("关于鸿泰");
-            if (Abount != null)
+            if (Abount != null && !string.IsNullOrEmpty(Abount.Content))
             {
                 var Con = Util.Extensions.RemoveHtml(Abount.Content);
                 if (Con.Length > 300)
