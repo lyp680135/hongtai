@@ -419,7 +419,10 @@
                 var YLCode = $("#YLCode").val();
                 var pass = $("#form1").validationEngine("validate");
                 if (pass) {
-                    Add(YLCode);
+                    layer.confirm('确定提交质量数据？', { icon: 3, title: '提示' }, function (index) {
+                        Add(YLCode);
+                    });
+                   
                  }
             });
             //添加
