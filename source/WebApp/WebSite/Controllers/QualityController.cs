@@ -1901,7 +1901,7 @@
                 var createTime = modelPrint.Createtime.ToLong().GetDateTimeFromUnixTime().Date;
                 if (DateTime.Now.Date > createTime.AddMonths(1))
                 {
-                    return this.AjaxResult(false, "质保书撤回时间限制为30天");
+                    return this.AjaxResult(false, "只能撤回30天内的质保书");
                 }
                 using (var tran = this.db.Database.BeginTransaction())
                 {
