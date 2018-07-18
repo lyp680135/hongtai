@@ -172,6 +172,7 @@
                         <ComboBox Name="cbMaterial" Height="25" Width="120" HorizontalAlignment="Left" 
                                   VerticalContentAlignment="Center" IsEditable="False"
                                   SelectionChanged="MaterialChanged" 
+                                  MouseLeftButtonDown="MaterialClick"
                                   >
                             <ComboBox.GroupStyle>
                                 <GroupStyle>

@@ -139,6 +139,9 @@ namespace WpfCardPrinter
 
             Application.Current.MainWindow = this;
 
+            //显示增加材质的点击事件
+            cbMaterial.AddHandler(ComboBox.MouseLeftButtonDownEvent, new MouseButtonEventHandler(MaterialClick),true);
+
             this.mUser = user;
             this.mWorkshop = shop;
 
@@ -1609,6 +1612,30 @@ namespace WpfCardPrinter
 
             }
         }
+
+        public void MaterialClick(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                using (PdProductAccess access = new PdProductAccess())
+                {
+                    var products = access.GetListByBatcode(mCurrentBatCode);
+                    if (products != null && products.Count > 0)
+                    {
+
+                        MessageBoxResult mbr = MessageBox.Show("当前批号下已经生产了其他材质，不能更换！", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (mbr == MessageBoxResult.OK)
+                        {
+                            flag = true;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+        }
     
         /// <summary>
         /// 材质切换下拉事件
@@ -2240,23 +2267,33 @@ namespace WpfCardPrinter
 
             if (id > 0 && mSelectedProduct != null)
             {
-                mSelectedProduct.Specid = id;
-                foreach (var item in mSpecList)
+                var selectedspec = findSpecById(id);
+
+                if (selectedspec != null)
                 {
-                    if (item.Id == id)
+                    mSelectedProduct.Specid = id;
+
+                    mSelectedProduct.Specname = selectedspec.Specname;
+                    mProductList[mSelectedProductIndex] = mSelectedProduct;
+                    
+                    if (mSelectedProductIndex > 0)
                     {
-                        mSelectedProduct.Specname = item.Specname;
-                        mProductList[mSelectedProductIndex] = mSelectedProduct;
-                        dgProduct.Items.Refresh();
-                        if (mSelectedProductIndex > 0)
-                        {
-                            dgProduct.SelectedIndex = mSelectedProductIndex;
-
-                            dgProduct.ScrollIntoView(dgProduct.SelectedItem);
-                        }
-
-                        break;
+                        dgProduct.SelectedIndex = mSelectedProductIndex;
+                        dgProduct.ScrollIntoView(dgProduct.SelectedItem);
                     }
+
+                    //将所有未保存的产品重置规格
+                    for (var i = 0; i < mProductList.Count; i++)
+                    {
+                        if (mProductList[i].Id <= 0)
+                        {
+                            mProductList[i].Specid = id;
+                            mProductList[i].Specname = selectedspec.Specname;
+                        }
+                    }
+
+                    //更新界面
+                    dgProduct.Items.Refresh();
                 }
             }
 
@@ -3528,7 +3565,7 @@ namespace WpfCardPrinter
                         {
                             if (mDefaultPrinter == null)
                             {
-                                MessageBox.Show("没有找到默认打印机");
+                                LogHelper.WriteLog("没有找到默认打印机");
                             }
                         }
                         else
@@ -3793,12 +3830,12 @@ namespace WpfCardPrinter
             //统计打印进度
             ShowLoading();
 
+            string DefaultPrinter = ConfigurationManager.AppSettings["DefaultPrinter"];
+            var printers = new LocalPrintServer().GetPrintQueues();
+
             //如果没有设置打印机，应该先弹出打印机选择界面
             if (mDefaultPrinter == null)
             {
-                string DefaultPrinter = ConfigurationManager.AppSettings["DefaultPrinter"];
-
-                var printers = new LocalPrintServer().GetPrintQueues();
                 //选择一个打印机
                 var selectedPrinter = printers.FirstOrDefault(p => p.Name.Contains(DefaultPrinter));
                 if (selectedPrinter == null)
@@ -3875,22 +3912,47 @@ namespace WpfCardPrinter
 
             if (!mbOffline)
             {
-                //先保存产品，然后打印产品
-                using (PdProductAccess access = new PdProductAccess())
+                try
                 {
-                    foreach (PdProduct pd in list)
+                    //先保存产品，然后打印产品
+                    using (PdProductAccess access = new PdProductAccess())
                     {
-                        //生成随机校验码
-                        pd.Randomcode = GenerateRandomCode();
-                        if (this.mUser != null)
+                        foreach (PdProduct pd in list)
                         {
-                            pd.Adder = this.mUser.Id;
+                            //生成随机校验码
+                            pd.Randomcode = GenerateRandomCode();
+                            if (this.mUser != null)
+                            {
+                                pd.Adder = this.mUser.Id;
+                            }
+
+                            pd.Id = (int)access.Insert(pd);
+                            if (pd.Id > 0)
+                            {
+                                DoPrint(pd, printing, len);
+                            }
                         }
-
-                        pd.Id = (int)access.Insert(pd);
-
-                        DoPrint(pd, printing, len);
                     }
+                }
+                catch (Exception e)
+                {
+                    if (e.Message.IndexOf("Connection must be valid and open") != -1)
+                    {
+                        this.mbOffline = true;
+                    }
+
+                    LogHelper.WriteLog("批量打印时发生错误：" + e.ToString());
+
+                    this.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        MessageBox.Show("批量打印出错中断："+e.Message, "操作提醒", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                        HideLoading();
+                        batprinted = 0;
+
+                        this.BindView();
+                        txtCurrWeight.Focus();
+                    }));
                 }
             }
             else
@@ -4075,6 +4137,8 @@ namespace WpfCardPrinter
                 return index;
             }
         }
+
+#region 称重设备相关代码
 
         private void InitWeightAutoInput()
         {
@@ -4319,4 +4383,6 @@ namespace WpfCardPrinter
             txtCurrWeight.Text = realweight;
         }
     }
+#endregion
+
 }

@@ -28,8 +28,8 @@
                 <DockPanel Height="56px" DockPanel.Dock="Left">
                     <Label Name="lbTitle" Content="标牌打印系统登录" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
                 </DockPanel>
-                <StackPanel Orientation="Horizontal" Width="140px" Height="60px" HorizontalAlignment="Right" DockPanel.Dock="Right">
-                    <Image Source="/WpfCardPrinter;component/Resources/logo.png" Width="120px" Height="60px" />
+                <StackPanel Orientation="Horizontal" Width="120px" Height="60px" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                    <Image Source="/WpfCardPrinter;component/Resources/logo.png" Width="96px" Height="60px" />
                 </StackPanel>
             </DockPanel>
             <DockPanel Grid.Row="0">
