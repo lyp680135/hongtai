@@ -38,15 +38,10 @@
                 var workInfo = this.List_workShop.FirstOrDefault();
                 if (!id.HasValue || id.Value <= 0)
                 {
-                    PdBatcode currentInfo = this.Db.PdBatcode.OrderByDescending(c => c.Id).FirstOrDefault(c => c.Batcode.StartsWith(workInfo.Code)) ?? new PdBatcode();
+                    BaseProductMaterial currentInfo = this.Db.BaseProductMaterial.FirstOrDefault();
                     if (currentInfo != null)
                     {
-                        var productInfo = this.Db.PdProduct.FirstOrDefault(f => f.Batcode == currentInfo.Batcode);
-                        if (productInfo != null)
-                        {
-                            this.ListQualityStandards = this.Db.BaseQualityStandard.Where(w => w.Materialid == productInfo.Materialid && w.Status == 0 && w.TargetCategory == targetCategory).ToList();
-                            this.Mid = Convert.ToInt32(productInfo.Materialid);
-                        }
+                        this.Mid = currentInfo.Id;
                     }
                 }
                 else
