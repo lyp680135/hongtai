@@ -186,8 +186,10 @@
                         <input type="text" name="BatCode" id="BatCode" lay-verify="BatCode" autocomplete="off" placeholder="请输入冶炼炉号" class="validate[required] layui-input" value="@Model.PdQuality.Batcode" disabled="disabled" />
                     </div>
                 }
-
-                <button type="button" id="searchBtn" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe615;</i>搜索</button>
+                @if (Model.PdQuality.Id == 0)
+                {
+                    <button type="button" id="searchBtn" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe615;</i>搜索</button>
+                }
             </div>
             @*化学数据*@
 
