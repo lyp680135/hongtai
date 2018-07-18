@@ -3,6 +3,7 @@
 @using System.Text.RegularExpressions;
 @using Microsoft.AspNetCore.Http;
 @{
+    ViewData["Tag"] = 0;
     var siteBasic = _cmsService.GetBasic();
     var mngSetting = _cmsService.GetSetting();
     string strUserAgent = this.Request.Headers["User-Agent"].ToString().ToLower();
@@ -163,7 +164,7 @@
                     for (int i = 0; i < Product.Count; i++)
                     {
                         <a href="#">
-                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Product[i]["Image"]" />
+                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Product[i]["Image"].ToString().Split(',')[0]" />
                             <div class="shade_box">
                                 <h2>@Html.Raw(Product[i]["Title"])@Html.Raw(Product[i]["Description"])</h2>
                                 <div class="more1"><span class="pic cssr_more2"></span></div>
