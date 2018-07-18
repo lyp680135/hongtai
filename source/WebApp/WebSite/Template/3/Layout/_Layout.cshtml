@@ -37,61 +37,84 @@
 </head>
 <body>
     <!--------------------------顶部导航------------------------------>
-    <div class="top_nav">
-        <div class="nav_box">
-            <a href="/"><img src="@SiteBasic.Logo" alt="@SiteBasic.CompName" /></a>
-            <a href="#" class="pic cssr_login"></a>
-            <div class="nav">
-                <a href="#" class="current">首页</a>
-                <a href="#">公司简介</a>
-                <a href="#">公司荣誉</a>
-                <a href="#">新闻中心</a>
-                <a href="#">产品中心</a>
-                <a href="#">营销网络</a>
-                <a href="#">服务中心</a>
+    @if (Convert.ToInt32(ViewData["Tag"]) == 0)
+    {
+        <div class="top_nav">
+            <div class="nav_box">
+                <a href="/"><img src="@SiteBasic.Logo" alt="@SiteBasic.CompName" style="margin-top:21px" /></a>
+                <a href="#" class="pic cssr_login"></a>
+                <div class="nav">
+                    <a href="/">首页</a>
+                    <a href="/About_us">公司简介</a>
+                    <a href="/Honor">公司荣誉</a>
+                    <a href="/News">新闻中心</a>
+                    <a href="/Product">产品中心</a>
+                    <a href="/Sales">营销网络</a>
+                    <a href="/Services">服务中心</a>
+                    <div class="clearfix"></div>
+                </div>
                 <div class="clearfix"></div>
             </div>
-            <div class="clearfix"></div>
         </div>
-    </div>
-    <!--------------------------banner------------------------------>
-    <div class="banner">
-        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
-                <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
-            </ol>
-            <div class="carousel-inner" role="listbox">
+        <!--------------------------banner------------------------------>
+        <div class="banner">
+            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
+                </ol>
+                <div class="carousel-inner" role="listbox">
 
-                @if (SiteBasic.CarouselImage.SafeString() != string.Empty)
-                {
-                    for (var i = 0; i < SiteBasic.CarouselImage.Object.Count; i++)
+                    @if (SiteBasic.CarouselImage.SafeString() != string.Empty)
                     {
-                        if (i == 0)
+                        for (var i = 0; i < SiteBasic.CarouselImage.Object.Count; i++)
                         {
-                            <div class="item active">
-                                <div class="main_figure">
-                                    <img src="/Content/images/main_figure1.png" />
+                            if (i == 0)
+                            {
+                                <div class="item active">
+                                    <div class="main_figure">
+                                        <img src="/Content/images/main_figure1.png" />
+                                    </div>
+                                    <img class="homebanner" src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@SiteBasic.CarouselImage.Object[i]" width="100%" />
                                 </div>
-                                <img class="homebanner" src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@SiteBasic.CarouselImage.Object[i]" width="100%" />
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="item">
-                                <div class="main_figure">
-                                    <img src="/Content/images/main_figure1.png" />
+                            }
+                            else
+                            {
+                                <div class="item">
+                                    <div class="main_figure">
+                                        <img src="/Content/images/main_figure1.png" />
+                                    </div>
+                                    <img class="homebanner" src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@SiteBasic.CarouselImage.Object[i]" width="100%" />
                                 </div>
-                                <img class="homebanner" src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@SiteBasic.CarouselImage.Object[i]" width="100%" />
-                            </div>
+                            }
                         }
                     }
-                }
+                </div>
             </div>
         </div>
-    </div>
-
+    }
+    else
+    {
+        <div class="top_nav top_nav1">
+            <img src="/Content/images/top_nav.jpg" class="nav_img" />
+            <div class="nav_box">
+                <a href="/"><img src="@SiteBasic.Logo" alt="@SiteBasic.CompName" style="margin-top:21px" /></a>
+                <a href="#" class="pic cssr_login"></a>
+                <div class="nav">
+                    <a href="/">首页</a>
+                    <a href="/About_us">公司简介</a>
+                    <a href="/Honor">公司荣誉</a>
+                    <a href="/News">新闻中心</a>
+                    <a href="/Product">产品中心</a>
+                    <a href="/Sales">营销网络</a>
+                    <a href="/Services">服务中心</a>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    }
     @RenderBody()
 
     <!--------------------------页脚------------------------------>
@@ -130,7 +153,7 @@
                             foreach (var Follow in Follows)
                             {
                                 <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Follow["Image"].ToString()" />
-                                var Tle =Util.Extensions.RemoveHtml(Follow["Title"].ToString());
+                                var Tle = Util.Extensions.RemoveHtml(Follow["Title"].ToString());
                                 if (!string.IsNullOrEmpty(Tle))
                                 {
                                     if (Tle.Length > 6)
@@ -183,6 +206,12 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".nav a").eq(@ViewBag.Tag).addClass("current");
+        });
+    </script>
 </body>
 </html>
 
