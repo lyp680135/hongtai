@@ -160,7 +160,7 @@
                     <div class="layui-input-inline">
                         <input type="text" name="BatCode" id="BatCode" lay-verify="BatCode" autocomplete="off" placeholder="请输入冶炼炉号" class="validate[required] layui-input" value="@Model.BatCode" />
                     </div>
-                    <div class="layui-input-inline" style="height: 32px;line-height: 32px;width: 100px;" id="ChangeBatCode">
+                    @*<div class="layui-input-inline" style="height: 32px;line-height: 32px;width: 100px;" id="ChangeBatCode">
                         <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="ChangeBatCode(this,1); return false;">
                             <i class="layui-icon">&#xe61a;</i>
                         </a>
@@ -168,7 +168,7 @@
 
                             <i class="layui-icon">&#xe619;</i>
                         </a>
-                    </div>
+                    </div>*@
                 }
                 else
                 {
@@ -493,6 +493,11 @@
                 window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + Sid + '&batcode=' + currCode;
             });
 
+            $('#BatCode').blur(function () {
+                var Sid = $('#SmeltCode').val();
+                var currCode = $("#BatCode").val();
+                window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + Sid + '&batcode=' + currCode;
+            });
 
 
             $('#SmeltCode').select2({
@@ -504,6 +509,7 @@
                 placeholder: "选择车间",
                 width: "152px",
                 language: "zh-CN",
+                minimumResultsForSearch: -1
             });
             //保存数据
             $("#btnSubmit").click(function () {
