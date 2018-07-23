@@ -1,0 +1,123 @@
+﻿@charset "utf-8";
+/* CSS Document */
+.service_search {
+    width: 1180px;
+    margin: 50px auto 75px auto;
+}
+
+.service_title span {
+    float: left;
+    margin-right: 6px;
+}
+
+.service_title h1 {
+    float: left;
+    font-size: 20px;
+    color: #333333;
+    margin-top: -1px;
+}
+
+.service_title {
+    border-bottom: 1px solid #e6e6e6;
+    padding-bottom: 12px;
+}
+/*--------------------------产品质量证明书----------------------------*/
+.quality_certificate {
+    margin-bottom: 60px;
+}
+
+    .quality_certificate h2 {
+        font-size: 16px;
+        color: #333;
+        margin: 30px 0 24px 0;
+    }
+
+.search .form-group {
+    float: left;
+    margin: 0 100px 0 0;
+}
+
+.search a {
+    float: right;
+    display: block;
+    width: 200px;
+    border-radius: 4px;
+    color: #fff;
+    background: #d58804;
+    text-align: center;
+    line-height: 40px;
+    font-size: 16px;
+}
+
+.form-group input {
+    border: 1px solid #cccccc;
+    line-height: 40px;
+    border-radius: 4px;
+    padding-left: 9px;
+    outline: none;
+    width: 298px;
+}
+
+.form-group span {
+    color: #333333;
+    font-size: 16px;
+}
+/*--------------------------联系我们------------------------------*/
+.contact_us {
+    margin-bottom: 60px;
+}
+
+.contact_box {
+    float: left;
+    margin-right: 124px;
+}
+
+    .contact_box:nth-last-child(2) {
+        margin: 0;
+    }
+
+    .contact_box span {
+        float: left;
+    }
+
+    .contact_box p {
+        float: left;
+        font-size: 16px;
+        line-height: 38px;
+        color: #333333;
+        margin-left: 12px;
+    }
+
+.contact {
+    margin: 30px 0;
+}
+
+.contact_us img {
+    border: 1px solid #e6e6e6;
+}
+/*--------------------------关注我们------------------------------*/
+.attention_box {
+    margin-top: 24px;
+}
+
+    .attention_box img {
+        float: left;
+    }
+
+    .attention_box .attention {
+        float: left;
+        margin-left: 18px;
+    }
+
+.attention p {
+    font-size: 24px;
+    color: #212121;
+    margin: 28px 0 22px 0;
+}
+
+.attention span {
+    font-size: 16px;
+    color: #333333;
+    display: block;
+    line-height: 40px;
+}

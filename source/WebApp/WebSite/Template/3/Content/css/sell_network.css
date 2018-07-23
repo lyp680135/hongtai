@@ -1,0 +1,39 @@
+@charset "utf-8";
+/* CSS Document */
+
+.product_box{
+	width:1180px;
+	margin:auto;
+	padding:50px 0 75px 0;
+}
+.product_title{
+	margin-bottom:8px;
+}
+.product_title span{
+	float:left;
+}
+.product_title h2{
+	float:left;
+	font-size:20px;
+	color:#212121;
+	line-height:30px;
+	margin-left:6px;
+}
+.contact_box .contact{
+	float:left;
+	margin-right:214px;
+}
+.contact_box .contact:nth-last-child(2){
+	float:right;
+	margin-right:0;
+}
+.contact p{
+	font-size:16px;
+	line-height:32px;
+	color:#4c4c4c;
+}
+.product_box img{
+	display:block;
+	margin:auto;
+	margin-top:38px;
+}

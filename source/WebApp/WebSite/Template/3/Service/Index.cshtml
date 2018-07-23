@@ -1,0 +1,210 @@
+﻿@page
+@inject ICMSService _cmsServices;
+@{
+    ViewData["Tag"] = 6;
+    ViewData["Title"] = "服务中心";
+    ViewData["Desc"] = "服务中心";
+    var mngSetting = _cmsServices.GetSetting();
+    var siteBasic = _cmsServices.GetBasic();
+    ViewBag.SiteBasic = siteBasic;
+}
+@section head{
+    <link href="/Content/css/service_search.css" rel="stylesheet" />
+    <script src="/Content/js/layui/lay/modules/layer.js"></script>
+    <script src="/Content/js/layui/layui.js"></script>
+    <link href="/Content/js/layui/css/layui.css" rel="stylesheet" />
+    <script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&ak=507E36FA8f5d0bf5b491248d86d04bf7"></script>
+}
+<!--------------------------面包屑------------------------------>
+<div class="location_box">
+    <div class="location">
+        <span>&nbsp;服务中心</span>
+        <span>您当前的位置： 首页 > </span>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!--------------------------产品质量证明书查询------------------------------>
+<div class="service_search">
+
+    <div class="quality_certificate">
+        <div class="service_title">
+            <span class="pic cssr_service1"></span>
+            <h1>产品质量证明书</h1>
+            <div class="clearfix"></div>
+        </div>
+        <h2>鸿泰钢铁《产品质量证明书》网上查询</h2>
+        <div class="search">
+            <form id="form1" method="post" onsubmit="return submitSearch()">
+                <div class="form-group">
+                    <span>产品批号：</span>
+                    <input type="text" name="batcode" id="batcode" placeholder="请输入产品批号">
+                </div>
+                <div class="form-group">
+                    <span>批号校验码：</span>
+                    <input type="text" name="validcode" id="validcode" placeholder="请输入批号校验码">
+                </div>
+                <input class="sub" type="submit" value="查询" />
+            </form>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="contact_us">
+        <div class="service_title">
+            <span class="pic cssr_service2"></span>
+            <h1>联系我们</h1>
+            <div class="clearfix"></div>
+        </div>
+        <div class="contact">
+            @{
+                var Phone = _cmsServices.IcontentColumnDataService.GetContentColumnDataList("联系鸿泰", 1, 1);
+                if (Phone != null)
+                {
+                    foreach (var P in Phone)
+                    {
+                        <div class="contact_box">
+                            <span class="pic cssr_service_contact1"></span>
+                            <p>@Html.Raw(P["Phone"])</p>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="contact_box">
+                            <span class="pic cssr_service_contact2"></span>
+                            <p>@Html.Raw(P["Fax"])</p>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="contact_box">
+                            <span class="pic cssr_service_contact3"></span>
+                            <p>@Html.Raw(P["Email"])</p>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="contact_box">
+                            <span class="pic cssr_service_contact4"></span>
+                            <p>@Html.Raw(P["Address"])</p>
+                            <div class="clearfix"></div>
+                        </div>
+                    }
+                }
+            }
+            <div class="clearfix"></div>
+        </div>
+        <div style="width:100%;height:300px;border:#ccc solid 1px;margin:0 1%;margin-top:8px;margin-top:50px" id="dituContent"></div>
+    </div>
+
+    <div class="attention_us">
+        <div class="service_title">
+            <span class="pic cssr_service3"></span>
+            <h1>关注我们</h1>
+            <div class="clearfix"></div>
+        </div>
+        <div class="attention_box">
+            @{
+                var Follow = _cmsServices.IcontentColumnDataService.GetContentColumnDataList("关注鸿泰", 1, 1);
+                if (Follow != null)
+                {
+                    foreach (var F in Follow)
+                    {
+                        <img src="@mngSetting.Domain_PC.Substring(0,mngSetting.Domain_PC.Length-1)@F["Image"]" />
+                        <div class="attention">
+                            <p>@Html.Raw(F["Title"])</p>
+                            <span>@Html.Raw(F["Description"])</span>
+                        </div>
+                    }
+                }
+            }
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    var ComAddress = $("#ComAddress").html();
+    //创建和初始化地图函数：
+    function initMap() {
+        //var icon = new BMap.Icon("http://map.baidu.com/image/us_mk_icon.png", new BMap.Size(100, 100));
+        createMap();//创建地图
+        setMapEvent();//设置地图事件
+        //addMapControl();//向地图添加控件
+    }
+
+    //创建地图函数：
+    function createMap() {
+        var map = new BMap.Map("dituContent");//在百度地图容器中创建一个地图
+        var localSearch = new BMap.LocalSearch(map);
+        localSearch.enableAutoViewport();
+        localSearch.setSearchCompleteCallback(function (searchResult) {
+            var new_point = new BMap.Point(@siteBasic.MapLocation);
+            var marker = new BMap.Marker(new_point);  // 创建标注
+            map.addOverlay(marker);              // 将标注添加到地图中
+           // marker.addEventListener("click", function () {
+           //     this.openInfoWindow(infoWindow);
+            //});
+            map.centerAndZoom(new_point, 17);
+        });
+        localSearch.search(ComAddress);
+        window.map = map;//将map变量存储在全局
+    }
+
+    //地图事件设置函数：
+    function setMapEvent() {
+        map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+        map.enableScrollWheelZoom();//启用地图滚轮放大缩小
+        map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+        map.enableKeyboard();//启用键盘上下左右键移动地图
+    }
+            initMap();//创建和初始化地图
+</script>
+<script type="text/javascript">
+
+    layui.use('layer', function () {
+        var $ = layui.jquery, layer = layui.layer;
+    });
+    function submitSearch() {
+        if (!$("#batcode").val()) {
+            $("#batcode").focus();
+            layer.msg('请输入产品批号！');
+            return false;
+        }
+        if (!$("#validcode").val()) {
+            $("#validcode").focus();
+            layer.msg('请输入批号校验码！');
+            return false;
+        }
+        var url = '/Service/SearchProduct';
+        var layerload = layer.load(1);
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: $("#form1").serialize(),
+            success: function (re) {
+                if (re == "success") {
+                    window.location.href = "/Service/Detail?batcode=" + $("#batcode").val() + "&validcode=" + $("#validcode").val();
+                } else {
+                    layer.msg(re);
+                }
+                layer.close(layerload);
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                layer.close(layerload);
+                layer.msg('操作失败，出现服务器错误！');
+            }
+        });
+        return false;
+    }
+</script>
+
+<style>
+    .sub {
+        float: left;
+        display: block;
+        width:160px;
+        border-radius: 4px;
+        color: white;
+        border: 1px solid #d58804;
+        text-align: center;
+        line-height: 40px;
+        font-size: 16px;
+        padding: 0;
+        margin: 0;
+        background: #d58804;
+    }
+</style>

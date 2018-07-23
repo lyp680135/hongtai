@@ -1,0 +1,21 @@
+@charset "utf-8";
+/* CSS Document */
+.ancillary_facility{
+	width:1180px;
+	margin:42px auto 80px auto;
+}
+.ancillary_facility p{
+	font-size:16px;
+	line-height:32px;
+	color:#4c4c4c;
+	margin-bottom:22px;
+}
+.ancillary_facility .img1{
+	float:left;
+}
+.ancillary_facility .img2{
+	float:right;
+}
+.facility{
+	margin-bottom:30px;
+}

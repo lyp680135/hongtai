@@ -1,0 +1,27 @@
+﻿@charset "utf-8";
+/* CSS Document */
+/*--------------------------产品展示----------------------------*/
+.product_box{
+	width:1180px;
+	margin:auto;
+	padding:50px 0 36px 0;
+}
+.product_exhibition1{
+	float:left;
+}
+.product_exhibition2{
+	float:right;
+}
+.product_exhibition{
+	border:1px solid #e3e4e6;
+	background:#edeeef;
+}
+.product_exhibition img{
+	display:block;
+}
+.product_exhibition span{
+	line-height:42px;
+	font-size:16px;
+	color:#212121;
+	margin-left:12px;
+}

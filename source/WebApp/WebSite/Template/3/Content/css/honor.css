@@ -1,0 +1,26 @@
+@charset "utf-8";
+/* CSS Document */
+/*--------------------------证书展示----------------------------*/
+.honor_box{
+	width:1180px;
+	margin:auto;
+	padding:50px 0 32px 0;
+}
+.honor_box img{
+	border:1px solid #e3e4e6;
+}
+.honor1 img{
+	margin-right:68px;
+}
+.honor1 img:last-of-type{
+	margin-right:0;
+}
+.honor_row{
+	margin-bottom:48px;
+}
+.honor2 img{
+	margin-right:36px;
+}
+.honor2 img:last-of-type{
+	margin-right:0;
+}

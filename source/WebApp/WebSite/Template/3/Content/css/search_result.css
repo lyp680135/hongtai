@@ -1,0 +1,124 @@
+@charset "utf-8";
+/* CSS Document */
+.search_result{
+	width:1180px;
+	margin:50px auto 0 auto;
+}
+.service_title span{
+	float:left;
+	margin-right:6px;
+}
+.service_title h1{
+	float:left;
+	font-size:20px;
+	color:#333333;
+	margin-top:-1px;
+}
+.service_title{
+	border-bottom:1px solid #e6e6e6;
+	padding-bottom:12px;
+}
+/*--------------------------质量证明书----------------------------*/
+.result{
+	background:#edeeef;
+	padding:12px 14px 20px 14px;
+	margin:30px 0 60px 0;
+}
+.result_row .div{
+	float:left;
+}
+.result_row{
+	margin-top:20px;
+}
+.result_row .div span{
+	font-size:16px;
+	color:#666666;
+}
+.result_row .div span:first-of-type{
+	color:#333333;
+	margin-right:10px;
+}
+.result_row .div4{
+	float:right;
+}
+.result_row .div1{
+	width:404px;
+}
+.result_row .div2{
+	width:396px;
+}.result_row1 .div1{
+	width:339px;
+}
+/*--------------------------打印质量证明书----------------------------*/
+.stamp .form-group{
+	margin:0;
+}
+.form-group a{
+	float:left;
+	display:block;
+	width:160px;
+	border-radius:4px;
+	color:#fff;
+	background:#d58804;
+	text-align:center;
+	line-height:40px;
+	font-size:16px;
+	text-decoration:none;
+}
+.form-group button{	
+	float:left;
+	display:block;
+	width:160px;
+	border-radius:4px;
+	color:#d58804;
+	border:1px solid #d58804;
+	text-align:center;
+	line-height:40px;
+	font-size:16px;
+	padding:0;
+	margin:0;
+	background:#fff;
+}
+.form-group button:hover{
+	background:#d58804;
+	border:none;
+}
+.form-group button:focus,.form-group button:active{
+	background:#fff;
+	border:1px solid #d58804;
+	color:#d58804;
+}
+.btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open>.dropdown-toggle.btn-primary.focus, .open>.dropdown-toggle.btn-primary:focus, .open>.dropdown-toggle.btn-primary:hover{
+	background:#d58804;
+	border:none;
+}
+.btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
+    outline: none;
+}
+.form-group input{
+	border:1px solid #cccccc;
+	line-height:40px;
+	border-radius:4px;
+	padding-left:9px;
+    outline: none;
+	width:298px;
+	float:left;
+	margin-right:20px;
+}
+.form-group span{
+	color:#333333;
+	font-size:16px;
+	float:left;
+	display:block;
+	line-height:42px;
+}
+.stamp small{
+	font-size:15px;
+	line-height:42px;
+	display:block;
+	color:#999999;
+	margin-left: 63px;
+}
+.stamp{
+	padding:30px 0 80px 0;
+}

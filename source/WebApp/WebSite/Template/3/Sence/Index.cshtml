@@ -1,0 +1,50 @@
+﻿@page "{cid:int}/{Id:int}.html"
+@inject ICMSService _cmsServices;
+@{
+    ViewData["Tag"] = 7;
+    var Id = Convert.ToInt32(RouteData.Values["Id"]);
+    var CId = Convert.ToInt32(RouteData.Values["Cid"]);
+    var model = _cmsServices.IcontentColumnDataService.GetContentColumnData(Id, CId);
+    ViewData["Title"] = model["Title"];
+    string content = Util.Extensions.ToHtml(model["Content"].ToString());
+    ViewData["Desc"] = content.Length > 30 ? content.Substring(0, 30) : content;
+    var mngSetting = _cmsServices.GetSetting();
+    ViewBag.SiteSetting = mngSetting;
+
+}
+@section head{
+    <link href="/Content/css/ancillary_facility.css" rel="stylesheet" />
+}
+<!--------------------------面包屑------------------------------>
+<div class="location_box">
+    <div class="location">
+        <span>&nbsp;@ViewData["Title"]</span>
+        <span>您当前的位置： 首页 > </span>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!--------------------------设施展示------------------------------>
+
+
+<div class="ancillary_facility">
+    <p>@Html.Raw(model["Content"].ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))</p>
+    <div class="facility">
+        @if (model["Image"].SafeString() != string.Empty)
+        {
+            foreach (var imgItem in model["Image"].ToString().Split(','))
+            {
+                <img class="img1" src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Html.Raw(imgItem)" />
+            }
+        }
+        <div class="clearfix"></div>
+    </div>
+
+</div>
+
+<style>
+    .img1{
+        max-height:320px;
+        margin:40px;
+        max-width:1086px;
+    }
+</style>

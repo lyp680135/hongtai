@@ -2,6 +2,8 @@
 @inject ICMSService _cmsServices;
 @{
     ViewData["Tag"] = 1;
+    ViewData["Title"] = "公司简介";
+    ViewData["Desc"] = "公司简介";
     var mngSetting = _cmsServices.GetSetting();
 }
 @section head{
@@ -49,47 +51,46 @@
     <div class="clearfix"></div>
 </div>
 
-
-<div class="intro_element">
-    <div class="element_row element_row2">
-        <img src="/Content/images/intro_element1.jpg" />
-        <div class="tabulation">
-            @{
-                var Intro3 = _cmsServices.GetSinglePage("关于鸿泰3");
+@{
+    var Intro3 = _cmsServices.IcontentColumnDataService.GetContentColumnDataList("关于鸿泰3", 1, 100);
+    if (Intro3 != null)
+    {
+        @for (int i = 0; i < Intro3.Count; i++)
+        {
+            <div class="intro_element">
+                @if (i % 2 == 0)
                 {
-                    if (Intro3 != null)
-                    {
-                        @Html.Raw(Util.Extensions.ToHtml(Intro3.Content).ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))
-                    }
-                }
-            }
-        </div>
-    </div>
-    <div class="clearfix"></div>
-</div>
+                    <div class="element_row element_row1">
 
-<div class="intro_element">
-    <div class="element_row element_row1">
-        <div class="tabulation">
-            @{
-                var Intro4 = _cmsServices.GetSinglePage("关于鸿泰4");
-                {
-                    if (Intro4 != null)
-                    {
-                        @Html.Raw(Util.Extensions.ToHtml(Intro4.Content).ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))
-                    }
+                        <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Intro3[i]["Image"]" />
+                        <div class="tabulation">
+                            @Html.Raw(Util.Extensions.ToHtml(Intro3[i]["Content"].ToString()).ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))
+                        </div>
+
+                    </div>
                 }
-            }
-        </div>
-        <img src="/Content/images/intro_element2.jpg" />
-        <div class="clearfix"></div>
-    </div>
-</div>
+                else
+                {
+                    <div class="element_row element_row2">
+
+                        <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Intro3[i]["Image"]" />
+                        <div class="tabulation">
+                            @Html.Raw(Util.Extensions.ToHtml(Intro3[i]["Content"].ToString()).ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))
+                        </div>
+
+                    </div>
+                }
+                <div class="clearfix"></div>
+            </div>
+        }
+    }
+}
 
 <style>
     .introduce2 img {
         display: block;
         margin-left: auto;
         margin-right: auto;
+        margin-bottom:20px;
     }
 </style>

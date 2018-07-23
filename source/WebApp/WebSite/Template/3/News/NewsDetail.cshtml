@@ -1,0 +1,93 @@
+﻿@page "{cid:int}/{Id:int}.html"
+@inject ICMSService _cmsService
+@{
+    ViewData["Tag"] = 3;
+    int CId = Convert.ToInt32(RouteData.Values["CId"]);
+    int Id = Convert.ToInt32(RouteData.Values["Id"]);
+    var model = _cmsService.IcontentColumnDataService.GetContentColumnData(Id, CId);
+    ViewData["Title"] = model["Title"];
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteBasic = siteBasic;
+    ViewBag.SiteSetting = mngSetting;
+    string content = Util.Extensions.ToHtml(model["Content"].ToString());
+    ViewData["Desc"] = content.Length > 30 ? content.Substring(0, 30) : content;
+}
+@section head
+    {
+    <link href="/Content/css/news_center.css" rel="stylesheet" />
+    <link href="/Content/css/news_details.css" rel="stylesheet" />
+}
+<!--------------------------面包屑------------------------------>
+<div class="location_box">
+    <div class="location">
+        <span>&nbsp;新闻详情</span>
+        <span>您当前的位置： 首页 > 新闻中心 > </span>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!--------------------------新闻中心------------------------------>
+<div class="news_center">
+    <div class="left_nav">
+        <div class="news_nav">
+            <a href="/News/0-1.html" class="news_nav1">
+                <span class="pic cssr_news_center1 span1"></span>
+                <span class="pic cssr_news_white1 span2"></span>
+                <h1>企业新闻</h1>
+                <div class="clearfix"></div>
+            </a>
+            <a href="/News/Dynamic/0-1.html" class="news_nav1">
+                <span class="pic cssr_news_center2 span1"></span>
+                <span class="pic cssr_news_white2 span2"></span>
+                <h1>行业动态</h1>
+                <div class="clearfix"></div>
+            </a>
+            <a href="/News/Hotspot/0-1.html" class="news_nav1">
+                <span class="pic cssr_news_center3 span1"></span>
+                <span class="pic cssr_news_white3 span2"></span>
+                <h1>本周热点</h1>
+                <div class="clearfix"></div>
+            </a>
+        </div>
+        @{
+            var Hots = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰热点", 1, 4);
+            if (Hots != null)
+            {
+
+                <div class="news_hot">
+                    <h2>热点新闻</h2>
+                    @for (var i = 0; i < Hots.Count; i++)
+                    {
+                        @if (Hots[i]["Content"] != null && Hots[i]["Content"].ToString().Length > 57)
+                        {
+                            <a href="/News/NewsDetail/@Html.Raw(Hots[i]["cid"]+"/"+Hots[i]["Id"]+".html")">
+                                @Html.Raw(Util.Extensions.RemoveHtml(Hots[i]["Content"].ToString().Substring(0, 57)))
+                            </a>
+                        }
+                    }
+                </div>
+            }
+        }
+    </div>
+
+    <div class="news_details">
+        <div class="details">
+            <h3>@Html.Raw(model["Title"])</h3>
+            <div>
+                <span>时间：@Html.Raw(Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(model["Createtime"])).ToString("yyyy-MM-dd"))&nbsp;&nbsp;&nbsp;@Html.Raw(Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(model["Createtime"])).ToString("hh:mm:ss"))</span>
+                <span>来源：下载</span>
+            </div>
+        </div>
+        @if (model["Image"].SafeString() != string.Empty)
+        {
+            foreach (var imgItem in model["Image"].ToString().Split(','))
+            {
+                <div style="max-width: 100%; margin: 10px auto;">
+                    <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Html.Raw(imgItem)" />
+                </div>
+            }
+        }
+        <p>@Html.Raw(model["Content"].ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))</p>
+    </div>
+    <div class="clearfix"></div>
+</div>
