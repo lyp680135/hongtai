@@ -123,23 +123,22 @@
                                         {
                                             foreach (var item in dxQualityStandards)
                                             {
-                                                if (item.TargetName != "Ceq")
+
+                                                if (Model.PdQuality != null && Model.PdQuality.Qualityinfos.SafeString() != string.Empty)
                                                 {
-                                                    if (Model.PdQuality != null && Model.PdQuality.Qualityinfos.SafeString() != string.Empty)
+                                                    foreach (var itemChild in (Newtonsoft.Json.Linq.JObject)Model.PdQuality.Qualityinfos.Object)
                                                     {
-                                                        foreach (var itemChild in (Newtonsoft.Json.Linq.JObject)Model.PdQuality.Qualityinfos.Object)
+                                                        if (item.TargetName == itemChild.Key)
                                                         {
-                                                            if (item.TargetName == itemChild.Key)
-                                                            {
-                                                                <th>@itemChild.Key</th>
-                                                            }
+                                                            <th>@itemChild.Key</th>
                                                         }
                                                     }
-                                                    else
-                                                    {
-                                                        <th>@item.TargetName</th>
-                                                    }
                                                 }
+                                                else
+                                                {
+                                                    <th>@item.TargetName</th>
+                                                }
+
                                             }
                                         }
 
@@ -158,28 +157,26 @@
                                         {
                                             foreach (var item in sxQualityStandards)
                                             {
-                                                if (item.TargetName != "Ceq")
+
+                                                if (Model.PdQuality != null && Model.PdQuality.Qualityinfos.SafeString() != string.Empty)
                                                 {
-                                                    if (Model.PdQuality != null && Model.PdQuality.Qualityinfos.SafeString() != string.Empty)
+                                                    foreach (var itemChild in (Newtonsoft.Json.Linq.JObject)Model.PdQuality.Qualityinfos.Object)
                                                     {
-                                                        foreach (var itemChild in (Newtonsoft.Json.Linq.JObject)Model.PdQuality.Qualityinfos.Object)
+                                                        if (item.TargetName == itemChild.Key)
                                                         {
-                                                            if (item.TargetName == itemChild.Key)
-                                                            {
-                                                                <td>
-                                                                    <input class="validate[@Html.Raw(item.TargetIsNull==1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName)" value="@itemChild.Value" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
-                                                                </td>
-                                                            }
+                                                            <td>
+                                                                <input class="validate[@Html.Raw(item.TargetIsNull==1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName)" value="@itemChild.Value" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
+                                                            </td>
                                                         }
                                                     }
-                                                    else
-                                                    {
-                                                        <td>
-                                                            <input class="validate[@Html.Raw(item.TargetIsNull==1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName)" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
-                                                        </td>
-                                                    }
-
                                                 }
+                                                else
+                                                {
+                                                    <td>
+                                                        <input class="validate[@Html.Raw(item.TargetIsNull==1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName)" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
+                                                    </td>
+                                                }
+
                                             }
                                         }
 
@@ -297,7 +294,7 @@
 
     <script type="text/javascript">
         //查看详情
-        function locationHref() {           
+        function locationHref() {
             var index = layer.open({
                 title: '历史记录',
                 type: 2,
@@ -422,7 +419,7 @@
                     layer.confirm('确定提交质量数据？', { icon: 3, title: '提示' }, function (index) {
                         Add(YLCode);
                     });
-                   
+
                  }
             });
             //添加
@@ -435,7 +432,7 @@
                     success: function (re) {
                         if (re.toString() == 'true') {
                             layer.msg('添加成功', { icon: 1 });
-                           
+
                             setTimeout(function () {
                                 window.location.reload();
                             }, 2000);

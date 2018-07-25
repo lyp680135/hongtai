@@ -45,7 +45,7 @@
                 if (!id.HasValue || id.Value <= 0)
                 {
                     var productInfo = new PdProduct();
-                    PdBatcode currentInfo = this.Db.PdBatcode.OrderByDescending(c => c.Id).FirstOrDefault(c => c.Batcode.StartsWith(workInfo.Code)) ?? new PdBatcode();
+                    PdBatcode currentInfo = this.Db.PdBatcode.OrderByDescending(c => c.Id).FirstOrDefault() ?? new PdBatcode();
                     if (currentInfo != null)
                     {
                         this.BatCode = currentInfo.Batcode;

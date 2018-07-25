@@ -168,7 +168,7 @@
                 @if (Model.PdQuality.Id == 0)
                 {
                     <div class="layui-input-inline">
-                        <input type="text" name="BatCode" id="BatCode" lay-verify="BatCode" autocomplete="off" placeholder="请输入冶炼炉号" class="validate[required] layui-input" value="@Model.BatCode" />
+                        <input type="text" name="BatCode" id="BatCode" lay-verify="BatCode" autocomplete="off" placeholder="请输入轧制批号" class="validate[required] layui-input" value="@Model.BatCode" />
                     </div>
                     @*<div class="layui-input-inline" style="height: 32px;line-height: 32px;width: 100px;" id="ChangeBatCode">
                             <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="ChangeBatCode(this,1); return false;">
@@ -183,13 +183,14 @@
                 else
                 {
                     <div class="layui-input-inline">
-                        <input type="text" name="BatCode" id="BatCode" lay-verify="BatCode" autocomplete="off" placeholder="请输入冶炼炉号" class="validate[required] layui-input" value="@Model.PdQuality.Batcode" disabled="disabled" />
+                        <input type="text" name="BatCode" id="BatCode" lay-verify="BatCode" autocomplete="off" placeholder="请输入轧制批号" class="validate[required] layui-input" value="@Model.PdQuality.Batcode" disabled="disabled" />
                     </div>
                 }
                 @if (Model.PdQuality.Id == 0)
                 {
                     <button type="button" id="searchBtn" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe615;</i>搜索</button>
                 }
+                <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" style="float:right;margin-right:20%;" onclick="locationHref(); return false;"><i class="layui-icon">&#xe615;</i>历史记录</button>
             </div>
             @*化学数据*@
 
@@ -232,7 +233,7 @@
                 {
                     if (Model.PdQuality.Id == 0)
                     {
-                        <h1 class="element">请选择冶炼炉号,输入炉批号进行搜索</h1>
+                        <h1 class="element">请选择冶炼炉号、轧制批号进行搜索</h1>
                     }
 
                 }
@@ -364,7 +365,7 @@
                             @{
                                 if (ListQualityStandards != null && ListQualityStandards.Count > 0)
                                 {
-                                    for (int i = 0; i < 3; i++)
+                                    for (int i = 0; i < 4; i++)
                                     {
                                         <tr>
 
@@ -428,6 +429,23 @@
     </div>
 
     <script type="text/javascript">
+        function locationHref() {
+            var index = layer.open({
+                title: '历史记录',
+                type: 2,
+                shadeClose: true, //点击遮罩关闭层
+                area: ['90%', '75%'],//大小
+                content: '/Manage/quality/SmeltList',//url
+                anim: '5',//动画效果
+                offset: '50px',//弹出层位置
+                shadeClose: true,
+                // maxmin: true,//最大化,最小化
+                btn: ['关闭'],
+                yes: function (index, layero) {
+                    layer.close(index);
+                }
+            });
+        }
         //按回车移动光标
         function focusNextInput(thisInput) {
             var inputs = document.getElementsByTagName("input");

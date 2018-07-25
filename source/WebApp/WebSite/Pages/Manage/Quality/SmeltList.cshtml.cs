@@ -1,4 +1,5 @@
-namespace WarrantyManage.Pages.Manage.Quality { 
+namespace WarrantyManage.Pages.Manage.Quality
+{
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -35,12 +36,19 @@ namespace WarrantyManage.Pages.Manage.Quality {
 
         public int PageCount { get; set; }
 
+        public string SmeltCode { get; set; }
+
         public new int Page { get; set; }
 
-        public void OnGet(int pg = 1)
+        public void OnGet(int pg = 1, string smeltCode = "")
         {
             this.PageIndex = pg;
             var predicate = PredicateBuilder.New<PdqualitySmeltCode>(true);
+            if (!string.IsNullOrWhiteSpace(smeltCode))
+            {
+                predicate.Extend(w => w.SmeltCode == smeltCode.Trim(), PredicateOperator.And);
+                this.SmeltCode = smeltCode;
+            }
             int total = 0;
             this.ManageModels = this.pdSmeltCode.Page<int>(ref total, this.PageIndex, this.PageSize, p => p.Id, predicate, false);
             this.PageCount = total;

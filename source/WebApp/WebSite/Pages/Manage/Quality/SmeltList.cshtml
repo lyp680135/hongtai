@@ -1,5 +1,6 @@
 ﻿@page
 @model WarrantyManage.Pages.Manage.Quality.SmeltListModel
+@inject Common.IService.IUserService userService
 <html>
 <head>
     <meta charset="utf-8">
@@ -16,7 +17,21 @@
     </style>
 </head>
 <body style="padding:5px;">
-    <form>
+    <form method="get" class="layui-form">
+        <div class="tools">
+            <ul class="seachform" style="width:100%">
+                <li>
+                    <label>
+                        按冶炼炉号查询:
+                    </label>
+                    <input type="text" style="width:100px" class="date scinput" id="SmeltCode" name="SmeltCode" value="@Model.SmeltCode" />
+                    <div style="clear:both"></div>
+                </li>
+                <li>
+                    <button id="addBtn" name="sb" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button>
+                </li>
+            </ul>
+        </div>
         <table class="layui-table">
             <thead>
                 <tr>
@@ -24,6 +39,7 @@
                         if (Model.ManageModels.Count > 0)
                         {
                             <td>创建时间</td>
+                            <td>录入人</td>
                             <td>冶炼炉号</td>
                             var obj = Model.ManageModels.FirstOrDefault();
                             var jobj = (Newtonsoft.Json.Linq.JObject)obj.Chemistry.Object;
@@ -43,6 +59,7 @@
                         {
                             <tr>
                                 <td>@Util.Extensions.GetDateTimeFromUnixTime(item.Createtime.ToLong()).ToString("yyyy/MM/dd")</td>
+                                <td>@userService.ApplicationUser.Mng_admin.RealName</td>
                                 <td>@item.SmeltCode</td>
                                 @{
                                     var valobj = (Newtonsoft.Json.Linq.JObject)item.Chemistry.Object;
@@ -74,8 +91,8 @@
             PageIndex = Model.PageIndex,
             PageCount = Model.PageCount,
             PageUrl = Request.GetAbsoluteUri(new List<KeyValuePair<string, string>>() {
-                                                                                                         new KeyValuePair<string, string>("pg","{0}")
-                                                                                                   }),
+                                                                                 new KeyValuePair<string, string>("pg","{0}")
+                                                                           }),
             PageText = "{0}",
             ShowCount = 6,
             ShowAll = false
