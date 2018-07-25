@@ -1,0 +1,45 @@
+﻿@page "{cid:int}/{Id:int}.html"
+@inject ICMSService _cmsService
+@{
+    ViewData["Tag"] = 5;
+    ViewData["Title"] = "新闻中心";
+    var siteBasic = _cmsService.GetBasic();
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteBasic = siteBasic;
+    ViewBag.SiteSetting = mngSetting;
+    int CId= Convert.ToInt32(RouteData.Values["CId"]);
+    int Id = Convert.ToInt32(RouteData.Values["Id"]);
+    var model= _cmsService.IcontentColumnDataService.GetContentColumnData(Id,CId);
+    string content = Util.Extensions.ToHtml(model["Content"].ToString());
+    ViewData["Desc"] = content.Length > 30?  content.Substring(0, 30): content;
+}
+@section head
+    {
+<link href="/Content/css/news_details.css" rel="stylesheet" />
+}
+    <div class="container-fluid matter">
+        <div class="row news_nav">
+            <div class="col-xs-12">
+                <a href="/News/0-1.html" class="current">企业新闻</a>
+                <a href="/News/Dynamic/0-1.html">行业动态</a>
+                <a href="/News/Hotspot/0-1.html">本周热点</a>
+            </div>
+        </div>
+        <div class="row news_content">
+            <div class="col-xs-12 text-center">
+                <h3>@Html.Raw(model["Title"])</h3>
+                <span>发布时间：@Html.Raw(Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(model["Createtime"])).ToString("yyyy-MM-dd"))</span>
+                @if (model["Image"].SafeString() != string.Empty)
+                {
+                    foreach (var imgItem in model["Image"].ToString().Split(','))
+                    {
+                        <div style="max-width: 100%; margin: 10px auto;">
+                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Html.Raw(imgItem)" />
+                        </div>
+                    }
+                }
+                <p>@Html.Raw(model["Content"].ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))</p>
+            </div>
+        </div>
+
+    </div>
