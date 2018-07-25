@@ -55,7 +55,7 @@
             this.BaseManageModels = this.Db.SiteModelColumn.Where(c => id_list.Contains(c.Id)).ToList();
             string database = "sitecontent_" + this.ContentGroup.ModelId;
             string sql = string.Empty;
-            string sql2 = "select * from " + database;
+            string sql2 = "select * from " + database + " where cid=" + this.ContentGroup.Id;
             List<Dictionary<string, object>> dirList2 = MySqlHelper.GetInstanct(Startup.Configuration["Database:ConnectionString"]).ExecuteEntityToDicList(sql2, System.Data.CommandType.Text, null);
             this.PageCount = dirList2.Count;
             if (string.IsNullOrEmpty(keyword))
