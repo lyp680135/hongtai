@@ -28,6 +28,8 @@
     [Authorize]
     public class QualityController : Controller
     {
+        private const int Count = 4;
+
         /// <summary>
         /// 图片存放根目录
         /// </summary>
@@ -765,42 +767,12 @@
                 return "该批号下的产品没有设置好可以参考的单样本质量指标";
             }
 
-            Dictionary<string, double> keyValuePairs = new Dictionary<string, double>();
+            Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
             if (listQualityStandards.Count > 0)
             {
                 foreach (var item in listQualityStandards)
                 {
-                    keyValuePairs.Add(item.TargetName, this.Request.Form[item.TargetName].ToDouble());
-                }
-
-                List<string> targetList = new List<string>()
-                    {
-                        "C", "Mn", "V", "Mo", "Cu", "Ni",
-                    };
-                var keyPairs = keyValuePairs.Keys.ToList();
-                List<string> targetName = new List<string>();
-                foreach (var item in targetList)
-                {
-                    // 判断是否缺少元素
-                    if (!keyPairs.Any(x => x == item))
-                    {
-                        targetName.Add(item);
-                    }
-                }
-
-                double ceq = 0;
-
-                // 如果少指标就返回
-                if (targetName.Count > 0)
-                {
-                    keyValuePairs.Add("Ceq", ceq);
-                }
-                else
-                {
-                    ceq = (keyValuePairs["C"] + (keyValuePairs["Mn"] / 6) +
-                    ((keyValuePairs["C"] + keyValuePairs["V"] + keyValuePairs["Mo"]) / 5) +
-                    ((keyValuePairs["Cu"] = keyValuePairs["Ni"]) / 15)).ToDouble(2);
-                    keyValuePairs.Add("Ceq", ceq);
+                    keyValuePairs.Add(item.TargetName, this.Request.Form[item.TargetName].ToString());
                 }
 
                 this.db.PdSmeltCode.Add(new PdqualitySmeltCode
@@ -816,86 +788,6 @@
 
             return "true";
         }
-
-        /// <summary>
-        /// 化学数据修改
-        /// </summary>
-        /// <param name="qId">质量数据Id</param>
-        /// <returns>string</returns>
-        //public string ChemistryEdit(int qId)
-        //{
-        //    var pdQuality = this.db.PdQuality.FirstOrDefault(f => f.Id == qId);
-        //    var pdSmelt = this.db.PdSmeltCode.FirstOrDefault(f => f.Qid == qId);
-        //    if (pdQuality == null || pdSmelt == null)
-        //    {
-        //        return "不存在质量数据,无法编辑";
-        //    }
-
-        //    var listQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 0 && w.Status == 0 && w.Materialid == pdQuality.MaterialId && w.TargetCategory == EnumList.TargetCategory.化学指标).ToList();
-        //    if (listQualityStandards == null || listQualityStandards.Count <= 0)
-        //    {
-        //        return "该批号下的产品没有设置好可以参考的单样本质量指标";
-        //    }
-        //    Dictionary<string, double> keyValuePairs = new Dictionary<string, double>();
-        //    if (listQualityStandards.Count > 0)
-        //    {
-        //        foreach (var item in listQualityStandards)
-        //        {
-        //            keyValuePairs.Add(item.TargetName, this.Request.Form[item.TargetName].ToDouble());
-        //        }
-
-        //        List<string> targetList = new List<string>()
-        //            {
-        //                "C", "Mn", "V", "Mo", "Cu", "Ni",
-        //            };
-        //        var keyPairs = keyValuePairs.Keys.ToList();
-        //        List<string> targetName = new List<string>();
-        //        foreach (var item in targetList)
-        //        {
-        //            // 判断是否缺少元素
-        //            if (!keyPairs.Any(x => x == item))
-        //            {
-        //                targetName.Add(item);
-        //            }
-        //        }
-
-        //        double ceq = 0;
-
-        //        // 如果少指标就返回
-        //        if (targetName.Count > 0)
-        //        {
-        //            keyValuePairs.Add("Ceq", ceq);
-        //        }
-        //        else
-        //        {
-        //            ceq = (keyValuePairs["C"] + (keyValuePairs["Mn"] / 6) +
-        //            ((keyValuePairs["C"] + keyValuePairs["V"] + keyValuePairs["Mo"]) / 5) +
-        //            ((keyValuePairs["Cu"] = keyValuePairs["Ni"]) / 15)).ToDouble(2);
-        //            keyValuePairs.Add("Ceq", ceq);
-        //        }
-
-        //        // 修改关系表数据
-        //        pdSmelt.Chemistry = keyValuePairs;
-        //        this.db.Update(pdSmelt);
-        //        this.db.SaveChanges();
-        //        var chemistry = (JObject)pdQuality.Qualityinfos.Object;
-        //        var allKeys = keyValuePairs.Keys.ToList();
-        //        foreach (var item in chemistry)
-        //        {
-        //            if (!allKeys.Any(o => o == item.Key))
-        //            {
-        //                keyValuePairs.Add(item.Key, item.Value.ToDouble());
-        //            }
-        //        }
-
-        //        // 先修改质量数据表
-        //        pdQuality.Qualityinfos = keyValuePairs;
-        //        this.db.Update(pdQuality);
-        //        this.db.SaveChanges();
-        //    }
-
-        //    return "true";
-        //}
 
         /// <summary>
         /// 添加物理数据
@@ -990,11 +882,12 @@
 
             if (listQualityStandards.Count > 0)
             {
-                Dictionary<string, double> keyValuePairs = new Dictionary<string, double>();
+                Dictionary<string, object> keyValuePairs = new Dictionary<string, object>();
 
                 foreach (var item in listQualityStandards)
                 {
-                    keyValuePairs.Add(item.TargetName, this.Request.Form[item.TargetName].ToDouble());
+
+                    keyValuePairs.Add(item.TargetName, this.Request.Form[item.TargetName].ToString());
                 }
 
                 var dicNew = (JObject)pdsmelcodeInfo.Chemistry.Object;
@@ -1012,7 +905,7 @@
 
             if (dxQualityStandards.Count > 0)
             {
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < Count; i++)
                 {
                     if (dxQualityStandards == null || dxQualityStandards.Count <= 0)
                     {
@@ -1022,7 +915,14 @@
                     Dictionary<string, object> keyValue = new Dictionary<string, object>();
                     foreach (var item in dxQualityStandards)
                     {
-                        keyValue.Add(item.TargetName, this.Request.Form[item.TargetName + i].ToDouble(2));
+                        if (item.TargetName.StartsWith("伸长率"))
+                        {
+                            keyValue.Add(item.TargetName, this.Request.Form[item.TargetName + i].ToDouble(1).ToString("f1"));
+                        }
+                        else
+                        {
+                            keyValue.Add(item.TargetName, this.Request.Form[item.TargetName + i].ToString());
+                        }
                     }
 
                     // 多行元素必要字段校验
@@ -1041,8 +941,8 @@
                         }
                     }
 
-                    double qqb = 0;
-                    double qb = 0;
+                    string qqb = string.Empty;
+                    string qb = string.Empty;
 
                     // 如果少指标就返回
                     if (targetdxName.Count > 0)
@@ -1051,12 +951,12 @@
                         {
                             if (!keyValue.Keys.Any(a => a == "强屈比"))
                             {
-                                keyValue.Add("强屈比", qqb);
+                                keyValue.Add("强屈比", qqb.ToDouble(2));
                             }
 
                             if (!keyValue.Keys.Any(b => b == "屈屈比"))
                             {
-                                keyValue.Add("屈屈比", qb);
+                                keyValue.Add("屈屈比", qb.ToDouble(2));
                             }
                         }
                     }
@@ -1066,14 +966,14 @@
                         {
                             if (!keyValue.Keys.Any(a => a == "屈屈比"))
                             {
-                                qqb = (keyValue["抗拉强度"].ToDouble() / keyValue["下屈服强度"].ToDouble()).ToDouble(2);
+                                qqb = (keyValue["抗拉强度"].ToDouble(2) / keyValue["下屈服强度"].ToDouble(2)).ToString("f2");
                                 keyValue.Add("屈屈比", qqb);
                             }
 
                             // 屈屈比计算公式
                             if (!keyValue.Keys.Any(b => b == "强屈比"))
                             {
-                                qb = (keyValue["下屈服强度"].ToDouble() / materialNameNum).ToDouble(2);
+                                qb = (keyValue["下屈服强度"].ToDouble(2) / materialNameNum.ToDouble(2)).ToString("f2");
                                 keyValue.Add("强屈比", qb);
                             }
                         }
@@ -1169,7 +1069,7 @@
 
             if (dxQualityStandards.Count > 0)
             {
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < Count; i++)
                 {
                     if (dxQualityStandards == null || dxQualityStandards.Count <= 0)
                     {
@@ -1179,7 +1079,14 @@
                     Dictionary<string, object> keyValue = new Dictionary<string, object>();
                     foreach (var item in dxQualityStandards)
                     {
-                        keyValue.Add(item.TargetName, this.Request.Form[item.TargetName + i].ToDouble(2));
+                        if (item.TargetName.StartsWith("伸长率"))
+                        {
+                            keyValue.Add(item.TargetName, this.Request.Form[item.TargetName + i].ToDouble(1).ToString("f1"));
+                        }
+                        else
+                        {
+                            keyValue.Add(item.TargetName, this.Request.Form[item.TargetName + i].ToString());
+                        }
                     }
 
                     // 多行元素必要字段校验
@@ -1198,8 +1105,8 @@
                         }
                     }
 
-                    double qqb = 0;
-                    double qb = 0;
+                    string qqb = string.Empty;
+                    string qb = string.Empty;
 
                     // 如果少指标就返回
                     if (targetdxName.Count > 0)
@@ -1223,14 +1130,14 @@
                         {
                             if (!keyValue.Keys.Any(a => a == "屈屈比"))
                             {
-                                qqb = (keyValue["抗拉强度"].ToDouble() / keyValue["下屈服强度"].ToDouble()).ToDouble(2);
+                                qqb = (keyValue["抗拉强度"].ToDouble(2) / keyValue["下屈服强度"].ToDouble(2)).ToString("f2");
                                 keyValue.Add("屈屈比", qqb);
                             }
 
                             // 屈屈比计算公式
                             if (!keyValue.Keys.Any(b => b == "强屈比"))
                             {
-                                qb = (keyValue["下屈服强度"].ToDouble() / materialNameNum).ToDouble(2);
+                                qb = (keyValue["下屈服强度"].ToDouble() / materialNameNum).ToString("f2");
                                 keyValue.Add("强屈比", qb);
                             }
                         }
@@ -1245,6 +1152,7 @@
 
             return "true";
         }
+
         /// <summary>
         /// 添加数据
         /// </summary>
@@ -1684,7 +1592,7 @@
 
                         if (checkStatus == EnumList.CheckStatus_PdQuality.审核通过)
                         {
-                            for (int i = 0; i < 3; i++)
+                            for (int i = 0; i < Count; i++)
                             {
                                 // tempObject[i].冷弯 = "完好/Pass";
                                 // tempObject[i].反弯 = "完好/Pass";
