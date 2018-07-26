@@ -14,34 +14,36 @@
     <link rel="stylesheet" type="text/css" href="/Content/css/sales.css">
 }
 
-    <div class="container-fluid sales">
-        @{
-            var Sale = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰销售",1,100);
-            if (Sale != null)
+<div class="container-fluid sales">
+    @{
+        var Sale = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰销售", 1, 100);
+        if (Sale != null)
+        {
+            foreach (var S in Sale)
             {
-                foreach (var S in Sale)
-                { 
-                    <div style="margin-bottom:30px">
-                        <h4 style="margin-bottom:10px">@Html.Raw(S["Title"])</h4>
-                        <p>@Html.Raw(S["Content"])</p>
-                    </div>
-                }
+                <div style="margin-bottom:30px">
+                    <h4 style="margin-bottom:10px">@Html.Raw(S["Title"])</h4>
+                    <p>@Html.Raw(S["Content"])</p>
+                </div>
             }
         }
-                    <div class="linkdiv" style="margin-bottom:20px">
-                        <strong class="linkstyle"><a href="http://m.31goods.com/priceindex/6/2-2/today" target="_blank">上海钢材今日行情</a></strong><br />
-
-                        <strong class="linkstyle"><a href="http://m.31goods.com/priceindex/29/2-2/today" target="_blank">南京钢材今日行情</a></strong><br />
-
-                        <strong class="linkstyle"><a href="http://m.31goods.com/priceindex/28/2-2/today" target="_blank">杭州钢材今日行情</a></strong>
-
-                        <strong class="linkstyle"><a href="http://m.31goods.com/priceindex/9/2-2/today" target="_blank">合肥钢材今日行情</a></strong><br />
-
-
-                    </div>
-        <div class="row sales_column">
-            <div class="col-xs-12">
-                <img src="/Content/images/sales_map.png" />
-            </div>
+    }
+    <div class="did">
+        <strong class="linkstyle"><a href="http://m.31goods.com/priceindex/6/2-2/today" target="_blank">上海钢材今日行情</a></strong>
+        <strong class="linkstyle"><a href="http://m.31goods.com/priceindex/29/2-2/today" target="_blank">南京钢材今日行情</a></strong>
+        <strong class="linkstyle"><a href="http://m.31goods.com/priceindex/28/2-2/today" target="_blank">杭州钢材今日行情</a></strong>
+        <strong class="linkstyle"><a href="http://m.31goods.com/priceindex/9/2-2/today" target="_blank">合肥钢材今日行情</a></strong>
+    </div>
+    <div class="row sales_column">
+        <div class="col-xs-12">
+            <img src="/Content/images/sales_map.png" />
         </div>
     </div>
+</div>
+
+<style>
+    .did .linkstyle {
+        display:block;
+        margin-bottom: 10px;
+    }
+</style>

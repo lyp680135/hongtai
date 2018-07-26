@@ -140,7 +140,7 @@
                                 <p>@Html.Raw(Sence[i]["Content"])</p>
                                 <div class="more1"><span class="pic cssr_more1"></span></div>
                             </div>
-                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Sence[i]["Image"].ToString().Split(",")[0]" />
+                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Sence[i]["Image"].ToString().Split(",")[0]" style="max-width:550px;max-height:320px"/>
                             <div class="clearfix"></div>
                         </a>
                     }
@@ -171,11 +171,11 @@
                                 <div class="more1"><span class="pic cssr_more2"></span></div>
                             </div>
                         </a>
+                        
                     }
                 </div>
             </div>
         }
-    }
     }
 </div>
 

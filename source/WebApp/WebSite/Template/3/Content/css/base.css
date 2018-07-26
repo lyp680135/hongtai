@@ -200,6 +200,7 @@ a:hover {
     z-index: 100;
     width: 100%;
     top: 0;
+    height:112px;
 }
 
 .logo {

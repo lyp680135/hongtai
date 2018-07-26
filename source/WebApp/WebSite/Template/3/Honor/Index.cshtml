@@ -25,14 +25,14 @@
     if (Honor != null)
     {
         <div class="honor_box">
-            <div class="honor1">
+            <div class="honor1" style="margin-left:80px">
                 @for (var i = 0; i < Honor.Count; i++)
                 {
                     <p style="text-align:center;font-size:35px;margin-bottom:20px">@Html.Raw(Honor[i]["Title"])</p>
-                    if (i % 4 == 0)
+                    @*if (i % 4 == 0)
                     {
                         @Html.Raw("<div class=\"honor_row\">")
-                    }
+                    }*@
                     if (Honor[i]["Image"].SafeString() != string.Empty)
                     {
                         foreach (var Item in Honor[i]["Image"].ToString().Split(","))
@@ -41,10 +41,10 @@
                         }
                     }
 
-                    if (i % 4 == 1 && i != 0 || (i + 1) == Honor.Count)
+                    @*if (i % 4 == 1 && i != 0 || (i + 1) == Honor.Count)
                     {
                         @Html.Raw("<div class=\"clearfix\"></div></div>")
-                    }
+                    }*@
                 }
             </div>
         </div>

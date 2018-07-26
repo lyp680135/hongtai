@@ -1,4 +1,4 @@
-@charset "utf-8";
+﻿@charset "utf-8";
 /* CSS Document */
 /*--------------------------banner----------------------------*/
 .banner{
@@ -206,7 +206,7 @@
 .product_content a{
 	float:left;
 	display:block;
-	width:366px;
+	width:352px;
 	margin-right:41px;
 }
 .product_content a:last-of-type{

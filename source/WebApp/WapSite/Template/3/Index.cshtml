@@ -2,7 +2,6 @@
 @inject ICMSService _cmsService;
 @{
     ViewData["Tag"] = 0;
-    ViewData["Title"] = "首页";
     var siteBasic = _cmsService.GetBasic();
     ViewBag.SiteBasic = siteBasic;
     var mngSetting = _cmsService.GetSetting();
