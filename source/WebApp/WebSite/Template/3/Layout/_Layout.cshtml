@@ -35,15 +35,19 @@
     <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <style>
-        .login{
-            float:right
+        .login {
+            float: right
         }
+
         .login_box {
-            vertical-align:super;
+            vertical-align: super;
             line-height: 110px;
             color: #fff;
             font-size: 18px;
-            display:inline-grid;
+            display: inline-table;
+            position: absolute;
+            top: 0px;
+            margin-left: 30px;
         }
     </style>
     @RenderSection("head", required: false)
@@ -58,19 +62,19 @@
                 <a href="/"><img src="@SiteBasic.Logo" alt="@SiteBasic.CompName" style="margin-top:21px" /></a>
                 @if (_userService.IsAuth)
                 {
-                <a href="~/Manage" class="login">
-                    @if (_userService.IsManageMember && _userService.ApplicationUser.Mng_admin != null)
-                    {
-                        <span class="pic cssr_login"></span>
-                        <span class="login_box">@Html.Raw(_userService.ApplicationUser.Mng_admin.RealName)</span>
-                    }
-                    else
-                    {
-                        <span class="pic cssr_login"></span>
-                        <span class="login_box">@Html.Raw(_userService.SaleSellerUser.Name)</span>
-                    }
-                    
-                </a>
+                    <a href="~/Manage" class="login">
+                        @if (_userService.IsManageMember && _userService.ApplicationUser.Mng_admin != null)
+                        {
+                            <span class="pic cssr_login"></span>
+                            <span class="login_box">@Html.Raw(_userService.ApplicationUser.Mng_admin.RealName)</span>
+                        }
+                        else
+                        {
+                            <span class="pic cssr_login"></span>
+                            <span class="login_box">@Html.Raw(_userService.SaleSellerUser.Name)</span>
+                        }
+
+                    </a>
                 }
                 else
                 {
@@ -139,6 +143,7 @@
                     <a href="~/Manage" class="login">
                         @if (_userService.IsManageMember && _userService.ApplicationUser.Mng_admin != null)
                         {
+                            
                             <span class="pic cssr_login"></span>
                             <span class="login_box">@Html.Raw(_userService.ApplicationUser.Mng_admin.RealName)</span>
                         }
@@ -155,7 +160,7 @@
                     <a href="~/Manage/" class="pic cssr_login" style="float:right"></a>
                 }
                 <div class="clearfix"></div>
-                <div class="nav" style="margin-left:-116px">
+                <div class="nav" style="margin-left:-120px">
                     <a href="/">首页</a>
                     <a href="/About_us">公司简介</a>
                     <a href="/Honor">公司荣誉</a>

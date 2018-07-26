@@ -195,6 +195,7 @@ a:hover {
 /*--------------------------导航----------------------------*/
 .top_nav {
     background: rgba(0,0,0,0.5);
+    filter: progid:DXImageTransform.Microsoft.gradient(startcolorstr=#7F000000,endcolorstr=#7F000000);
     position: fixed;
     z-index: 100;
     width: 100%;
@@ -216,7 +217,7 @@ a:hover {
 
 .nav {
     float: right;
-    margin-right:123px;
+    
     position:absolute;
     top:0px;
     left:34%;
@@ -309,7 +310,7 @@ a:hover {
 
 .footer_nav {
     float: left;
-    margin-right: 142px;
+    margin-right: 112px;
 }
 
     .footer_nav:nth-last-child(2) {

@@ -1,4 +1,4 @@
-@charset "utf-8";
+﻿@charset "utf-8";
 /* CSS Document */
 
 .product_box{
@@ -21,7 +21,7 @@
 }
 .contact_box .contact{
 	float:left;
-	margin-right:214px;
+	margin-right:148px;
 }
 .contact_box .contact:nth-last-child(2){
 	float:right;
