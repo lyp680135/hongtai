@@ -604,8 +604,8 @@
 
                                     if (lowstrength > 0)
                                     {
-                                        dynamicdata["强屈比"] = dynamicdata["强屈比"].ToString() + (antistrength / lowstrength).ToString("0.00");
-                                        dynamicdata["屈屈比"] = dynamicdata["屈屈比"].ToString() + (lowstrength / material.Standardstrength).ToString("0.00");
+                                        dynamicdata["强屈比"] = dynamicdata["强屈比"].ToString() + (antistrength / lowstrength).ToString("0.0");
+                                        dynamicdata["屈屈比"] = dynamicdata["屈屈比"].ToString() + (lowstrength / material.Standardstrength).ToString("0.0");
                                     }
                                     else
                                     {
