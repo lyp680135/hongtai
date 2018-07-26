@@ -126,7 +126,7 @@
                                 <p>@Html.Raw(Sence[i]["Content"])</p>
                                 <div class="more1"><span class="pic cssr_more1"></span></div>
                             </div>
-                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Sence[i]["Image"].ToString().Split(",")[0]" />
+                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Sence[i]["Image"].ToString().Split(",")[0]" style="max-width:550px;max-height:320px" />
                             <div class="clearfix"></div>
                         </a>
                     }
@@ -165,7 +165,7 @@
                     @for (int i = 0; i < Product.Count; i++)
                     {
                         <a href="/Product">
-                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Product[i]["Image"].ToString().Split(',')[0]" />
+                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Product[i]["Image"].ToString().Split(',')[0]" style="max-width:360px;max-height:260px" />
                             <div class="shade_box">
                                 <h2>@Html.Raw(Product[i]["Title"])@Html.Raw(Product[i]["Description"])</h2>
                                 <div class="more1"><span class="pic cssr_more2"></span></div>

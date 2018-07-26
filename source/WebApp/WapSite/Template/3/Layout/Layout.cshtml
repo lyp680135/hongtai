@@ -47,29 +47,33 @@
                         <img onclick="fun()" src="@ViewBag.SiteSetting.Domain_PC.Substring(0,ViewBag.SiteSetting.Domain_PC.Length-1)@ViewBag.SiteBasic.Logo" width="129" />
                         <span class="service_hotline">@SiteBasic.LogoText</span>
                     </div>
-                    <div class="col-xs-2 text-right right">
-                        @if (_userService.IsAuth)
-                        {
+
+                    @if (_userService.IsAuth)
+                    {
+                        <div class="col-xs-2 text-right right" style="margin-left: -30px;">
                             <a href="@ViewBag.SiteSetting.Domain_WAPManage">
                                 <img src="/Content/images/head_portrait_before.png" width="21" />
                                 @if (_userService.IsManageMember && _userService.ApplicationUser.Mng_admin != null)
                                 {
-                                    <span>@Html.Raw(_userService.ApplicationUser.Mng_admin.RealName)</span>
+                                    <span style="position:absolute;right:-25px">@Html.Raw(_userService.ApplicationUser.Mng_admin.RealName)</span>
                                 }
                                 else
                                 {
-                                    <span>@Html.Raw(_userService.SaleSellerUser.Name)</span>
+                                    <span style="position:absolute;right:-25px">@Html.Raw(_userService.SaleSellerUser.Name)</span>
                                 }
                             </a>
-                        }
-                        else
-                        {
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-xs-2 text-right right">
                             <a href="/Login">
-                                <img src="/Content/images/head_portrait_before.png" width="21" />
+                                <img src="/Content/images/head_portrait_before.png" width="21" style="margin-left:0px" />
                             </a>
-                        }
-                    </div>
+                        </div>
+                    }
                 </div>
+
             </div>
             <div class="container-fluid top submenu">
                 <div class="row">

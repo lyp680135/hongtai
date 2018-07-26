@@ -19,26 +19,34 @@
     </div>
 </div>
 <!--------------------------证书展示------------------------------>
-<div class="honor_box">
-    @{
-        var Honor = _cmsServices.IcontentColumnDataService.GetContentColumnDataList("鸿泰荣誉", 1, 100);
-        if (Honor != null)
-        {
-            foreach (var H in Honor)
-            {
-                <h3 style="text-align:center;margin-bottom:20px">@Html.Raw(H["Title"])</h3>
-                <div class="honor1">
-                    @if (H["Image"].SafeString() != string.Empty)
+
+@{
+    var Honor = _cmsServices.IcontentColumnDataService.GetContentColumnDataList("鸿泰荣誉", 1, 100);
+    if (Honor != null)
+    {
+        <div class="honor_box">
+            <div class="honor1">
+                @for (var i = 0; i < Honor.Count; i++)
+                {
+                    <p style="text-align:center;font-size:35px;margin-bottom:20px">@Html.Raw(Honor[i]["Title"])</p>
+                    if (i % 4 == 0)
                     {
-                        <div class="honor_row">
-                            @foreach (var Imgitem in H["Image"].ToString().Split(","))
-                            {
-                                <img src="@mngSetting.Domain_PC.Substring(0,mngSetting.Domain_PC.Length-1)@Imgitem" />
-                            }
-                        </div>
+                        @Html.Raw("<div class=\"honor_row\">")
                     }
-                </div>
-            }
-        }
+                    if (Honor[i]["Image"].SafeString() != string.Empty)
+                    {
+                        foreach (var Item in Honor[i]["Image"].ToString().Split(","))
+                        {
+                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Item" style="max-width:210px;max-height:370px" />
+                        }
+                    }
+
+                    if (i % 4 == 1 && i != 0 || (i + 1) == Honor.Count)
+                    {
+                        @Html.Raw("<div class=\"clearfix\"></div></div>")
+                    }
+                }
+            </div>
+        </div>
     }
-</div>
+}

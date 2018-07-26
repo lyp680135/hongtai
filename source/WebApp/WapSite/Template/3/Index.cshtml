@@ -29,7 +29,7 @@
                 </div>
                 <p>
                     @{
-                        var about = _cmsService.GetSinglePage("关于鸿泰");
+                        var about = _cmsService.GetSinglePage("关于鸿泰1");
                         if (about != null)
                         {
                             <div style="text-align:center">
@@ -38,7 +38,7 @@
                                     var Content = Util.Extensions.RemoveHtml(about.Content);
                                     if (Content.Length > 150)
                                     {
-                                        Content = Content.Substring(0, 126) + "...";
+                                        Content = Content.Substring(0, 124) + "...";
                                     }
                                     @Html.Raw(Content);
                                 }
@@ -143,7 +143,7 @@
                 {
                     <div class="col-xs-6 text-center">
                         <a href="/Product/" class="product_list">
-                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@ProductImg[i]["Image"].ToString().Split(',')[0]" style="height:150px" />
+                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@ProductImg[i]["Image"].ToString().Split(',')[0]" style="height:100px" />
                             <div class="mask">
                                 <div class="mask_content">
                                     <p>@Html.Raw(ProductImg[i]["Title"])</p>

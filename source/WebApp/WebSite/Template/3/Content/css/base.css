@@ -216,6 +216,10 @@ a:hover {
 
 .nav {
     float: right;
+    margin-right:123px;
+    position:absolute;
+    top:0px;
+    left:34%;
 }
 
     .nav a {
@@ -235,8 +239,9 @@ a:hover {
     }
 
 .cssr_login {
-    float: right;
-    margin: 43px 0 0 36px;
+    /*float: right;*/
+    margin: 43px 0 0 0px;
+    display:inline-grid;
 }
 
 .Navimg {

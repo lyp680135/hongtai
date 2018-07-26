@@ -1,4 +1,4 @@
-@charset "utf-8";
+﻿@charset "utf-8";
 /* CSS Document */
 /*--------------------------证书展示----------------------------*/
 .honor_box{
@@ -10,12 +10,15 @@
 	border:1px solid #e3e4e6;
 }
 .honor1 img{
-	margin-right:68px;
+	margin-right:58px;
+    margin-bottom:30px;
+    
 }
 .honor1 img:last-of-type{
 	margin-right:0;
 }
 .honor_row{
+    margin-left:77px;
 	margin-bottom:48px;
 }
 .honor2 img{

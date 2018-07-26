@@ -34,8 +34,12 @@
     public void OnGet(int? tid, int? p)
     {
         this.Page = p ?? 1;
-        this.PageCount = _cmsService.IcontentColumnDataService.GetContentCount("鸿泰新闻");
-        int Cid = _contentService.GetSiteCategoryByName("鸿泰新闻").Id;
+        var Con = _cmsService.IcontentColumnDataService.GetContentColumnDataList("鸿泰新闻", 1, 100);
+        if (Con != null && Con.Count > 0)
+        {
+            this.PageCount = _cmsService.IcontentColumnDataService.GetContentCount("鸿泰新闻");
+            int Cid = _contentService.GetSiteCategoryByName("鸿泰新闻").Id;
+        }
     }
 }
 <!--------------------------面包屑------------------------------>
@@ -80,10 +84,10 @@
                     <h2>热点新闻</h2>
                     @for (var i = 0; i < Hots.Count; i++)
                     {
-                        @if (Hots[i]["Content"] != null && Hots[i]["Content"].ToString().Length > 57)
+                        @if (Hots[i]["Title"] != null)
                         {
                             <a href="/News/NewsDetail/@Html.Raw(Hots[i]["cid"]+"/"+Hots[i]["Id"]+".html")">
-                                @Html.Raw(Util.Extensions.RemoveHtml(Hots[i]["Content"].ToString().Substring(0, 57)))
+                                @Html.Raw(Util.Extensions.RemoveHtml(Hots[i]["Title"].ToString()))
                             </a>
                         }
                     }
