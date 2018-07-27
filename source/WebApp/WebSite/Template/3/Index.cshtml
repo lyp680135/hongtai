@@ -123,7 +123,17 @@
                                 <h2>@Html.Raw(Sence[i]["Title"])</h2>
                                 <span class="span1"></span>
                                 <small>@Html.Raw(Sence[i]["Titledes"])</small>
-                                <p>@Html.Raw(Sence[i]["Content"])</p>
+                                <p>
+                                    @if (Sence[i]["Content"].ToString().Length > 100)
+                                    {
+                                        @Html.Raw(Util.Extensions.RemoveHtml(Sence[i]["Content"].ToString().Substring(0, 100)))
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(Util.Extensions.RemoveHtml(Sence[i]["Content"].ToString()))
+                                    }
+
+                                </p>
                                 <div class="more1"><span class="pic cssr_more1"></span></div>
                             </div>
                             <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Sence[i]["Image"].ToString().Split(",")[0]" style="max-width:550px;max-height:320px" />
@@ -137,7 +147,16 @@
                                 <h2>@Html.Raw(Sence[i]["Title"])</h2>
                                 <span class="span1"></span>
                                 <small>@Html.Raw(Sence[i]["Titledes"])</small>
-                                <p>@Html.Raw(Sence[i]["Content"])</p>
+                                <p>
+                                    @if (Sence[i]["Content"].ToString().Length > 100)
+                                    {
+                                        @Html.Raw(Util.Extensions.RemoveHtml(Sence[i]["Content"].ToString().Substring(0, 100)))
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(Util.Extensions.RemoveHtml(Sence[i]["Content"].ToString()))
+                                    }
+                                </p>
                                 <div class="more1"><span class="pic cssr_more1"></span></div>
                             </div>
                             <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Sence[i]["Image"].ToString().Split(",")[0]" style="max-width:550px;max-height:320px"/>
@@ -149,6 +168,13 @@
         }
     </div>
 </div>
+<style>
+    .mien_content p img{
+        max-height:1px;
+        max-width:1px;
+    }
+</style>
+
 <!--------------------------产品中心------------------------------>
 <div class="product">
     <div class="share_title">

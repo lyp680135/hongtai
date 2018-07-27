@@ -143,7 +143,6 @@
                     <a href="~/Manage" class="login">
                         @if (_userService.IsManageMember && _userService.ApplicationUser.Mng_admin != null)
                         {
-                            
                             <span class="pic cssr_login"></span>
                             <span class="login_box">@Html.Raw(_userService.ApplicationUser.Mng_admin.RealName)</span>
                         }

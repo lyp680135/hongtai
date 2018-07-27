@@ -20,7 +20,7 @@
         <div class="row mien_content">
             <div class="col-xs-12">
                 <p>@Html.Raw(model["Content"].ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))</p>
-                @if (model["Image"].SafeString() != string.Empty)
+                @*@if (model["Image"].SafeString() != string.Empty)
                 {
                     foreach (var imgItem in model["Image"].ToString().Split(','))
                     {
@@ -28,7 +28,7 @@
                             <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Html.Raw(imgItem)" />
                         </div>
                     }
-                }
+                }*@
             </div>
         </div>
     </div>

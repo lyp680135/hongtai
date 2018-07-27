@@ -28,16 +28,16 @@
 
 <div class="ancillary_facility">
     <p>@Html.Raw(model["Content"].ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))</p>
-    <div class="facility">
+    @*<div class="facility">
         @if (model["Image"].SafeString() != string.Empty)
         {
             foreach (var imgItem in model["Image"].ToString().Split(','))
             {
-                <img class="img1" src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Html.Raw(imgItem)" />
+                <img class="img1" src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Html.Raw(imgItem)" style="max-width:1166px" />
             }
         }
         <div class="clearfix"></div>
-    </div>
+    </div>*@
 
 </div>
 
@@ -46,5 +46,8 @@
         max-height:320px;
         margin:40px;
         max-width:1086px;
+    }
+    .ancillary_facility p img {
+        max-width:1166px;
     }
 </style>
