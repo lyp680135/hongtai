@@ -116,9 +116,7 @@
             {
                 for (int i = 0; i < Sence.Count; i++)
                 {
-                    if (i % 2 == 0)
-                    {
-                        <a href="/Sence/@Html.Raw(Sence[i]["cid"]+"/"+Sence[i]["Id"]+".html")" class="mien_box2">
+                        <a href="/Sence/@Html.Raw(Sence[i]["cid"]+"/"+Sence[i]["Id"]+".html")" class="@Html.Raw(i%2==0?"mien_box1":"mien_box2")">
                             <div class="mien_content">
                                 <h2>@Html.Raw(Sence[i]["Title"])</h2>
                                 <span class="span1"></span>
@@ -139,30 +137,6 @@
                             <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Sence[i]["Image"].ToString().Split(",")[0]" style="max-width:550px;max-height:320px" />
                             <div class="clearfix"></div>
                         </a>
-                    }
-                    else
-                    {
-                        <a href="/Sence/@Html.Raw(Sence[i]["cid"]+"/"+Sence[i]["Id"]+".html")" class="mien_box1">
-                            <div class="mien_content">
-                                <h2>@Html.Raw(Sence[i]["Title"])</h2>
-                                <span class="span1"></span>
-                                <small>@Html.Raw(Sence[i]["Titledes"])</small>
-                                <p>
-                                    @if (Sence[i]["Content"].ToString().Length > 100)
-                                    {
-                                        @Html.Raw(Util.Extensions.RemoveHtml(Sence[i]["Content"].ToString().Substring(0, 100)))
-                                    }
-                                    else
-                                    {
-                                        @Html.Raw(Util.Extensions.RemoveHtml(Sence[i]["Content"].ToString()))
-                                    }
-                                </p>
-                                <div class="more1"><span class="pic cssr_more1"></span></div>
-                            </div>
-                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Sence[i]["Image"].ToString().Split(",")[0]" style="max-width:550px;max-height:320px"/>
-                            <div class="clearfix"></div>
-                        </a>
-                    }
                 }
             }
         }
