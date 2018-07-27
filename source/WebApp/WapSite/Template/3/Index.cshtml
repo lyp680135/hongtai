@@ -102,17 +102,10 @@
                             <h2>@Html.Raw(Sence[i]["Title"])</h2>
                             <div></div>
                             <span>@Html.Raw(Sence[i]["Titledes"])</span>
-                            <p>
-                                @if (Sence[i]["Content"].ToString().Length > 100)
-                                {
-                                    @Html.Raw(Util.Extensions.RemoveHtml(Sence[i]["Content"].ToString().Substring(0, 100)))
-                                }
-                                else
-                                {
-                                    @Html.Raw(Util.Extensions.RemoveHtml(Sence[i]["Content"].ToString()))
-                                }
-
-                            </p>
+                            @{
+                                var content = Sence[i]["Content"].ToString().RemoveHtml();
+                                @Html.Raw(content.Length > 100 ? content.Substring(0, 100) : content);
+                            }
                             <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Sence[i]["Image"].ToString().Split(",")[0]" width="100%" />
                         </a>
                     </div>
