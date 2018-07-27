@@ -122,15 +122,10 @@
                                 <span class="span1"></span>
                                 <small>@Html.Raw(Sence[i]["Titledes"])</small>
                                 <p>
-                                    @if (Sence[i]["Content"].ToString().Length > 100)
-                                    {
-                                        @Html.Raw(Util.Extensions.RemoveHtml(Sence[i]["Content"].ToString().Substring(0, 100)))
-                                    }
-                                    else
-                                    {
-                                        @Html.Raw(Util.Extensions.RemoveHtml(Sence[i]["Content"].ToString()))
-                                    }
-
+                                    @{
+                                        var content = Sence[i]["Content"].ToString().RemoveHtml();
+                                        @Html.Raw(content.Length > 100 ? content.Substring(0, 100) : content);                                    
+                                     }
                                 </p>
                                 <div class="more1"><span class="pic cssr_more1"></span></div>
                             </div>
