@@ -83,6 +83,10 @@
                             {
                                 ViewData["Title"] = "产品查询";
                             }
+                            else if (int.Parse(ViewData["Tag"].ToString()) == 0)
+                            {
+                                ViewData["Title"] = "首页";
+                            }
                             else if (int.Parse(ViewData["Tag"].ToString()) == 4)
                             {
                                 ViewData["Title"] = "产品查询";
