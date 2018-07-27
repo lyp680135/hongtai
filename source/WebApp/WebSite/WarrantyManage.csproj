@@ -6,9 +6,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="logfile\**" />
+    <Compile Remove="Template\4\**" />
     <Content Remove="logfile\**" />
+    <Content Remove="Template\4\**" />
     <EmbeddedResource Remove="logfile\**" />
+    <EmbeddedResource Remove="Template\4\**" />
     <None Remove="logfile\**" />
+    <None Remove="Template\4\**" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="ProModels\CommonModel.cs" />
@@ -105,7 +109,6 @@
   <ItemGroup>
     <Folder Include="ProModels\Core\" />
     <Folder Include="Template\3\Content\" />
-    <Folder Include="Template\4\Content\" />
     <Folder Include="ueditor\" />
     <Folder Include="UploadFile\ueditor\" />
   </ItemGroup>
