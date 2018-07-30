@@ -155,8 +155,11 @@
     </Compile>
     <Compile Include="ModelAccess\MngAdminAccess.cs" />
     <Compile Include="ModelAccess\PdWorkshopAccess.cs" />
+    <Compile Include="ModelAccess\SqliteAccess\BaseSqliteAccess.cs" />
+    <Compile Include="ModelAccess\SqliteAccess\LoginLogSqliteAccess.cs" />
     <Compile Include="ModelAccess\SqliteAccess\ProductSqliteAccess.cs" />
     <Compile Include="Model\BaseGbProduction.cs" />
+    <Compile Include="Model\LoginLog.cs" />
     <Compile Include="Model\MngAdmin.cs" />
     <Compile Include="Model\PdWorkshop.cs" />
     <Compile Include="UserControl\LoadingControl.xaml.cs">
