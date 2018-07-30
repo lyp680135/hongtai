@@ -3,7 +3,7 @@
 @inject Common.IService.IContentGroupService _contentService
 @{
     var SiteBasic = _cmsService.GetBasic();
-    var Tag = ViewData["Tag"] as string;
+    var Tag = ViewData["Tag"].ToInt();
     var mngSetting = _cmsService.GetSetting();
 }
 
@@ -32,8 +32,12 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <script src="/Content/js/jquery-1.9.1.min.js"></script>
     <link href="/Content/css/base.css" rel="stylesheet" />
-    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+   <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+        <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
     <style>
         .login {
             float: right
@@ -55,118 +59,45 @@
 </head>
 <body>
     <!--------------------------顶部导航------------------------------>
-    @if (Convert.ToInt32(ViewData["Tag"]) == 0)
-    {
-        <div class="top_nav">
-            <div class="nav_box">
-                <a href="/"><img src="@SiteBasic.Logo" alt="@SiteBasic.CompName" style="margin-top:21px" /></a>
-                @if (_userService.IsAuth)
-                {
-                    <a href="~/Manage" class="login">
-                        @if (_userService.IsManageMember && _userService.ApplicationUser.Mng_admin != null)
-                        {
-                            <span class="pic cssr_login"></span>
-                            <span class="login_box">@Html.Raw(_userService.ApplicationUser.Mng_admin.RealName)</span>
-                        }
-                        else
-                        {
-                            <span class="pic cssr_login"></span>
-                            <span class="login_box">@Html.Raw(_userService.SaleSellerUser.Name)</span>
-                        }
-
-                    </a>
-                }
-                else
-                {
-                    <a href="~/Manage/" class="pic cssr_login" style="float:right"></a>
-                }
-                <div class="clearfix"></div>
-                <div class="nav">
-                    <a href="/">首页</a>
-                    <a href="/About_us">公司简介</a>
-                    <a href="/Honor">公司荣誉</a>
-                    <a href="/News/0-1.html">新闻中心</a>
-                    <a href="/Product">产品中心</a>
-                    <a href="/Sales">营销网络</a>
-                    <a href="/Service">服务中心</a>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-        <!--------------------------banner------------------------------>
-        <div class="banner">
-            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-                <ol class="carousel-indicators">
-                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                    <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
-                    <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
-                </ol>
-                <div class="carousel-inner" role="listbox">
-
-                    @if (SiteBasic.CarouselImage.SafeString() != string.Empty)
+    <div class="top_nav top_nav1">
+        @Html.Raw(Tag != 0 ? " <img src=\"/Content/images/top_nav.jpg\" class=\"Navimg\" />" : "")
+        <div class="nav_box">
+            <a href="/"><img src="@SiteBasic.Logo" alt="@SiteBasic.CompName" style="margin-top:21px" /></a>
+            @if (_userService.IsAuth)
+            {
+                <a href="~/Manage" class="login">
+                    @if (_userService.IsManageMember && _userService.ApplicationUser.Mng_admin != null)
                     {
-                        for (var i = 0; i < SiteBasic.CarouselImage.Object.Count; i++)
-                        {
-                            if (i == 0)
-                            {
-                                <div class="item active">
-                                    <img class="homebanner" src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@SiteBasic.CarouselImage.Object[i]" width="100%" />
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="item">
-                                    <img class="homebanner" src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@SiteBasic.CarouselImage.Object[i]" width="100%" />
-                                </div>
-                            }
-                        }
+                        <span class="pic cssr_login"></span>
+                        <span class="login_box">@Html.Raw(_userService.ApplicationUser.Mng_admin.RealName)</span>
                     }
-                </div>
-            </div>
-        </div>
-    }
-    else
-    {
-        <div class="top_nav top_nav1">
-            <img src="/Content/images/top_nav.jpg" class="Navimg" />
-            <div class="nav_box">
-                <a href="/"><img src="@SiteBasic.Logo" alt="@SiteBasic.CompName" style="margin-top:21px" /></a>
-                @if (_userService.IsAuth)
-                {
-                    <a href="~/Manage" class="login">
-                        @if (_userService.IsManageMember && _userService.ApplicationUser.Mng_admin != null)
-                        {
-                            <span class="pic cssr_login"></span>
-                            <span class="login_box">@Html.Raw(_userService.ApplicationUser.Mng_admin.RealName)</span>
-                        }
-                        else
-                        {
-                            <span class="pic cssr_login"></span>
-                            <span class="login_box">@Html.Raw(_userService.SaleSellerUser.Name)</span>
-                        }
+                    else
+                    {
+                        <span class="pic cssr_login"></span>
+                        <span class="login_box">@Html.Raw(_userService.SaleSellerUser.Name)</span>
+                    }
 
-                    </a>
-                }
-                else
-                {
-                    <a href="~/Manage/" class="pic cssr_login" style="float:right"></a>
-                }
-                <div class="clearfix"></div>
-                <div class="nav" style="margin-left:-120px">
-                    <a href="/">首页</a>
-                    <a href="/About_us">公司简介</a>
-                    <a href="/Honor">公司荣誉</a>
-                    <a href="/News/0-1.html">新闻中心</a>
-                    <a href="/Product">产品中心</a>
-                    <a href="/Sales">营销网络</a>
-                    <a href="/Service">服务中心</a>
-                    <div class="clearfix"></div>
-                </div>
+                </a>
+            }
+            else
+            {
+                <a href="~/Manage/" class="pic cssr_login" style="float:right"></a>
+            }
+            <div class="clearfix"></div>
+            <div class="nav">
+                <a href="/">首页</a>
+                <a href="/About_us">公司简介</a>
+                <a href="/Honor">公司荣誉</a>
+                <a href="/News/0-1.html">新闻中心</a>
+                <a href="/Product">产品中心</a>
+                <a href="/Sales">营销网络</a>
+                <a href="/Service">服务中心</a>
                 <div class="clearfix"></div>
             </div>
+            <div class="clearfix"></div>
         </div>
-    }
+    </div>
+     
     @RenderBody()
 
     <!--------------------------页脚------------------------------>

@@ -200,7 +200,7 @@ a:hover {
     z-index: 100;
     width: 100%;
     top: 0;
-    height:112px;
+    height: 112px;
 }
 
 .logo {
@@ -218,32 +218,31 @@ a:hover {
 
 .nav {
     float: right;
-    
-    position:absolute;
-    top:0px;
-    left:34%;
+    position: absolute;
+    top: 0px;
+    left: 32%;
+}
+.nav a {
+    flaot: left;
+    color: #fff;
+    font-size: 18px;
+    line-height: 112px;
+    padding: 0 20px;
 }
 
-    .nav a {
-        flaot: left;
-        color: #fff;
-        font-size: 18px;
-        line-height: 112px;
-        padding: 0 20px;
-    }
+.nav .current {
+    color: #e60112;
+}
 
-    .nav .current {
-        color: #e60112;
-    }
 
-    .nav a:hover {
-        color: #e60112;
-    }
+.nav a:hover {
+    color: #e60112;
+}
 
 .cssr_login {
     /*float: right;*/
     margin: 43px 0 0 0px;
-    display:inline-grid;
+    display: inline-grid;
 }
 
 .Navimg {

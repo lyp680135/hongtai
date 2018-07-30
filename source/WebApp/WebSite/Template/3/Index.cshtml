@@ -32,7 +32,37 @@
     }
 }
 
+<!--------------------------banner------------------------------>
+<div class="banner">
+    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
+            <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
+        </ol>
+        <div class="carousel-inner" role="listbox">
 
+            @if (siteBasic.CarouselImage.SafeString() != string.Empty)
+            {
+                for (var i = 0; i < siteBasic.CarouselImage.Object.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        <div class="item active">
+                            <img class="homebanner" src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@siteBasic.CarouselImage.Object[i]" style="height:100%;width:100%" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="item">
+                            <img class="homebanner" src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@siteBasic.CarouselImage.Object[i]" style="height:100%;width:100%" />
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>
 
 <!--------------------------关于我们------------------------------>
 <div class="about">
@@ -116,22 +146,22 @@
             {
                 for (int i = 0; i < Sence.Count; i++)
                 {
-                        <a href="/Sence/@Html.Raw(Sence[i]["cid"]+"/"+Sence[i]["Id"]+".html")" class="@Html.Raw(i%2==0?"mien_box1":"mien_box2")">
-                            <div class="mien_content">
-                                <h2>@Html.Raw(Sence[i]["Title"])</h2>
-                                <span class="span1"></span>
-                                <small>@Html.Raw(Sence[i]["Titledes"])</small>
-                                <p>
-                                    @{
-                                        var content = Sence[i]["Content"].ToString().RemoveHtml();
-                                        @Html.Raw(content.Length > 100 ? content.Substring(0, 100) : content);                                    
-                                     }
-                                </p>
-                                <div class="more1"><span class="pic cssr_more1"></span></div>
-                            </div>
-                            <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Sence[i]["Image"].ToString().Split(",")[0]" style="max-width:550px;max-height:320px" />
-                            <div class="clearfix"></div>
-                        </a>
+                    <a href="/Sence/@Html.Raw(Sence[i]["cid"]+"/"+Sence[i]["Id"]+".html")" class="@Html.Raw(i%2==0?"mien_box1":"mien_box2")">
+                        <div class="mien_content">
+                            <h2>@Html.Raw(Sence[i]["Title"])</h2>
+                            <span class="span1"></span>
+                            <small>@Html.Raw(Sence[i]["Titledes"])</small>
+                            <p>
+                                @{
+                                    var content = Sence[i]["Content"].ToString().RemoveHtml();
+                                    @Html.Raw(content.Length > 100 ? content.Substring(0, 100) : content);
+                                }
+                            </p>
+                            <div class="more1"><span class="pic cssr_more1"></span></div>
+                        </div>
+                        <img src="@mngSetting.Domain_PC.Substring(0, mngSetting.Domain_PC.Length - 1)@Sence[i]["Image"].ToString().Split(",")[0]" style="max-width:550px;max-height:320px" />
+                        <div class="clearfix"></div>
+                    </a>
                 }
             }
         }
@@ -160,7 +190,7 @@
                                 <div class="more1"><span class="pic cssr_more2"></span></div>
                             </div>
                         </a>
-                        
+
                     }
                 </div>
             </div>

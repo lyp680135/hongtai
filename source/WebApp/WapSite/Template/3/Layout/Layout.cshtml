@@ -124,21 +124,24 @@
                                 <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
                             </ol>
                             <div class="carousel-inner" role="listbox">
-                                @if (SiteBasic.CarouselImage.SafeString() != string.Empty)
-                                {
-                                    for (var i = 0; i < SiteBasic.CarouselImage.Object.Count; i++)
+                                @{
+                                    var News = _cmsService.IcontentColumnDataService.GetContentColumnDataList("手机端轮播图", 1, 1);
+                                    if (News != null)
                                     {
-                                        if (i == 0)
+                                        for (int i = 0; i < News.Count; i++)
                                         {
-                                            <div class="item active">
-                                                <img class="homebanner" src="@MngSetting.Domain_PC.Substring(0, MngSetting.Domain_PC.Length - 1)@SiteBasic.CarouselImage.Object[i]" style="height:180px" />
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="item">
-                                                <img class="homebanner" src="@MngSetting.Domain_PC.Substring(0, MngSetting.Domain_PC.Length - 1)@SiteBasic.CarouselImage.Object[i]" style="height:180px"/>
-                                            </div>
+                                            @if (News[i]["Image"].SafeString() != string.Empty)
+                                            {
+                                                var arr = News[i]["Image"].ToString().Split(',');
+                                                for (var j = 0; j < arr.Count(); j++)
+                                                { 
+                                                
+                                                    <div class="@Html.Raw(j==0?"item active":"item")">
+                                                        <img class="homebanner" src="@MngSetting.Domain_PC.Substring(0, MngSetting.Domain_PC.Length - 1)@arr[j]" width="100%" />
+                                                    </div>
+                                                    
+                                                }
+                                            }
                                         }
                                     }
                                 }
