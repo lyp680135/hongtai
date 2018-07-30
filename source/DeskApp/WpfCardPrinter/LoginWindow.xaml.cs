@@ -103,7 +103,7 @@ namespace WpfCardPrinter
 
             //将密码加密
             password = MD5Util.GenerateMD5(password);
-#if !DEBUG
+#if DEBUG
                     MainWindow mainwindow = new MainWindow(null, null);
                     mainwindow.Show();
 
