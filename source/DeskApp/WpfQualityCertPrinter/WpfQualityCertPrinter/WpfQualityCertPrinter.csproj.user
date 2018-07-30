@@ -13,7 +13,7 @@
     <StartAction>URL</StartAction>
   </PropertyGroup>
   <PropertyGroup>
-    <ProjectView>ShowAllFiles</ProjectView>
+    <ProjectView>ProjectFiles</ProjectView>
     <PublishUrlHistory>D:\Project\Release\wpfprinter\</PublishUrlHistory>
     <InstallUrlHistory />
     <SupportUrlHistory />

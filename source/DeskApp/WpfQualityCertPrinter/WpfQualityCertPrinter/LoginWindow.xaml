@@ -39,7 +39,10 @@
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" Margin="0 30 0 10">
                         <Label Content="生产账号：" FontSize="14" Width="120" Height="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Right"  />
-                        <ComboBox Name="cbAccount" Width="200" Height="30" IsEditable="True" VerticalContentAlignment="Center" />
+                        <ComboBox Name="cbAccount" Width="200" Height="30" IsEditable="True" VerticalContentAlignment="Center" 
+                                   SelectedValuePath="Id"
+                                   DisplayMemberPath="UserName"
+                                  />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="登录密码：" FontSize="14" Width="120" HorizontalContentAlignment="Right" />
