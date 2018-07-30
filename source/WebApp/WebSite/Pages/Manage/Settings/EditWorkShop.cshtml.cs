@@ -19,12 +19,16 @@
 
         public DataLibrary.PdWorkshop Wsclass { get; set; }
 
+        public List<DataLibrary.PdWorkshopTeam> Teamlist { get; set; }
+
         public void OnGet(int id)
         {
             var rs = this.Db.PdWorkshop.FirstOrDefault(p => p.Id == id);
             if (rs != null)
             {
                 this.Wsclass = rs;
+                int teamid = rs.Id;
+                this.Teamlist = this.Db.PdWorkshopTeam.Where(c => c.WorkshopId == teamid).ToList();
             }
             else
             {

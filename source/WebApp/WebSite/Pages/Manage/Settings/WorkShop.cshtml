@@ -40,9 +40,9 @@
         }
         function cancelBubble(e) {
             var evt = e ? e : window.event;
-            if (evt.stopPropagation) {        //W3C 
+            if (evt.stopPropagation) {        //W3C
                 evt.stopPropagation();
-            } else {       //IE      
+            } else {       //IE
                 evt.cancelBubble = true;
             }
         }
@@ -59,19 +59,24 @@
         .forminfo li label {
             width: 50px;
         }
+
         .layui-table td {
-            text-align:center;
-            text-indent:0px;
+            text-align: center;
+            text-indent: 0px;
         }
+
         .addclass {
-            cursor:pointer;
+            cursor: pointer;
         }
+
         .layui-table tbody tr {
             cursor: pointer;
         }
+
         .layui-table thead th {
-           text-align:center;
+            text-align: center;
         }
+
         #form1 lable {
             font-size: 14px;
             height: 38px;
@@ -130,66 +135,85 @@
                     {
                         foreach (DataLibrary.PdWorkshop wsclass in list)
                         {
-                <tr onclick="Edit(@wsclass.Id)">
+                            <tr onclick="Edit(@wsclass.Id)">
 
-                    <td onclick="stopchoose()"><input name="id" type="checkbox" value="@wsclass.Id" /></td>
-                    <td>@wsclass.Id</td>
-                    <td>@wsclass.Name</td>
-                    <td>@wsclass.Code</td>
-                    <td>
-                        @{
-                            if (!string.IsNullOrEmpty(wsclass.Inputer))
-                            {
-                                var temp_userid = Array.ConvertAll(wsclass.Inputer.Split(','), new Converter<string, int>(x => int.Parse(x)));
-                                var resultOperator = db.MngAdmin.Where(c => temp_userid.Contains(c.Id)).ToList();
-                                foreach (var result in resultOperator)
-                                {
-                                    @Html.Raw("  " + result.RealName + " " + result.UserName);<br />
-                                }
-                            }
-                        }
-                    </td>
-                    <td>
-                        @{
-                            if (!string.IsNullOrEmpty(wsclass.Outputer))
-                            {
-                                var temp_userid2 = Array.ConvertAll(wsclass.Outputer.Split(','), new Converter<string, int>(x => int.Parse(x)));
-                                var resultOperator2 = db.MngAdmin.Where(c => temp_userid2.Contains(c.Id)).ToList();
-                                foreach (var result in resultOperator2)
-                                {
-                                    @Html.Raw("  " + result.RealName + " " + result.UserName);<br />
-                                }
-                            }
-                        }
-                    </td>
-                    <td>
-                        @{
-                            if (!string.IsNullOrEmpty(wsclass.QAInputer))
-                            {
-                                var temp_userid3 = Array.ConvertAll(wsclass.QAInputer.Split(','), new Converter<string, int>(x => int.Parse(x)));
-                                var resultOperator3 = db.MngAdmin.Where(c => temp_userid3.Contains(c.Id)).ToList();
-                                foreach (var result in resultOperator3)
-                                {
-                                    @Html.Raw("  " + result.RealName + " " + result.UserName);<br />
-                                }
-                            }
-                        }
-                    </td>
-                    @*<td>
-                        @{
-                            if (!string.IsNullOrEmpty(wsclass.Furnacer))
-                            {
-                                var temp_userid4 = Array.ConvertAll(wsclass.Furnacer.Split(','), new Converter<string, int>(x => int.Parse(x)));
-                                var resultOperator4 = db.MngAdmin.Where(c => temp_userid4.Contains(c.Id)).ToList();
-                                foreach (var result in resultOperator4)
-                                {
-                                    @Html.Raw("  " + result.RealName + " " + result.UserName);<br />
-                                }
-                            }
-                        }
-                    </td>*@
+                                <td onclick="stopchoose()"><input name="id" type="checkbox" value="@wsclass.Id" /></td>
+                                <td>@wsclass.Id</td>
+                                <td>@wsclass.Name</td>
+                                <td>@wsclass.Code</td>
+                                <td>
+                                    @{
+                                        if (!string.IsNullOrEmpty(wsclass.Inputer))
+                                        {
+                                            var temp_userid = Array.ConvertAll(wsclass.Inputer.Split(','), new Converter<string, int>(x => int.Parse(x)));
+                                            var resultOperator = db.MngAdmin.Where(c => temp_userid.Contains(c.Id)).ToList();
+                                            foreach (var result in resultOperator)
+                                            {
+                                                var relation = this.db.PdWorkshopTeamAdminRelation.FirstOrDefault(c => c.AdminId == result.Id);
+                                                var teamname = string.Empty;
+                                                if (relation != null)
+                                                {
 
-                </tr>
+                                                    var team = this.db.PdWorkshopTeam.FirstOrDefault(c => c.Id == relation.WorkShopTeamId);
+                                                    if (team != null)
+                                                    {
+
+                                                        teamname = team.TeamName;
+                                                    }
+                                                }
+                                                if (!string.IsNullOrEmpty(teamname))
+                                                {
+                                                    @Html.Raw("  " + result.RealName + " " + result.UserName + "(" + teamname + ")");<br />
+                                                }
+                                                else
+                                                {
+                                                    @Html.Raw("  " + result.RealName + " " + result.UserName);<br />
+                                                }
+                                            }
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @{
+                                        if (!string.IsNullOrEmpty(wsclass.Outputer))
+                                        {
+                                            var temp_userid2 = Array.ConvertAll(wsclass.Outputer.Split(','), new Converter<string, int>(x => int.Parse(x)));
+                                            var resultOperator2 = db.MngAdmin.Where(c => temp_userid2.Contains(c.Id)).ToList();
+                                            foreach (var result in resultOperator2)
+                                            {
+                                                @Html.Raw("  " + result.RealName + " " + result.UserName);<br />
+                                            }
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @{
+                                        if (!string.IsNullOrEmpty(wsclass.QAInputer))
+                                        {
+                                            var temp_userid3 = Array.ConvertAll(wsclass.QAInputer.Split(','), new Converter<string, int>(x => int.Parse(x)));
+                                            var resultOperator3 = db.MngAdmin.Where(c => temp_userid3.Contains(c.Id)).ToList();
+                                            foreach (var result in resultOperator3)
+                                            {
+                                                @Html.Raw("  " + result.RealName + " " + result.UserName);<br />
+                                            }
+                                        }
+                                    }
+                                </td>
+                                @*<td>
+                                        @{
+                                            if (!string.IsNullOrEmpty(wsclass.Furnacer))
+                                            {
+                                                var temp_userid4 = Array.ConvertAll(wsclass.Furnacer.Split(','), new Converter<string, int>(x => int.Parse(x)));
+                                                var resultOperator4 = db.MngAdmin.Where(c => temp_userid4.Contains(c.Id)).ToList();
+                                                foreach (var result in resultOperator4)
+                                                {
+                                                    @Html.Raw("  " + result.RealName + " " + result.UserName);<br />
+                                                }
+                                            }
+                                        }
+                                    </td>*@
+
+                            </tr>
                         }
                     }
                 }
@@ -247,21 +271,21 @@
         });
 
         $("#add").click(function () {
-           
+
             layer.open({
                 type: 2,
                 title: '新增车间',
                 shadeClose: false,
-                area: ['50%','90%'],
+                area: ['50%', '90%'],
                 content: '/Manage/Settings/AddWorkShop',
-            }); 
+            });
 
             $("#hiddType").val("add");
         });
-        function Edit(id) { 
+        function Edit(id) {
             layer.open({
                 type: 2,
-                title:'修改车间',
+                title: '修改车间',
                 shadeClose: false,
                 area: ['50%', '90%'],
                 content: '/Manage/Settings/EditWorkShop?id=' + id,

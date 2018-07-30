@@ -327,7 +327,7 @@
                               {
                                   DepartId = 1,
                                   FirstChar = string.Empty,
-                                  GroupManage = (new int[] { quanlityhuaxue != null ? quanlityhuaxue.Id : 0 , (int)GroupManage.质量员 }).ToList(),
+                                  GroupManage = (new int[] { quanlityhuaxue != null ? quanlityhuaxue.Id : 0, (int)GroupManage.质量员 }).ToList(),
                                   InJob = true,
                                   Password = string.Empty,
                                   RealName = luruName[i],
@@ -408,7 +408,7 @@
         }
 
         [HttpPost]
-        public ActionResult Edit(int hiddId, string workShopName, string code, string[] rukuName, string[] rukuTel, string[] chukuName, string[] chukuTel, string[] luruName, string[] ruluTel, string[] luhaoName, string[] luhaoTel, int[] wuliorhuaxue)
+        public ActionResult Edit(int hiddId, string workShopName, string code, string[] rukuName, string[] rukuTel, int[] workShopTeamId, string[] chukuName, string[] chukuTel, string[] luruName, string[] ruluTel, string[] luhaoName, string[] luhaoTel, int[] wuliorhuaxue)
         {
             List<int> warehousingoperatorids = new List<int>();
             List<int> outboundoperatorids = new List<int>();
@@ -436,6 +436,7 @@
                     {
                         DataLibrary.MngAdmin rukuperson = this.db.MngAdmin.FirstOrDefault(c => c.UserName == rukuTel[i]);
                         DataLibrary.MngAdmin same = null;
+                        DataLibrary.PdWorkshopTeamAdminRelation relationadmin = null;
 
                         // 如果为空则是新增
                         if (rukuperson == null)
@@ -455,12 +456,29 @@
 
                         if (rukuperson != null)
                         {
+                            relationadmin = this.db.PdWorkshopTeamAdminRelation.FirstOrDefault(c => c.AdminId == rukuperson.Id);
+
                             if (!rukuperson.GroupManage.Object.Contains((int)GroupManage.入库操作员))
                             {
                                 List<int> list_temp = rukuperson.GroupManage.Object;
                                 list_temp.Add((int)GroupManage.入库操作员);
 
                                 rukuperson.GroupManage = list_temp;
+                            }
+
+                            if (relationadmin == null)
+                            {
+                                var relation = this.db.PdWorkshopTeamAdminRelation.Add(
+                                   new DataLibrary.PdWorkshopTeamAdminRelation()
+                                   {
+                                       AdminId = rukuperson.Id,
+                                       WorkShopTeamId = workShopTeamId[i],
+                                   });
+                            }
+                            else
+                            {
+                                relationadmin.AdminId = rukuperson.Id;
+                                relationadmin.WorkShopTeamId = workShopTeamId[i];
                             }
 
                             rukuperson.RealName = rukuName[i];
@@ -481,6 +499,23 @@
                                      Sex = true,
                                      UserName = rukuTel[i]
                                  });
+                            this.db.SaveChanges();
+                            relationadmin = this.db.PdWorkshopTeamAdminRelation.FirstOrDefault(c => c.AdminId == tempadmin.Entity.Id);
+                            if (relationadmin == null)
+                            {
+                                var relation = this.db.PdWorkshopTeamAdminRelation.Add(
+                                   new DataLibrary.PdWorkshopTeamAdminRelation()
+                                   {
+                                       AdminId = tempadmin.Entity.Id,
+                                       WorkShopTeamId = workShopTeamId[i],
+                                   });
+                            }
+                            else
+                            {
+                                relationadmin.AdminId = tempadmin.Entity.Id;
+                                relationadmin.WorkShopTeamId = workShopTeamId[i];
+                            }
+
                             this.db.SaveChanges();
                             warehousingoperatorids.Add(tempadmin.Entity.Id);
                         }

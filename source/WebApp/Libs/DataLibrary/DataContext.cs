@@ -87,6 +87,8 @@
 
         public virtual DbSet<PdqualitySmeltCode> PdSmeltCode { get; set; }
 
+        public virtual DbSet<PdWorkshopTeamAdminRelation> PdWorkshopTeamAdminRelation { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
         }

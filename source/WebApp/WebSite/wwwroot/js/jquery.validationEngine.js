@@ -25,6 +25,7 @@
                     "alertTextCheckboxe": "* 必选",
                     "alertTextDateRange": "* 日期范围不可空白"
                 },
+               
                 "dateRange": {
                     "regex": "none",
                     "alertText": "* 无效的 ",
@@ -97,6 +98,10 @@
                 "WorkShopCode": {
                     "regex": /[A-Za-z]/,
                     "alertText": "*无效的车间代码"
+                },
+                "teamrequired": { 
+                    "regex": /^[\s\S]*.*[^\s][\s\S]*$/,
+                    "alertText": "* 班组必选-如无班组请前往设置",
                 },
                 "email": {
                     // Shamelessly lifted from Scott Gonzalez via the Bassistance Validation plugin http://projects.scottsplayground.com/email_address_validation/
