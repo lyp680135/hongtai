@@ -11,34 +11,18 @@ using System.Data;
 
 namespace WpfCardPrinter.ModelAccess.SqliteAccess
 {
-    class ProductSqliteAccess : IDisposable
-    {
-        public PdProduct _model;
-        public SQLiteConnection _connection;
-
-        private static string sqlite_path = @"database\offcaching.dat";
-        private static string sqlite_password = "xiaoyutech888";
-
-        /// <summary>
-        /// 创建数据库
-        /// </summary>
-        public static void CreateDB()
+   public class ProductSqliteAccess : BaseSqliteAccess<PdProduct>
+    {     
+       public ProductSqliteAccess() : base()
         {
-            //判断文件是否已经存在，如果存在，则不用再次创建
-            if (!File.Exists(sqlite_path))
-            {
-                if (!Directory.Exists("database"))
-                {
-                    Directory.CreateDirectory("database");
-                }
 
-                SQLiteConnection cn = new SQLiteConnection("data source=" + sqlite_path);
-                cn.Open();
-                cn.ChangePassword(sqlite_password);
-                cn.Close();
-            }
         }
 
+       public ProductSqliteAccess(PdProduct model)
+            :base(model)
+        {
+
+        }
         /// <summary>
         /// 创建表格
         /// </summary>
@@ -76,52 +60,11 @@ namespace WpfCardPrinter.ModelAccess.SqliteAccess
             cn.Close();
         }
 
-        public ProductSqliteAccess()
-        {
-            _connection = new SQLiteConnection("data source=" + sqlite_path);
-            try
-            {
-                _connection.SetPassword(sqlite_password);
-                _connection.Open();
-            }
-            catch (Exception ex)
-            {
-                LogHelper.WriteLog(ex.Message);
-            }
-        }
-
-        public ProductSqliteAccess(PdProduct model)
-        {
-            _model = model;
-
-            SQLiteConnection cn = new SQLiteConnection("data source=" + sqlite_path);
-            try
-            {
-                _connection.Open();
-                _connection.SetPassword(sqlite_password);
-            }
-            catch (Exception ex)
-            {
-                LogHelper.WriteLog(ex.Message);
-            }
-        }
+       
 
         ~ProductSqliteAccess()
         {
             Dispose();
-        }
-
-        public void Dispose()
-        {
-            try
-            {
-                _connection.Close();
-                _connection.Dispose();
-            }
-            catch (Exception ex)
-            {
-                LogHelper.WriteLog(ex.Message);
-            }
         }
 
         /// <summary>
