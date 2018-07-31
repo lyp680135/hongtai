@@ -81,8 +81,9 @@
         /// </summary>
         /// <param name="curcode">当前炉批号</param>
         /// <param name="offset">偏移量</param>
+        /// <param name="wid" >车间id</param>
         /// <returns>stirng</returns>
-        public string GetPatCodeNew(string curcode, int offset)
+        public string GetPatCodeNew(string curcode, int offset, int wid)
         {
             var batcode = curcode;
 
@@ -93,11 +94,11 @@
                 var id = current.Id;
                 if (offset > 0)
                 {
-                    productInfo = this.db.PdBatcode.OrderBy(o => o.Id).FirstOrDefault(f => f.Id > id);
+                    productInfo = this.db.PdBatcode.Where(w => w.Workshopid == wid).OrderBy(o => o.Id).FirstOrDefault(f => f.Id > id);
                 }
                 else
                 {
-                    productInfo = this.db.PdBatcode.OrderByDescending(o => o.Id).FirstOrDefault(f => f.Id < id);
+                    productInfo = this.db.PdBatcode.Where(w => w.Workshopid == wid).OrderByDescending(o => o.Id).FirstOrDefault(f => f.Id < id);
                 }
 
                 if (productInfo != null)
