@@ -58,7 +58,7 @@
 
         public PdBatcode SingleNextById(int id, string shopcode)
         {
-            return this.db.PdBatcode.OrderBy(c => c.Id).FirstOrDefault(c => c.Id > id && c.Batcode.StartsWith(shopcode));
+            return this.db.PdBatcode.OrderBy(c => c.Id).FirstOrDefault(c => c.Id > id && c.Batcode.EndsWith(shopcode));
         }
 
         public PdBatcode SingleByPrefixCode(string prefixCode)
@@ -73,7 +73,7 @@
 
         public PdBatcode SingleLast(string shopcode)
         {
-            return this.db.PdBatcode.OrderByDescending(c => c.Id).FirstOrDefault(c => c.Batcode.StartsWith(shopcode)) ?? new PdBatcode();
+            return this.db.PdBatcode.OrderByDescending(c => c.Id).FirstOrDefault(c => c.Batcode.EndsWith(shopcode)) ?? new PdBatcode();
         }
 
         /// <summary>
@@ -97,7 +97,7 @@
                 }
                 else
                 {
-                    productInfo = this.db.PdBatcode.OrderBy(o => o.Id).LastOrDefault(f => f.Id < id);
+                    productInfo = this.db.PdBatcode.OrderByDescending(o => o.Id).FirstOrDefault(f => f.Id < id);
                 }
 
                 if (productInfo != null)
@@ -183,6 +183,7 @@
             string code = curritem.Batcode.Replace(fIRST_WORD, string.Empty);
             string datestr = code.Substring(0, 4);
             string numberstr = code.Replace(datestr, string.Empty);
+            numberstr = numberstr.Substring(0, numberstr.Length - 1);
 
             // 如果是当月，则在批号后做运算
             if (datestr == dATE_CODE)
@@ -213,7 +214,7 @@
                 else
                 {
                     string preMonthCode = DateTime.Now.AddMonths(-1).ToString("yyMM");
-                    string prefix = string.Format("{0}{1}%", fIRST_WORD, preMonthCode);
+                    string prefix = string.Format("{0}%", preMonthCode);
 
                     var pdcode = this.SingleByPrefixCode(prefix);
 
@@ -221,7 +222,10 @@
                     {
                         batcode = pdcode.Batcode;
                     }
-
+                    else
+                    {
+                        batcode = curritem.Batcode;
+                    }
                     // 如果上个月的批号没有，则继续保持当前批号，即返回空值
                 }
             }
@@ -299,7 +303,7 @@
         /// <param name=batCode">炉批号</param>
         /// <param name=smeltCode">冶炼id</param>
         /// <returns>View</returns>
-        public ActionResult Check(int pId = 0, int materialid = 0, string batCode = "", int smeltCode = 0)
+        public ActionResult Check(int pId = 0, int materialid = 0, string batCode = "", string smeltCode = "")
         {
             PdProduct productInfo = null;
             List<BaseQualityStandard> listQualityStandards = null;
@@ -760,7 +764,11 @@
             {
                 return "冶炼炉号不能为空";
             }
-
+            var chemistryInfo = this.db.PdSmeltCode.FirstOrDefault(f => f.SmeltCode == yLCode && f.Status == 0);
+            if (chemistryInfo != null)
+            {
+                return "已存在该冶炼炉号化学数据,无法重复添加";
+            }
             var listQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 0 && w.Status == 0 && w.Materialid == mId && w.TargetCategory == EnumList.TargetCategory.化学指标).ToList();
             if (listQualityStandards == null || listQualityStandards.Count <= 0)
             {
@@ -780,7 +788,8 @@
                     SmeltCode = yLCode,
                     Chemistry = keyValuePairs,
                     Createtime = (int)Util.Extensions.GetCurrentUnixTime(),
-                    EntryPerson = this.userService.ApplicationUser.Mng_admin.Id
+                    EntryPerson = this.userService.ApplicationUser.Mng_admin.Id,
+                    Status = 0
                 });
 
                 this.db.SaveChanges();
@@ -789,15 +798,35 @@
             return "true";
         }
 
+
+        /// <summary>
+        /// 编辑状态
+        /// </summary>
+        /// <param name="id">主键</param>
+        /// <param name="status">状态</param>
+        /// <returns>string</returns>
+        public string ChemistryEdit(int id, int status)
+        {
+            var chemistryInfo = this.db.PdSmeltCode.FirstOrDefault(f => f.Id == id);
+            if (chemistryInfo == null)
+            {
+                return "不存在化学数据无法编辑";
+            }
+            chemistryInfo.Status = status;
+            this.db.Update(chemistryInfo);
+            this.db.SaveChanges();
+            return "true";
+        }
+
         /// <summary>
         /// 添加物理数据
         /// </summary>
-        /// <param name="sId">冶炼表Id</param>
+        /// <param name="smeltCode">冶炼表Id</param>
         /// <param name="batCode">炉批号</param>
         /// <returns>string</returns>
-        public string PhysicsAdd(int sId, string batCode)
+        public string PhysicsAdd(string smeltCode, string batCode)
         {
-            if (sId <= 0)
+            if (string.IsNullOrEmpty(smeltCode))
             {
                 return "请选择冶炼炉号";
             }
@@ -854,10 +883,10 @@
                 return "已添加过相同炉批号的质量数据,并且等待审核中";
             }
 
-            var pdsmelcodeInfo = this.db.PdSmeltCode.FirstOrDefault(f => f.Id == sId);
+            var pdsmelcodeInfo = this.db.PdSmeltCode.FirstOrDefault(f => f.SmeltCode == smeltCode && f.Status == 0);
             if (pdsmelcodeInfo == null)
             {
-                return "不存在关系数据";
+                return "不存在该冶炼炉号化学数据,请先输入化学数据";
             }
 
             var pdquatulyInfo = this.db.PdProduct.FirstOrDefault(f => f.Batcode == batCode);
