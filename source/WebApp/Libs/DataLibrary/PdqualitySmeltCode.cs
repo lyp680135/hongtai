@@ -19,6 +19,11 @@
         public int Createtime { get; set; }
 
         /// <summary>
+        ///  Gets or sets 0:未作废,1:已作废
+        /// </summary>
+        public int Status { get; set; }
+
+        /// <summary>
         /// Gets or sets 产品质量数据- 化学
         /// </summary>
         public JsonObject<object> Chemistry { get; set; }
