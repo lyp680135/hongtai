@@ -560,7 +560,9 @@
                     success: function (re) {
                         if (re.toString() == 'true') {
                             layer.msg('添加成功', { icon: 1 });
-                            window.location.href = '/Manage/Quality/List';
+                            setTimeout(function () {
+                                window.location.href = '/Manage/Quality/List';
+                            }, 2000);
                         } else {
                             layer.msg(re, { icon: 2 });
                         }
