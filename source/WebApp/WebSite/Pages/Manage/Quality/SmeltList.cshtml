@@ -84,7 +84,7 @@
                                     @if (item.Status == 0)
                                     {
                                         <a class="tablelink" href="javascript:void(0)" onclick="zuofei(@item.Id,1)">作废</a>
-                                    }                                   
+                                    }
                                 </td>
                             </tr>
                         }
@@ -100,8 +100,8 @@
             PageIndex = Model.PageIndex,
             PageCount = Model.PageCount,
             PageUrl = Request.GetAbsoluteUri(new List<KeyValuePair<string, string>>() {
-             new KeyValuePair<string, string>("pg","{0}")
-       }),
+         new KeyValuePair<string, string>("pg","{0}")
+   }),
             PageText = "{0}",
             ShowCount = 6,
             ShowAll = false
@@ -117,29 +117,33 @@
             });
         })
         function zuofei(id, status) {
-            $.ajax({
-                type: "POST", url: '/Quality/ChemistryEdit?status=' + status + '&Id=' + id,
-                data: $("#form1").serialize(),
-                success: function (re) {
-                    if (re.toString() == 'true') {
-                        layer.msg('编辑成功', { icon: 1 });
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 2000);                        
-                    } else {
-                        layer.msg(re, { icon: 2 });
-                    }
-                    layer.close(loadLayer);
-                }, error: function () {
-                    layer.close(loadLayer);
-                    layer.msg('编辑成功，系统出现未知错误', { icon: 2 });
-                }
-            });
-        }
-                                                    //function trclick(SmeltCode) {
+            layer.confirm('确定作废该化学数据?', { icon: 3, title: '提示' }, function (index) {
 
-                                                    //    window.location.href = '/Manage/quality/PhysicsInfo?SmeltCode=' + SmeltCode;
-                                                    //}
+                $.ajax({
+                    type: "POST", url: '/Quality/ChemistryEdit?status=' + status + '&Id=' + id,
+                    data: $("#form1").serialize(),
+                    success: function (re) {
+                        if (re.toString() == 'true') {
+                            layer.msg('作废成功', { icon: 1 });
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 2000);
+                        } else {
+                            layer.msg(re, { icon: 2 });
+                        }
+                        layer.close(loadLayer);
+                    }, error: function () {
+                        layer.close(loadLayer);
+                        layer.msg('编辑成功，系统出现未知错误', { icon: 2 });
+                    }
+                });
+            });
+
+        }
+                                                        //function trclick(SmeltCode) {
+
+                                                        //    window.location.href = '/Manage/quality/PhysicsInfo?SmeltCode=' + SmeltCode;
+                                                        //}
     </script>
 </body>
 

@@ -121,7 +121,15 @@
                         <select id="WorkShopCode" name="WorkShopCode" lay-filter="WorkShopCode">
                             @foreach (var item in Model.List_workShop)
                             {
-                                <option value="@item.Code">@item.Name</option>
+                                @if (Model.Wid > 0 && Model.Wid == item.Id)
+                                {
+                                    <option value="@item.Id" selected="selected">@item.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+
                             }
                         </select>
                     </div>
@@ -397,7 +405,8 @@
 
         function ChangeBatCode(obj, offset) {
             var currCode = $("#BatCode").val();
-            GetBatCode(currCode, offset)
+            var WorkShopCode = $("#WorkShopCode").val();
+            GetBatCode(currCode, offset, WorkShopCode)
             return false;
         }
 
@@ -406,7 +415,7 @@
                 shade: [0.1, '#fff'] //0.1透明度的白色背景
             });
             $.ajax({
-                type: "POST", url: '/Quality/GetPatCodeNew', data: "curcode=" + currCode + "&offset=" + offset,
+                type: "POST", url: '/Quality/GetPatCodeNew', data: "curcode=" + currCode + "&offset=" + offset + '&wid=' + workShopCode,
                 success: function (re) {
                     var json = JSON.parse(re);
 
@@ -414,7 +423,7 @@
                         if (json.data != '') {
                             $("#BatCode").val(json.Data);
                             $("#ChangeBatCode button").removeClass("layui-btn-disabled");
-                            window.location.href = '/Manage/quality/PhysicsInfo?batcode=' + $("#BatCode").val();
+                            window.location.href = '/Manage/quality/PhysicsInfo?batcode=' + $("#BatCode").val() + '&wid=' + $('#WorkShopCode').val();
                             layer.msg("炉批号获取完成");
 
                             //CheckBatCode(json.Data);
@@ -449,7 +458,7 @@
         }
 
         $(function () {
-            $('#BatCode').blur(function () {              
+            $('#BatCode').blur(function () {
                 var $this = $(this);
                 if ($this.val().trim() == '') {
                     layer.msg('请输入轧制批号')
@@ -491,6 +500,11 @@
                 width: "152px",
                 language: "zh-CN",
                 minimumResultsForSearch: -1
+            });
+
+            $('#WorkShopCode').change(function () {
+                var $this = $(this);
+                window.location.href = '/Manage/quality/PhysicsInfo?wid=' + $this.val();
             });
             //保存数据
             $("#btnSubmit").click(function () {

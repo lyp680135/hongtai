@@ -33,7 +33,9 @@
 
         public string SmeltCode { get; set; }
 
-        public void OnGet(int? id, string batCode, string smeltCode)
+        public int Wid { get; set; }
+
+        public void OnGet(int? id, string batCode, string smeltCode, int wid = 0)
         {
             var userId = this.userService.ApplicationUser.Mng_admin.Id;
             var targetCategory = EnumList.TargetCategory.物理指标;
@@ -41,14 +43,29 @@
             this.List_workShop = this.Db.PdWorkshop.AsEnumerable().Where(c => c.QAInputer.Split(',').Contains(userId.ToString())).ToList();
             if (this.List_workShop.Count > 0)
             {
-                var workInfo = this.List_workShop.FirstOrDefault();
+                var workInfo = new PdWorkshop();
                 if (!id.HasValue || id.Value <= 0)
                 {
+                    if (wid > 0)
+                    {
+                        workInfo = this.List_workShop.FirstOrDefault(f => f.Id == wid);
+                        this.Wid = wid;
+                    }
+                    else
+                    {
+                        workInfo = this.List_workShop.FirstOrDefault();
+                    }
+
                     var productInfo = new PdProduct();
-                    PdBatcode currentInfo = this.Db.PdBatcode.OrderByDescending(c => c.Id).FirstOrDefault(c => c.Workshopid == workInfo.Id && c.Status == 1) ?? new PdBatcode();
+                    PdBatcode currentInfo = this.Db.PdBatcode.OrderByDescending(c => c.Id).FirstOrDefault(c => c.Workshopid == workInfo.Id) ?? new PdBatcode();
                     if (currentInfo != null)
                     {
                         this.BatCode = currentInfo.Batcode;
+                        productInfo = this.Db.PdProduct.FirstOrDefault(f => f.Batcode == currentInfo.Batcode);
+                        if (productInfo != null)
+                        {
+                            this.ListQualityStandards = this.Db.BaseQualityStandard.Where(w => w.Materialid == productInfo.Materialid && w.Status == 0 && w.TargetCategory == targetCategory).ToList();
+                        }
                     }
 
                     if (!string.IsNullOrEmpty(batCode))
