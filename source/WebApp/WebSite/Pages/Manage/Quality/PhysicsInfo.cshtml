@@ -1,5 +1,6 @@
 ﻿@page
 @model WarrantyManage.Pages.Manage.Quality.PhysicsInfoModel
+@inject DataLibrary.DataContext _db
 @using DataLibrary;
 @{
     Layout = null;
@@ -75,7 +76,7 @@
         }
 
         .element {
-            width: 600px;
+            width: 300px;
             height: 200px;
             position: absolute;
             left: 50%;
@@ -155,8 +156,17 @@
                         <input type="text" name="BatCode" id="BatCode" lay-verify="BatCode" autocomplete="off" placeholder="请输入轧制批号" class="validate[required] layui-input BatCode" value="@Model.PdQuality.Batcode" disabled="disabled" />
                     </div>
                 }
+                @{
+                    var pdList = this._db.PdQuality.Where(w => w.Batcode == Model.BatCode).ToList();
+                    if (pdList != null && pdList.Count > 0)
+                    {
+                        <div class="layui-form-mid layui-word-aux" id="BatCodeTips" style="color:orange !important">
+                            @Html.Raw("提示：该炉批号已添加过 " + pdList.Count + " 条质量纪录")
+                        </div>
+                    }
+                }
             </div>
-            @if (Model.PdQuality.Id == 0 && Model.ListQualityStandards != null && Model.ListQualityStandards.Count > 0)
+            @if (Model.PdQuality.Id == 0 && !string.IsNullOrWhiteSpace(Model.BatCode) && Model.List_workShop != null && Model.List_workShop.Count > 0)
             {
                 <lable class="yllh" style="">冶炼炉号:</lable>
                 <div class="layui-input-inline">
@@ -165,6 +175,10 @@
                 <button type="button" id="selsmeltcode" class="layui-btn layui-btn-sm layui-btn-normal" onclick="locationHref(); return false;"><i class="layui-icon">&#xe615;</i>选择冶炼炉号</button>
             }
 
+            @if (Model.ListQualityStandards == null || Model.ListQualityStandards.Count <= 0)
+            {
+                <h3 class="element">请先设置质量指标</h3>
+            }
             @if (Model.ListQualityStandards != null)
             {
 
@@ -339,15 +353,19 @@
 
                 <div class="layui-form-item">
                     <div class="layui-input-block">
-                        @if (Model.PdQuality.Id == 0)
+                        @if (Model.ListQualityStandards != null && Model.ListQualityStandards.Count > 0)
                         {
-                            <button class="layui-btn layui-btn-normal" type="button" id="btnSubmit">保存</button>
+                            @if (Model.PdQuality.Id == 0)
+                            {
+                                <button class="layui-btn layui-btn-normal" type="button" id="btnSubmit">保存</button>
+                            }
+                            else
+                            {
+                                <input type="hidden" value="@Model.PdQuality.Id" name="pId" id="pId" />
+                                <button class="layui-btn layui-btn-normal" type="button" id="btnEdit" oncli="return false;">修改</button>
+                            }
                         }
-                        else
-                        {
-                            <input type="hidden" value="@Model.PdQuality.Id" name="pId" id="pId" />
-                            <button class="layui-btn layui-btn-normal" type="button" id="btnEdit" oncli="return false;">修改</button>
-                        }
+
                     </div>
                 </div>
             }
@@ -361,7 +379,7 @@
                 type: 2,
                 shadeClose: true, //点击遮罩关闭层
                 area: ['90%', '75%'],//大小
-                content: '/Manage/quality/SmeltList',//url
+                content: '/Manage/quality/SmeltList?type=PhysicsInfo',//url
                 anim: '5',//动画效果
                 offset: '50px',//弹出层位置
                 shadeClose: true,
@@ -373,8 +391,10 @@
             });
         }
         function Flash(smeltCode) {
-            var currCode = $("#BatCode").val();
-            window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + smeltCode + '&batcode=' + currCode;
+            //var currCode = $("#BatCode").val();
+            $('#SmeltCode').val(smeltCode);
+            layer.closeAll();
+            //window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + smeltCode + '&batcode=' + currCode;
         }
         //按回车移动光标
         function focusNextInput(thisInput) {
@@ -390,19 +410,6 @@
                 }
             }
         }
-
-        //layui.use('form', function () {
-        //    var form = layui.form;
-
-        //    //form.on('select(WorkShopCode)', function (data) {
-        //    //    //GetBatCode('', 1, true);
-        //    //});
-        //    //form.on('select(SmeltCode)', function (data) {
-        //    //    //GetBatCode('', 1, true);
-        //    //})
-        //});
-
-
         function ChangeBatCode(obj, offset) {
             var currCode = $("#BatCode").val();
             var WorkShopCode = $("#WorkShopCode").val();

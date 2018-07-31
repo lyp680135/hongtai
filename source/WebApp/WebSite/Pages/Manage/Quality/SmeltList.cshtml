@@ -48,7 +48,11 @@
                             {
                                 <td>@item.Key</td>
                             }
-                            <td>操作</td>
+                            if (string.IsNullOrEmpty(Model.Type))
+                            {
+                                <td>操作</td>
+                            }
+
                         }
                     }
                 </tr>
@@ -80,12 +84,16 @@
                                         }
                                     }
                                 }
-                                <td>
-                                    @if (item.Status == 0)
-                                    {
-                                        <a class="tablelink" href="javascript:void(0)" onclick="zuofei(@item.Id,1)">作废</a>
-                                    }
-                                </td>
+
+                                @if (string.IsNullOrEmpty(Model.Type))
+                                {
+                                    <td>
+                                        @if (item.Status == 0)
+                                        {
+                                            <a class="tablelink" href="javascript:void(0)" onclick="zuofei(@item.Id,1)">作废</a>
+                                        }
+                                    </td>
+                                }
                             </tr>
                         }
 
@@ -100,8 +108,8 @@
             PageIndex = Model.PageIndex,
             PageCount = Model.PageCount,
             PageUrl = Request.GetAbsoluteUri(new List<KeyValuePair<string, string>>() {
-         new KeyValuePair<string, string>("pg","{0}")
-   }),
+new KeyValuePair<string, string>("pg","{0}")
+}),
             PageText = "{0}",
             ShowCount = 6,
             ShowAll = false
@@ -109,12 +117,18 @@
     </form>
     <script type="text/javascript">
         $(function () {
-            $('.layui-table tbody tr ').click(function () {
-                var $this = $(this);
-                var SmeltCode = $this.attr('SmeltCode');
-                //var SId = $this.attr('SId');
-                window.parent.Flash(SmeltCode);
-            });
+            @{
+                if (!string.IsNullOrEmpty(Model.Type))
+                {
+                    @Html.Raw(@"$('.layui-table tbody tr ').click(function() {
+                        var $this = $(this);
+                        var SmeltCode = $this.attr('SmeltCode');                      
+                        window.parent.Flash(SmeltCode);
+                    });");
+                    
+                }
+            }
+
         })
         function zuofei(id, status) {
             layer.confirm('确定作废该化学数据?', { icon: 3, title: '提示' }, function (index) {
@@ -140,10 +154,10 @@
             });
 
         }
-                                                        //function trclick(SmeltCode) {
+                                                                            //function trclick(SmeltCode) {
 
-                                                        //    window.location.href = '/Manage/quality/PhysicsInfo?SmeltCode=' + SmeltCode;
-                                                        //}
+                                                                            //    window.location.href = '/Manage/quality/PhysicsInfo?SmeltCode=' + SmeltCode;
+                                                                            //}
     </script>
 </body>
 

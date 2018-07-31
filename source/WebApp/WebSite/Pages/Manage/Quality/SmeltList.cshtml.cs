@@ -38,9 +38,11 @@ namespace WarrantyManage.Pages.Manage.Quality
 
         public string SmeltCode { get; set; }
 
+        public string Type { get; set; }
+
         public new int Page { get; set; }
 
-        public void OnGet(int pg = 1, string smeltCode = "")
+        public void OnGet(int pg = 1, string smeltCode = "", string type = "")
         {
             this.PageIndex = pg;
             var predicate = PredicateBuilder.New<PdqualitySmeltCode>(true);
@@ -51,6 +53,10 @@ namespace WarrantyManage.Pages.Manage.Quality
                 this.SmeltCode = smeltCode;
             }
 
+            if (!string.IsNullOrEmpty(type))
+            {
+                this.Type = type;
+            }
             int total = 0;
             this.ManageModels = this.pdSmeltCode.Page<int>(ref total, this.PageIndex, this.PageSize, p => p.Id, predicate, false);
             this.PageCount = total;
