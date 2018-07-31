@@ -31,9 +31,9 @@
 
         public string BatCode { get; set; }
 
-        public int SmeltCode { get; set; }
+        public string SmeltCode { get; set; }
 
-        public void OnGet(int? id, string batCode, int smeltCode = 0)
+        public void OnGet(int? id, string batCode, string smeltCode)
         {
             var userId = this.userService.ApplicationUser.Mng_admin.Id;
             var targetCategory = EnumList.TargetCategory.物理指标;
@@ -45,7 +45,7 @@
                 if (!id.HasValue || id.Value <= 0)
                 {
                     var productInfo = new PdProduct();
-                    PdBatcode currentInfo = this.Db.PdBatcode.OrderByDescending(c => c.Id).FirstOrDefault() ?? new PdBatcode();
+                    PdBatcode currentInfo = this.Db.PdBatcode.OrderByDescending(c => c.Id).FirstOrDefault(c => c.Workshopid == workInfo.Id && c.Status == 1) ?? new PdBatcode();
                     if (currentInfo != null)
                     {
                         this.BatCode = currentInfo.Batcode;
@@ -72,10 +72,9 @@
                     this.ListQualityStandards = this.Db.BaseQualityStandard.Where(w => w.Materialid == currentInfo.MaterialId && w.Status == 0 && w.TargetCategory == targetCategory).ToList();
                 }
 
-                if (smeltCode > 0)
+                if (!string.IsNullOrEmpty(smeltCode))
                 {
-                    this.PdSmeltCode = this.Db.PdSmeltCode.LastOrDefault();
-                    this.PdSmeltCode = this.Db.PdSmeltCode.FirstOrDefault(f => f.Id == smeltCode);
+                    this.PdSmeltCode = this.Db.PdSmeltCode.FirstOrDefault(f => f.SmeltCode == smeltCode);
                     this.SmeltCode = smeltCode;
                 }
             }

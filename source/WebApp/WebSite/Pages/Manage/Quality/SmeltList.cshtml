@@ -41,12 +41,14 @@
                             <td>创建时间</td>
                             <td>录入人</td>
                             <td>冶炼炉号</td>
+                            <td>状态</td>
                             var obj = Model.ManageModels.FirstOrDefault();
                             var jobj = (Newtonsoft.Json.Linq.JObject)obj.Chemistry.Object;
                             foreach (var item in jobj)
                             {
                                 <td>@item.Key</td>
                             }
+                            <td>操作</td>
                         }
                     }
                 </tr>
@@ -57,10 +59,11 @@
                     {
                         foreach (var item in Model.ManageModels)
                         {
-                            <tr>
+                            <tr SmeltCode="@item.SmeltCode" SId="@item.Id">
                                 <td>@Util.Extensions.GetDateTimeFromUnixTime(item.Createtime.ToLong()).ToString("yyyy/MM/dd")</td>
                                 <td>@userService.ApplicationUser.Mng_admin.RealName</td>
                                 <td>@item.SmeltCode</td>
+                                <td>@item.Status.ToString().Replace("0", "未作废").Replace("1", "已作废")</td>
                                 @{
                                     var valobj = (Newtonsoft.Json.Linq.JObject)item.Chemistry.Object;
                                     foreach (var jobject in valobj)
@@ -77,6 +80,12 @@
                                         }
                                     }
                                 }
+                                <td>
+                                    @if (item.Status == 0)
+                                    {
+                                        <a class="tablelink" href="javascript:void(0)" onclick="zuofei(@item.Id,1)">作废</a>
+                                    }                                   
+                                </td>
                             </tr>
                         }
 
@@ -91,12 +100,47 @@
             PageIndex = Model.PageIndex,
             PageCount = Model.PageCount,
             PageUrl = Request.GetAbsoluteUri(new List<KeyValuePair<string, string>>() {
-                                                                                 new KeyValuePair<string, string>("pg","{0}")
-                                                                           }),
+             new KeyValuePair<string, string>("pg","{0}")
+       }),
             PageText = "{0}",
             ShowCount = 6,
             ShowAll = false
         })
     </form>
+    <script type="text/javascript">
+        $(function () {
+            $('.layui-table tbody tr ').click(function () {
+                var $this = $(this);
+                var SmeltCode = $this.attr('SmeltCode');
+                //var SId = $this.attr('SId');
+                window.parent.Flash(SmeltCode);
+            });
+        })
+        function zuofei(id, status) {
+            $.ajax({
+                type: "POST", url: '/Quality/ChemistryEdit?status=' + status + '&Id=' + id,
+                data: $("#form1").serialize(),
+                success: function (re) {
+                    if (re.toString() == 'true') {
+                        layer.msg('编辑成功', { icon: 1 });
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 2000);                        
+                    } else {
+                        layer.msg(re, { icon: 2 });
+                    }
+                    layer.close(loadLayer);
+                }, error: function () {
+                    layer.close(loadLayer);
+                    layer.msg('编辑成功，系统出现未知错误', { icon: 2 });
+                }
+            });
+        }
+                                                    //function trclick(SmeltCode) {
+
+                                                    //    window.location.href = '/Manage/quality/PhysicsInfo?SmeltCode=' + SmeltCode;
+                                                    //}
+    </script>
 </body>
+
 </html>

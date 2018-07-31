@@ -64,20 +64,13 @@
             color: red;
         }
 
-        #SmeltCode {
-            opacity: 1;
-            width: 150px !important;
-            display: block;
-            border: 1px solid #cccccc;
-            padding: 7px 10px;
-        }
 
         option {
             color: black;
             line-height: 20px;
         }
 
-        #BatCode {
+        .BatCode {
             height: 32px !important;
         }
 
@@ -90,6 +83,13 @@
             transform: translate(-50%, -50%); /* 50%为自身尺寸的一半 */
             font-size: 30px;
             color: #808080;
+        }
+
+        .yllh {
+            line-height: 32px;
+            display: inline-block;
+            float: left;
+            padding-right: 10px;
         }
     </style>
 </head>
@@ -126,124 +126,42 @@
                         </select>
                     </div>
                 }
-                @if (Model.PdQuality.Id == 0 && Model.PdSmeltCodeList != null && Model.PdSmeltCodeList.Count > 0)
-                {
-                    <div class="layui-input-inline" style="width:150px;">
-                        <select id="SmeltCode" name="SmeltCode" class="select2 validate[required] layui-input">
-                            <option value=""></option>
-                            @foreach (var item in Model.PdSmeltCodeList)
-                            {
-                                if (item.Id == Model.SmeltCode)
-                                {
-                                    <option value="@item.Id" selected=selected>@item.SmeltCode</option>
-                                }
-                                else
-                                {
-                                    <option value="@item.Id">@item.SmeltCode</option>
-                                }
-                            }
-
-                        </select>
-                    </div>
-                }
-                else if (Model.PdQuality.Id > 0 && Model.PdSmeltCodeList != null && Model.PdSmeltCodeList.Count > 0)
-                {
-
-                    <div class="layui-input-inline" style="width:150px;">
-                        <select id="SmeltCode" name="SmeltCode" class="select2" disabled="disabled">
-                            @foreach (var item in Model.PdSmeltCodeList)
-                            {
-                                if (item.Id == Model.SmeltCode)
-                                {
-                                    <option value="@item.Id" selected=selected>@item.SmeltCode</option>
-                                }
-                                else
-                                {
-                                    <option value="@item.Id">@item.SmeltCode</option>
-                                }
-                            }
-                        </select>
-                    </div>
-                }
                 @if (Model.PdQuality.Id == 0)
                 {
                     <div class="layui-input-inline">
-                        <input type="text" name="BatCode" id="BatCode" lay-verify="BatCode" autocomplete="off" placeholder="请输入轧制批号" class="validate[required] layui-input" value="@Model.BatCode" />
+                        <input type="text" name="BatCode" id="BatCode" lay-verify="BatCode" autocomplete="off" placeholder="请输入轧制批号" class="validate[required] layui-input BatCode" value="@Model.BatCode" />
                     </div>
-                    @*<div class="layui-input-inline" style="height: 32px;line-height: 32px;width: 100px;" id="ChangeBatCode">
-                            <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="ChangeBatCode(this,1); return false;">
-                                <i class="layui-icon">&#xe61a;</i>
-                            </a>
-                            <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="ChangeBatCode(this, -1);return false;">
+                    <div class="layui-input-inline" style="width: 100px;" id="ChangeBatCode">
+                        <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="ChangeBatCode(this,1); return false;">
+                            <i class="layui-icon">&#xe61a;</i>
+                        </a>
+                        <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="ChangeBatCode(this, -1);return false;">
 
-                                <i class="layui-icon">&#xe619;</i>
-                            </a>
-                        </div>*@
+                            <i class="layui-icon">&#xe619;</i>
+                        </a>
+                    </div>
                 }
                 else
                 {
                     <div class="layui-input-inline">
-                        <input type="text" name="BatCode" id="BatCode" lay-verify="BatCode" autocomplete="off" placeholder="请输入轧制批号" class="validate[required] layui-input" value="@Model.PdQuality.Batcode" disabled="disabled" />
+                        <input type="text" name="BatCode" id="BatCode" lay-verify="BatCode" autocomplete="off" placeholder="请输入轧制批号" class="validate[required] layui-input BatCode" value="@Model.PdQuality.Batcode" disabled="disabled" />
                     </div>
                 }
-                @if (Model.PdQuality.Id == 0)
-                {
-                    <button type="button" id="searchBtn" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe615;</i>搜索</button>
-                }
-                <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" style="float:right;margin-right:1%;" onclick="locationHref(); return false;"><i class="layui-icon">&#xe615;</i>历史记录</button>
             </div>
-            @*化学数据*@
-
-            @{
-                @if (Model.PdSmeltCode != null && Model.PdSmeltCode.Id > 0)
-                {
-                    var Chemistry = (Newtonsoft.Json.Linq.JObject)Model.PdSmeltCode.Chemistry.Object;
-                    <div class="layui-form-item">
-                        <h3 class="title">化学数据</h3>
-                        <table class="tbData">
-
-                            <thead>
-                                <tr>
-                                    @foreach (var item in Chemistry)
-                                    {
-                                        <th>@item.Key</th>
-                                    }
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    @foreach (var item in Chemistry)
-                                    {
-                                        var val = item.Value;
-                                        if (val.SafeString() != string.Empty)
-                                        {
-                                            <th>@val</th>
-                                        }
-                                        else
-                                        {
-                                            <th></th>
-                                        }
-                                    }
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                }
-                else
-                {
-                    if (Model.PdQuality.Id == 0)
-                    {
-                        <h1 class="element">请选择冶炼炉号、轧制批号进行搜索</h1>
-                    }
-
-                }
+            @if (Model.PdQuality.Id == 0 && Model.ListQualityStandards != null && Model.ListQualityStandards.Count > 0)
+            {
+                <lable class="yllh" style="">冶炼炉号:</lable>
+                <div class="layui-input-inline">
+                    <input type="text" name="SmeltCode" id="SmeltCode" lay-verify="SmeltCode" autocomplete="off" placeholder="请输入冶炼炉号" class="validate[required] layui-input BatCode" value="@Model.SmeltCode" />
+                </div>
+                <button type="button" id="selsmeltcode" class="layui-btn layui-btn-sm layui-btn-normal" onclick="locationHref(); return false;"><i class="layui-icon">&#xe615;</i>选择冶炼炉号</button>
             }
 
             @if (Model.ListQualityStandards != null)
             {
 
                 <div class="layui-form-item">
-                    <h3 class="title">物理数据</h3>
+                    <h3 class="title"></h3>
                     <table class="tbData">
                         <thead>
                             <tr>
@@ -446,6 +364,10 @@
                 }
             });
         }
+        function Flash(smeltCode) {
+            var currCode = $("#BatCode").val();
+            window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + smeltCode + '&batcode=' + currCode;
+        }
         //按回车移动光标
         function focusNextInput(thisInput) {
             var inputs = document.getElementsByTagName("input");
@@ -474,13 +396,12 @@
 
 
         function ChangeBatCode(obj, offset) {
-
             var currCode = $("#BatCode").val();
             GetBatCode(currCode, offset)
             return false;
         }
 
-        function GetBatCode(currCode, offset) {
+        function GetBatCode(currCode, offset, workShopCode) {
             var index = layer.load(1, {
                 shade: [0.1, '#fff'] //0.1透明度的白色背景
             });
@@ -493,7 +414,7 @@
                         if (json.data != '') {
                             $("#BatCode").val(json.Data);
                             $("#ChangeBatCode button").removeClass("layui-btn-disabled");
-
+                            window.location.href = '/Manage/quality/PhysicsInfo?batcode=' + $("#BatCode").val();
                             layer.msg("炉批号获取完成");
 
                             //CheckBatCode(json.Data);
@@ -527,22 +448,24 @@
             });
         }
 
-        $(document).ready(function () {
-            //$('#SmeltCode').change(function () {
-            //    var Sid = $('#SmeltCode').val();
-            //    var currCode = $("#BatCode").val();
-            //    window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + Sid + '&batcode=' + currCode;
-            //});
+        $(function () {
+            $('#BatCode').blur(function () {              
+                var $this = $(this);
+                if ($this.val().trim() == '') {
+                    layer.msg('请输入轧制批号')
+                    return;
+                }
+                window.location.href = '/Manage/quality/PhysicsInfo?batcode=' + $this.val().trim();
+            });
+            $('#searchBtn').click(function () {
+                var Sid = $('#SmeltCode').val();
+                var currCode = $("#BatCode").val();
+                var pass = $("#form1").validationEngine("validate");
+                if (pass) {
+                    window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + Sid + '&batcode=' + currCode;
+                }
 
-            //$('#searchBtn').click(function () {
-            //    var Sid = $('#SmeltCode').val();
-            //    var currCode = $("#BatCode").val();
-            //    var pass = $("#form1").validationEngine("validate");
-            //    if (pass) {
-            //        window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + Sid + '&batcode=' + currCode;
-            //    }
-
-            //});
+            });
             $('#searchBtn').click(function () {
                 var Sid = $('#SmeltCode').val().trim();
                 var currCode = $("#BatCode").val();
@@ -558,11 +481,11 @@
                 window.location.href = '/Manage/quality/PhysicsInfo?smeltCode=' + Sid + '&batcode=' + currCode;
             });
 
-            $('#SmeltCode').select2({
-                placeholder: "选择冶炼炉号",
-                width: "152px",
-                language: "zh-CN",
-            });
+            //$('#SmeltCode').select2({
+            //    placeholder: "选择冶炼炉号",
+            //    width: "152px",
+            //    language: "zh-CN",
+            //});
             $('#WorkShopCode').select2({
                 placeholder: "选择车间",
                 width: "152px",
@@ -573,10 +496,11 @@
             $("#btnSubmit").click(function () {
                 $('input').removeClass('bgcolor');
                 var SmeltCode = $("#SmeltCode").val();
+                var BatCode = $('#BatCode').val();
                 var pass = $("#form1").validationEngine("validate");
                 if (pass) {
                     $.ajax({
-                        type: "POST", url: '/Quality/Check?SmeltCode=' + SmeltCode,
+                        type: "POST", url: '/Quality/Check?batCode=' + BatCode,
                         data: $("#form1").serialize(),
                         success: function (re) {
                             //如果校验通过就直接添加
@@ -610,7 +534,7 @@
                 var BatCode = $('#BatCode').val();
                 var loadLayer = layer.load(1);
                 $.ajax({
-                    type: "POST", url: '/Quality/PhysicsAdd?SId=' + SmeltCode + '&BatCode=' + BatCode,
+                    type: "POST", url: '/Quality/PhysicsAdd?SmeltCode=' + SmeltCode + '&BatCode=' + BatCode,
                     data: $("#form1").serialize(),
                     success: function (re) {
                         if (re.toString() == 'true') {

@@ -44,11 +44,13 @@ namespace WarrantyManage.Pages.Manage.Quality
         {
             this.PageIndex = pg;
             var predicate = PredicateBuilder.New<PdqualitySmeltCode>(true);
+            predicate.Extend(w => w.Status == 0, PredicateOperator.And);
             if (!string.IsNullOrWhiteSpace(smeltCode))
             {
                 predicate.Extend(w => w.SmeltCode == smeltCode.Trim(), PredicateOperator.And);
                 this.SmeltCode = smeltCode;
             }
+
             int total = 0;
             this.ManageModels = this.pdSmeltCode.Page<int>(ref total, this.PageIndex, this.PageSize, p => p.Id, predicate, false);
             this.PageCount = total;
