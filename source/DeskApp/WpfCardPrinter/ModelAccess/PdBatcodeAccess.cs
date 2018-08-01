@@ -10,13 +10,14 @@ namespace WpfCardPrinter.ModelAccess
 {
     class PdBatcodeAccess : BaseAccess<PdBatcode>
     {
-        public PdBatcodeAccess() : base()
+        public PdBatcodeAccess()
+            : base()
         {
 
         }
 
         public PdBatcodeAccess(PdBatcode model)
-            :base(model)
+            : base(model)
         {
 
         }
@@ -26,7 +27,7 @@ namespace WpfCardPrinter.ModelAccess
             long newid = -1;
             try
             {
-                using (MySqlCommand mysqlcom = new MySqlCommand("INSERT INTO pdbatcode (batcode,adder,createtime,status,workshopid) VALUES (@batcode,@adder,unix_timestamp(now()),@status,@workshopid)", _connection))
+                using (MySqlCommand mysqlcom = new MySqlCommand("INSERT INTO pdbatcode (batcode,adder,createtime,status,workshopid,Serialno) VALUES (@batcode,@adder,unix_timestamp(now()),@status,@workshopid,@Serialno)", _connection))
                 {
                     mysqlcom.Parameters.Add("@batcode", MySqlDbType.VarChar);
                     mysqlcom.Parameters["@batcode"].Value = pdcode.Batcode;
@@ -36,7 +37,7 @@ namespace WpfCardPrinter.ModelAccess
                     mysqlcom.Parameters["@status"].Value = pdcode.Status;
                     mysqlcom.Parameters.Add("@workshopid", MySqlDbType.Int32);
                     mysqlcom.Parameters["@workshopid"].Value = pdcode.Workshopid;
-
+                    mysqlcom.Parameters.Add("@Serialno",MySqlDbType.Int32).Value = pdcode.Serialno;
                     if (mysqlcom.ExecuteNonQuery() > 0)
                     {
                         newid = mysqlcom.LastInsertedId;
@@ -76,12 +77,13 @@ namespace WpfCardPrinter.ModelAccess
                             pdbatcode.Productrate = Convert.IsDBNull(dr["productrate"]) ? new double?() : dr.GetDouble("productrate");
                             pdbatcode.Billetpieceweight = Convert.IsDBNull(dr["billetpieceweight"]) ? new double?() : dr.GetDouble("billetpieceweight");
                             pdbatcode.Billetnumber = Convert.IsDBNull(dr["billetnumber"]) ? new int?() : dr.GetInt32("billetnumber");
+                            pdbatcode.Serialno = int.Parse(dr["Serialno"].ToString());
                         }
                     }
                 }
             }
 
-            return pdbatcode; 
+            return pdbatcode;
         }
 
         public PdBatcode SingleByPrefixCode(string prefixCode)
@@ -107,6 +109,7 @@ namespace WpfCardPrinter.ModelAccess
                             pdcode.Productrate = Convert.IsDBNull(dr["productrate"]) ? new double?() : dr.GetDouble("productrate");
                             pdcode.Billetpieceweight = Convert.IsDBNull(dr["billetpieceweight"]) ? new double?() : dr.GetDouble("billetpieceweight");
                             pdcode.Billetnumber = Convert.IsDBNull(dr["billetnumber"]) ? new int?() : dr.GetInt32("billetnumber");
+                            pdcode.Serialno = int.Parse(dr["Serialno"].ToString());
                         }
                     }
                 }
@@ -144,6 +147,7 @@ namespace WpfCardPrinter.ModelAccess
                             pdcode.Productrate = Convert.IsDBNull(dr["productrate"]) ? new double?() : dr.GetDouble("productrate");
                             pdcode.Billetpieceweight = Convert.IsDBNull(dr["billetpieceweight"]) ? new double?() : dr.GetDouble("billetpieceweight");
                             pdcode.Billetnumber = Convert.IsDBNull(dr["billetnumber"]) ? new int?() : dr.GetInt32("billetnumber");
+                            pdcode.Serialno = int.Parse(dr["Serialno"].ToString());
                         }
                     }
                 }
@@ -152,18 +156,15 @@ namespace WpfCardPrinter.ModelAccess
             return pdcode;
         }
 
-        public PdBatcode SingleNextById(int id, string shopcode)
+        public PdBatcode SingleNextById(int Serialno, int workshopid)
         {
             PdBatcode pdcode = null;
 
             //判断下一个批号数据库中有没有
-            using (MySqlCommand mysqlcom = new MySqlCommand("SELECT * FROM pdbatcode WHERE id>@currid AND LEFT(batcode,1)=@code ORDER BY ID ASC LIMIT 1", _connection))
+            using (MySqlCommand mysqlcom = new MySqlCommand("SELECT * FROM pdbatcode WHERE substring(Serialno,5)>@Serialno and workshopid=@workshopid  ORDER BY ID ASC LIMIT 1", _connection))
             {
-                mysqlcom.Parameters.Add("@currid", MySqlDbType.Int32); ;
-                mysqlcom.Parameters["@currid"].Value = id;
-                mysqlcom.Parameters.Add("@code", MySqlDbType.VarChar);
-                mysqlcom.Parameters["@code"].Value = shopcode;
-
+                mysqlcom.Parameters.Add("@Serialno", MySqlDbType.Int32).Value = Serialno;
+                mysqlcom.Parameters.Add("@workshopid", MySqlDbType.Int32).Value = workshopid;
                 using (MySqlDataReader dr = mysqlcom.ExecuteReader())
                 {
                     //如果有数据就输出
@@ -181,6 +182,7 @@ namespace WpfCardPrinter.ModelAccess
                             pdcode.Productrate = Convert.IsDBNull(dr["productrate"]) ? new double?() : dr.GetDouble("productrate");
                             pdcode.Billetpieceweight = Convert.IsDBNull(dr["billetpieceweight"]) ? new double?() : dr.GetDouble("billetpieceweight");
                             pdcode.Billetnumber = Convert.IsDBNull(dr["billetnumber"]) ? new int?() : dr.GetInt32("billetnumber");
+                            pdcode.Serialno = int.Parse(dr["Serialno"].ToString());
                         }
                     }
                 }
@@ -216,6 +218,7 @@ namespace WpfCardPrinter.ModelAccess
                                 pdcode.Productrate = Convert.IsDBNull(dr["productrate"]) ? new double?() : dr.GetDouble("productrate");
                                 pdcode.Billetpieceweight = Convert.IsDBNull(dr["billetpieceweight"]) ? new double?() : dr.GetDouble("billetpieceweight");
                                 pdcode.Billetnumber = Convert.IsDBNull(dr["billetnumber"]) ? new int?() : dr.GetInt32("billetnumber");
+                                pdcode.Serialno = int.Parse(dr["Serialno"].ToString());
                             }
                         }
                     }
@@ -255,6 +258,7 @@ namespace WpfCardPrinter.ModelAccess
                                 pdcode.Productrate = Convert.IsDBNull(dr["productrate"]) ? new double?() : dr.GetDouble("productrate");
                                 pdcode.Billetpieceweight = Convert.IsDBNull(dr["billetpieceweight"]) ? new double?() : dr.GetDouble("billetpieceweight");
                                 pdcode.Billetnumber = Convert.IsDBNull(dr["billetnumber"]) ? new int?() : dr.GetInt32("billetnumber");
+                                pdcode.Serialno = int.Parse(dr["Serialno"].ToString());
                             }
                         }
                     }
@@ -298,6 +302,7 @@ namespace WpfCardPrinter.ModelAccess
                             pdcode.Productrate = Convert.IsDBNull(dr["productrate"]) ? new double?() : dr.GetDouble("productrate");
                             pdcode.Billetpieceweight = Convert.IsDBNull(dr["billetpieceweight"]) ? new double?() : dr.GetDouble("billetpieceweight");
                             pdcode.Billetnumber = Convert.IsDBNull(dr["billetnumber"]) ? new int?() : dr.GetInt32("billetnumber");
+                            pdcode.Serialno = int.Parse(dr["Serialno"].ToString());
                         }
                     }
                 }
@@ -336,6 +341,7 @@ namespace WpfCardPrinter.ModelAccess
                             pdcode.Productrate = Convert.IsDBNull(dr["productrate"]) ? new double?() : dr.GetDouble("productrate");
                             pdcode.Billetpieceweight = Convert.IsDBNull(dr["billetpieceweight"]) ? new double?() : dr.GetDouble("billetpieceweight");
                             pdcode.Billetnumber = Convert.IsDBNull(dr["billetnumber"]) ? new int?() : dr.GetInt32("billetnumber");
+                            pdcode.Serialno = int.Parse(dr["Serialno"].ToString());
                         }
                     }
                 }
@@ -378,7 +384,7 @@ namespace WpfCardPrinter.ModelAccess
                     var list = access.GetListByBatcode(batcode);
 
                     //累加总重量
-                    for(int i=0;i<list.Count;i++)
+                    for (int i = 0; i < list.Count; i++)
                     {
                         totalrealweight += list[i].Weight.Value;
                     }

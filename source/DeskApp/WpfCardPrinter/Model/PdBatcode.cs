@@ -33,5 +33,7 @@ namespace DataLibrary
         /// Gets or sets 成材率
         /// </summary>
         public double? Productrate { get; set; }
+        public int Serialno { get; set; }
+        
     }
 }
