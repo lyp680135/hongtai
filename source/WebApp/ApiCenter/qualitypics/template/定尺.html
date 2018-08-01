@@ -11,11 +11,10 @@
         .warranty {
             width: 1583px;
             height: 1125px;
-            /*border: 1px solid #333;*/
             padding: 10px;
             z-index: 2;
             font-size: 17px;
-            padding-top: 80px;
+            padding-top: 70px;
         }
 
         .title {
@@ -94,29 +93,27 @@
 </head>
 <body>
 
-    <div id="warrantycopy" class="warranty">
-        <div style="position: absolute;margin-left:30px;"><img src="{{data.Logo}}" /></div>
-        <div style="position: absolute;width:100%;height:100px; text-align:center;margin-right:15px;">
-            <img width="515" height="100" src="{{data.TitleIcon}}" />
+    <div class="warranty">
+        <div style="position: absolute;margin-left:30px;"><img src="{{data.Logo}}" style="margin-top:20px"  /></div>
+        <div style="position: absolute;width:100%;height:75px; text-align:center;margin-right:15px;">
+            <img width="515" height="75" src="{{data.TitleIcon}}" />
             <div style="font-size: 36px; font-weight: 900;line-height: 0.5;">产品质量证明书</div>
             <div style="font-size: 20px; font-weight: 900;padding:0;line-height: 0.5; vertical-align:baseline;">INSPECTION CERTIFICATE</div>
         </div>
-
-        <div class="table1" style="margin-top:35px;">
-            <table style="width: 100%;">
+        <div>
+            <table style="width: 100%;margin-top:55px;">
                 <tbody>
                     <tr>
-                        <td style="padding-left: 63px; width: 100px;">
-                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        <td align="right" width="500">
+                             <img src="{{data.QualityIcon2}}" width="85" height="120" />
                         </td>
-                        <td style="width:555px;padding-left:10px; padding-top:20px;">
+                        <td style="width:515px;padding-left:10px; padding-top:20px;">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </td>
-
                         <td style="text-align: right;padding-left:30px">
                             <img src="{{data.QualityIcon}}" width="290" height="120" style="padding-right:0px;" />
                         </td>
-                        <td style="text-align: left; width:210px;">
+                        <td style="text-align: left; width:210px;padding-top:10px;">
                             <div style="margin-left: 20px;">
                                 <div style="font-size: 24px; font-weight: bold; ">
                                     NO. <span style="font-size:15px;">&nbsp;</span>
@@ -131,8 +128,12 @@
                             </div>
                         </td>
                     </tr>
-                    <tr style="margin-top: 20px;">
-                        <td colspan="2" style="padding-left: 87px;padding-top:50px;padding-bottom:20px" width="310">
+                </tbody>
+           	    </table>
+               <table style="width: 100%;" cellpadding="0" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td style="padding-left: 87px;padding-bottom:20px;padding-top:40px;" width="700">
                             <div style="margin-bottom: 20px;">
                                 收货单位/Purchaser
                                 <span style="margin-left: 20px;font-weight: bold;">{{data.DeliveryCompany}}</span>
@@ -145,8 +146,12 @@
                                 技术标准/Specification
                                 <span style="margin-left: 20px;font-weight: bold;">{{data.Standard}}</span>
                             </div>
+							<div style="margin-bottom: 20px;">
+                                ISO9001：2008/Number
+                                <span style="margin-left: 20px;font-weight: bold;">UQ100524R0</span>
+                            </div>                        
                         </td>
-                        <td style="padding-top:50px;padding-bottom:20px" width="450">
+                        <td style="padding-bottom:20px;padding-top:40px;" width="640">
                             <div style="margin-bottom: 20px;font-size:17px;">
                                 生产许可证号/Production License Number
                                 <span style="margin-left: 20px;font-weight: bold;">{{data.PermitNo}}</span>
@@ -159,8 +164,12 @@
                                 交货形式/Delivery Form
                                 <span style="margin-left: 20px; font-weight: bold;">{{data.DeliveryState}}/{{data.DeliveryStateEn}}</span>
                             </div>
+                            <div style="margin-bottom: 20px;">
+                                ISO014001：2004/Number
+                                <span style="margin-left: 20px; font-weight: bold;">UE090048R0</span>
+                            </div>
                         </td>
-                        <td style="text-align: center; padding-right: 15px;padding-top:10px;margin-top:-15px;">
+                        <td align="center" valign="top" width="220">
                             <img src="{qrimg}" width="130px" height="130px" />
                             <div style="font-size:12px;line-height:20px;margin-top:5px;">
                                 扫码验证识别
@@ -173,30 +182,30 @@
                 </tbody>
             </table>
         </div>
-        <div class="table2" style="margin-top:20px;">
+        <div class="table2">
             <table width="1521px" align="center" border="0" cellpadding="0" cellspacing="0" style="margin:0 20px">
-                <tr>
+                 <tr>
                     <td rowspan="2" width="38px">序号<div>NO.</div></td>
-                    <td rowspan="2" width="114px">批号<br />Batch No.</td>
-                    <td rowspan="2" width="76px">规格<br />Size(mm)</td>
+                    <td rowspan="2" width="104px">批号<br />Batch No.</td>
+                    <td rowspan="2" width="66px">规格<br />Size(mm)</td>
                     <td rowspan="2" width="76px">定尺长度<br />Longth<br />(m)</td>
-                    <td rowspan="2" width="76px">件数<br />Piece</td>
-			        <td rowspan="2" width="76px">重量<br />Weight<br />(kg)</td>
-			        <td rowspan="2" width="76px">重量偏差<br />Weight<br />Offset<br />(%)</td>
-			        <td rowspan="2" width="76px"><br />外形尺寸<br />表面质量<br />Surface<br />Quality</td>
+                    <td rowspan="2" width="56px">件数<br />Piece</td>
+                    <td rowspan="2" width="56px">重量<br />Weight<br />(kg)</td>
+                    <td rowspan="2" width="66px">重量偏差<br />Weight<br />Offset<br />(%)</td>
+                    <td rowspan="2" width="76px"><br />外形尺寸<br />表面质量<br />Surface<br />Quality</td>
                     <td colspan="6">拉伸试验<br />Tensile Test</td>
                     <td colspan="2" width="114px">冷弯试验<br />Cold Bend Test<br />180°</td>
-       		        <td colspan="2" height="75">反弯试验<div>BackBending Test</div><div>＋90°&nbsp;&nbsp;－20°</div>
+                    <td colspan="2" height="75">反弯试验<div>BackBending Test</div><div>＋90°&nbsp;&nbsp;－20°</div>
                     </td>
                 </tr>
 
                 <tr>
-			        <td height="70px" width="113px">下屈服强度<br />R°el(MPa)</td>
-			        <td width="113px">抗拉强度<br />R°m(MPa)</td> 
-			        <td width="113px">断后伸长率<br />A(%)</td>
-			        <td width="113px">最大力总伸长率<br />Agt(%)</td>
-			        <td width="113px">屈屈比<br />R°el/Rel</td>
-			        <td width="113px">强屈比<br />R°m/R°el</td>
+                    <td height="70px" width="128px">下屈服强度<br />R°el(MPa)</td>
+                    <td width="128px">抗拉强度<br />R°m(MPa)</td> 
+                    <td width="133px">断后伸长率<br />A(%)</td>
+                    <td width="133px">最大力总伸长率<br />Agt(%)</td>
+                    <td width="113px">屈屈比<br />R°el/Rel</td>
+                    <td width="113px">强屈比<br />R°m/R°el</td>
                     <td width="40px">弯心D<br />(mm)</td>
                     <td width="80px">结果<br />Result</td>
                     <td width="40px">弯心D<br />(mm)</td>
@@ -328,3 +337,4 @@
     </div>
 </body>
 </html>
+
