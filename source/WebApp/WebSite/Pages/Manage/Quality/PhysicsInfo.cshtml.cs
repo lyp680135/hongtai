@@ -35,6 +35,8 @@
 
         public int Wid { get; set; }
 
+        public string Msg { get; set; }
+
         public void OnGet(int? id, string batCode, string smeltCode, int wid = 0)
         {
             var userId = this.userService.ApplicationUser.Mng_admin.Id;
@@ -75,6 +77,11 @@
                         if (productInfo != null)
                         {
                             this.ListQualityStandards = this.Db.BaseQualityStandard.Where(w => w.Materialid == productInfo.Materialid && w.Status == 0 && w.TargetCategory == targetCategory).ToList();
+                        }
+                        else
+                        {
+                            this.ListQualityStandards = new List<BaseQualityStandard>();
+                            this.Msg = "不存在该炉批号";
                         }
                     }
                 }

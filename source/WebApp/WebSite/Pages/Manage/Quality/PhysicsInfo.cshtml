@@ -240,7 +240,7 @@
                                                             if (item.TargetName == itemChild.Key)
                                                             {
                                                                 <td>
-                                                                    <input class="validate[@Html.Raw(item.TargetIsNull==1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName)" value="@itemChild.Value" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
+                                                                    <input class="validate[@Html.Raw(item.TargetIsNull == 1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName)" value="@itemChild.Value" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
                                                                 </td>
                                                             }
                                                         }
@@ -248,7 +248,7 @@
                                                     else
                                                     {
                                                         <td>
-                                                            <input class="validate[@Html.Raw(item.TargetIsNull==1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName)" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
+                                                            <input class="validate[@Html.Raw(item.TargetIsNull == 1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName)" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
                                                         </td>
                                                     }
 
@@ -325,7 +325,7 @@
                                                                 if (item.TargetName == itemChild.Key)
                                                                 {
                                                                     <td>
-                                                                        <input class="validate[@Html.Raw(item.TargetIsNull==1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName + i)" value="@Html.Raw(itemChild.Value)" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
+                                                                        <input class="validate[@Html.Raw(item.TargetIsNull == 1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName + i)" value="@Html.Raw(itemChild.Value)" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
                                                                     </td>
                                                                 }
 
@@ -335,7 +335,7 @@
                                                         else
                                                         {
                                                             <td>
-                                                                <input class="validate[@Html.Raw(item.TargetIsNull==1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName + i)" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
+                                                                <input class="validate[@Html.Raw(item.TargetIsNull == 1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName + i)" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
                                                             </td>
                                                         }
 
@@ -371,7 +371,12 @@
             }
         </form>
     </div>
-
+    @if (!string.IsNullOrEmpty(Model.Msg))
+    {
+        <script type="text/javascript">
+            layer.msg('@Model.Msg', { icon: 2 });
+        </script>
+    }
     <script type="text/javascript">
         function locationHref() {
             var index = layer.open({
@@ -463,7 +468,14 @@
                 }
             });
         }
-
+        function FlashBatCode(obj) {
+            var $this = $(obj);
+            if ($this.val().trim() == '') {
+                layer.msg('请输入轧制批号')
+                return;
+            }
+            window.location.href = '/Manage/quality/PhysicsInfo?batcode=' + $this.val().trim();
+        }
         $(function () {
             $('#BatCode').blur(function () {
                 var $this = $(this);
@@ -471,8 +483,9 @@
                     layer.msg('请输入轧制批号')
                     return;
                 }
-                window.location.href = '/Manage/quality/PhysicsInfo?batcode=' + $this.val().trim();
+                window.location.href = '/Manage/quality/PhysicsInfo?batcode=' + $this.val().trim() + '&wid=' + $('#WorkShopCode').val();
             });
+
             $('#searchBtn').click(function () {
                 var Sid = $('#SmeltCode').val();
                 var currCode = $("#BatCode").val();
