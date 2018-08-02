@@ -83,6 +83,7 @@ namespace WpfCardPrinter
     public partial class MainWindow : Window
     {
         public string myWorkshopProductLine = System.Configuration.ConfigurationManager.AppSettings["WorkshopProductLine"];
+        public string ProductLine = System.Configuration.ConfigurationManager.AppSettings["ProductLine"];
         public string myQRCodeUrlString = System.Configuration.ConfigurationManager.AppSettings["QRCodeUrlString"];
         public int nunlength = string.IsNullOrWhiteSpace(System.Configuration.ConfigurationManager.AppSettings["UnfixedLengthNumber"]) ? 0 : Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["UnfixedLengthNumber"]);
         public string mLabelPageWidth = ConfigurationManager.AppSettings["PageWidth"];
@@ -127,10 +128,10 @@ namespace WpfCardPrinter
         private BitmapImage zhi_e = null;
         private BitmapImage pan = null;
         private BitmapImage pan_e = null;
-		
+
         //是否离线
         private bool mbOffline = false;
-		
+
         public MainWindow(MngAdmin user, PdWorkshop shop)
         {
             InitializeComponent();
@@ -140,7 +141,7 @@ namespace WpfCardPrinter
             Application.Current.MainWindow = this;
 
             //显示增加材质的点击事件
-            cbMaterial.AddHandler(ComboBox.MouseLeftButtonDownEvent, new MouseButtonEventHandler(MaterialClick),true);
+            cbMaterial.AddHandler(ComboBox.MouseLeftButtonDownEvent, new MouseButtonEventHandler(MaterialClick), true);
 
             this.mUser = user;
             this.mWorkshop = shop;
@@ -233,7 +234,8 @@ namespace WpfCardPrinter
 
         private void BeginInitData()
         {
-            this.Dispatcher.BeginInvoke(new Action(() => { 
+            this.Dispatcher.BeginInvoke(new Action(() =>
+            {
                 SetLoadingValue(2, "", "正在装载标牌资源...");
                 //初始化标牌显示
                 InitLabel();
@@ -747,7 +749,7 @@ namespace WpfCardPrinter
 
         protected void InitData()
         {
-           
+
             this.Dispatcher.BeginInvoke(new Action(() => { SetLoadingValue(10, "", "正在加载系统配置..."); }));
 
             try
@@ -766,7 +768,7 @@ namespace WpfCardPrinter
                         mTitle = "小羽网络科技（杭州）" + "称重/标牌打印";
                     }
                 }
-    
+
                 this.Dispatcher.BeginInvoke(new Action(() => { SetLoadingValue(15, "", "正在检查缓存数据..."); }));
 
                 CheckOfflineCache();
@@ -828,11 +830,11 @@ namespace WpfCardPrinter
                     {
                         mCurrentTeam = mTeamList[0];
 
-						this.Dispatcher.BeginInvoke(new Action(() =>
-						{
-                        	//当第一次使用系统时，把默认的排班写入库中
-                        	SetCurrentWorkShift(mCurrentTeam.Id);
-						}));
+                        this.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            //当第一次使用系统时，把默认的排班写入库中
+                            SetCurrentWorkShift(mCurrentTeam.Id);
+                        }));
                     }
                     else
                     {
@@ -875,7 +877,7 @@ namespace WpfCardPrinter
                     }
                 }
 
-				using (BaseProductMaterialAccess maccess = new BaseProductMaterialAccess())
+                using (BaseProductMaterialAccess maccess = new BaseProductMaterialAccess())
                 {
                     var mtlist = maccess.GetList();
                     if (mtlist != null)
@@ -910,7 +912,7 @@ namespace WpfCardPrinter
                 }
 
                 this.Dispatcher.BeginInvoke(new Action(() => { SetLoadingValue(51, "", "正在加载品名材质信息...完成！"); }));
-                
+
 
                 //长度
                 var commonlist = new ObservableCollection<CommonItem>();
@@ -1072,7 +1074,7 @@ namespace WpfCardPrinter
                         }
                     }
 
-                        
+
 
                     this.Dispatcher.BeginInvoke(new Action(() =>
                     {
@@ -1189,7 +1191,7 @@ namespace WpfCardPrinter
             {
                 start = 1;
             }
-            
+
             //逐行生成数据
             for (var i = start; i <= 100; i++)
             {
@@ -1238,7 +1240,7 @@ namespace WpfCardPrinter
                 materialid = mMaterial.Id;
             }
 
-           // int nunlength = 5;
+            // int nunlength = 5;
             int strict_lengthtype = (int)DataLibrary.EnumList.ProductQualityLevel.定尺;
             if (mMaterial != null)
             {
@@ -1490,7 +1492,7 @@ namespace WpfCardPrinter
                     var materialitem = findMaterialById(mSelectedProduct.Materialid.Value);
                     cbMaterial.SelectedValue = materialitem;
                     cbClass.SelectedValue = materialitem.Classid;
-                    
+
                     //如果和原来的一样，手动触发控件刷新规格等数据
                     if (materialitem.Id == oldmaterial && materialitem.Classid == oldclass)
                     {
@@ -1636,7 +1638,7 @@ namespace WpfCardPrinter
 
             }
         }
-    
+
         /// <summary>
         /// 材质切换下拉事件
         /// </summary>
@@ -1933,7 +1935,7 @@ namespace WpfCardPrinter
                 ShowLoading();
             }));
 
-            if(mbOffline)
+            if (mbOffline)
             {
                 MessageBoxResult dialogresult = MessageBox.Show("离线状态下切换批号将不能再返回当前批号，请确认是否继续操作？", "操作提醒", MessageBoxButton.OKCancel, MessageBoxImage.Information);
                 if (dialogresult == MessageBoxResult.Cancel)
@@ -1974,7 +1976,7 @@ namespace WpfCardPrinter
                         {
                             txtBatCode.Text = nextcode;
 
-                            if (!mbOffline) 
+                            if (!mbOffline)
                             {
                                 mCurrentBatCode = nextcode;
 
@@ -2001,7 +2003,7 @@ namespace WpfCardPrinter
                                     HideLoading();
                                 }
                             }
-                           
+
                         }));
                     }
                     else
@@ -2275,7 +2277,7 @@ namespace WpfCardPrinter
 
                     mSelectedProduct.Specname = selectedspec.Specname;
                     mProductList[mSelectedProductIndex] = mSelectedProduct;
-                    
+
                     if (mSelectedProductIndex > 0)
                     {
                         dgProduct.SelectedIndex = mSelectedProductIndex;
@@ -2716,7 +2718,7 @@ namespace WpfCardPrinter
                                     if (result > 0)
                                     {
                                         product.Id = (int)result;
-                        			}
+                                    }
                                 }
                             }
                         }
@@ -2744,8 +2746,8 @@ namespace WpfCardPrinter
                     {
                         //把数据反写回选中的那条数据中
                         mProductList[mSelectedProductIndex] = product;
-                    }                
-				}
+                    }
+                }
 
                 if (!mbOffline)
                 {
@@ -2842,7 +2844,7 @@ namespace WpfCardPrinter
                         prevcode = GetBatCode(mCurrentBatCode, -1);
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     if (ex.Message.IndexOf("Connection must be valid and open") != -1)
                     {
@@ -2915,10 +2917,10 @@ namespace WpfCardPrinter
         public string GetBatCode(string curcode, int offset)
         {
             string batcode = "";
-
+            int serialno = 0;
             //第一位为生产线
             string FIRST_WORD = myWorkshopProductLine;
-            string DATE_CODE = DateTime.Now.ToString("yyMM");
+            string DATE_CODE = DateTime.Now.ToString("yy");
 
             PdBatcode curritem = new PdBatcode();
 
@@ -2982,14 +2984,14 @@ namespace WpfCardPrinter
 
                     if (curritem == null || curritem.Id <= 0)     //如果当前批号为空并且数据库里也没有
                     {
-                        batcode = string.Format("{0}{1}{2}", FIRST_WORD, DATE_CODE, 1.ToString().PadLeft(4, '0'));
-
+                        batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, 1.ToString("D5"), this.ProductLine);
+                        serialno = Convert.ToInt32(string.Format("{0}{1}", DATE_CODE, 1.ToString("D5")));
                         PdBatcode pdcode = new PdBatcode();
                         pdcode.Batcode = batcode;
                         pdcode.Adder = "标牌打印程序";
                         pdcode.Status = 0;
                         pdcode.Workshopid = mCurrentTeam.WorkshopId;
-
+                        pdcode.Serialno = serialno;
                         access.Insert(pdcode);
 
                         if (curritem == null)
@@ -2999,105 +3001,50 @@ namespace WpfCardPrinter
                     }
                     else
                     {
+                        int serNo = Convert.ToInt32(curritem.Serialno.ToString().Substring(DATE_CODE.Length)) + offset;
+                        var nextBatcode = curcode.Substring((DATE_CODE + FIRST_WORD).Length, 5);
+                        int number = Convert.ToInt32(nextBatcode) + offset;
+                        batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, number.ToString("D5"), this.ProductLine);
+                        //下一个
                         if (offset > 0)
                         {
-                            var pdcode = access.SingleNextById(curritem.Id, myWorkshopProductLine);
-                            if (pdcode != null)
+                            if (curritem.Status == 0)
+                            {
+                                return curritem.Batcode;
+                            }
+                            var pdcode = access.SingleNextById(serNo, this.mWorkshop.Id);
+                            if (pdcode != null && pdcode.Id > 0)
+                            {
                                 return pdcode.Batcode;
-                        }
-                    }
-
-                    //分隔字符串
-                    string code = curritem.Batcode.Replace(FIRST_WORD, "");
-                    string datestr = code.Substring(0, 4);
-                    string numberstr = code.Replace(datestr, "");
-
-                    if (datestr == DATE_CODE)   //如果是当月，则在批号后做运算
-                    {
-                        int number = int.Parse(numberstr);
-                        number += offset;
-
-                        if (number > 0)
-                        {
-                            batcode = string.Format("{0}{1}{2}", FIRST_WORD, DATE_CODE, number.ToString().PadLeft(4, '0'));
-
-                            //如果是下一个，则为新生成的炉号，需要插入到数据库中
-                            if (offset > 0)
-                            {
-                                if (curritem.Status == 1)
-                                {
-
-                                    PdBatcode pdcode = new PdBatcode();
-                                    pdcode.Batcode = batcode;
-                                    pdcode.Adder = "标牌打印程序";
-                                    pdcode.Status = 0;
-                                    pdcode.Workshopid = mCurrentTeam.WorkshopId;
-
-                                    access.Insert(pdcode);
-                                }
-                                else
-                                {
-                                    //如果当前批号没有已使用，则仍然使用当前批号，不能跳过
-                                    batcode = curritem.Batcode;
-                                }
                             }
-
-                        }
-                        else  //如果炉号到0，则表示已经到了上月最后一个炉号
-                        {
-                            string preMonthCode = DateTime.Now.AddMonths(-1).ToString("yyMM");
-                            string prefix = string.Format("{0}{1}%", FIRST_WORD, preMonthCode);
-
-                            var pdcode = access.SingleByPrefixCode(prefix);
-                            if (pdcode != null)
+                            else
                             {
-                                batcode = pdcode.Batcode;
-                            }
 
-                            //如果上个月的批号没有，则继续保持当前批号，即返回空值
-                        }
-                    }
-                    else     //如果不是当月，则为历史记录，直接在数据库里取上一个和下一个
-                    {
-                        if (offset > 0)
-                        {
-                            var pdcode = access.SingleNextByIdAndShopId(curritem.Id, this.mWorkshop.Id);
-                            if (pdcode != null)
-                            {
-                                batcode = pdcode.Batcode;
-                            }
+                                serialno = Convert.ToInt32(string.Format("{0}{1}", DATE_CODE, number.ToString("D5")));
 
-                            //如果数据库没有，则生成新的
-                            if (string.IsNullOrEmpty(batcode))     //如果当前批号为空并且数据库里也没有
-                            {
-                                batcode = string.Format("{0}{1}{2}", FIRST_WORD, DATE_CODE, 1.ToString().PadLeft(4, '0'));
-
-                                if (curritem.Status == 1)
+                                access.Insert(new PdBatcode
                                 {
-                                    PdBatcode pc = new PdBatcode();
-                                    pc.Batcode = batcode;
-                                    pc.Adder = "标牌打印程序";
-                                    pc.Status = 0;
-                                    pc.Workshopid = mCurrentTeam.WorkshopId;
-
-                                    access.Insert(pc);
-                                }
-                                else
-                                {
-                                    //如果当前批号没有已使用，则仍然使用当前批号，不能跳过
-                                    batcode = curritem.Batcode;
-                                }
+                                    Batcode = batcode,
+                                    Adder = "标牌打印程序",
+                                    Status = 0,
+                                    Workshopid = mCurrentTeam.WorkshopId,
+                                    Serialno = serialno
+                                });
                             }
                         }
+                        //上一个
                         else
                         {
-                            var pdcode = access.SinglePrevByIdAndShopId(curritem.Id, this.mWorkshop.Id);
+
+                            var pdcode = access.SingleByPrefixCode(batcode);
                             if (pdcode != null)
                             {
                                 return pdcode.Batcode;
                             }
-
-                            //如果上一条的批号没有，则继续保持当前批号，即返回空值
+                            else
+                            {
+                                return curritem.Batcode;
+                            }
                         }
                     }
                 }
@@ -3245,11 +3192,11 @@ namespace WpfCardPrinter
                     var printedlog = access.SingleByProductid(product.Id);
                     if (printedlog != null)
                     {
-	                    if (printedlog.Status == 1)
+                        if (printedlog.Status == 1)
                         {
                             this.Dispatcher.BeginInvoke(new Action(() =>
                             {
-	                           MessageBox.Show("该产品已经打印过了，不能再次打印！", "操作提示", MessageBoxButton.OK, MessageBoxImage.Error);
+                                MessageBox.Show("该产品已经打印过了，不能再次打印！", "操作提示", MessageBoxButton.OK, MessageBoxImage.Error);
                             }));
                             return;
                         }
@@ -3471,7 +3418,7 @@ namespace WpfCardPrinter
                             var point = CommonUtils.GetPointFromSetting(PiececountPoint);
 
                             string piececounttxt = string.Format("{0}", product.Piececount);
-                            if (mMaterial.Deliverytype != (int)EnumList.DeliveryType.盘卷 
+                            if (mMaterial.Deliverytype != (int)EnumList.DeliveryType.盘卷
                                 && product.Lengthtype == (int)EnumList.ProductQualityLevel.定尺)
                             {
                                 FormattedText formattedText = new FormattedText(
@@ -3784,7 +3731,7 @@ namespace WpfCardPrinter
                     break;
                 }
             }
-            
+
             PdBatcode batcode = new PdBatcode();
             batcode.Batcode = mCurrentBatCode;
 
@@ -3873,7 +3820,7 @@ namespace WpfCardPrinter
                             this.BindView();
                             txtCurrWeight.Focus();
                         }));
-                    
+
                     }
                 }
 
@@ -3892,7 +3839,7 @@ namespace WpfCardPrinter
                     }
                 }
             });
-           
+
         }
 
         int batprinted = 0;
@@ -3945,7 +3892,7 @@ namespace WpfCardPrinter
 
                     this.Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        MessageBox.Show("批量打印出错中断："+e.Message, "操作提醒", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show("批量打印出错中断：" + e.Message, "操作提醒", MessageBoxButton.OK, MessageBoxImage.Warning);
 
                         HideLoading();
                         batprinted = 0;
@@ -4003,7 +3950,7 @@ namespace WpfCardPrinter
                 }
             }
         }
-        
+
         public string GenerateRandomCode()
         {
             StringBuilder codebuilder = new StringBuilder();
@@ -4076,7 +4023,7 @@ namespace WpfCardPrinter
             }
 
             return retindex;
-        } 
+        }
 
         private int findClassIndexById(int id)
         {
@@ -4138,7 +4085,7 @@ namespace WpfCardPrinter
             }
         }
 
-#region 称重设备相关代码
+        #region 称重设备相关代码
 
         private void InitWeightAutoInput()
         {
@@ -4383,6 +4330,6 @@ namespace WpfCardPrinter
             txtCurrWeight.Text = realweight;
         }
     }
-#endregion
+        #endregion
 
 }
