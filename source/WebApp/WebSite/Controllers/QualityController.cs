@@ -91,14 +91,14 @@
             if (current != null)
             {
                 var productInfo = new PdBatcode();
-                var id = current.Id;
+                var serialno = current.Serialno;
                 if (offset > 0)
                 {
-                    productInfo = this.db.PdBatcode.Where(w => w.Workshopid == wid).OrderBy(o => o.Id).FirstOrDefault(f => f.Id > id);
+                    productInfo = this.db.PdBatcode.Where(w => w.Workshopid == wid).OrderBy(o => o.Id).FirstOrDefault(f => f.Serialno > serialno);
                 }
                 else
                 {
-                    productInfo = this.db.PdBatcode.Where(w => w.Workshopid == wid).OrderByDescending(o => o.Id).FirstOrDefault(f => f.Id < id);
+                    productInfo = this.db.PdBatcode.Where(w => w.Workshopid == wid).OrderByDescending(o => o.Id).FirstOrDefault(f => f.Serialno < serialno);
                 }
 
                 if (productInfo != null)
@@ -375,7 +375,7 @@
                 foreach (var item in dxQualityStandards)
                 {
                     // 多行元素比较3次,
-                    for (int i = 0; i <= 2; i++)
+                    for (int i = 0; i < Count; i++)
                     {
                         var val = this.Request.Form[item.TargetName + i].ToString();
                         if ((item.TargetIsNull == 0 && !string.IsNullOrEmpty(val)) || item.TargetIsNull == 1)
@@ -812,6 +812,11 @@
             if (chemistryInfo == null)
             {
                 return "不存在化学数据无法编辑";
+            }
+            var chemistry = this.db.PdSmeltCode.FirstOrDefault(f => f.SmeltCode == chemistryInfo.SmeltCode && f.Status == 0 && f.Id != id);
+            if (chemistry != null)
+            {
+                return "已经存在该冶炼炉号化学数据,恢复失败";
             }
             chemistryInfo.Status = status;
             this.db.Update(chemistryInfo);
