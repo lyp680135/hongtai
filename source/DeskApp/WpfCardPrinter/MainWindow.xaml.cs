@@ -3001,10 +3001,6 @@ namespace WpfCardPrinter
                     }
                     else
                     {
-                        int serNo = Convert.ToInt32(curritem.Serialno.ToString().Substring(DATE_CODE.Length)) + offset;
-                        var nextBatcode = curcode.Substring((DATE_CODE + FIRST_WORD).Length, 5);
-                        int number = Convert.ToInt32(nextBatcode) + offset;
-                        batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, number.ToString("D5"), this.ProductLine);
                         //下一个
                         if (offset > 0)
                         {
@@ -3012,16 +3008,23 @@ namespace WpfCardPrinter
                             {
                                 return curritem.Batcode;
                             }
-                            var pdcode = access.SingleNextById(serNo, this.mWorkshop.Id);
+                            var pdcode = access.SingleNextById(curritem.Serialno, this.mWorkshop.Id);
                             if (pdcode != null && pdcode.Id > 0)
                             {
                                 return pdcode.Batcode;
                             }
                             else
                             {
-
+                                int serNo = Convert.ToInt32(curritem.Serialno.ToString().Substring(DATE_CODE.Length)) + offset;
+                                var nextBatcode = curcode.Substring((DATE_CODE + FIRST_WORD).Length, 5);
+                                var currSerNo = curritem.Serialno.ToString().Substring(0, 2);
+                                int number = Convert.ToInt32(nextBatcode) + offset;
+                                if (currSerNo != DATE_CODE)
+                                {
+                                    number = 1;                                 
+                                }
                                 serialno = Convert.ToInt32(string.Format("{0}{1}", DATE_CODE, number.ToString("D5")));
-
+                                batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, number.ToString("D5"), this.ProductLine);
                                 access.Insert(new PdBatcode
                                 {
                                     Batcode = batcode,
@@ -3036,7 +3039,7 @@ namespace WpfCardPrinter
                         else
                         {
 
-                            var pdcode = access.SingleByPrefixCode(batcode);
+                            var pdcode = access.SingleByPrefixCode(curritem.Serialno);
                             if (pdcode != null)
                             {
                                 return pdcode.Batcode;
@@ -3502,7 +3505,7 @@ namespace WpfCardPrinter
                         PrintDialog dialog = new PrintDialog();
                         PrintTicket pt = dialog.PrintTicket;
                         pt.PageOrientation = PageOrientation.Landscape;
-                        pt.CopyCount = 2;
+                        pt.CopyCount = 1;
 
                         //从本地计算机中获取所有打印机对象(PrintQueue)
                         var printers = new LocalPrintServer().GetPrintQueues();
