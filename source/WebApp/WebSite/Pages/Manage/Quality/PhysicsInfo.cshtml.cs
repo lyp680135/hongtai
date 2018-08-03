@@ -59,16 +59,6 @@
                     }
 
                     var productInfo = new PdProduct();
-                    PdBatcode currentInfo = this.Db.PdBatcode.OrderByDescending(c => c.Id).FirstOrDefault(c => c.Workshopid == workInfo.Id) ?? new PdBatcode();
-                    if (currentInfo != null)
-                    {
-                        this.BatCode = currentInfo.Batcode;
-                        productInfo = this.Db.PdProduct.FirstOrDefault(f => f.Batcode == currentInfo.Batcode);
-                        if (productInfo != null)
-                        {
-                            this.ListQualityStandards = this.Db.BaseQualityStandard.Where(w => w.Materialid == productInfo.Materialid && w.Status == 0 && w.TargetCategory == targetCategory).ToList();
-                        }
-                    }
 
                     if (!string.IsNullOrEmpty(batCode))
                     {
@@ -78,10 +68,25 @@
                         {
                             this.ListQualityStandards = this.Db.BaseQualityStandard.Where(w => w.Materialid == productInfo.Materialid && w.Status == 0 && w.TargetCategory == targetCategory).ToList();
                         }
-                        else
+
+                        PdBatcode currBatCode = this.Db.PdBatcode.FirstOrDefault(f => f.Batcode == batCode);
+                        if (currBatCode == null)
                         {
                             this.ListQualityStandards = new List<BaseQualityStandard>();
                             this.Msg = "不存在该炉批号";
+                        }
+                    }
+                    else
+                    {
+                        PdBatcode currentInfo = this.Db.PdBatcode.OrderByDescending(c => c.Id).FirstOrDefault(c => c.Workshopid == workInfo.Id) ?? new PdBatcode();
+                        if (currentInfo != null)
+                        {
+                            this.BatCode = currentInfo.Batcode;
+                            productInfo = this.Db.PdProduct.FirstOrDefault(f => f.Batcode == currentInfo.Batcode);
+                            if (productInfo != null)
+                            {
+                                this.ListQualityStandards = this.Db.BaseQualityStandard.Where(w => w.Materialid == productInfo.Materialid && w.Status == 0 && w.TargetCategory == targetCategory).ToList();
+                            }
                         }
                     }
                 }

@@ -135,6 +135,27 @@
                         </select>
                     </div>
                 }
+                else if (Model.PdQuality.Id > 0 && Model.List_workShop != null && Model.List_workShop.Count > 0)
+                {
+                    var pdbatcode = _db.PdBatcode.FirstOrDefault(f => f.Batcode == Model.PdQuality.Batcode);
+                    <div class="layui-input-inline" style="width:150px;">
+                        <select id="WorkShopCode" name="WorkShopCode" lay-filter="WorkShopCode" disabled="disabled">
+                            @foreach (var item in Model.List_workShop)
+                            {
+                                @if (item.Id == pdbatcode.Workshopid)
+                                {
+                                    <option value="@item.Id" selected="selected">@item.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+
+                            }
+                        </select>
+                    </div>
+
+                }
                 @if (Model.PdQuality.Id == 0)
                 {
                     <div class="layui-input-inline">
@@ -318,7 +339,7 @@
                                                     <td class="tdtips">第@(i + 1)次</td>
                                                     @foreach (var item in sxQualityStandards)
                                                     {
-                                                        if (Model.PdQuality != null && Model.PdQuality.Qualityinfos_Dynamics.SafeString() != string.Empty && Model.PdQuality.Qualityinfos_Dynamics.Object.Count > 2)
+                                                        if (Model.PdQuality != null && Model.PdQuality.Qualityinfos_Dynamics.SafeString() != string.Empty && Model.PdQuality.Qualityinfos_Dynamics.Object.Count > 3)
                                                         {
                                                             foreach (var itemChild in (Newtonsoft.Json.Linq.JObject)Model.PdQuality.Qualityinfos_Dynamics.Object[i])
                                                             {
