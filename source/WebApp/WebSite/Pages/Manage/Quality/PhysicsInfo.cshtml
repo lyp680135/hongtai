@@ -326,7 +326,8 @@
                             @{
                                 if (ListQualityStandards != null && ListQualityStandards.Count > 0)
                                 {
-                                    for (int i = 0; i < 4; i++)
+                                    var count = Model.PdQuality.Id > 0 ? Model.PdQuality.Qualityinfos_Dynamics.Object.Count : 4;
+                                    for (int i = 0; i < count; i++)
                                     {
                                         <tr>
 
