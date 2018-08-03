@@ -3039,7 +3039,7 @@ namespace WpfCardPrinter
                         else
                         {
 
-                            var pdcode = access.SingleByPrefixCode(curritem.Serialno);
+                            var pdcode = access.SingleByPrefixCode(curritem.Serialno,this.mWorkshop.Id);
                             if (pdcode != null)
                             {
                                 return pdcode.Batcode;

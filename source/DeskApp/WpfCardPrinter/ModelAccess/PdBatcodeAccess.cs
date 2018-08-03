@@ -86,14 +86,14 @@ namespace WpfCardPrinter.ModelAccess
             return pdbatcode;
         }
 
-        public PdBatcode SingleByPrefixCode(int prefixCode)
+        public PdBatcode SingleByPrefixCode(int prefixCode,int wid)
         {
             PdBatcode pdcode = null;
-            using (MySqlCommand mysqlcom = new MySqlCommand("SELECT * FROM pdbatcode WHERE serialno < @prefix ORDER BY ID DESC LIMIT 1", _connection))
+            using (MySqlCommand mysqlcom = new MySqlCommand("SELECT * FROM pdbatcode WHERE serialno < @prefix and workshopid=@workshopid ORDER BY ID DESC LIMIT 1", _connection))
             {
                 mysqlcom.Parameters.Add("@prefix", MySqlDbType.Int32);
                 mysqlcom.Parameters["@prefix"].Value = prefixCode;
-
+                mysqlcom.Parameters.Add("@workshopid", MySqlDbType.Int32).Value = wid;
                 using (MySqlDataReader dr = mysqlcom.ExecuteReader())
                 {
                     if (dr.HasRows)
