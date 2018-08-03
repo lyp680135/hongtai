@@ -136,8 +136,7 @@
                                         <input placeholder="姓名" name="RukuName" type="text" value="@resultOperator[i].RealName" class="validate[required] scinput" style="width:100px" />
                                         <input placeholder="手机号" name="rukuTel" type="text" class="validate[required] scinput validate[custom[MobilePhone]]" value="@resultOperator[i].UserName" style="width:100px" />
                                         <select name="WorkShopTeamId" class="validate[required] scinput validate[custom[teamrequired]] " style="width:70px;">
-                                            <optgroup label="班组"></optgroup>
-                                            <option value=""></option>
+                                            <option value="">班组</option>
                                             @foreach (var te in Model.Teamlist)
                                             {
                                                 if (this.db.PdWorkshopTeamAdminRelation.FirstOrDefault(c => c.AdminId == resultOperator[i].Id && c.WorkShopTeamId == te.Id) != null)
@@ -259,7 +258,7 @@
 
         function addworkin(obj) {
 
-            var html = '<span class="inputspan" style="margin-left:70px;"><input placeholder="姓名" name="RukuName"  type="text"  value="" class="validate[required] scinput" style="width:100px ;" />  <input  placeholder="手机号" name="rukuTel"  type="text" class="validate[required] scinput validate[custom[MobilePhone]]" value="" style="width:100px" />  <select name="WorkShopTeamId" class="validate[required] scinput validate[custom[teamrequired]]" style="width:70px;"><optgroup label="班组"></optgroup> <option value=""></option>@foreach (var te in Model.Teamlist){<option value="@te.Id">@te.TeamName</option>}</select> <a onclick="addworkin(this)" class="addclass">添加</a> <a onclick="deleteRow(this)" class="deleclass">删除</a></span>';
+            var html = '<span class="inputspan" style="margin-left:70px;"><input placeholder="姓名" name="RukuName"  type="text"  value="" class="validate[required] scinput" style="width:100px ;" />  <input  placeholder="手机号" name="rukuTel"  type="text" class="validate[required] scinput validate[custom[MobilePhone]]" value="" style="width:100px" />  <select name="WorkShopTeamId" class="validate[required] scinput validate[custom[teamrequired]]" style="width:70px;"><option value="">班组</option>@foreach (var te in Model.Teamlist){<option value="@te.Id">@te.TeamName</option>}</select> <a onclick="addworkin(this)" class="addclass">添加</a> <a onclick="deleteRow(this)" class="deleclass">删除</a></span>';
             $(obj).parent().parent().append(html);
         }
         function addworkout(obj) {
