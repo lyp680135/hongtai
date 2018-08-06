@@ -89,7 +89,7 @@ namespace WpfCardPrinter.ModelAccess
         public PdBatcode SingleByPrefixCode(int prefixCode,int wid)
         {
             PdBatcode pdcode = null;
-            using (MySqlCommand mysqlcom = new MySqlCommand("SELECT * FROM pdbatcode WHERE serialno < @prefix and workshopid=@workshopid ORDER BY ID DESC LIMIT 1", _connection))
+            using (MySqlCommand mysqlcom = new MySqlCommand("SELECT * FROM pdbatcode WHERE serialno < @prefix and workshopid=@workshopid ORDER BY serialno DESC LIMIT 1", _connection))
             {
                 mysqlcom.Parameters.Add("@prefix", MySqlDbType.Int32);
                 mysqlcom.Parameters["@prefix"].Value = prefixCode;
@@ -161,7 +161,7 @@ namespace WpfCardPrinter.ModelAccess
             PdBatcode pdcode = null;
 
             //判断下一个批号数据库中有没有
-            using (MySqlCommand mysqlcom = new MySqlCommand("SELECT * FROM pdbatcode WHERE Serialno > @Serialno and workshopid=@workshopid  ORDER BY ID ASC LIMIT 1", _connection))
+            using (MySqlCommand mysqlcom = new MySqlCommand("SELECT * FROM pdbatcode WHERE Serialno > @Serialno and workshopid=@workshopid  ORDER BY Serialno ASC LIMIT 1", _connection))
             {
                 mysqlcom.Parameters.Add("@Serialno", MySqlDbType.Int32).Value = Serialno;
                 mysqlcom.Parameters.Add("@workshopid", MySqlDbType.Int32).Value = workshopid;
