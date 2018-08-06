@@ -123,10 +123,13 @@
                         </div>
                     </li>
                     <li><label>&nbsp;</label><button id="sb" name="sb" class="layui-btn layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button></li>
+
                 </ul>
             </form>
             <div style="float:right;position: absolute;top: 48px; right: 10px;">
                 <label>&nbsp;</label>
+                <label>&nbsp;</label>
+                <button id="copy" name="copy" class="layui-btn layui-btn-normal"><i class="layui-icon">&#xe663;</i>数据复制</button>
                 <button id="add" name="add" class="layui-btn layui-btn-normal"><i class="layui-icon">&#xe654;</i>添加</button>
                 <button id="delete" name="delete" class="layui-btn layui-btn-danger"><i class="layui-icon"></i> 删除</button>
             </div>
@@ -134,14 +137,13 @@
                 <thead>
                     <tr>
                         <th><input name="" type="checkbox" id="chkall" /></th>
-                        @* <th>ID</th>*@
+                        <th>ID</th>
                         <th>指标名</th>
                         <th>指标英文名</th>
                         <th>材质</th>
                         <th>执行标准</th>
                         <th>参考值范围</th>
                         <th style="width:80px">指标类型</th>
-                        <th style="width:80px">指标类别</th>
                         <th style="width:80px">是否禁用</th>
                         <th>是否必填</th>
                         <th>备注</th>
@@ -154,7 +156,7 @@
                         {
                             <tr onclick="Edit(@item.Id)" title="@item.TargetNote">
                                 <td style="width:40px" onclick="stopchoose()"><input name="id" type="checkbox" value="@item.Id" /></td>
-                                @*<td style="width:50px">@item.Id</td>*@
+                                <td style="width:50px">@item.Id</td>
                                 <td style="width:100px">@item.TargetName</td>
                                 <td style="width:100px">@item.TargetNameEn</td>
                                 <td style="width:130px">
@@ -185,7 +187,6 @@
                                 </td>
                                 <td style="width:100px">@item.TargetMin ~ @item.TargetMax</td>
                                 <td>@item.TargetType.ToString().Replace("0", "单样本").Replace("1", "多样本")</td>
-                                <td>@Enum.GetName(typeof(DataLibrary.EnumList.TargetCategory), Convert.ToInt16(item.TargetCategory))</td>
                                 <td>
                                     @if (item.Status == 1)
                                     {
@@ -229,23 +230,52 @@
         </div>
     </div>
 
-
-    @*<div id="Standardtype" style="display:none">
-            @{
-                var qsclass = Model.Qslist;
-                if (qsclass != null && qsclass.Count > 0)
-                {
-                    foreach (var qs in qsclass)
-                    {
-                        <label><input type="radio" name="standard" value="@qs.Id" checked="checked" />@qs.Name</label>
-                    }
-
-                }
-
-            }
-        </div>*@
+    <div class="tip" id="copybox">
+        <form id="form3">
+            <div class="tiptop"><span id="addtips">指标复制</span><a onclick="javascript:layer.closeAll();"></a></div>
+            <div class="tipinfo">
+                <ul class="forminfo">
+                    <li style="line-height: 34px;" class="rukuli">
+                        <label style="width:70px;">源材质<b>*</b></label>
+                        <select name="YMaterialid" id="YMaterialid" class="validate[required] scinput" style="width:200px">
+                            <option value="">请选择</option>
+                            @foreach (var item in _db.BaseProductClass.ToList())
+                            {
+                                <optgroup label="@item.Name">
+                                    @foreach (var items in _db.BaseProductMaterial.Where(w => w.Classid == item.Id).ToList())
+                                    {
+                                        <option value="@Html.Raw(items.Id)">@Html.Raw(items.Name)</option>
+                                    }
+                                </optgroup>
+                            }
+                        </select>
+                    </li>
+                    <li>
+                    </li>
+                    <li style="line-height: 34px;" class="rukuli">
+                        <label style="width:70px;">目标材质<b>*</b></label>
+                        <select name="MMaterialid" id="MMaterialid" class="validate[required] scinput" style="width:200px">
+                            <option value="">请选择</option>
+                            @foreach (var item in _db.BaseProductClass.ToList())
+                            {
+                                <optgroup label="@item.Name">
+                                    @foreach (var items in _db.BaseProductMaterial.Where(w => w.Classid == item.Id).ToList())
+                                    {
+                                        <option value="@Html.Raw(items.Id)">@Html.Raw(items.Name)</option>
+                                    }
+                                </optgroup>
+                            }
+                        </select>
+                    </li>
+                </ul>
+            </div>
+            <div class="tipbtn">
+                <input name="" type="button" class="sure" value="确定" onclick="AddCopyData('/BaseQuanlity/CopyQuanlity')" />&nbsp;
+                <input name="" onclick="javascript: layer.closeAll();" type="button" class="cancel" value="取消" />
+            </div>
+        </form>
+    </div>
     <div class="tip" id="addbox">
-
         <form id="form2">
             <div class="tiptop"><span id="addtips">添加指标</span><a onclick="javascript:layer.closeAll();"></a></div>
             <div class="tipinfo">
@@ -300,18 +330,6 @@
                     </li>
                     <li>
                     </li>
-                    <li style="line-height:34px;" class="rukuli">
-                        <label style="width:70px;">指标类别</label>
-                        <select name="TargetCategory" id="TargetCategory" class="validate[required] scinput">
-                            <option value="">请选择</option>
-                            @foreach (DataLibrary.EnumList.TargetCategory item in Enum.GetValues(typeof(DataLibrary.EnumList.TargetCategory)))
-                            {
-                                <option value="@Convert.ToInt32(item)">@Enum.GetName(typeof(DataLibrary.EnumList.TargetCategory), item)</option>
-                            }
-                        </select>
-                    </li>
-                    <li>
-                    </li>
                     <li style="line-height: 34px;" class="rukuli">
                         <label style="width:70px;">是否禁用</label>
                         <input type="radio" name="Status" value="0" checked="checked" />未禁用
@@ -362,7 +380,10 @@
     <script type="text/javascript">
         var addformhtml = $("#addbox").html();
         var addformwidth = $("#addbox").width();
+        var copyformhtml = $("#copybox").html();
+        var copyformwidth = $("#copybox").width();
         $("#addbox").html("");
+        $("#copybox").html("");
         $("#add").click(function () {
             layer.open({
                 type: 1,
@@ -377,7 +398,45 @@
         $("#sb").click(function () {
             $("#form1").submit();
         });
-
+        //复制数据
+        function AddCopyData(url) {
+            var valid = $("#form3").validationEngine("validate");
+            var yMid = $('#YMaterialid').val();
+            var mMid = $('#MMaterialid').val();
+            if (yMid == mMid) {
+                layer.msg('源材质不能和目标材质相同');
+                return;
+            }
+            if (valid) {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: $("#form3").serialize(),
+                    success: function (res) {
+                        if (res == 'true') {
+                            layer.msg('数据复制成功', { icon: 1 });
+                            setTimeout(function () { window.location.reload(); }, 2000);
+                            return;
+                        }
+                        else if (res == '1') {
+                            layer.confirm('目标材质下存在指标数据,确认复制?', { icon: 3, title: '提示' }, function (index) {
+                                AddCopyData('/BaseQuanlity/CopyQuanlity?confirm=' + false);
+                            });
+                            return;
+                        }
+                        else {
+                            layer.msg(res, { icon: 2});
+                            setTimeout(function () { window.location.reload(); }, 2000);
+                            return;
+                        }
+                        layer.close(loadLayer);
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(loadLayer);
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                });
+            }
+        }
         function AddBaseQuanlity() {
             var valid = $("#form2").validationEngine("validate");
             if (valid) {
@@ -440,6 +499,17 @@
 
             });
         });
+
+        $('#copy').click(function () {
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                area: ['380px', '250px'],
+                content: copyformhtml,
+            });
+        });
+
         $("#edit").click(function () {
 
             var selectedid = getSelectedId();
@@ -521,8 +591,7 @@
                     $("#TargetType").val(re.targetType);
                     $('input[name=Status]').eq(re.status).attr('checked', 'checked');
                     $('input[name=TargetIsNull]').eq(re.targetIsNull).attr('checked', 'checked');
-                    $("#TargetCategory").val(re.targetCategory);
-                    $("#Id").val(id);                    
+                    $("#Id").val(id);
                 }, error: function (XMLHttpRequest, textStatus, errorThrown) {
                     layer.msg('无法获取到数据！', { icon: 2 });
                 }

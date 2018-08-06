@@ -50,11 +50,14 @@
         case DataLibrary.EnumList.PageShowType.富文本框:
             if (modelData != null)
             {
-                <script id="container" name="@Html.Raw(model.FildName)" type="text/plain" style="width:120%;height:380px;">@Html.Raw(modelData[model.FildName.ToString()])</script>
+                <script id="container" name="@Html.Raw(model.FildName)" type="text/plain" style="width:120%;height:380px;">
+                    @Html.Raw(modelData[model.FildName.ToString()])
+                </script>
             }
             else
             {
-                <script id="container" name="@Html.Raw(model.FildName)" type="text/plain" style="width:120%;height:380px;"></script>
+                <script id="container" name="@Html.Raw(model.FildName)" type="text/plain" style="width:120%;height:380px;">
+                </script>
             }
             break;
         case DataLibrary.EnumList.PageShowType.数字:
@@ -88,7 +91,7 @@
                 <option value="">请选择</option>
                 @for (var i = 0; i < cb_arr.Length; i++)
                 {
-                    if (modelData != null && i == Convert.ToInt32(modelData[@Html.Raw(model.FildName).ToString()]))
+                    if (modelData != null && i + 1 == Convert.ToInt32(modelData[@Html.Raw(model.FildName).ToString()]))
                     {
                         <option value="@(i+1)" selected="selected">@cb_arr[i]</option>
                     }
@@ -127,7 +130,7 @@
         case DataLibrary.EnumList.PageShowType.手机号:
             if (modelData != null)
             {
-                <input type="tel" lay-verify="required|phone" autocomplete="off" maxlength="@Html.Raw(model.FildLength)" name="@Html.Raw(model.FildName)" value="@modelData[@Html.Raw(model.FildName).ToString()]"  class="@Html.Raw(model.FildIsNull == 0 ? "scinput validate[custom[phone]]" : "validate[required] validate[custom[phone]] scinput")"/>
+                <input type="tel" lay-verify="required|phone" autocomplete="off" maxlength="@Html.Raw(model.FildLength)" name="@Html.Raw(model.FildName)" value="@modelData[@Html.Raw(model.FildName).ToString()]" class="@Html.Raw(model.FildIsNull == 0 ? "scinput validate[custom[phone]]" : "validate[required] validate[custom[phone]] scinput")" />
             }
             else
             {

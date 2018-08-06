@@ -108,6 +108,7 @@
         input.dfinput {
             height: 38px;
         }
+
         .element {
             width: 600px;
             height: 200px;
@@ -166,6 +167,7 @@
             </form>
             <div style="float:right;position: absolute;top: 48px; right: 10px;">
                 <label>&nbsp;</label>
+                <button id="copy" name="copy" class="layui-btn layui-btn-normal"><i class="layui-icon">&#xe663;</i>数据复制</button>
                 <button id="add" name="add" class="layui-btn layui-btn-normal"><i class="layui-icon">&#xe654;</i>添加</button>
             </div>
         </div>
@@ -220,8 +222,8 @@
                                     <td>@spec.Coldratio</td>
                                     <td>@spec.Reverseratio</td>
                                     @*<td>
-                                        <button  onclick="Edit(@spec.Id)" class="layui-btn layui-btn-sm"><i class="layui-icon">&#xe642;</i>修改</button>
-                                    </td>*@
+                                            <button  onclick="Edit(@spec.Id)" class="layui-btn layui-btn-sm"><i class="layui-icon">&#xe642;</i>修改</button>
+                                        </td>*@
 
                                 </tr>
                             }
@@ -229,7 +231,7 @@
                     </tbody>
                 </table>
             }
-            else if (Model.List_group.Count==0 && Model.MaterialId > 0)
+            else if (Model.List_group.Count == 0 && Model.MaterialId > 0)
             {
                 <h1 class="element">所选择材质暂无数据！</h1>
             }
@@ -240,17 +242,108 @@
         }
     </div>
 
-
+    <div class="tip" id="copybox">
+        <form id="form3">
+            <div class="tiptop"><span id="addtips">指标复制</span><a onclick="javascript:layer.closeAll();"></a></div>
+            <div class="tipinfo">
+                <ul class="forminfo">
+                    <li style="line-height: 34px;" class="rukuli">
+                        <label style="width:70px;">源材质<b>*</b></label>
+                        <select name="YMaterialid" id="YMaterialid" class="validate[required] scinput" style="width:200px">
+                            <option value="">请选择</option>
+                            @foreach (var item in _db.BaseProductClass.ToList())
+                            {
+                                <optgroup label="@item.Name">
+                                    @foreach (var items in _db.BaseProductMaterial.Where(w => w.Classid == item.Id).ToList())
+                                    {
+                                        <option value="@Html.Raw(items.Id)">@Html.Raw(items.Name)</option>
+                                    }
+                                </optgroup>
+                            }
+                        </select>
+                    </li>
+                    <li>
+                    </li>
+                    <li style="line-height: 34px;" class="rukuli">
+                        <label style="width:70px;">目标材质<b>*</b></label>
+                        <select name="MMaterialid" id="MMaterialid" class="validate[required] scinput" style="width:200px">
+                            <option value="">请选择</option>
+                            @foreach (var item in _db.BaseProductClass.ToList())
+                            {
+                                <optgroup label="@item.Name">
+                                    @foreach (var items in _db.BaseProductMaterial.Where(w => w.Classid == item.Id).ToList())
+                                    {
+                                        <option value="@Html.Raw(items.Id)">@Html.Raw(items.Name)</option>
+                                    }
+                                </optgroup>
+                            }
+                        </select>
+                    </li>
+                </ul>
+            </div>
+            <div class="tipbtn">
+                <input name="" type="button" class="sure" value="确定" onclick="AddCopyData('/BaseSpec/CopyBaseSpace')" />&nbsp;
+                <input name="" onclick="javascript: layer.closeAll();" type="button" class="cancel" value="取消" />
+            </div>
+        </form>
+    </div>
 
     <script type="text/javascript">
-
+        var copyformhtml = $("#copybox").html();
+        var copyformwidth = $("#copybox").width();     
+        $("#copybox").html("");
 
         $('.layui-table tbody tr:odd').addClass('odd');
         $("#sb").click(function () {
             $("#form1").submit();
         });
-
-
+        $('#copy').click(function () {
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                area: ['380px', '250px'],
+                content: copyformhtml,
+            });
+        });
+        function AddCopyData(url) {
+            var valid = $("#form3").validationEngine("validate");
+            var yMid = $('#YMaterialid').val();
+            var mMid = $('#MMaterialid').val();
+            if (yMid == mMid) {
+                layer.msg('源材质不能和目标材质相同');
+                return;
+            }
+            if (valid) {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: $("#form3").serialize(),
+                    success: function (res) {
+                        if (res == 'true') {
+                            layer.msg('数据复制成功', { icon: 1 });
+                            setTimeout(function () { window.location.reload(); }, 2000);
+                            return;
+                        }
+                        else if (res == '1') {
+                            layer.confirm('目标材质下已有规格存在,确认复制?', { icon: 3, title: '提示' }, function (index) {
+                                AddCopyData('/BaseSpec/CopyBaseSpace?confirm=' + false);
+                            });
+                            return;
+                        }
+                        else {
+                            layer.msg(res, { icon: 2 });
+                            setTimeout(function () { window.location.reload(); }, 2000);
+                            return;
+                        }
+                        layer.close(loadLayer);
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(loadLayer);
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                });
+            }
+        }
         function Edit(id) {
             layer.open({
                 type: 2,

@@ -4,8 +4,10 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using DataLibrary;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
 
     [Authorize]
     public class BaseSpecController : Controller
@@ -25,7 +27,8 @@
             {
                 var tempClass = this.db.BaseSpecifications.FirstOrDefault(c => c.Classid == classid
                                                                         && c.Materialid == materialid
-                                                                        && c.Callname == callname[i]);
+                                                                        && c.Callname == callname[i]
+                                                                        && c.Referlength == referlength[i]);
                 if (tempClass != null)
                 {
                     return this.AjaxResult(false, "该规格别名已经存在，请勿重复添加!");
@@ -54,6 +57,72 @@
             return this.AjaxResult(true, "添加成功!");
         }
 
+        /// <summary>
+        /// 复制规格
+        /// </summary>
+        /// <param name="yMaterialid">源材质</param>
+        /// <param name="mMaterialid">目标材质</param>
+        /// <param name="confirm">是否确认添加</param>
+        /// <returns>string</returns>
+        public string CopyBaseSpace(int yMaterialid, int mMaterialid, bool confirm = true)
+        {
+            var ySpaceList = this.db.BaseSpecifications.Where(w => w.Materialid == yMaterialid).AsNoTracking().ToList();
+            var classInfo = this.db.BaseProductMaterial.FirstOrDefault(f => f.Id == mMaterialid);
+            if (ySpaceList == null || ySpaceList.Count <= 0)
+            {
+                return "源材质没有设置规格数据,无法复制";
+            }
+
+            if (classInfo == null)
+            {
+                return "目标材质没有设置品名,清闲设置品名";
+            }
+            if (confirm)
+            {
+                var mCount = this.db.BaseSpecifications.Where(w => w.Materialid == mMaterialid).ToList();
+                if (mCount != null && mCount.Count > 0)
+                {
+                    return "1";
+                }
+            }
+
+            var mSpaceList = this.db.BaseSpecifications.Where(w => w.Materialid == mMaterialid).AsNoTracking().ToList();
+            var entityList = new List<BaseSpecifications>();
+            if (mSpaceList.Count <= 0)
+            {
+                ySpaceList.ForEach(o =>
+                {
+                    o.Id = 0;
+                    o.Materialid = mMaterialid;
+                    o.Classid = classInfo.Classid;
+                    entityList.Add(o);
+                });
+            }
+            else
+            {
+                ySpaceList.ForEach(o =>
+                {
+                    var entityInfo = mSpaceList.FirstOrDefault(f => f.Callname == o.Callname && f.Referlength == o.Referlength);
+
+                    // 如果源数据没有就添加
+                    if (entityInfo == null)
+                    {
+                        o.Id = 0;
+                        o.Materialid = mMaterialid;
+                        o.Classid = classInfo.Classid;
+                        entityList.Add(o);
+                    }
+                });
+            }
+
+            if (entityList.Count > 0)
+            {
+                this.db.BaseSpecifications.AddRange(entityList);
+                this.db.SaveChanges();
+            }
+            return "true";
+        }
+
         [HttpPost]
         public ActionResult Edit(int[] hiddenId, int classid, int materialid, string[] specname, string[] callname, double[] referpieceweight, int[] referpiececount, double[] referlength, double[] refermeterweight, double[] coldratio, double[] reverseratio)
         {
@@ -63,7 +132,8 @@
                 {
                     var tempClass = this.db.BaseSpecifications.FirstOrDefault(c => c.Classid == classid
                                                        && c.Materialid == materialid
-                                                       && c.Callname == callname[i] && c.Id != hiddenId[i]);
+                                                       && c.Callname == callname[i] && c.Id != hiddenId[i]
+                                                        && c.Referlength == referlength[i]);
                     if (tempClass != null)
                     {
                         return this.AjaxResult(false, "该规格别名已经存在，请勿重复添加!");

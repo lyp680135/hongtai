@@ -40,6 +40,7 @@
                     this.BaseManageModel.Add(baseManageInfo);
                 }
             });
+            this.BaseManageModel = this.BaseManageModel.OrderBy(o => o.Id).ToList();
         }
     }
 }

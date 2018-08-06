@@ -35,11 +35,11 @@
         .tree_select {
             color: red;
         }
+
         .layui-table tbody tr {
-            height:49px;
+            height: 49px;
             cursor: pointer;
         }
-        
     </style>
 </head>
 
@@ -69,100 +69,119 @@
                             <tr>
                                 <th><input name="" type="checkbox" value="" id="chkall" /></th>
                                 @{
-                        foreach (var item in Model.BaseManageModels)
-                        {
-                            if (Model.BaseManageModels.IndexOf(item) < 6 && item.PageShowType != DataLibrary.EnumList.PageShowType.富文本框)
-                            {
-                                <th>@item.FildDescription</th>
-                            }
-                        }
-            @*<th>操作</th>*@
+                                    foreach (var item in Model.BaseManageModels)
+                                    {
+                                        if (Model.BaseManageModels.IndexOf(item) < 6 && item.PageShowType != DataLibrary.EnumList.PageShowType.富文本框)
+                                        {
+                                            <th>@item.FildDescription</th>
+                                        }
+                                    }
+                                    @*<th>操作</th>*@
                                 }
                             </tr>
                         </thead>
                         <tbody>
                             @{
-                    foreach (var item in Model.DirList)
-                    {
-                        <tr onclick="Edit(@item["Id"],@item["cid"])">
-                            <td onclick="stopchoose()"><input name="id" type="checkbox" value="@item["Id"]" /></td>
-                            @{
-                    foreach (var model in Model.BaseManageModels)
-                    {
-
-                        if (Model.BaseManageModels.IndexOf(model) < 6 && model.PageShowType != DataLibrary.EnumList.PageShowType.富文本框)
-                        {
-                            if (model.PageShowType == DataLibrary.EnumList.PageShowType.图片)
-                            {
-                                <td>
-                                    @{
-                            if (item[model.FildName] != null)
-                            {
-                                foreach (var img in item[model.FildName].ToString().Split(","))
+                                foreach (var item in Model.DirList)
                                 {
-                                    <img src="@img" style="max-height:100px;" />
-                    }
-                }
-                                    }
-                                </td>
-                }
-                else if (model.PageShowType == DataLibrary.EnumList.PageShowType.下拉框 || model.PageShowType == DataLibrary.EnumList.PageShowType.单选按钮 || model.PageShowType == DataLibrary.EnumList.PageShowType.复选框)
-                {
-                    if (item[model.FildName] != null && item[model.FildName].ToString() != "")
-                    {
-                        for (var i = 1; i <= model.FildValue.Split(",").Length; i++)
-                        {
-                            if (Convert.ToInt32(item[model.FildName]) == i)
-                            {
-                                var text = model.FildValue.Split(",")[i - 1];
-                                <td>@text</td>
-                            }
-                        }
-                     }
-                    else
-                    {
-                        <td></td>
-                    }
-                }
-                else if (model.PageShowType == DataLibrary.EnumList.PageShowType.时间选择框)
-                {           
-                    if (item[model.FildName] != null)
-                    {
-                        <td>@Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(item[model.FildName])).ToDateTimeString()</td>
-                    }
-                }
-                else
-                {
-                    if (item[model.FildName] != null)
-                    {
-                        if(item[model.FildName].ToString().Length > 20){
-                            <td>@item[model.FildName].ToString().Substring(0,20)...</td>
-                        }else
-                        {
-                            <td>@item[model.FildName]</td>
-                        }
-                    }
-                }
-            }
-        }
-    }
-    </tr>
-}
+                                    <tr onclick="Edit(@item["Id"],@item["cid"])">
+                                        <td onclick="stopchoose()"><input name="id" type="checkbox" value="@item["Id"]" /></td>
+                                        @{
+                                            foreach (var model in Model.BaseManageModels)
+                                            {
+
+                                                if (Model.BaseManageModels.IndexOf(model) < 6 && model.PageShowType != DataLibrary.EnumList.PageShowType.富文本框)
+                                                {
+                                                    if (model.PageShowType == DataLibrary.EnumList.PageShowType.图片)
+                                                    {
+                                                        <td>
+                                                            @{
+                                                                if (item[model.FildName] != null)
+                                                                {
+                                                                    foreach (var img in item[model.FildName].ToString().Split(","))
+                                                                    {
+                                                                        <img src="@img" style="max-height:100px;" />
+                                                                    }
+                                                                }
+                                                            }
+                                                        </td>
+                                                    }
+                                                    else if (model.PageShowType == DataLibrary.EnumList.PageShowType.下拉框 || model.PageShowType == DataLibrary.EnumList.PageShowType.单选按钮 || model.PageShowType == DataLibrary.EnumList.PageShowType.复选框)
+                                                    {
+                                                        if (item[model.FildName] != null && item[model.FildName].ToString() != "")
+                                                        {
+                                                            var val = string.Empty;
+                                                            for (var i = 1; i <= model.FildValue.Split(",").Length; i++)
+                                                            {
+                                                                if (model.PageShowType == DataLibrary.EnumList.PageShowType.下拉框)
+                                                                {
+                                                                    if (Convert.ToInt32(item[model.FildName]) == i)
+                                                                    {
+                                                                        val = model.FildValue.Split(",")[i - 1];
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (Convert.ToInt32(item[model.FildName]) == i - 1)
+                                                                    {
+                                                                        val = model.FildValue.Split(",")[i - 1];
+                                                                    }
+                                                                }
+                                                            }
+                                                            if (!string.IsNullOrEmpty(val))
+                                                            {
+                                                                <td>@val</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td></td>}
+                                                        }
+                                                        else
+                                                        {
+                                                            <td></td>
+                                                        }
+                                                    }
+                                                    else if (model.PageShowType == DataLibrary.EnumList.PageShowType.时间选择框)
+                                                    {
+                                                        if (item[model.FildName] != null)
+                                                        {
+                                                            <td>@Util.Extensions.GetDateTimeFromUnixTime(Convert.ToInt64(item[model.FildName])).ToDateTimeString()</td>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (item[model.FildName] != null)
+                                                        {
+                                                            if (item[model.FildName].ToString().Length > 20)
+                                                            {
+                                                                <td>@item[model.FildName].ToString().Substring(0, 20)...</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td>@item[model.FildName]</td>
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>
                     @await Component.InvokeAsync("PageList", new
-        {
-            PageSize = Model.PageSize,
-            PageIndex = Model.Page,
-            PageCount = Model.PageCount,
-            PageUrl = Request.GetAbsoluteUri(new List<KeyValuePair<string, string>>() {
-                                        new KeyValuePair<string, string>("pg","{0}")
-                                }),
-            PageText = "{0}",
-            ShowCount = 6,
-            ShowAll = false
-        })
+                    {
+                        PageSize = Model.PageSize,
+                        PageIndex = Model.Page,
+                        PageCount = Model.PageCount,
+                        PageUrl = Request.GetAbsoluteUri(new List<KeyValuePair<string, string>>() {
+                                                                                                                                                                        new KeyValuePair<string, string>("pg","{0}")
+                                                                                                                                                                }),
+                        PageText = "{0}",
+                        ShowCount = 6,
+                        ShowAll = false
+                    })
                 </div>
             </form>
         </div>

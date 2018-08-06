@@ -68,6 +68,65 @@
             return null;
         }
 
+        /// <summary>
+        /// 复制数据
+        /// </summary>
+        /// <param name="yMaterialid">源材质</param>
+        /// <param name="mMaterialid">目标材质</param>
+        /// <param name="confirm">是否确认添加</param>
+        /// <returns>string</returns>
+        public string CopyQuanlity(int yMaterialid, int mMaterialid, bool confirm = true)
+        {
+            var yQualityList = this.db.BaseQualityStandard.Where(w => w.Materialid == yMaterialid).AsNoTracking().ToList();
+            if (yQualityList == null || yQualityList.Count <= 0)
+            {
+                return "源材质没有设置指标数据,无法复制";
+            }
+            if (confirm)
+            {
+                var mCount = this.db.BaseQualityStandard.Where(w => w.Materialid == mMaterialid).ToList();
+                if (mCount != null && mCount.Count > 0)
+                {
+                    return "1";
+                }
+            }
+
+            var mQualityList = this.db.BaseQualityStandard.Where(w => w.Materialid == mMaterialid).AsNoTracking().ToList();
+            var entityList = new List<BaseQualityStandard>();
+            if (mQualityList.Count <= 0)
+            {
+                yQualityList.ForEach(o =>
+                {
+                    o.Id = 0;
+                    o.Materialid = mMaterialid;
+                    entityList.Add(o);
+                });
+            }
+            else
+            {
+                yQualityList.ForEach(o =>
+                {
+                    var entityInfo = mQualityList.FirstOrDefault(f => f.TargetName == o.TargetName);
+
+                    // 如果源数据没有就添加
+                    if (entityInfo == null)
+                    {
+                        o.Id = 0;
+                        o.Materialid = mMaterialid;
+                        entityList.Add(o);
+                    }
+                });
+            }
+
+            if (entityList.Count > 0)
+            {
+                this.db.BaseQualityStandard.AddRange(entityList);
+                this.db.SaveChanges();
+            }
+
+            return "true";
+        }
+
         public ActionResult Edit(BaseQualityStandard baseQualityStandard)
         {
             var baseQualityStandard1 = this.db.BaseQualityStandard.AsNoTracking().FirstOrDefault(p => p.Id == baseQualityStandard.Id);
