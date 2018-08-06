@@ -107,11 +107,11 @@
                                     <td>
                                         @if (item.Status == 0)
                                         {
-                                            <a class="tablelink" href="javascript:void(0)" onclick="zuofei(@item.Id,1)">作废</a>
+                                            <a class="tablelink" href="javascript:void(0)" onclick="zuofei(@item.Id,1)" style="color:green" >作废</a>
                                         }
                                         else
                                         {
-                                            <a class="tablelink" href="javascript:void(0)" onclick="zuofei(@item.Id,0)">恢复</a>
+                                            <a class="tablelink" href="javascript:void(0)" onclick="zuofei(@item.Id,0)" style="color:red">恢复</a>
                                         }
                                     </td>
                                 }
