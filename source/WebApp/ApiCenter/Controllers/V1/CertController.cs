@@ -114,7 +114,7 @@
                             {
                                 // 更新出库的车牌号和收货单位
                                 printlog.Consignor = consignor;
-
+                                printlog.Adder = userid;
                                 this.db.SalePrintlog.Update(printlog);
 
                                 if (this.db.SaveChanges() > 0)
