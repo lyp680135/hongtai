@@ -25,7 +25,7 @@ namespace WarrantyManage.Pages.Manage.Quality
 
         public override int PageSize
         {
-            get { return 10; }
+            get { return 6; }
         }
 
         public List<DataLibrary.PdqualitySmeltCode> ManageModels { get; set; }
