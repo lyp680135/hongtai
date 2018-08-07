@@ -94,11 +94,11 @@
                 var serialno = current.Serialno;
                 if (offset > 0)
                 {
-                    productInfo = this.db.PdBatcode.Where(w => w.Workshopid == wid).OrderBy(o => o.Id).FirstOrDefault(f => f.Serialno > serialno);
+                    productInfo = this.db.PdBatcode.Where(w => w.Workshopid == wid).OrderBy(o => o.Serialno).FirstOrDefault(f => f.Serialno > serialno);
                 }
                 else
                 {
-                    productInfo = this.db.PdBatcode.Where(w => w.Workshopid == wid).OrderByDescending(o => o.Id).FirstOrDefault(f => f.Serialno < serialno);
+                    productInfo = this.db.PdBatcode.Where(w => w.Workshopid == wid).OrderByDescending(o => o.Serialno).FirstOrDefault(f => f.Serialno < serialno);
                 }
 
                 if (productInfo != null)
