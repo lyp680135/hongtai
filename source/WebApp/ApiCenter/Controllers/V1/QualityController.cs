@@ -7,6 +7,7 @@
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Text;
     using System.Text.RegularExpressions;
     using Common.IService;
     using Common.Service;
@@ -17,6 +18,8 @@
     using Newtonsoft.Json.Linq;
     using SixLabors.ImageSharp;
     using Util;
+    using WarrantyApiCenter.Models;
+    using static DataLibrary.EnumList;
 
     public class QualityController : BaseController
     {
@@ -78,12 +81,42 @@
                 FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
                 byte[] buffer = new byte[fs.Length];
                 fs.Read(buffer, 0, (int)fs.Length);
-
                 var resp = this.File(buffer, "image/jpeg");
                 return resp;
             }
 
             return null;
+        }
+
+        // POST: api/Quality
+        [HttpPost]
+        [Produces("application/json")]
+        public ResponseModel Post(string p, int iswater, int flag)
+        {
+            var cert = this.db.SalePrintlog.FirstOrDefault(c => c.Printno == p);
+            var obj = new { Id =0, Checkcode = string.Empty };
+            if (cert != null)
+            {
+                var detail = this.db.SalePrintLogDetail.FirstOrDefault(c => c.PrintId == cert.Id);
+                if (detail != null)
+                {
+                    var auth = this.db.SaleSellerAuth.FirstOrDefault(c => c.Id == detail.Authid);
+                    if (auth != null)
+                    {
+                        int authid = auth.Sellerid;
+                        if (this.userService.SaleSellerUser.Id != authid)
+                        {
+                            return new ResponseModel(ApiResponseStatus.Success, string.Empty, "您没有下载该质保书的权限！");
+                        }
+                        else
+                        {
+                            obj = new { Id = cert.Id, Checkcode = cert.Checkcode };
+                        }
+                    }
+                }
+            }
+
+            return new ResponseModel(ApiResponseStatus.Success, string.Empty, JsonConvert.SerializeObject(obj));
         }
 
         ///// <summary>

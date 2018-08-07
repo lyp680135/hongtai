@@ -16,7 +16,7 @@
              new KeyValuePair<string, List<string>>("/api/tokenbyphone", new List<string>() { "get" }),
              new KeyValuePair<string, List<string>>("/api/tokenbysaler", new List<string>() { "get" }),
              new KeyValuePair<string, List<string>>("/api/v1/warranty", new List<string>() { "get" }),
-             new KeyValuePair<string, List<string>>("/api/v1/quality", new List<string>() { "post" }),
+             new KeyValuePair<string, List<string>>("/api/v1/quality", new List<string>() { "get" }),
              new KeyValuePair<string, List<string>>("/api/v1/cert", new List<string>() { "post" }),
         };
 

@@ -25,7 +25,7 @@
         public Task Invoke(HttpContext httpContext)
         {
             string requestPath = httpContext.Request.Path.Value.ToLower();
-            if (requestPath == "/api/v1/quality" || requestPath == "/api/v1/quality/")
+            if (requestPath.TrimEnd('/') == "/api/v1/quality" && httpContext.Request.Method.ToLower() == "get")
             {
             }
             else
@@ -43,7 +43,7 @@
                 return httpContext.Response.WriteAsync(JsonConvert.SerializeObject(responseModel));
             }
 
-            if (requestPath == "/api/v1/quality" || requestPath == "/api/v1/quality/")
+            if (requestPath.TrimEnd('/') == "/api/v1/quality" && httpContext.Request.Method.ToLower() == "get")
             {
                 return this.next(httpContext);
             }
