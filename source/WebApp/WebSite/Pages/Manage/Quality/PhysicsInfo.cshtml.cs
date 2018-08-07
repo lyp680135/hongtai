@@ -78,7 +78,7 @@
                     }
                     else
                     {
-                        PdBatcode currentInfo = this.Db.PdBatcode.OrderByDescending(c => c.Id).FirstOrDefault(c => c.Workshopid == workInfo.Id) ?? new PdBatcode();
+                        PdBatcode currentInfo = this.Db.PdBatcode.OrderByDescending(c => c.Serialno).FirstOrDefault(c => c.Workshopid == workInfo.Id) ?? new PdBatcode();
                         if (currentInfo != null)
                         {
                             this.BatCode = currentInfo.Batcode;
