@@ -31,6 +31,7 @@
 <script>
 // import xyHelper from '../plugins/xyHelper'
 import vueProgress from '../components/vueProgressBar.vue'
+import SystemConfig from '@/plugins/systemConfig'
 
 export default {
   name: 'WarrantyBook',
@@ -77,7 +78,24 @@ export default {
   methods: {
     saveAsMobile: function () {
       // 点击下载
-      genHtmlImg(this, 'download')
+      var vue = this
+      if (myBrowser() === 'WeChat' || myBrowser() === 'Safari') {
+         var htmlurl = 'api/v1/Quality/'
+         var params = {
+          'printno': vue.PrintNo
+        }
+       
+        vue.$http.post(htmlurl + '?p=' + params.printno + '&iswater=' +  vue.iswater + '&flag='+1).then(function (obj) {
+            window.location.href = SystemConfig.getConfig().Domain_WAP + 'Cert/?p='+obj.Id+'-'+obj.Checkcode
+        }).catch(function (e) {
+           console.log('Oops, error' + e)
+        })
+      } else {
+         genHtmlImg(this, 'download')
+      }
+
+     
+      
     }
   },
   mounted: function () {
@@ -160,6 +178,9 @@ function myBrowser () {
   if (userAgent.indexOf('Trident') > -1) {
     return 'Edge'
   } // 判断是否Edge浏览器
+  if (userAgent.indexOf('MicroMessenger') > -1) {
+    return 'WeChat'    
+  } // 判断是否为微信客户端
 }
 
 // IE浏览器图片保存本地
