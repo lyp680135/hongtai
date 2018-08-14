@@ -78,24 +78,7 @@ export default {
   methods: {
     saveAsMobile: function () {
       // 点击下载
-      var vue = this
-      if (myBrowser() === 'WeChat' || myBrowser() === 'Safari') {
-         var htmlurl = 'api/v1/Quality/'
-         var params = {
-          'printno': vue.PrintNo
-        }
-       
-        vue.$http.post(htmlurl + '?p=' + params.printno + '&iswater=' +  vue.iswater + '&flag='+1).then(function (obj) {
-            window.location.href = SystemConfig.getConfig().Domain_WAP + 'Cert/?p='+obj.Id+'-'+obj.Checkcode
-        }).catch(function (e) {
-           console.log('Oops, error' + e)
-        })
-      } else {
-         genHtmlImg(this, 'download')
-      }
-
-     
-      
+      genHtmlImg(this, 'download')
     }
   },
   mounted: function () {
@@ -139,7 +122,19 @@ function genHtmlImg (vue, op) {
     image.src = objectURL
 
     if (op === 'download') {
-      oDownLoad(image.src)
+      if (myBrowser() === 'WeChat' || myBrowser() === 'Safari') {
+        var htmlurl = 'api/v1/Quality/'
+        var params = {
+          'printno': vue.PrintNo
+        }
+        vue.$http.post(htmlurl + '?p=' + params.printno + '&iswater=1' + '&flag=' + 1).then(function (obj) {
+          window.location.href = SystemConfig.getConfig().Domain_WAP + 'Cert/?p=' + obj.Id + '-' + obj.Checkcode
+        }).catch(function (e) {
+          console.log('Oops, error' + e)
+        })
+      } else {
+        oDownLoad(image.src)
+      }
     } else {
       document.getElementById('loadimg').style.display = 'none'
       image.style.width = '100%'
@@ -179,7 +174,7 @@ function myBrowser () {
     return 'Edge'
   } // 判断是否Edge浏览器
   if (userAgent.indexOf('MicroMessenger') > -1) {
-    return 'WeChat'    
+    return 'WeChat'
   } // 判断是否为微信客户端
 }
 
