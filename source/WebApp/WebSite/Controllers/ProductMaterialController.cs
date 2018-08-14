@@ -96,7 +96,7 @@
                         return -1;
                     }
 
-                    if (this.db.BaseProductMaterial.FirstOrDefault(p => p.Id != hiddId && p.Name == name) != null)
+                    if (this.db.BaseProductMaterial.FirstOrDefault(p => p.Id != hiddId && p.Classid == classid && p.Name == name) != null)
                     {
                         return -1;
                     }
