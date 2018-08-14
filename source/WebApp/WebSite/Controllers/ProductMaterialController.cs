@@ -6,19 +6,24 @@
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Models;
+    using Newtonsoft.Json;
+    using static DataLibrary.EnumList;
 
     [Authorize]
     public class ProductMaterialController : Controller
     {
         private DataLibrary.DataContext db;
+        private Common.IService.ISettingService settingService;
 
-        public ProductMaterialController(DataLibrary.DataContext db)
+        public ProductMaterialController(DataLibrary.DataContext db, Common.IService.ISettingService settingService)
         {
             this.db = db;
+            this.settingService = settingService;
         }
 
         [HttpPost]
-        public string Create(string name, int classid, string note, int standardstrength)
+        public string Create(string name, int classid, string note, int standardstrength, string templatename)
         {
             using (var tran = this.db.Database.BeginTransaction())
             {
@@ -35,19 +40,31 @@
                         {
                             Name = name,
                             Classid = classid,
+                            Templatename = templatename,
                             Note = note,
                             Standardstrength = standardstrength
                         };
 
                         this.db.BaseProductMaterial.Add(wsclass);
-                        this.db.SaveChanges();
-                        tran.Commit();
+                        if (this.db.SaveChanges() > 0)
+                        {
+                            tran.Commit();
+                            var responData = Util.Helpers.HttpHelper.HttpPost(
+                                $"{this.settingService.MngSetting.Domain_WebApi}api/v1/WarrantyTemplate/?materialid=" + wsclass.Id, null, System.Text.Encoding.UTF8);
+                            var webApi_ResponseModel = JsonConvert.DeserializeObject<WebApiResponseModel>(responData);
+                            if (webApi_ResponseModel.Status == ApiResponseStatus.Failed)
+                            {
+                                return "0";
+                            }
+                        }
+
                         return wsclass.Id.ToString();
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     tran.Rollback();
+                    var msg = ex.Message;
                     return "0";
                 }
             }
@@ -66,7 +83,7 @@
         }
 
         [HttpPost]
-        public int Edit(int hiddId, string name, int classid, string note, int standardstrength)
+        public int Edit(int hiddId, string name, int classid, string note, int standardstrength, string templatename)
         {
             using (var tran = this.db.Database.BeginTransaction())
             {
@@ -83,13 +100,25 @@
                     {
                         return -1;
                     }
+
                     rs.Name = name;
                     rs.Classid = classid;
+                    rs.Templatename = templatename;
                     rs.Note = note;
                     rs.Standardstrength = standardstrength;
                     this.db.BaseProductMaterial.Update(rs);
-                    this.db.SaveChanges();
-                    tran.Commit();
+                    if (this.db.SaveChanges() > 0)
+                    {
+                        tran.Commit();
+                        var responData = Util.Helpers.HttpHelper.HttpPost(
+                            $"{this.settingService.MngSetting.Domain_WebApi}api/v1/WarrantyTemplate/?materialid=" + hiddId, null, System.Text.Encoding.UTF8);
+                        var webApi_ResponseModel = JsonConvert.DeserializeObject<WebApiResponseModel>(responData);
+                        if (webApi_ResponseModel.Status == ApiResponseStatus.Failed)
+                        {
+                            return 0;
+                        }
+                    }
+
                     return 1;
                 }
                 catch (Exception)

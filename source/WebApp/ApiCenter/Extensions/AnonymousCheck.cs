@@ -18,6 +18,7 @@
              new KeyValuePair<string, List<string>>("/api/v1/warranty", new List<string>() { "get" }),
              new KeyValuePair<string, List<string>>("/api/v1/quality", new List<string>() { "get" }),
              new KeyValuePair<string, List<string>>("/api/v1/cert", new List<string>() { "post" }),
+             new KeyValuePair<string, List<string>>("/api/v1/WarrantyTemplate", new List<string>() { "get", "post" }),
         };
 
         public static List<KeyValuePair<string, List<string>>> ListAnonymousData { get => listAnonymousData; set => listAnonymousData = value; }

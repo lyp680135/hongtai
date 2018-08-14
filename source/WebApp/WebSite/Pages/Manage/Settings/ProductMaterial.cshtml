@@ -38,9 +38,9 @@
         }
         function cancelBubble(e) {
             var evt = e ? e : window.event;
-            if (evt.stopPropagation) {        //W3C 
+            if (evt.stopPropagation) {        //W3C
                 evt.stopPropagation();
-            } else {       //IE      
+            } else {       //IE
                 evt.cancelBubble = true;
             }
         }
@@ -63,11 +63,13 @@
             border: 1px solid #9c9c9c;
             width: 100px;
             height: 38px;
-            line-height:38px;
+            line-height: 38px;
         }
+
         .layui-table tbody tr {
             cursor: pointer;
         }
+
         #form1 lable {
             font-size: 14px;
             height: 38px;
@@ -142,8 +144,9 @@
                     <th style="width:220px">材质</th>
                     <th>品名</th>
                     <th>材质强度</th>
+                    <th>所属模板</th>
                     <th>备注</th>
-                  
+
                 </tr>
             </thead>
             <tbody>
@@ -173,11 +176,17 @@
                                         }
                                     }
                                 </td>
+                                
                                 <td>@pmclass.Standardstrength</td>
+		<td>
+                                    @{
+                                        @Html.Raw(pmclass.Templatename);
+                                    }
+                                </td>
                                 <td>@pmclass.Note</td>
                             </tr>
-                                            }
-                                        }
+                        }
+                    }
                 }
             </tbody>
         </table>
@@ -204,6 +213,16 @@
                                 {
                                     @Html.Raw("<option value='" + pclass.Id + "'>" + pclass.Name + "</option>");
                                 }
+                            }
+                        </select>
+                    </li>
+                    <li style="line-height: 34px;" class="rukuli">
+                        <label style="width:70px;">所属模板<b>*</b></label>
+                        <select name="templatename" id="templatename" class="validate[required] scinput">
+                            <option value="">请选择</option>
+                            @foreach (string str in Model.TemplatName)
+                            {
+                                <option value="@str">@str</option>
                             }
                         </select>
                     </li>
@@ -302,9 +321,9 @@
                 }
             });
 
-           
+
         });
-        function Edit(id) { 
+        function Edit(id) {
             layer.open({
                 type: 1,
                 title: false,
@@ -320,7 +339,7 @@
                 type: "GET",
                 url: '/ProductMaterial/Edit?id=' + id,
                 success: function (re) {
-                  //  console.log(re);
+                    //  console.log(re);
                     $("#Name").val(re.name);
                     $("#classid").val(re.classid);
                     $("#Note").val(re.note);
@@ -385,11 +404,10 @@
                             layer.msg('操作成功', { icon: 1 });
                             setTimeout("window.location.reload();", 1000);
                         }
-                        if (parseInt(re) < 0)  { 
+                        if (parseInt(re) < 0) {
                             layer.msg('您已添加该材质，请勿重复添加', { icon: 2 });
                         }
-                        if (parseInt(re) ==0)
-                        {
+                        if (parseInt(re) == 0) {
                             layer.msg('操作失败，出现服务器错误！', { icon: 2 });
                         }
                         layer.close(loadLayer);

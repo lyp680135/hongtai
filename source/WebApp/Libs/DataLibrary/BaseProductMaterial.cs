@@ -23,5 +23,8 @@
 
         [MaxLength(255)]
         public string Note { get; set; }
+
+        [MaxLength(50)]
+        public string Templatename { get; set; }
     }
 }

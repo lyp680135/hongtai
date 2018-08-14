@@ -1,23 +1,32 @@
 ﻿namespace WarrantyManage.Pages.Manage.Settings
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Models;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+    using static DataLibrary.EnumList;
 
     public class ProductMaterialModel : AuthorizeModel
     {
-        public ProductMaterialModel(DataLibrary.DataContext db)
+        private Common.IService.ISettingService settingService;
+
+        public ProductMaterialModel(DataLibrary.DataContext db, Common.IService.ISettingService settingService)
          : base(db)
         {
+            this.settingService = settingService;
         }
 
         public string Keyword { get; set; }
 
         public string Pname { get; set; }
+
+        public List<string> TemplatName { get; set; }
 
         public void OnGet()
         {
@@ -43,6 +52,14 @@
             this.ViewData["pname"] = this.Pname;
             this.ViewData["list"] = queryResult;
             this.ViewData["plist"] = queryResult2;
+            var rsponseData = Util.Helpers.HttpHelper.HttpGet($"{this.settingService.MngSetting.Domain_WebApi}api/v1/WarrantyTemplate/", System.Text.Encoding.UTF8);
+            var webApi_ResponseModel = JsonConvert.DeserializeObject<WebApiResponseModel>(rsponseData);
+            if (webApi_ResponseModel != null && webApi_ResponseModel.Status == ApiResponseStatus.Success)
+            {
+                List<string> list_str = JsonConvert.DeserializeObject<List<string>>(webApi_ResponseModel.Data);
+
+                this.TemplatName = list_str;
+            }
         }
     }
 }
