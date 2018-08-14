@@ -28,7 +28,15 @@
                     <div style="clear:both"></div>
                 </li>
                 <li>
-                    <button id="addBtn" name="sb" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button>
+                   @if (!string.IsNullOrEmpty(Model.Type))
+                    {
+                        <input name="Type" hidden="hidden"  value="Physicsinfo" id="Type" />
+                        <button id="addBtn" name="sb" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button>
+                    }
+                    else
+                    {
+                        <button id="addBtn" name="sb" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button>
+                    }
                 </li>
             </ul>
         </div>
