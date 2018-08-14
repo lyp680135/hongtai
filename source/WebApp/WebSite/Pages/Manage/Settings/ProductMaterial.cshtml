@@ -143,8 +143,9 @@
                     <th style="width:60px">编号</th>
                     <th style="width:220px">材质</th>
                     <th>品名</th>
+
                     <th>材质强度</th>
-                    <th>所属模板</th>
+                    <th>质保书模板</th>
                     <th>备注</th>
 
                 </tr>
@@ -157,34 +158,34 @@
                     {
                         foreach (DataLibrary.BaseProductMaterial pmclass in list)
                         {
-                            <tr onclick="Edit(@pmclass.Id)">
-                                <td onclick="stopchoose()"><input name="id" type="checkbox" value="@pmclass.Id" /></td>
-                                <td>@pmclass.Id</td>
-                                <td>@pmclass.Name</td>
-                                <td>
-                                    @{
-                                        foreach (DataLibrary.BaseProductClass pclass in list3)
-                                        {
-                                            if (pclass.Id == pmclass.Classid)
-                                            {
-                                                @Html.Raw(pclass.Name);
-                                            }
-                                            else
-                                            {
-                                                @Html.Raw("");
-                                            }
-                                        }
-                                    }
-                                </td>
-                                
-                                <td>@pmclass.Standardstrength</td>
-		<td>
-                                    @{
-                                        @Html.Raw(pmclass.Templatename);
-                                    }
-                                </td>
-                                <td>@pmclass.Note</td>
-                            </tr>
+                <tr onclick="Edit(@pmclass.Id)">
+                    <td onclick="stopchoose()"><input name="id" type="checkbox" value="@pmclass.Id" /></td>
+                    <td>@pmclass.Id</td>
+                    <td>@pmclass.Name</td>
+                    <td>
+                        @{
+                            foreach (DataLibrary.BaseProductClass pclass in list3)
+                            {
+                                if (pclass.Id == pmclass.Classid)
+                                {
+                                    @Html.Raw(pclass.Name);
+                                }
+                                else
+                                {
+                                    @Html.Raw("");
+                                }
+                            }
+                        }
+                    </td>
+
+                    <td>@pmclass.Standardstrength</td>
+                    <td>
+                        @{
+                            @Html.Raw(pmclass.Templatename);
+                        }
+                    </td>
+                    <td>@pmclass.Note</td>
+                </tr>
                         }
                     }
                 }
@@ -217,7 +218,7 @@
                         </select>
                     </li>
                     <li style="line-height: 34px;" class="rukuli">
-                        <label style="width:70px;">所属模板<b>*</b></label>
+                        <label style="width:70px;">质保书模板<b>*</b></label>
                         <select name="templatename" id="templatename" class="validate[required] scinput">
                             <option value="">请选择</option>
                             @foreach (string str in Model.TemplatName)
@@ -313,6 +314,7 @@
                 success: function (re) {
                     $("#Name").val(re.name);
                     $("#classid").val(re.classid);
+                    $("#templatename").val(re.templatename);
                     $("#Note").val(re.note);
                     $("#Standardstrength").val(re.standardstrength);
                     $("#hiddId").val(selectedid);
@@ -320,8 +322,6 @@
                     layer.msg('无法获取到数据！', { icon: 2 });
                 }
             });
-
-
         });
         function Edit(id) {
             layer.open({
@@ -342,6 +342,7 @@
                     //  console.log(re);
                     $("#Name").val(re.name);
                     $("#classid").val(re.classid);
+                    $("#templatename").val(re.templatename);
                     $("#Note").val(re.note);
                     $("#hiddId").val(id);
                     $("#Standardstrength").val(re.standardstrength);
