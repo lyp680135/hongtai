@@ -2304,21 +2304,28 @@ namespace WpfCardPrinter
 
         private void ChangeShift_Click(object sender, RoutedEventArgs e)
         {
-            ChangeShiftWindow csw = new ChangeShiftWindow();
-            csw.Title = "换班操作";
-
-            csw.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            csw.Owner = this;
-
-            bool? result = csw.ShowDialog();
-            if (result.HasValue && result.Value)
+            MessageBoxResult dialogresult = MessageBox.Show("请确认是否要注销账号？", "操作提醒", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            if (dialogresult == MessageBoxResult.OK)
             {
-                var workshift = cbWorkShift.SelectedItem;
-                if (workshift is PdWorkshopTeam)
-                {
-                    MessageBox.Show("已经成功换班到[" + ((PdWorkshopTeam)workshift).TeamName + "]", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
+                LoginWindow lwin = new LoginWindow();
+                lwin.Show();
+                this.Close();
             }
+            //ChangeShiftWindow csw = new ChangeShiftWindow();
+            //csw.Title = "换班操作";
+
+            //csw.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            //csw.Owner = this;
+
+            //bool? result = csw.ShowDialog();
+            //if (result.HasValue && result.Value)
+            //{
+            //    var workshift = cbWorkShift.SelectedItem;
+            //    if (workshift is PdWorkshopTeam)
+            //    {
+            //        MessageBox.Show("已经成功换班到[" + ((PdWorkshopTeam)workshift).TeamName + "]", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Information);
+            //    }
+            //}
         }
 
         private void Search_Click(object sender, RoutedEventArgs e)
@@ -3021,7 +3028,7 @@ namespace WpfCardPrinter
                                 int number = Convert.ToInt32(nextBatcode) + offset;
                                 if (currSerNo != DATE_CODE)
                                 {
-                                    number = 1;                                 
+                                    number = 1;
                                 }
                                 serialno = Convert.ToInt32(string.Format("{0}{1}", DATE_CODE, number.ToString("D5")));
                                 batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, number.ToString("D5"), this.ProductLine);
@@ -3039,7 +3046,7 @@ namespace WpfCardPrinter
                         else
                         {
 
-                            var pdcode = access.SingleByPrefixCode(curritem.Serialno,this.mWorkshop.Id);
+                            var pdcode = access.SingleByPrefixCode(curritem.Serialno, this.mWorkshop.Id);
                             if (pdcode != null)
                             {
                                 return pdcode.Batcode;
@@ -4333,6 +4340,6 @@ namespace WpfCardPrinter
             txtCurrWeight.Text = realweight;
         }
     }
-        #endregion
+    #endregion
 
 }

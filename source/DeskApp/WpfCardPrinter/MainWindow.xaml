@@ -57,7 +57,7 @@
                     <Label Width="80" Content="车间当班：" FontSize="14" Height="30"  HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="SlateGray" VerticalContentAlignment="Center"/>
                     <TextBox Name="txtTeam" IsReadOnly="True" Height="25" Margin="0,0,5,0" TextWrapping="NoWrap" FontSize="14" Width="60" HorizontalAlignment="Left" VerticalContentAlignment="Center" Foreground="SlateGray" Background="#f0f0f0" />
                     <Label Name="txtTeamCount" Width="70" Height="30" Content="已产（0）" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="12"/>
-                    <Button Name="btnChangeShift" Content="换班" HorizontalAlignment="Left" Width="60px" Background="Coral" Click="ChangeShift_Click" />
+                    <Button Name="btnChangeShift" Content="注销" HorizontalAlignment="Left" Width="60px" Background="Coral" Click="ChangeShift_Click" />
                 </DockPanel>
                 <DockPanel Margin="0,8,0,10">
                     <Label Width="80" Content="轧制批号：" FontSize="14" Height="30"  HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Red"/>
