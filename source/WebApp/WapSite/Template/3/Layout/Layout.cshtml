@@ -52,14 +52,14 @@
                     {
                         <div class="col-xs-2 text-right right" style="margin-left: -30px;">
                             <a href="@ViewBag.SiteSetting.Domain_WAPManage">
-                                <img src="/Content/images/head_portrait_before.png" width="21" />
+                                <img src="/Content/images/head_portrait_before.png" width="21" style="position:absolute"/>
                                 @if (_userService.IsManageMember && _userService.ApplicationUser.Mng_admin != null)
                                 {
-                                    <span style="position:absolute;right:-25px">@Html.Raw(_userService.ApplicationUser.Mng_admin.RealName)</span>
+                                    <span id="spa" style="position:absolute;right:-1px">@Html.Raw(_userService.ApplicationUser.Mng_admin.RealName)</span>
                                 }
                                 else
                                 {
-                                    <span style="position:absolute;right:-25px">@Html.Raw(_userService.SaleSellerUser.Name)</span>
+                                    <span id="spa" style="position:absolute;right:-1px">@Html.Raw(_userService.SaleSellerUser.Name)</span>
                                 }
                             </a>
                         </div>
@@ -75,6 +75,7 @@
                 </div>
 
             </div>
+
             <div class="container-fluid top submenu">
                 <div class="row">
                     <div class="col-xs-12 text-center">
@@ -134,12 +135,12 @@
                                             {
                                                 var arr = News[i]["Image"].ToString().Split(',');
                                                 for (var j = 0; j < arr.Count(); j++)
-                                                { 
-                                                
+                                                {
+
                                                     <div class="@Html.Raw(j==0?"item active":"item")">
                                                         <img class="homebanner" src="@MngSetting.Domain_PC.Substring(0, MngSetting.Domain_PC.Length - 1)@arr[j]" width="100%" />
                                                     </div>
-                                                    
+
                                                 }
                                             }
                                         }
@@ -214,6 +215,15 @@
         function fun() {
             window.location.href = "/";
         }
+    </script>
+
+    <script type="text/javascript">
+        var string_str = $('#spa').html();
+        var new_str = '';
+        if (string_str.length >= 2) {
+            new_str = string_str.substring(0, 2) + '.';
+        }
+        $('#spa').html(new_str);
     </script>
 
     <div class="container-fluid footer">
