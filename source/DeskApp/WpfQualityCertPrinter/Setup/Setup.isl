@@ -342,6 +342,7 @@
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
 		<row><td>Component2</td><td>{D61B7284-800A-4B57-94F6-BF1D59FDA409}</td><td>INSTALLDIR</td><td>2</td><td/><td>File2</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISX_DEFAULTCOMPONENT</td><td>{238807A5-0BE7-4ABC-B3F8-5A65A47B2A2A}</td><td>LOGS</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ISX_DEFAULTCOMPONENT1</td><td>{002850E9-A9E1-475F-B8B8-9A6D20418B6A}</td><td>INSTALLDIR</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>IS_ININSTALL_SHORTCUT</td><td>{837F91D8-EC25-48E9-A6BB-8989A4A54670}</td><td>INSTALLDIR</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
@@ -1053,6 +1054,7 @@
 		<col key="yes" def="s72">Component_</col>
 		<row><td>INSTALLDIR</td><td>Component2</td></row>
 		<row><td>INSTALLDIR</td><td>ISX_DEFAULTCOMPONENT</td></row>
+		<row><td>INSTALLDIR</td><td>ISX_DEFAULTCOMPONENT1</td></row>
 		<row><td>INSTALLDIR</td><td>IS_ININSTALL_SHORTCUT</td></row>
 		<row><td>LOGS</td><td>ISX_DEFAULTCOMPONENT</td></row>
 	</table>
@@ -1870,6 +1872,7 @@
 		<col key="yes" def="s72">Component_</col>
 		<row><td>AlwaysInstall</td><td>Component2</td></row>
 		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT</td></row>
+		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT1</td></row>
 		<row><td>AlwaysInstall</td><td>IS_ININSTALL_SHORTCUT</td></row>
 	</table>
 
@@ -2030,6 +2033,7 @@
 		<col def="S0">Miscellaneous</col>
 		<row><td>Component2</td><td/><td/><td>_ED64B078_DC08_420E_BE8F_BD9797A0BB7F_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ISX_DEFAULTCOMPONENT</td><td/><td/><td>_425172E4_CA0D_444E_BCF3_76C5423C10C2_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ISX_DEFAULTCOMPONENT1</td><td/><td/><td>_320F1508_53D4_4647_85BE_C8D0B4596986_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>IS_ININSTALL_SHORTCUT</td><td/><td/><td>_9794F9DC_6D87_44AB_8723_53418C07D590_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
@@ -2425,7 +2429,7 @@
 		<row><td>DVD-18</td><td>Express</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[LocalAppDataFolder]Downloaded Installations</td><td>0</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>0</td><td>http://www.installengine.com/cert05/isengine</td><td>0</td><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert05/dotnetfx</td><td>0</td><td>1033</td><td/><td/><td/><td/><td/><td>3</td><td/><td>http://www.installengine.com/Msiengine30</td><td/></row>
 		<row><td>DVD-5</td><td>Express</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[LocalAppDataFolder]Downloaded Installations</td><td>0</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>0</td><td>http://www.installengine.com/cert05/isengine</td><td>0</td><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert05/dotnetfx</td><td>0</td><td>1033</td><td/><td/><td/><td/><td/><td>3</td><td/><td>http://www.installengine.com/Msiengine30</td><td/></row>
 		<row><td>DVD-9</td><td>Express</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[LocalAppDataFolder]Downloaded Installations</td><td>0</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>0</td><td>http://www.installengine.com/cert05/isengine</td><td>0</td><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert05/dotnetfx</td><td>0</td><td>1033</td><td/><td/><td/><td/><td/><td>3</td><td/><td>http://www.installengine.com/Msiengine30</td><td/></row>
-		<row><td>SingleImage</td><td>Express</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[LocalAppDataFolder]Downloaded Installations</td><td>1</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>0</td><td>http://www.installengine.com/cert05/isengine</td><td>0</td><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert05/dotnetfx</td><td>0</td><td>1033</td><td/><td/><td/><td/><td/><td>3</td><td/><td>http://www.installengine.com/Msiengine30</td><td/></row>
+		<row><td>SingleImage</td><td>Express</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[LocalAppDataFolder]Downloaded Installations</td><td>1</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>0</td><td>http://www.installengine.com/cert05/isengine</td><td>0</td><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert05/dotnetfx</td><td>0</td><td>1033</td><td/><td/><td/><td/><td>1024</td><td>3</td><td/><td>http://www.installengine.com/Msiengine30</td><td/></row>
 		<row><td>WebDeployment</td><td>Express</td><td>0</td><td>http://</td><td>0</td><td>setup</td><td>Default</td><td>[LocalAppDataFolder]Downloaded Installations</td><td>2</td><td>http://www.Installengine.com/Msiengine20</td><td>http://www.Installengine.com/Msiengine20</td><td>0</td><td>http://www.installengine.com/cert05/isengine</td><td>0</td><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert05/dotnetfx</td><td>0</td><td>1033</td><td/><td/><td/><td/><td/><td>3</td><td/><td>http://www.installengine.com/Msiengine30</td><td/></row>
 	</table>
 
@@ -3725,7 +3729,8 @@
 		<row><td>IDS__TargetReq_DESC_RESOLUTION</td><td>2052</td><td>对于运行 [ProductName] 屏幕分辨率不足。</td><td>0</td><td/><td>1931872625</td></row>
 		<row><td>ID_STRING1</td><td>2052</td><td>http://www.31goods.com</td><td>0</td><td/><td>1931903345</td></row>
 		<row><td>ID_STRING2</td><td>2052</td><td>龙志培</td><td>0</td><td/><td>1931874705</td></row>
-		<row><td>ID_STRING3</td><td>2052</td><td>质量证~1|质量证明书打印程序</td><td>0</td><td/><td>1931872625</td></row>
+		<row><td>ID_STRING3</td><td>1033</td><td>NEWSHO~1|NewShortcut3</td><td>0</td><td/><td>1822822031</td></row>
+		<row><td>ID_STRING3</td><td>2052</td><td>自动更新</td><td>0</td><td/><td>1822828175</td></row>
 		<row><td>ID_STRING4</td><td>2052</td><td>质量证~1|质量证明书打印程序</td><td>0</td><td/><td>1931872625</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>http://www.31goods.com</td><td>0</td><td/><td>1931897233</td></row>
 		<row><td>ID_STRING5</td><td>2052</td><td>http://www.31goods.com</td><td>0</td><td/><td>1931897233</td></row>
@@ -3733,6 +3738,10 @@
 		<row><td>ID_STRING6</td><td>2052</td><td>龙志培</td><td>0</td><td/><td>1931901329</td></row>
 		<row><td>ID_STRING7</td><td>1033</td><td>18257173086</td><td>0</td><td/><td>1931907473</td></row>
 		<row><td>ID_STRING7</td><td>2052</td><td>18257173086</td><td>0</td><td/><td>1931907473</td></row>
+		<row><td>ID_STRING8</td><td>1033</td><td>NEWSHO~1|NewShortcut2</td><td>0</td><td/><td>1822840175</td></row>
+		<row><td>ID_STRING8</td><td>2052</td><td>质量证~1|质量证明书打印程序</td><td>0</td><td/><td>1822850415</td></row>
+		<row><td>ID_STRING9</td><td>1033</td><td>质量证~1|质量证明书打印程序</td><td>0</td><td/><td>1822867055</td></row>
+		<row><td>ID_STRING9</td><td>2052</td><td>质量证~1|质量证明书打印程序</td><td>0</td><td/><td>1822867055</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>2052</td><td>系统将不安装此功能。</td><td>0</td><td/><td>1931872625</td></row>
 	</table>
 
@@ -4435,7 +4444,8 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="L255">FileName</col>
 		<col def="s72">DirProperty</col>
 		<col def="i2">InstallMode</col>
-		<row><td>NewShortcut1</td><td>Component2</td><td/><td>steelcertprinter</td><td>2</td></row>
+		<row><td>NewShortcut21</td><td>ISX_DEFAULTCOMPONENT1</td><td/><td>steelcertprinter</td><td>2</td></row>
+		<row><td>NewShortcut3</td><td>ISX_DEFAULTCOMPONENT1</td><td/><td>steelcertprinter</td><td>2</td></row>
 		<row><td>UNINST_Uninstall_SteelCertPrinter</td><td>IS_ININSTALL_SHORTCUT</td><td/><td>steelcertprinter</td><td>2</td></row>
 	</table>
 
@@ -4522,8 +4532,9 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="S255">ISComments</col>
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>NewShortcut1</td><td>steelcertprinter</td><td>##ID_STRING3##</td><td>Component2</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>NewShortcut11</td><td>DesktopFolder</td><td>##ID_STRING3##</td><td>Component2</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>NewShortcut2</td><td>DesktopFolder</td><td>##ID_STRING8##</td><td>ISX_DEFAULTCOMPONENT1</td><td>[INSTALLDIR]WpfQualityCertPrinter.exe</td><td/><td/><td/><td/><td/><td>1</td><td>INSTALLDIR</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>NewShortcut21</td><td>steelcertprinter</td><td>##ID_STRING9##</td><td>ISX_DEFAULTCOMPONENT1</td><td>[INSTALLDIR]WpfQualityCertPrinter.exe</td><td/><td/><td/><td/><td/><td>1</td><td>INSTALLDIR</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>NewShortcut3</td><td>steelcertprinter</td><td>##ID_STRING3##</td><td>ISX_DEFAULTCOMPONENT1</td><td>[INSTALLDIR]updater.exe</td><td>-auto WpfQualityCertPrinter.exe hongtai</td><td/><td/><td/><td/><td>1</td><td>INSTALLDIR</td><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>UNINST_Uninstall_SteelCertPrinter</td><td>steelcertprinter</td><td>##IDS_SHORTCUT_DISPLAY_NAME1##</td><td>IS_ININSTALL_SHORTCUT</td><td>[SystemFolder]msiexec.exe</td><td>/x {F7558878-947B-45E9-B3C1-6322BDA57872}</td><td/><td/><td>UNINST_Uninstall_S_89D4FE18564B4840B70622CEA5DEE774.exe</td><td>0</td><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
 	</table>
 

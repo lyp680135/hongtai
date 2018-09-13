@@ -13,11 +13,7 @@ namespace WpfCardPrinter.ModelAccess
         public T _model;
         public MySqlConnection _connection;
 
-#if DEBUG
-        public string myConnectionString = System.Configuration.ConfigurationManager.AppSettings["DBConnectionString"];
-#else
-        public string myConnectionString = "Server=47.98.246.14; Port=3306; Uid=warranty_mingyuan; Pwd=warranty23MingYuan_DoIt_145Xiaoyu_6; Database=warranty_mingyuan";
-#endif
+        public string myConnectionString = "Server=dev.xiaoyutt.com; Port=7035; Uid=warranty; Pwd=warranty123456; Database=warranty_hongtai";
 
         public BaseAccess()
         {
