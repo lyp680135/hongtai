@@ -73,13 +73,16 @@ namespace WpfCardPrinter.ModelAccess
 
             using (PdBatcodeAccess access = new PdBatcodeAccess())
             {
-                string code = batcode.Substring(0, 1);
-                var pdcode = access.SingleLast(code);
-                if (pdcode != null)
+                PdBatcode code = access.SingleByBatcode(batcode);
+                if (code != null)
                 {
-                    if(pdcode.Batcode == batcode)
+                    var pdcode = access.SingleLast(code.Workshopid);
+                    if (pdcode != null)
                     {
-                        enable = true;
+                        if (pdcode.Batcode == batcode)
+                        {
+                            enable = true;
+                        }
                     }
                 }
             }

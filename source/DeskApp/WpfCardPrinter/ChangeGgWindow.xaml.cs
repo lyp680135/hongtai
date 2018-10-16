@@ -96,6 +96,7 @@ namespace WpfCardPrinter
                 }
             }
         }
+		
         public void Submit_Click(object sender, RoutedEventArgs e)
         {
             int Specid = 0;
@@ -109,9 +110,10 @@ namespace WpfCardPrinter
             //main.updateChangeSelect(Convert.ToInt32(cbSpec.SelectedValue));
             this.DialogResult = false;
         }
+		
         private void SpecChanged(object sender, EventArgs e) 
         {
-
+            this.lbCurrGg.Content = (this.cbSpec.SelectedItem as BaseSpecifications).FullSpecname;
         }
     }
 }

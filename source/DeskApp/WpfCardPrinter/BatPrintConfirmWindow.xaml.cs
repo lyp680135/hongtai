@@ -180,8 +180,12 @@ namespace WpfCardPrinter
                     return;
                 }
 
-                //根据选中的Specid，补全Specname
+                //根据选中的Specid，补全Specname，没有选规格的行忽略掉
                 var spec=main.findSpecById(item.Specid);
+                if (spec == null)
+                {
+                    continue;
+                }
 
                 string msg = string.Format("{0}－{1}件\r\n", spec.FullSpecname, item.Printnums);
 

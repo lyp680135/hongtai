@@ -31,7 +31,8 @@ namespace WpfCardPrinter.ModelAccess.SqliteAccess
                                 + "[UserName] VARCHAR(255),"
                                 + "[LoginTime] INTEGER,"
                                 + "[RealName] VARCHAR(255),"
-                                + "[Address] Address(255) "
+                                + "[Address] VARCHAR(255), "
+                                + "[Code] VARCHAR(255) "
                                 + ")";
                 cmd.ExecuteNonQuery();
             }
@@ -51,13 +52,14 @@ namespace WpfCardPrinter.ModelAccess.SqliteAccess
         public int Insert(LoginLog loginlog)
         {
             int result = 0;
-            string sqlStr = string.Format("insert into loginlog(UserName,LoginTime,RealName,Address) values(@UserName,@LoginTime,@RealName,@Address)");
+            string sqlStr = string.Format("insert into loginlog(UserName,LoginTime,RealName,Address,Code) values(@UserName,@LoginTime,@RealName,@Address,@Code)");
             using (SQLiteCommand cmd = new SQLiteCommand(sqlStr, _connection))
             {
                 cmd.Parameters.Add("@UserName", DbType.String).Value = loginlog.UserName;
                 cmd.Parameters.Add("@LoginTime", DbType.Int64).Value = loginlog.LoginTime;
                 cmd.Parameters.Add("@RealName", DbType.String).Value = loginlog.RealName;
                 cmd.Parameters.Add("@Address", DbType.String).Value = loginlog.Address;
+                cmd.Parameters.Add("@Code", DbType.String).Value = loginlog.Code;
                 result = cmd.ExecuteNonQuery();
             }
             return result;
@@ -98,6 +100,7 @@ namespace WpfCardPrinter.ModelAccess.SqliteAccess
                             loginlogInfo.LoginTime = Convert.ToInt64(dr["LoginTime"]);
                             loginlogInfo.RealName = dr["RealName"].ToString();
                             loginlogInfo.Address = dr["Address"].ToString();
+                            loginlogInfo.Code = dr["Code"].ToString();
                         }
                     }
                 }
@@ -126,6 +129,7 @@ namespace WpfCardPrinter.ModelAccess.SqliteAccess
                             loginlogInfo.LoginTime = Convert.ToInt64(dr["LoginTime"]);
                             loginlogInfo.RealName = dr["RealName"].ToString();
                             loginlogInfo.Address = dr["Address"].ToString();
+                            loginlogInfo.Code = dr["Code"].ToString();
                             loginlist.Add(loginlogInfo);
                         }
                     }

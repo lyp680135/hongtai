@@ -30,60 +30,12 @@ using WpfCardPrinter.ModelAccess.SqliteAccess;
 
 namespace WpfCardPrinter
 {
-    public partial class QualityLevelDataConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value == null)
-            {
-                return "";
-            }
-            return (DataLibrary.EnumList.ProductQualityLevel)value;
-        }
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public partial class DateTimeDataConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value == null)
-            {
-                return "";
-            }
-
-            int timestamp = 0;
-            DateTime date = TimeUtils.GetUnixStartTime();
-            int.TryParse(value.ToString(), out timestamp);
-
-            if (timestamp > 0)
-            {
-                date = TimeUtils.GetDateTimeFromUnixTime(timestamp);
-            }
-
-            if (date == TimeUtils.GetUnixStartTime())
-            {
-                return "";
-            }
-
-            return date.ToString("yyyy-MM-dd");
-        }
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window
     {
-        public string myWorkshopProductLine = System.Configuration.ConfigurationManager.AppSettings["WorkshopProductLine"];
-        public string ProductLine = System.Configuration.ConfigurationManager.AppSettings["ProductLine"];
+        public string myWorkshopProductLine = LoginWindow.shopCode;
         public string myQRCodeUrlString = System.Configuration.ConfigurationManager.AppSettings["QRCodeUrlString"];
         public int nunlength = string.IsNullOrWhiteSpace(System.Configuration.ConfigurationManager.AppSettings["UnfixedLengthNumber"]) ? 0 : Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["UnfixedLengthNumber"]);
         public string mLabelPageWidth = ConfigurationManager.AppSettings["PageWidth"];
@@ -110,7 +62,7 @@ namespace WpfCardPrinter
         private PdWorkshopTeam mCurrentTeam = null;
         public BaseProductMaterial mMaterial = null;
 
-        private int index = 0;
+
         private PrintQueue mDefaultPrinter = null;
 
         private int mSelectedProductIndex = -1;
@@ -328,15 +280,20 @@ namespace WpfCardPrinter
 
                         mMaterial = findMaterialById(product.Materialid.Value);
                         cbMaterial.SelectedValue = findMaterialById(product.Materialid.Value);
+
+                        //将时间重置为当时最后一件打印的时间
+                        dpProductionDate.SelectedDate = Utils.TimeUtils.GetDateTimeFromUnixTime(product.Createtime.Value);
                     }
                 }
                 else
                 {
                     var lastproduct = access.SingleLastProductByWorkshopid(mWorkshop.Id);
-                    cbClass.SelectedValue = lastproduct.Classid;
-
-                    mMaterial = findMaterialById(lastproduct.Materialid.Value);
-                    cbMaterial.SelectedValue = mMaterial;
+                    if (lastproduct != null)
+                    {
+                        cbClass.SelectedValue = lastproduct.Classid;
+                        mMaterial = findMaterialById(lastproduct.Materialid.Value);
+                        cbMaterial.SelectedValue = mMaterial;
+                    }
                 }
             }
 
@@ -536,6 +493,10 @@ namespace WpfCardPrinter
                     var point = CommonUtils.GetPointFromSetting(RandomcodePoint);
                     Canvas.SetTop(lbLabelRandomCode, (point.Y + offsetY) * scale);
                     Canvas.SetLeft(lbLabelRandomCode, (point.X + offsetX) * scale);
+                }
+                else
+                {
+                    lbLabelRandomCode.Visibility = System.Windows.Visibility.Hidden;
                 }
 
                 //是否显示规格
@@ -795,6 +756,10 @@ namespace WpfCardPrinter
                             workshopid = item.WorkshopId;
                         }
                     }
+                    else
+                    {
+                        throw new Exception("找不到车间的班组信息...");
+                    }
                 }
 
                 this.Dispatcher.BeginInvoke(new Action(() => { SetLoadingValue(24, "", "正在加载班组信息...完成！"); }));
@@ -819,7 +784,7 @@ namespace WpfCardPrinter
                 }
                 else
                 {
-                    throw new Exception("找不到指定车间...");
+                    throw new Exception("找不到指定车间信息...");
                 }
 
                 this.Dispatcher.BeginInvoke(new Action(() => { SetLoadingValue(35, "", "正在加载换班信息...完成！"); }));
@@ -866,6 +831,7 @@ namespace WpfCardPrinter
                         mClassList.Clear();
 
                         mMaterialList.Clear();
+
                         foreach (var item in list)
                         {
                             mClassList.Add(item);
@@ -1080,6 +1046,16 @@ namespace WpfCardPrinter
                     {
                         //补全列表
                         mProductList = ProductAutoComplete(batcode, list);
+
+                        //将所有未保存的产品重置规格
+                        for (var i = 0; i < mProductList.Count; i++)
+                        {
+                            if (mProductList[i].Id <= 0)
+                            {
+                                mProductList[i].Specid = product.Specid;
+                                mProductList[i].Specname = product.Specname;
+                            }
+                        }
 
                         flag = false;
                         int index = findProductIndexById(product.Id);
@@ -1612,9 +1588,26 @@ namespace WpfCardPrinter
                     txtBundle.Text = string.Format("{0}", mSelectedProduct.Bundlecode);
                 }
 
+                //如果是新增的，可以改时间，否则不能改
+                if (mSelectedProduct.Id > 0)
+                {
+                    dpProductionDate.IsEnabled = false;
+                }
+                else
+                {
+                    dpProductionDate.IsEnabled = true;
+                }
             }
         }
-
+        public void Change_config(object sender, RoutedEventArgs e)
+        {
+            OffsetConfig cgw = new OffsetConfig();
+            cgw.Title = "更改配置";
+            cgw.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            cgw.updataSelectHandler += InitLabel;
+            cgw.Owner = this;
+            cgw.ShowDialog();
+        }
         public void MaterialClick(object sender, MouseButtonEventArgs e)
         {
             try
@@ -2228,7 +2221,52 @@ namespace WpfCardPrinter
 
         }
         /// <summary>
+        /// 刷新主线程UI
+        /// </summary>
+        /// <param name="classid"></param>
+        /// <param name="materialid"></param>
+        /// <param name="mCurrentBatCode"></param>
+        public void UpdateMaterial(int classid, int materialid, string mCurrentBatCode)
+        {
+
+            cbClass.SelectedValue = findClassIndexById(classid);
+            cbMaterial.SelectedValue = findMaterialById(materialid);
+            DoMaterialChanged(classid, materialid);
+
+            //重新加载产品
+            StartReloadProduct(mCurrentBatCode);
+        }
+        /// <summary>
         /// 切换材质
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        //private void ChangeCz_Click(object sender, RoutedEventArgs e)
+        //{
+        //    MessageBoxResult result = MessageBox.Show("确认切换材质？", "操作提醒", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+        //    if (result == MessageBoxResult.OK)
+        //    {
+        //        if (cbMaterial.SelectedValue == null)
+        //            return;
+        //        ChangeCzWindow cgw = new ChangeCzWindow();
+        //        cgw.Title = "切换材质";
+        //        cgw.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        //        cgw.mCurrentBatCode = this.mCurrentBatCode;
+        //        if (cbMaterial.SelectedItem != null)
+        //        {
+        //            var materialitem = (cbMaterial.SelectedItem as BaseProductMaterial);
+        //            cgw.MaterialId = materialitem.Id;
+        //            cgw.ClassId = materialitem.Classid;
+        //        }
+        //        // 订阅事件
+        //        cgw.updataSelectHandler += UpdateMaterial;
+        //        cgw.lbCurrCz.Content = $"{this.cbClass.Text}->{(this.cbMaterial.SelectedItem as BaseProductMaterial).Name}";
+        //        cgw.Owner = this;
+        //        cgw.ShowDialog();
+        //    }
+        //}
+        /// <summary>
+        /// 切换规格
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -2256,6 +2294,7 @@ namespace WpfCardPrinter
             cgw.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             //订阅事件
             cgw.updataSelectHandler += updateChangeSelect;
+            cgw.lbCurrGg.Content = this.cbSpec.Text;
             cgw.Owner = this;
             cgw.ShowDialog();
         }
@@ -2304,7 +2343,7 @@ namespace WpfCardPrinter
 
         private void ChangeShift_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult dialogresult = MessageBox.Show("请确认是否要注销账号？", "操作提醒", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            MessageBoxResult dialogresult = MessageBox.Show("请确认是否要注销登录？", "操作提醒", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
             if (dialogresult == MessageBoxResult.OK)
             {
                 LoginWindow lwin = new LoginWindow();
@@ -2348,6 +2387,15 @@ namespace WpfCardPrinter
                     }
                     else
                     {
+                        if (querytime == null && !string.IsNullOrEmpty(querybatcode))
+                        {
+                            mCurrentBatCode = querybatcode;
+                          
+                            StartReloadProduct(mCurrentBatCode);
+                                
+                            return;
+                        }
+
                         mSelectedProductIndex = -1;
 
                         mProductList.Clear();
@@ -2376,7 +2424,15 @@ namespace WpfCardPrinter
                     var product = DoSaveProduct();
                     if (product != null)
                     {
-                        DoPrint(product, 1, 1);
+                        //获取Specname
+                        var spec = findSpecById(product.Specid.Value);
+                        if (spec != null)
+                        {
+                            product.Specname = spec.Specname;
+                            product.ReferWeight = spec.Referpieceweight;
+
+                            DoPrint(product, 1, 1);
+                        }
                     }
                 }
                 else
@@ -2414,9 +2470,10 @@ namespace WpfCardPrinter
                             MessageBox.Show("获取不到规格号", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
-
-
-                    //MessageBox.Show("请称重保存后再进行标牌打印！", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        MessageBox.Show("请称重保存后再进行标牌打印！", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
             }
             else
@@ -2438,12 +2495,6 @@ namespace WpfCardPrinter
                         dgProduct.SelectedIndex = -1;
                         return null;
                     }
-                }
-
-                if (string.IsNullOrEmpty(txtCurrWeight.Text) && mMaterial.Measurement == (int)EnumList.MeteringMode.磅计)
-                {
-                    MessageBoxResult dialogresult = MessageBox.Show(string.Format("磅计产品请先输入称重数据后再保存！"), "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return null;
                 }
             }
 
@@ -2544,7 +2595,14 @@ namespace WpfCardPrinter
 
             product.Lengthtype = lengthtype;
 
-            product.Createtime = (int)((dpProductionDate.SelectedDate != null) ? ((dpProductionDate.SelectedDate.Value.ToUniversalTime().Ticks - 621355968000000000) / 10000000) : 0);
+            if (mSelectedProduct.Id <= 0)        //新记录用当前时间，老记录不改时间
+            {
+                product.Createtime = (int)((dpProductionDate.SelectedDate != null) ? ((dpProductionDate.SelectedDate.Value.ToUniversalTime().Ticks - 621355968000000000) / 10000000) : 0);
+            }
+            else
+            {
+                product.Createtime = mSelectedProduct.Createtime;
+            }
 
             if (specid > 0)
             {
@@ -2630,7 +2688,18 @@ namespace WpfCardPrinter
                 //如果是新增,并且重量为0,则忽略
                 if (product.Id <= 0 && (product.Weight == null || product.Weight <= 0))
                 {
-                    return null;
+                    if (mMaterial.Measurement == (int)EnumList.MeteringMode.理计)
+                    {
+                        var spec = findSpecById(product.Specid.Value);
+                        if (spec != null)
+                            product.Weight = spec.Referpieceweight;
+                        else
+                            return null;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
 
                 //获取规格名称
@@ -2991,7 +3060,7 @@ namespace WpfCardPrinter
 
                     if (curritem == null || curritem.Id <= 0)     //如果当前批号为空并且数据库里也没有
                     {
-                        batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, 1.ToString("D5"), this.ProductLine);
+                        batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, 1.ToString("D5"), myWorkshopProductLine);
                         serialno = Convert.ToInt32(string.Format("{0}{1}", DATE_CODE, 1.ToString("D5")));
                         PdBatcode pdcode = new PdBatcode();
                         pdcode.Batcode = batcode;
@@ -3031,7 +3100,7 @@ namespace WpfCardPrinter
                                     number = 1;
                                 }
                                 serialno = Convert.ToInt32(string.Format("{0}{1}", DATE_CODE, number.ToString("D5")));
-                                batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, number.ToString("D5"), this.ProductLine);
+                                batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, number.ToString("D5"), myWorkshopProductLine);
                                 access.Insert(new PdBatcode
                                 {
                                     Batcode = batcode,

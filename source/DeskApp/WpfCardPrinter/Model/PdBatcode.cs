@@ -9,6 +9,8 @@ namespace DataLibrary
         [Key]
         public int Id { get; set; }
         public string Batcode { get; set; }
+
+        public int Serialno { get; set; }
      
         public int? Createtime { get; set; }
         public string Adder { get; set; }
@@ -33,7 +35,5 @@ namespace DataLibrary
         /// Gets or sets 成材率
         /// </summary>
         public double? Productrate { get; set; }
-        public int Serialno { get; set; }
-        
     }
 }

@@ -447,5 +447,25 @@ namespace WpfCardPrinter.ModelAccess
 
             return productlist;
         }
+
+        public void DeleteProduct(string batcode)
+        {
+            string sqlStr = @" delete from pdproduct where batcode=@batcode ";
+            using (MySqlCommand sqlcmd = new MySqlCommand(sqlStr, _connection))
+            {
+                sqlcmd.Parameters.Add("@batcode", MySqlDbType.VarChar).Value = batcode;
+                sqlcmd.ExecuteNonQuery();
+            }
+        }
+
+        public void DeleteProductById(int Id)
+        {
+            string sqlStr = @" delete from pdproduct where Id=@Id ";
+            using (MySqlCommand sqlcmd = new MySqlCommand(sqlStr, _connection))
+            {
+                sqlcmd.Parameters.Add("@Id", MySqlDbType.Int32).Value = Id;
+                sqlcmd.ExecuteNonQuery();
+            }
+        }
     }
 }

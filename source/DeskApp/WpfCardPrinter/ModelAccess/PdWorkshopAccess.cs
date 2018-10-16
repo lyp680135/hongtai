@@ -139,7 +139,7 @@ namespace WpfCardPrinter.ModelAccess
                                 shop.Inputer = (!Convert.IsDBNull(dr["inputer"])) ? dr.GetString("inputer") : null;
                                 shop.Outputer = (!Convert.IsDBNull(dr["outputer"])) ? dr.GetString("outputer") : null;
                                 shop.QAInputer = (!Convert.IsDBNull(dr["qainputer"])) ? dr.GetString("qainputer") : null;
-                                shop.CreateTime = dr.GetInt32("createtime");
+                                shop.CreateTime = (!Convert.IsDBNull(dr["createtime"])) ? dr.GetInt32("createtime") : 0;
 
                                 list.Add(shop);
                             }

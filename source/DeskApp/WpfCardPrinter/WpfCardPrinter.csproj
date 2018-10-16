@@ -33,7 +33,7 @@
     <NuGetPackageImportStamp>a2b63124</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -43,7 +43,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -145,11 +145,17 @@
     <Compile Include="BatPrintConfirmWindow.xaml.cs">
       <DependentUpon>BatPrintConfirmWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ChangeCzWindow.xaml.cs">
+      <DependentUpon>ChangeCzWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ChangeGgWindow.xaml.cs">
       <DependentUpon>ChangeGgWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ComDialog.xaml.cs">
       <DependentUpon>ComDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Confirm.xaml.cs">
+      <DependentUpon>Confirm.xaml</DependentUpon>
     </Compile>
     <Compile Include="LoadingWindow.xaml.cs">
       <DependentUpon>LoadingWindow.xaml</DependentUpon>
@@ -158,6 +164,7 @@
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ModelAccess\MngAdminAccess.cs" />
+    <Compile Include="ModelAccess\PdStockOutAccess.cs" />
     <Compile Include="ModelAccess\PdWorkshopAccess.cs" />
     <Compile Include="ModelAccess\SqliteAccess\BaseSqliteAccess.cs" />
     <Compile Include="ModelAccess\SqliteAccess\LoginLogSqliteAccess.cs" />
@@ -165,7 +172,11 @@
     <Compile Include="Model\BaseGbProduction.cs" />
     <Compile Include="Model\LoginLog.cs" />
     <Compile Include="Model\MngAdmin.cs" />
+    <Compile Include="Model\PdStockOut.cs" />
     <Compile Include="Model\PdWorkshop.cs" />
+    <Compile Include="OffsetConfig.xaml.cs">
+      <DependentUpon>OffsetConfig.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControl\LoadingControl.xaml.cs">
       <DependentUpon>LoadingControl.xaml</DependentUpon>
     </Compile>
@@ -182,6 +193,8 @@
     <Compile Include="Model\PdQuality.cs" />
     <Compile Include="Utils\ByteUtils.cs" />
     <Compile Include="Utils\CommonUtils.cs" />
+    <Compile Include="Utils\Converters.cs" />
+    <Compile Include="Utils\HttpUtils.cs" />
     <Compile Include="Utils\ImageUtils.cs" />
     <Compile Include="Utils\LogHelper.cs" />
     <Compile Include="Utils\MD5Util.cs" />
@@ -190,6 +203,10 @@
     <Page Include="BatPrintConfirmWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChangeCzWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="ChangeGgWindow.xaml">
       <SubType>Designer</SubType>
@@ -203,6 +220,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Confirm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="LoadingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -210,6 +231,10 @@
     <Page Include="LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OffsetConfig.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControl\LoadingControl.xaml">
       <SubType>Designer</SubType>
@@ -260,6 +285,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\setting.png" />
+    <Content Include="SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="updater.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Resources\hongtai_shuju.png" />
     <Resource Include="Resources\zhi_e.jpg" />
     <Resource Include="Resources\pan_e.jpg" />
@@ -271,6 +303,15 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <Resource Include="duilib license.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="DuiLib_u.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="log4net.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="MySql.Data.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -145,7 +145,16 @@
                     <Label Name="lbLabelBundleCode" Content="23" FontSize="11px" FontWeight="Bold" VerticalContentAlignment="Center" Width="40px" Canvas.Left="185" Canvas.Top="165" />
                     <Image Name="imgLabelQRcode" Canvas.Top="138" Canvas.Left="243" Width="60px" Height="60px"></Image>
                 </Canvas>
-                <Label Content="标牌预览" HorizontalAlignment="Center" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 10 0 0">
+                    <Label Content="标牌预览" HorizontalAlignment="Center" VerticalContentAlignment="Center" />
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="调整打印位置" Width="20" Height="20" Background="Transparent" Click="Change_config" RenderTransformOrigin="0.415,1.225">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Stretch="Fill" Width="15" Height="15" Source="/WpfCardPrinter;component/Resources/setting.png" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
             </StackPanel>
         </DockPanel>
         <DockPanel Grid.Row="4" Height="50" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="0,0.2,0,-0.6">
