@@ -25,6 +25,12 @@ namespace WpfQualityCertPrinter.ModelAccess
 
         }
 
+        public SalePrintlogAccess(MySqlConnection conn)
+            : base(conn)
+        {
+
+        }
+
         public SalePrintlog SingleById(int? id = null)
         {
             SalePrintlog log = null;
@@ -87,7 +93,7 @@ namespace WpfQualityCertPrinter.ModelAccess
                             log.Id = int.Parse(dr["Id"].ToString());
                             log.Consignor = (!Convert.IsDBNull(dr["Consignor"])) ? dr["Consignor"].ToString() : null;
                             log.Printno = dr["Printno"].ToString();
-                            log.Status = int.Parse(dr["Status"].ToString());
+                            log.Status = (!Convert.IsDBNull(dr["Status"])) ? int.Parse(dr["Status"].ToString()) : new int?();
                             log.Checkcode = (!Convert.IsDBNull(dr["Checkcode"])) ? dr["Checkcode"].ToString() : null;
                         }
                     }
@@ -248,6 +254,28 @@ namespace WpfQualityCertPrinter.ModelAccess
             }
 
             return list;
+        }
+
+        public int Delete(int id)
+        {
+            int result = 0;
+
+            try
+            {
+                string sql = "DELETE FROM saleprintlog WHERE id=@id";
+                using (MySqlCommand mysqlcom = new MySqlCommand(sql, _connection))
+                {
+                    mysqlcom.Parameters.Add(new MySqlParameter("@id", id));
+
+                    result = mysqlcom.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return result;
         }
     }
 }

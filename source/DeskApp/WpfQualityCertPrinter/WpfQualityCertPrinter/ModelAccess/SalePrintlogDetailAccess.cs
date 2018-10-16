@@ -24,6 +24,12 @@ namespace WpfQualityCertPrinter.ModelAccess
 
         }
 
+        public SalePrintLogDetaillAccess(MySqlConnection conn)
+            : base(conn)
+        {
+
+        }
+
         /// <summary>
         /// 获取质量证明书的详细产品明细清单
         /// </summary>
@@ -57,7 +63,8 @@ namespace WpfQualityCertPrinter.ModelAccess
                                 log.Authid = dr.GetInt32("authid");
                                 log.Number = dr.GetInt32("number");
                                 log.PrintId = dr.GetInt32("printid");
-
+                                log.Printnumber = dr.GetInt32("printnumber");
+								
                                 list.Add(log);
                             }
                         }
@@ -70,6 +77,31 @@ namespace WpfQualityCertPrinter.ModelAccess
             }
 
             return list;
+        }
+
+        public int DeleteByIds(List<int> ids)
+        {
+            int result = 0;
+
+            try
+            {
+                string idsstr = string.Join(",", ids);
+
+                if (!string.IsNullOrEmpty(idsstr))
+                {
+                    string sql = "DELETE FROM saleprintlogdetail WHERE id IN (" + idsstr + ")";
+                    using (MySqlCommand mysqlcom = new MySqlCommand(sql, _connection))
+                    {
+                        result = mysqlcom.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return result;
         }
     }
 }

@@ -41,5 +41,31 @@ namespace XYNetCloud.Utils
 
             return point;
         }
+
+        /// <summary>
+        /// 执行CMD命令
+        /// </summary>
+        /// <param name="str"></param>
+        public static void start(string str)
+        {
+            using (System.Diagnostics.Process p = new System.Diagnostics.Process())
+            {
+                p.StartInfo.FileName = "cmd.exe";
+                p.StartInfo.UseShellExecute = false;    //是否使用操作系统shell启动
+                p.StartInfo.RedirectStandardInput = true;//接受来自调用程序的输入信息
+                p.StartInfo.RedirectStandardOutput = true;//由调用程序获取输出信息
+                p.StartInfo.RedirectStandardError = true;//重定向标准错误输出
+                p.StartInfo.CreateNoWindow = true;//不显示程序窗口
+                p.StartInfo.Verb = "RunAs";
+                //p.StartInfo.Arguments = str;
+                p.Start();//启动程序
+                //向cmd窗口发送输入信息
+                p.StandardInput.WriteLine(str);
+                //p.StandardInput.WriteLine("exit");
+                p.StandardInput.AutoFlush = true;
+
+            }
+
+        }
     }
 }

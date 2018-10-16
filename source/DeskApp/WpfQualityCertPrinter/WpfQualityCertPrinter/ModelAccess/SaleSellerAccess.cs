@@ -24,6 +24,12 @@ namespace WpfQualityCertPrinter.ModelAccess
 
         }
 
+        public SaleSellerAccess(MySqlConnection conn)
+            : base(conn)
+        {
+
+        }
+
         public SaleSeller SingleById(int? id = null)
         {
             SaleSeller seller = null;

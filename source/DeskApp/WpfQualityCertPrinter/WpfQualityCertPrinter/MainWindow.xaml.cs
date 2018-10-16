@@ -531,8 +531,13 @@ namespace WpfQualityCertPrinter
 
                                                 ImageLoadingControl.Visibility = Visibility.Hidden;
 
-                                                //开始打印
-                                                DoPrint();
+                                                 //第一次生成时弹出是否打印的确认框
+                                                MessageBoxResult msgresult = MessageBox.Show("质量证明书生成成功，是否立即打印？", "操作提醒", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                                                if (msgresult == MessageBoxResult.Yes)
+                                                {
+                                                    //开始打印
+                                                    DoPrint();
+                                                }
 
                                             }));
                                         }
@@ -574,7 +579,10 @@ namespace WpfQualityCertPrinter
                     }
                     else
                     {
-                        MessageBox.Show("请求打印质量证明书返回生成失败：\n\n 服务器返回为空", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
+                        this.Dispatcher.BeginInvoke(new Action(() =>
+                           {
+                               MessageBox.Show("请求打印质量证明书返回生成失败：\n\n 服务器返回为空", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
+                           }));
                     }
                 }
                 catch (Exception e)

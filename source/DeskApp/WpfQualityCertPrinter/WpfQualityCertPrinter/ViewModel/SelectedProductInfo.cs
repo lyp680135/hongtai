@@ -20,5 +20,6 @@ namespace WpfQualityCertPrinter.ViewModel
         public int Startbundle { get; set; }
         public int Endbundle { get; set; }
         public int Number { get; set; }
+        public int Printnumber { get; set; }
     }
 }

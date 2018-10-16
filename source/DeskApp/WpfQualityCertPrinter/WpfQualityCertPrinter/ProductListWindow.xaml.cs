@@ -164,6 +164,7 @@ namespace WpfQualityCertPrinter
                         {
                             cangroup = true;
                             sitem.Number++;
+                            sitem.Printnumber++;
                             break;
                         }
                     }
@@ -183,6 +184,7 @@ namespace WpfQualityCertPrinter
                             Lengthtype = item.Lengthtype,
                             Lengthnote = item.Lengthnote,
                             Number = 1,
+                            Printnumber = 1,
                         });
                     }
                 }

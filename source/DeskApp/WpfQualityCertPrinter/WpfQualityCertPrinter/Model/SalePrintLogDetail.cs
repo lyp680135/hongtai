@@ -27,5 +27,10 @@
         /// </summary>
         public int Number { get; set; }
 
+        /// <summary>
+        /// Gets or sets 打印产品分组件自定义打印数
+        /// </summary>
+        public int Printnumber { get; set; }
+
     }
 }

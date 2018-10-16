@@ -42,6 +42,16 @@ namespace WpfQualityCertPrinter.ModelAccess
             }
         }
 
+        public BaseAccess(MySqlConnection conn)
+        {
+            _connection = conn;
+        }
+
+        public MySqlConnection GetConnection()
+        {
+            return _connection;
+        }
+
         ~BaseAccess()
         {
             Dispose();

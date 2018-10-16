@@ -133,7 +133,7 @@ namespace WpfQualityCertPrinter
         {
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.Filter = "图像文件(*.png)|*.png|*.*|";
-            dialog.FileName = "minyuancert";
+            dialog.FileName = "cert";
             dialog.DefaultExt = "png";
             dialog.RestoreDirectory = true;
 

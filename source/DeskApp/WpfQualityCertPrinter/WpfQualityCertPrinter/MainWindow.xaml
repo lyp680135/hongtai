@@ -30,7 +30,7 @@
                 <ImageBrush ImageSource="/WpfQualityCertPrinter;component/Resources/topbg.png" Stretch="UniformToFill" TileMode="None"  />
             </DockPanel.Background>
             <DockPanel Height="56px" DockPanel.Dock="Left">
-                <Label Name="lbTitle" Content="涟钢振兴轧钢有限公司质量证明书打印" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
+                <Label Name="lbTitle" Content="江苏鸿泰钢铁有限公司质量证明书打印" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
             </DockPanel>
             <StackPanel Orientation="Horizontal" Width="395px" Height="56px" HorizontalAlignment="Right" DockPanel.Dock="Right">
                 <Image Source="/WpfQualityCertPrinter;component/Resources/banner_01.png" Width="125px" Height="56px" Margin="5px 0px 0px 0px" />

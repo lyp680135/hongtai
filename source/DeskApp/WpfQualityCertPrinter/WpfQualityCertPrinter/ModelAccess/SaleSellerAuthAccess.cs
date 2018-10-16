@@ -25,6 +25,12 @@ namespace WpfQualityCertPrinter.ModelAccess
 
         }
 
+        public SaleSellerAuthAccess(MySqlConnection conn)
+            : base(conn)
+        {
+
+        }
+
         public SaleSellerAuth SingleById(int id)
         {
             SaleSellerAuth auth = null;
@@ -151,6 +157,51 @@ namespace WpfQualityCertPrinter.ModelAccess
             }
 
             return list;
+        }
+
+        public int UpdateNums(SaleSellerAuth model)
+        {
+            int result = 0;
+
+            try
+            {
+                string sql = "UPDATE salesellerauth SET number=@number WHERE id=@id";
+                using (MySqlCommand mysqlcom = new MySqlCommand(sql, _connection))
+                {
+                    mysqlcom.Parameters.Add(new MySqlParameter("@number", model.Number));
+                    mysqlcom.Parameters.Add(new MySqlParameter("@id", model.Id));
+
+                    result = mysqlcom.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return result;
+        }
+
+        public int Delete(int id)
+        {
+            int result = 0;
+
+            try
+            {
+                string sql = "DELETE FROM salesellerauth WHERE id=@id";
+                using (MySqlCommand mysqlcom = new MySqlCommand(sql, _connection))
+                {
+                    mysqlcom.Parameters.Add(new MySqlParameter("@id", id));
+
+                    result = mysqlcom.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return result;
         }
     }
 }

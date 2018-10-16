@@ -196,6 +196,9 @@ namespace WpfQualityCertPrinter
 
         private void ReSelect_Click(object sender, RoutedEventArgs e)
         {
+            //先退出编辑模式
+            dgSelectProducts.CommitEdit(DataGridEditingUnit.Row, true);
+
             //如果是从历史数据中选择的，不允许进行修改
             if (this.m_Printlogid > 0)
             {
@@ -283,6 +286,7 @@ namespace WpfQualityCertPrinter
                             && item.Lengthnote == sitem.Lengthnote)
                     {
                         this.m_productinfolist[i].Number = item.Number;
+                        this.m_productinfolist[i].Printnumber = item.Number;
                         find = true;
                         break;
                     }
@@ -320,6 +324,8 @@ namespace WpfQualityCertPrinter
                         var selecteditem = access.GetProductInfoById(item.Authid);
                         if (selecteditem != null)
                         {
+                            selecteditem.Printnumber = item.Printnumber;
+                            selecteditem.Number = item.Number;
                             this.m_productinfolist.Add(selecteditem);
                         }
                     }

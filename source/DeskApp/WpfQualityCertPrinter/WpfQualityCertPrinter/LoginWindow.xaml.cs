@@ -20,6 +20,7 @@ using WpfQualityCertPrinter.Model;
 using WpfQualityCertPrinter.ModelAccess;
 using WpfQualityCertPrinter.ModelAccess.SqliteAccess;
 using WpfQualityCertPrinter.Utils;
+using XYNetCloud.Utils;
 
 namespace WpfQualityCertPrinter
 {
@@ -28,6 +29,8 @@ namespace WpfQualityCertPrinter
     /// </summary>
     public partial class LoginWindow : Window
     {
+        public readonly string updateVersionUrl = "http://upgrade.xiaoyutt.com/update?client=hongtai&app=WpfQualityCertPrinter.exe";
+        public readonly string cmdStr = " updater.exe -auto WpfQualityCertPrinter.exe hongtai  ";
         public LoginWindow()
         {
             InitializeComponent();
@@ -35,6 +38,33 @@ namespace WpfQualityCertPrinter
             cbAccount.Focus();
 
             InitData();
+#if DEBUG
+
+#else
+            UpdateVersion();
+#endif
+
+        }
+        private void UpdateVersion()
+        {
+            var resStr = HttpUtils.GetResponseText(updateVersionUrl, 5000);
+            if (!string.IsNullOrEmpty(resStr))
+            {
+                var version = resStr.Split(',')[0];
+                var file = System.Diagnostics.FileVersionInfo.GetVersionInfo(AppDomain.CurrentDomain.BaseDirectory + "WpfQualityCertPrinter.exe").FileVersion;
+                var oldVerNum = Convert.ToInt16(file.Replace(".", string.Empty));
+                var newVerNum = Convert.ToInt16(version.Replace(".", string.Empty));
+                if (newVerNum > oldVerNum)
+                {
+                    MessageBoxResult mbr = MessageBox.Show("有新版本程序,是否需要更新?", "操作提醒", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                    if (mbr == MessageBoxResult.OK)
+                    {
+                        //CommonUtils.UpdateAppSetting("updateVersion", version);
+                        CommonUtils.start(cmdStr);
+                        Environment.Exit(0);
+                    }
+                }
+            }
         }
         private void InitData()
         {

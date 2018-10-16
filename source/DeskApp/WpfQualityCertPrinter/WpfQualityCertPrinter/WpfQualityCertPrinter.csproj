@@ -39,6 +39,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -47,6 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
@@ -119,6 +121,8 @@
     <Compile Include="ModelAccess\PdBatcodeAccess.cs" />
     <Compile Include="ModelAccess\PdProductAccess.cs" />
     <Compile Include="ModelAccess\SalePrintlogDetailAccess.cs" />
+    <Compile Include="ModelAccess\SaleSellerAuthDetailAccess.cs" />
+    <Compile Include="ModelAccess\PdStockoutAccess.cs" />
     <Compile Include="ModelAccess\SaleSellerAuthAccess.cs" />
     <Compile Include="ModelAccess\SaleSellerAccess.cs" />
     <Compile Include="ModelAccess\SalePrintlogHttpAccess.cs" />
@@ -135,6 +139,7 @@
     <Compile Include="Model\MngAdmin.cs" />
     <Compile Include="Model\MngSetting.cs" />
     <Compile Include="Model\PdBatcode.cs" />
+    <Compile Include="Model\PdStockout.cs" />
     <Compile Include="Model\PdProduct.cs" />
     <Compile Include="Model\PdWorkshop.cs" />
     <Compile Include="ModelAccess\PdWorkshopAccess.cs" />
@@ -208,11 +213,12 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SelCondition.xaml">
-      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SelectGJ.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SelectProductWindow.xaml">
       <SubType>Designer</SubType>
@@ -237,6 +243,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Content Include="zxing.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -244,11 +253,13 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="log4net.config">
+    <Content Include="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="packages.config" />
-    <None Include="Properties\app.manifest" />
+    <None Include="Properties\app.manifest">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -266,10 +277,28 @@
     <Resource Include="Resources\cert_template.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Newtonsoft.Json.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="updater.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="duilib license.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="DuiLib_u.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Libs\log4net.dll" />
     <Content Include="Libs\Newtonsoft.Json.dll" />
     <Content Include="Libs\zxing.dll" />
+    <Content Include="log4net.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="MySql.Data.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\logo.png" />

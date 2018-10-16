@@ -21,8 +21,8 @@
         </DockPanel>
         <DockPanel Grid.Row="1" Margin="0,0.4,-0.4,0.2">
             <Label Content="时间：" Width="70" Height="35" VerticalContentAlignment="Center" Margin="30,0,0,0"/>
-            <DatePicker Name="startDate" Height="30" Width="150" HorizontalAlignment="Left" VerticalContentAlignment="Center"  Margin="5,21,0,21" />
-        </DockPanel>
+            <DatePicker Name="startDate" Height="30" Width="150" HorizontalAlignment="Left" VerticalContentAlignment="Center"  Margin="8,0,0,0" />           
+        </DockPanel>       
         <DockPanel Grid.Column="1" Grid.Row="3">
             <Button Content="查询" Background="LightBlue"  HorizontalAlignment="Left" VerticalAlignment="Center" Width="80" Margin="180,0,0,0" Height="35" Click="Seach" />
         </DockPanel>

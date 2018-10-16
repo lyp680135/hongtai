@@ -1,7 +1,7 @@
 ﻿<Window x:Class="WpfQualityCertPrinter.SelectProductWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="随车生成质量证明书" Height="400" Width="520"
+        Title="随车生成质量证明书" Height="400" Width="560"
         ResizeMode="NoResize">
     <Window.Resources>
         <Style x:Key="contentCenterStyle" TargetType="{x:Type TextBlock}">
@@ -17,7 +17,7 @@
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="520*"/>
+            <ColumnDefinition Width="560*"/>
         </Grid.ColumnDefinitions>
 
         <DockPanel Grid.Column="1" Grid.Row="0" Background="#e5e5e5">
@@ -32,7 +32,7 @@
             </StackPanel>
         </DockPanel>
         <DockPanel Grid.Column="1"  Grid.Row="1" Margin="10 10 10 10">
-            <DataGrid Name="dgSelectProducts" HorizontalAlignment="Left" VerticalAlignment="Top" Height="130" Width="480"
+            <DataGrid Name="dgSelectProducts" HorizontalAlignment="Left" VerticalAlignment="Top" Height="130" Width="520"
                       CanUserAddRows="False"
                       AutoGenerateColumns="False" 
                       AreRowDetailsFrozen="False" AllowDrop="True"
@@ -86,13 +86,21 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="数量" Width="80" IsReadOnly="True">
+                    <DataGridTemplateColumn Header="数量" Width="60" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Number}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0"></TextBlock>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="打印数量" Binding="{Binding Path=Printnumber}" Width="70" IsReadOnly="False" ElementStyle="{StaticResource contentCenterStyle}">
+                        <DataGridTextColumn.EditingElementStyle>
+                            <Style TargetType="TextBox">
+                                <Setter Property="TextAlignment" Value="Center"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                            </Style>
+                        </DataGridTextColumn.EditingElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTemplateColumn Header="操作" Width="*" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
