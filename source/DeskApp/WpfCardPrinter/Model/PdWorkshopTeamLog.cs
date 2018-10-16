@@ -11,6 +11,7 @@ namespace DataLibrary
         public int WorkshopId { get; set; }
         public int TeamId { get; set; }
         public string Batcode { get; set; }
+        public int BatcodeId { get; set; }
         public string Adder { get; set; }
         public int CreateTime { get; set; }
     }

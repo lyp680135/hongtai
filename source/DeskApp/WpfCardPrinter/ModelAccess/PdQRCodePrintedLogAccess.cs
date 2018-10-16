@@ -23,6 +23,8 @@ namespace WpfCardPrinter.ModelAccess
 
         public int GetCanPrintNumber(int workshopid, int specid)
         {
+            return 99999;
+
             int leavenum = 0;
             int authnumber = 0;
 

@@ -1,0 +1,124 @@
+﻿<Window x:Class="WpfCardPrinter.ReprintWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfCardPrinter"
+        mc:Ignorable="d"
+        Title="标牌补打" Height="450" Width="680"
+        ResizeMode="NoResize">
+    <Window.Resources>
+        <local:QualityLevelDataConverter x:Key="QualityLevelDataConverter" />
+        <local:DateTimeDataConverter x:Key="DateTimeDataConverter" />
+        <Style x:Key="contentCenterStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="380*"/>
+            <RowDefinition Height="70*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="370"/>
+            <ColumnDefinition Width="290*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Name="mask" Visibility="Hidden" Grid.ColumnSpan="10" Grid.RowSpan="10" Panel.ZIndex="999" Opacity="0.7" Background="#eeeeee">
+
+        </Grid>
+        <Grid Name="loading" Visibility="Hidden" Grid.ColumnSpan="2" Panel.ZIndex="10000" Width="420" Background="#ffffff" Margin="137,94,137,94">
+            <local:LoadingControl x:Name="LoadingControl" Width="20" Height="50" VerticalAlignment="Top" Margin="70,24,330,0"/>
+            <ProgressBar Name="progress" HorizontalAlignment="Left" Height="10" Margin="60,97,0,0" VerticalAlignment="Top" Width="305"/>
+            <Label Name="lbTip" Content="正在加载数据，请稍等..." FontSize="18" HorizontalAlignment="Left" Margin="137,35,0,0" VerticalAlignment="Top"/>
+            <Label Name="lbProc" Content="进度信息" HorizontalAlignment="Left" Margin="70,125,0,0" VerticalAlignment="Top"/>
+            <Label Name="lbError" Content="错误信息" HorizontalAlignment="Left" Margin="70,151,0,0" VerticalAlignment="Top" Foreground="Red"/>
+        </Grid>
+        <DockPanel Grid.ColumnSpan="2">
+            <DataGrid Name="dgProduct" Margin="10,10,9.6,0" DockPanel.Dock="Top" Height="300" SelectionMode="Single" AutoGenerateColumns="False" CanUserAddRows="False"  HeadersVisibility="Column" 
+                LoadingRow="dgProduct_LoadingRow" 
+                SelectionChanged="DataGrid_SelectionChanged">
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Height" Value="22" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Width="70"  CanUserSort="False" IsReadOnly="False" 
+                                        Binding="{Binding Checked,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridCheckBoxColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <CheckBox x:Name="ckbSelectedAll" Content="全选" IsChecked="False"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,0,0"
+                                          Checked="ckbSelectedAll_Checked"
+                                          Unchecked="ckbSelectedAll_Unchecked"
+                                         ></CheckBox>
+                            </DataTemplate>
+                        </DataGridCheckBoxColumn.HeaderTemplate>
+                        <DataGridCheckBoxColumn.ElementStyle>
+                            <Style TargetType="CheckBox">
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                            </Style>
+                        </DataGridCheckBoxColumn.ElementStyle>
+                        <DataGridCheckBoxColumn.EditingElementStyle>
+                            <Style TargetType="CheckBox">
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                            </Style>
+                        </DataGridCheckBoxColumn.EditingElementStyle>
+                    </DataGridCheckBoxColumn>
+                    <DataGridTemplateColumn Header="序号" Width="40" MinWidth="10" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGridRow}}, Path=Header}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding Batcode}" Header="轧制批号" Width="80" IsReadOnly="True" ElementStyle="{StaticResource contentCenterStyle}" />
+                    <DataGridTextColumn x:Name="bundleHeader" Binding="{Binding Bundlecode}" Header="捆号" IsReadOnly="True" ElementStyle="{StaticResource contentCenterStyle}" />
+                    <DataGridTemplateColumn Header="质量等级" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Lengthtype,Converter={StaticResource QualityLevelDataConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding Specname}" Header="规格" IsReadOnly="True" ElementStyle="{StaticResource contentCenterStyle}" />
+                    <DataGridTextColumn Binding="{Binding Length}" Header="长度" IsReadOnly="True" ElementStyle="{StaticResource contentCenterStyle}" />
+                    <DataGridTextColumn Binding="{Binding Piececount}" Header="支数" IsReadOnly="True" ElementStyle="{StaticResource contentCenterStyle}" />
+                    <DataGridTextColumn Header="班别" Binding="{Binding Shiftname}" IsReadOnly="True" ElementStyle="{StaticResource contentCenterStyle}" />
+                    <DataGridTemplateColumn Header="称重" Width="60">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
+                                    <TextBlock.Text>
+                                        <Binding Path="Weight" StringFormat="{}{0:N0}"/>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="时间" Width="80" IsReadOnly="True"  CanUserSort="True" SortMemberPath="Createtime">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Createtime,Converter={StaticResource DateTimeDataConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0"></TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+        <DockPanel Grid.Column="0" Grid.Row="1">
+            <Button Content="补 打" Background="LightBlue"  HorizontalAlignment="Left" VerticalAlignment="Center" Width="80" Margin="20,0,0,0" Height="25" Click="Button_Click" />
+        </DockPanel>
+        <DockPanel Grid.Column="1" Grid.Row="1" Margin="0,10,10,10">
+            <Label Content="轧制批号" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+            <TextBox Name="txtQueryBatcode" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Width="120" Margin="10,0,0,0" Height="24" VerticalContentAlignment="Center"/>
+            <Button Content="查询" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75" Margin="10,0,0,0" Height="24" Click="Search_Click" />
+        </DockPanel>
+    </Grid>
+</Window>

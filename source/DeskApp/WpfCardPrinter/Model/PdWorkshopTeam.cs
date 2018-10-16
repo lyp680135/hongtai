@@ -13,5 +13,7 @@ namespace DataLibrary
         public string Leader { get; set; }
         public string Adder { get; set; }
         public int? CreateTime { get; set; }
+
+        public PdWorkshopTeamLog CurrTeamlog { get; set; }
     }
 }

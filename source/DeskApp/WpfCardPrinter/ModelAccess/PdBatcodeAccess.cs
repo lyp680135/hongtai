@@ -22,6 +22,14 @@ namespace WpfCardPrinter.ModelAccess
 
         }
 
+
+
+        public PdBatcodeAccess(MySqlConnection conn)
+            : base(conn)
+        {
+
+        }
+
         public long Insert(PdBatcode pdcode)
         {
             long newid = -1;

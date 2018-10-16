@@ -25,11 +25,11 @@ namespace WpfCardPrinter
         /// 更新UI
         /// </summary>
         /// <param name="id"></param>
-        public delegate void UpdataSelect(int classid, int materialid, string mcurrbatcode);
+        public delegate void UpdataSelect(int classid, int materialid, string batcode);
         public event UpdataSelect updataSelectHandler;
         public int ClassId { get; set; }
 
-        public string mCurrentBatCode { get; set; }
+        public PdBatcode mCurrentBatCode { get; set; }
         public int MaterialId { get; set; }
         public ObservableCollection<BaseProductMaterial> mMaterialList = new ObservableCollection<BaseProductMaterial>();
         public ListCollectionView mGroupedMaterialList = null;
@@ -61,8 +61,7 @@ namespace WpfCardPrinter
 
         private void MaterialChanged(object sender, EventArgs e)
         {
-            var currMaterial = (this.cbMaterial.SelectedItem as BaseProductMaterial);
-            this.lbCurrCz.Content = string.Format("{0}->{1}", currMaterial.Classname, currMaterial.Name);
+            
         }
 
         public void Submit_Click(object sender, RoutedEventArgs e)
@@ -73,7 +72,7 @@ namespace WpfCardPrinter
                 int cid = (cbMaterial.SelectedItem as BaseProductMaterial).Classid;
                 using (PdProductAccess pdaccess = new PdProductAccess())
                 {
-                    var productList = pdaccess.GetListByBatcode(mCurrentBatCode);
+                    var productList = pdaccess.GetListByBatcode(mCurrentBatCode.Batcode);
                     if (productList != null && productList.Count > 0)
                     {
                         MessageBoxResult result = MessageBox.Show("此操作将会重置数据,确认操作？", "操作提醒", MessageBoxButton.OKCancel, MessageBoxImage.Question);
@@ -84,7 +83,7 @@ namespace WpfCardPrinter
                                 var objList = specaccess.GetListByClassAndMaterial(cid, mid);
                                 productList.ForEach(o =>
                                 {
-                                    var obj = specaccess.GetListById(Convert.ToInt16(o.Specid)).FirstOrDefault();
+                                    var obj = specaccess.GetListById(Convert.ToInt32(o.Specid)).FirstOrDefault();
                                     if (cid != ClassId || !objList.Any(x => x.Callname == obj.Callname && x.Referlength == obj.Referlength))
                                     {
                                         pdaccess.DeleteProductById(o.Id);
@@ -99,7 +98,7 @@ namespace WpfCardPrinter
                         }
                     }
                 }
-                updataSelectHandler.Invoke(cid, mid, mCurrentBatCode);
+                updataSelectHandler.Invoke(cid, mid, mCurrentBatCode.Batcode);
                 this.DialogResult = false;
             }
         }

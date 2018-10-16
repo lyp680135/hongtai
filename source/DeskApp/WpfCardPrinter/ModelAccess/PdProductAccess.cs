@@ -161,7 +161,7 @@ namespace WpfCardPrinter.ModelAccess
 
             try
             {
-                using (MySqlCommand mysqlcom = new MySqlCommand("SELECT C.*,D.specname FROM (SELECT A.*,B.TeamName FROM ("
+                using (MySqlCommand mysqlcom = new MySqlCommand("SELECT C.*,D.specname,D.referpieceweight FROM (SELECT A.*,B.TeamName FROM ("
                         + "SELECT * FROM pdproduct WHERE batcode=@batcode"
                         + ") AS A LEFT JOIN pdworkshopteam AS B ON A.workshift = B.id) AS C LEFT JOIN basespecifications AS D"
                         + " ON C.specid=D.id ORDER BY bundlecode ASC", _connection))
@@ -209,7 +209,8 @@ namespace WpfCardPrinter.ModelAccess
                                 obj.BundlecodeValue = code;
 
                                 obj.Specname = (!Convert.IsDBNull(dr["specname"])) ? dr.GetString("specname") : null;
-
+                                obj.ReferWeight = (!Convert.IsDBNull(dr["referpieceweight"])) ? dr.GetDouble("referpieceweight") : new double?();
+                                
                                 productlist.Add(obj);
                             }
                         }
@@ -218,7 +219,7 @@ namespace WpfCardPrinter.ModelAccess
             }
             catch (Exception e)
             {
-
+                return null;
             }
 
             return productlist;
@@ -258,6 +259,7 @@ namespace WpfCardPrinter.ModelAccess
                             product.WorkShift = dr.GetInt32("workshift");
                             product.Shiftname = dr.GetString("teamname");
                             product.Createtime = dr.GetInt32("createtime");
+                            product.Randomcode = (!Convert.IsDBNull(dr["randomcode"])) ? dr.GetString("randomcode") : null;
                         }
                     }
                 }
@@ -302,6 +304,7 @@ namespace WpfCardPrinter.ModelAccess
                                 product.WorkShift = dr.GetInt32("workshift");
                                 product.Shiftname = dr.GetString("teamname");
                                 product.Createtime = dr.GetInt32("createtime");
+                                product.Randomcode = (!Convert.IsDBNull(dr["randomcode"])) ? dr.GetString("randomcode") : null;
                             }
                         }
                     }
@@ -354,6 +357,7 @@ namespace WpfCardPrinter.ModelAccess
                                 product.WorkShift = dr.GetInt32("workshift");
                                 product.Shiftname = dr.GetString("teamname");
                                 product.Createtime = dr.GetInt32("createtime");
+                                product.Randomcode = (!Convert.IsDBNull(dr["randomcode"])) ? dr.GetString("randomcode") : null;
                             }
                         }
                     }
@@ -380,7 +384,7 @@ namespace WpfCardPrinter.ModelAccess
                 return null;
             }
 
-            sb.Append("SELECT A.*,B.TeamName FROM (SELECT * FROM pdproduct WHERE 1=1");
+            sb.Append("SELECT C.*,D.specname,D.referpieceweight FROM (SELECT A.*,B.TeamName FROM (SELECT * FROM pdproduct WHERE 1=1");
 
             if(!string.IsNullOrEmpty(batcode))
             {
@@ -397,7 +401,8 @@ namespace WpfCardPrinter.ModelAccess
                 sb.Append(" AND createtime>@time AND createtime<@nexttime");
             }
 
-            sb.Append(") AS A LEFT JOIN pdworkshopteam AS B ON A.workshift = B.id ORDER BY batcode ASC,bundlecode ASC");
+            sb.Append(") AS A LEFT JOIN pdworkshopteam AS B ON A.workshift = B.id) AS C LEFT JOIN basespecifications AS D"
+                        + " ON C.specid=D.id ORDER BY batcode ASC,bundlecode ASC");
 
             using (MySqlCommand command = new MySqlCommand(sb.ToString(), _connection))
             {
@@ -438,6 +443,9 @@ namespace WpfCardPrinter.ModelAccess
                             product.WorkShift = dr.GetInt32("workshift");
                             product.Shiftname = dr.GetString("teamname");
                             product.Createtime = dr.GetInt32("createtime");
+                            product.Specname = (!Convert.IsDBNull(dr["specname"])) ? dr.GetString("specname") : null;
+                            product.ReferWeight = (!Convert.IsDBNull(dr["referpieceweight"])) ? dr.GetDouble("referpieceweight") : new double?();
+                            product.Randomcode = (!Convert.IsDBNull(dr["randomcode"])) ? dr.GetString("randomcode") : null;
 
                             productlist.Add(product);
                         }
