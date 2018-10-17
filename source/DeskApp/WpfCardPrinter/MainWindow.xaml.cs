@@ -646,7 +646,6 @@ namespace WpfCardPrinter
                     {
                         if (lastlog.TeamId == shiftid)
                         {
-                            MessageBox.Show("数据错误，请重新打开程序！", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Warning);
                             return false;
                         }
 
@@ -665,6 +664,10 @@ namespace WpfCardPrinter
                     log.TeamId = shiftid;
                     log.Batcode = mCurrentBatCode;
                     log.CreateTime = (int)TimeUtils.GetCurrentUnixTime();
+
+                    PdBatcodeAccess baccess = new PdBatcodeAccess(access.GetConnection());
+                    var batcode = baccess.SingleByBatcode(mCurrentBatCode);
+                    log.BatcodeId = batcode.Id;
 
                     //写入换班记录到数据库
                     long newid = access.Insert(log);

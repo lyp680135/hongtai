@@ -116,11 +116,11 @@ namespace WpfCardPrinter
                 var list = new List<PdProduct>();
                 if (type == "initdata")
                 {
-                    list = access.Query(mCurrentBatCode.Batcode, null);
+                    list = access.Query(mCurrentBatCode.Batcode, null, mCurrentBatCode.Workshopid);
                 }
                 else
                 {
-                    list = access.Query(this.txtQueryBatcode.Text.Trim(), null);
+                    list = access.Query(this.txtQueryBatcode.Text.Trim(), null, mCurrentBatCode.Workshopid);
                     if (list == null)
                     {
                         MessageBox.Show("没有找到满足条件的产品记录！", "查询结果", MessageBoxButton.OK, MessageBoxImage.Error);

@@ -371,7 +371,7 @@ namespace WpfCardPrinter.ModelAccess
             return product;
         }
 
-        public List<PdProduct> Query(string batcode, DateTime? createdate, int workShopId = 0)
+        public List<PdProduct> Query(string batcode, DateTime? createdate, int workShopId)
         {
             List<PdProduct> productlist = null;
 
