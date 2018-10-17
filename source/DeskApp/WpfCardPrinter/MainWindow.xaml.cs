@@ -3103,15 +3103,16 @@ namespace WpfCardPrinter
                     if (this.mWorkshop == null)
                     {
                         this.mWorkshop = waccess.Single(myWorkshopProductLine);
-                        if (this.mWorkshop != null)
-                        {
-                            curritem = access.SingleLastById(this.mWorkshop.Id);
-                        }
-
+                        
                         if (this.mWorkshop == null)
                         {
                             return batcode;
                         }
+                    }
+
+                    if (this.mWorkshop != null)
+                    {
+                        curritem = access.SingleLastById(this.mWorkshop.Id);
                     }
 
                     //如果是刚打开程序初始读取批号
@@ -3120,7 +3121,11 @@ namespace WpfCardPrinter
                         if (curritem != null)
                         {
                             batcode = curritem.Batcode;
-                            return batcode;
+
+                            if (!string.IsNullOrEmpty(batcode))
+                            {
+                                return batcode;
+                            }
                         }
                     }
 
