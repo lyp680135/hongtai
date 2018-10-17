@@ -3,4 +3,5 @@
     <add key="ProductLine" value="L" />
 3、手动增加或修改各车间的初始批号到批号表
 INSERT INTO `pdbatcode` VALUES (3, '标牌打印程序', '18B00001A', 1800001, 1539745576, 0, 1, NULL, NULL, NULL);
-4、
+4、将质量指标的C、Si、Mn、P、S设置成必填，其他设置成非必填
+
