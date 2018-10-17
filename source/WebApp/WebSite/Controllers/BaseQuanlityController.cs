@@ -82,6 +82,7 @@
             {
                 return "源材质没有设置指标数据,无法复制";
             }
+
             if (confirm)
             {
                 var mCount = this.db.BaseQualityStandard.Where(w => w.Materialid == mMaterialid).ToList();
@@ -145,6 +146,7 @@
             {
                 return this.AjaxResult(false, "指定了重复的指标名,无法修改");
             }
+
             baseQualityStandard.TargetName = baseQualityStandard.TargetName.Trim();
             baseQualityStandard.Classid = this.db.BaseProductMaterial.FirstOrDefault(w => w.Id == baseQualityStandard.Materialid).Classid;
             this.db.BaseQualityStandard.Update(baseQualityStandard);

@@ -77,6 +77,7 @@
             {
                 return "目标材质没有设置品名,清闲设置品名";
             }
+
             if (confirm)
             {
                 var mCount = this.db.BaseSpecifications.Where(w => w.Materialid == mMaterialid).ToList();
@@ -120,6 +121,7 @@
                 this.db.BaseSpecifications.AddRange(entityList);
                 this.db.SaveChanges();
             }
+
             return "true";
         }
 

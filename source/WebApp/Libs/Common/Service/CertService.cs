@@ -12,10 +12,10 @@
     using System.Web;
     using Common.IService;
     using DataLibrary;
-    // using ImageSharp;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using SixLabors.ImageSharp;
+    using Util;
     using static DataLibrary.EnumList;
 
     public class CertService : ICertService
@@ -51,7 +51,7 @@
                         var quality = this.db.PdQuality.Where(p => p.Batcode == item["Batcode"].ToString() && p.CheckStatus == CheckStatus_PdQuality.审核通过).FirstOrDefault();
                         if (quality == null)
                         {
-                            return new CommonResult(CommonResultStatus.Failed, "出库失败了，所选批号[" + item["batcode"].ToString() + "]还没有通过质量检测。", string.Empty);
+                            return new CommonResult(CommonResultStatus.Failed, "出库失败了，所选批号[" + item["Batcode"].ToString() + "]还没有通过质量检测。", string.Empty);
                         }
                     }
                 }
@@ -79,7 +79,7 @@
                     }
                 }
 
-                List<SaleSellerAuth> authlist = new List<SaleSellerAuth>();
+                List<JObject> authlist = new List<JObject>();
 
                 // 先出库生成授权信息
                 foreach (var item in list)
@@ -89,6 +89,7 @@
 
                     int.TryParse(lengthtypestr, out int lengthtype);
                     int.TryParse(item["Number"].ToString(), out int number);
+                    int.TryParse(item["Printnumber"].ToString(), out int printnumber);
 
                     CommonResult result = this.stockoutService.Stockout(batcode, lpn, sellerid, lengthtype, number, userid);
                     if (result.Status == (int)CommonResultStatus.Failed)
@@ -102,7 +103,14 @@
                         {
                             foreach (var auth in datalist)
                             {
-                                authlist.Add(auth);
+                                JObject token = new JObject();
+
+                                authlist.Add(new JObject()
+                                {
+                                    { "Id", auth.Id },
+                                    { "Number", auth.Number },
+                                    { "Printnumber", printnumber }
+                                });
                             }
                         }
                     }
@@ -120,10 +128,11 @@
                 int findsamecount = 0;
 
                 // 生成一张质保书下的产品分组列表
-                foreach (SaleSellerAuth jt in authlist)
+                foreach (JObject jt in authlist)
                 {
-                    int authid = jt.Id;
-                    int number = jt.Number.Value;
+                    int.TryParse(jt["Id"].ToString(), out int authid);
+                    int.TryParse(jt["Number"].ToString(), out int number);
+                    int.TryParse(jt["Printnumber"].ToString(), out int printnumber);
 
                     // 查找打印明细表中同批货是否已经开过质保书(但没有下载过）
                     var logdetail = (from l in this.db.SalePrintLogDetail
@@ -143,12 +152,21 @@
                                 findsamecount++;
                             }
                         }
+
+                        // 找到后更新打印数量
+                        logdetail.Printnumber = printnumber;
+                        this.db.SalePrintLogDetail.Update(logdetail);
+                        if (this.db.SaveChanges() <= 0)
+                        {
+                            return new CommonResult(CommonResultStatus.Failed, "打印记录保存失败", "更新打印数量失败！");
+                        }
                     }
 
                     productinfos.Add(new SalePrintLogDetail
                     {
                         Authid = authid,
                         Number = number,
+                        Printnumber = printnumber,
                     });
                 }
 
@@ -344,7 +362,7 @@
 
                             info.Add("CheckPerson", checkPerson);  // 审核人
                             info.Add("EntryPerson", entryPerson);  // 录入人
-                            info.Add("OutDate", Util.Extensions.GetDateTimeFromUnixTime(pdquality.Createtime).ToString("yyyy-MM-dd")); // 出证日期
+                            info.Add("OutDate", Util.Extensions.GetDateTimeFromUnixTime(printFirst.Createtime.Value).ToString("yyyy-MM-dd")); // 出证日期
                         }
                     }
                     else
@@ -389,6 +407,7 @@
                                           s.Id,
                                           s.Authid,
                                           s.Number,
+                                          s.Printnumber,
                                           s.PrintId,
                                           sl.Materialid,
                                           sl.Classid,
@@ -448,8 +467,8 @@
                         JObject productinfo = new JObject();
                         productinfo["Specname"] = detail.Spec.Specname;
                         productinfo["Length"] = detail.Spec.Referlength;
-                        productinfo["Piece"] = detail.Number;
-                        productinfo["Weight"] = detail.Spec.Referpieceweight * detail.Number;
+                        productinfo["Piece"] = detail.Printnumber;
+                        productinfo["Weight"] = detail.Spec.Referpieceweight * detail.Printnumber;
 
                         outinfo["PdProduct"] = productinfo;
 
@@ -475,7 +494,8 @@
 
                             if (ok)
                             {
-                                double c = 0, mn = 0, cr = 0, v = 0, mo = 0, cu = 0, ni = 0;
+                                double si = 0, p = 0, s = 0, nb = 0;
+                                double c = 0, mn = 0, cr = 0, v = 0, mo = 0, cu = 0, ni = 0, ceq = 0;
 
                                 // 化学成份相关数据
                                 outinfo["Qualityinfo"] = (JObject)item.Qualityinfos.Object;
@@ -485,46 +505,90 @@
                                     if (d.Key.ToUpper() == "C")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out c);
+                                        outinfo["Qualityinfo"][d.Key] = c.ToString("0.00");
+                                    }
+
+                                    if (d.Key.ToUpper() == "SI")
+                                    {
+                                        double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out si);
+                                        outinfo["Qualityinfo"][d.Key] = si.ToString("0.00");
                                     }
 
                                     if (d.Key.ToUpper() == "MN")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out mn);
+                                        outinfo["Qualityinfo"][d.Key] = mn.ToString("0.00");
                                     }
 
-                                    if (d.Key.ToUpper() == "CR")
+                                    if (d.Key.ToUpper() == "P")
                                     {
-                                        double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out cr);
+                                        double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out p);
+                                        outinfo["Qualityinfo"][d.Key] = p.ToString("0.000");
+                                    }
+
+                                    if (d.Key.ToUpper() == "S")
+                                    {
+                                        double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out s);
+                                        outinfo["Qualityinfo"][d.Key] = s.ToString("0.000");
                                     }
 
                                     if (d.Key.ToUpper() == "V")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out v);
+                                        outinfo["Qualityinfo"][d.Key] = v.ToString("0.000");
                                     }
 
-                                    if (d.Key.ToUpper() == "MO")
+                                    if (d.Key.ToUpper() == "NB")
                                     {
-                                        double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out mo);
+                                        double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out nb);
+                                        outinfo["Qualityinfo"][d.Key] = nb.ToString("0.000");
                                     }
 
                                     if (d.Key.ToUpper() == "CU")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out cu);
+                                        outinfo["Qualityinfo"][d.Key] = cu.ToString("0.000");
                                     }
 
                                     if (d.Key.ToUpper() == "NI")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out ni);
+                                        outinfo["Qualityinfo"][d.Key] = ni.ToString("0.000");
+                                    }
+
+                                    if (d.Key.ToUpper() == "MO")
+                                    {
+                                        double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out mo);
+                                        outinfo["Qualityinfo"][d.Key] = mo.ToString("0.000");
+                                    }
+
+                                    if (d.Key.ToUpper() == "CR")
+                                    {
+                                        double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out cr);
+                                        outinfo["Qualityinfo"][d.Key] = cr.ToString("0.000");
+                                    }
+
+                                    // Ceq 要读手动输入的
+                                    if (d.Key.ToUpper() == "CEQ")
+                                    {
+                                        double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out ceq);
                                     }
                                 }
 
-                                // Ceq = C +  Mn/6  + (Cr + V +Mo) / 5 + (Cu + ni) / 15
-                                outinfo["Qualityinfo"]["Ceq"] = (c + (mn / 6) + ((cr + v + mo) / 5) + ((cu + ni) / 15)).ToString("0.00");
+                                if (ceq != 0)
+                                {
+                                    outinfo["Qualityinfo"]["Ceq"] = ceq.ToString("0.00");
+                                }
+                                else
+                                {
+                                    // Ceq = C +  Mn/6  + (Cr + V +Mo) / 5 + (Cu + ni) / 15
+                                    outinfo["Qualityinfo"]["Ceq"] = (c + (mn / 6) + ((cr + v + mo) / 5) + ((cu + ni) / 15)).ToString("0.00");
+                                }
 
                                 outinfo["Qualityinfo"]["Surface"] = "合格/Pass";
-                                outinfo["Qualityinfo"]["Metall"] = "－";
-                                outinfo["Qualityinfo"]["Vickers"] = "－";
-                                outinfo["Qualityinfo"]["Microstructures"] = "－";
+                                outinfo["Qualityinfo"]["Metall"] = "合格/Pass";
+                                outinfo["Qualityinfo"]["Vickers"] = "合格/Pass";
+                                outinfo["Qualityinfo"]["Microstructures"] = "合格/Pass";
 
                                 if (mngsetting.SystemVersion == EnumList.SystemVersion.简单版本)
                                 {
@@ -538,6 +602,10 @@
                                         }
                                     }
                                 }
+
+                                // 重量偏差只保留2位小数点
+                                double.TryParse(outinfo["Qualityinfo"]["重量偏差"].ToString(), out double realweightoffset);
+                                outinfo["Qualityinfo"]["重量偏差"] = realweightoffset.ToString("0.00");
 
                                 // 合并多行数据为一层数据
                                 var dynamicdata = new JObject();

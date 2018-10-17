@@ -31,5 +31,10 @@
         /// </summary>
         [Required]
         public int Number { get; set; }
+
+        /// <summary>
+        /// Gets or sets 实际打印数量
+        /// </summary>
+        public int Printnumber { get; set; }
     }
 }

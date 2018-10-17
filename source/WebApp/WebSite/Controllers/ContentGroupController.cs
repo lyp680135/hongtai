@@ -76,6 +76,7 @@
                     contentGroup.Depth = depTh;
                     contentGroup.Sequence = list.Count == 0 ? 1 : Util.Extensions.ToInt(this.db.SiteCategory.Where(c => c.Depth == depTh).Max(c => c.Sequence)) + 1;
                 }
+
                 contentGroup.ModelId = modelId;
                 contentGroup.ContentTitle = contentTitle;
                 this.db.SiteCategory.Update(contentGroup);

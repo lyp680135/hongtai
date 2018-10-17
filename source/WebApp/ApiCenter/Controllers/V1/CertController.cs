@@ -66,7 +66,7 @@
         [AllowAnonymous]
         public ResponseModel Post(string requestData)
         {
-            // {"list":"[{\"Batcode\":\"A18050011\",\"Classid\":1,\"Classname\":null,\"Materialid\":1,\"Materialname\":\"HRB400\",\"Specid\":1,\"Length\":\"L\",\"Lengthtype\":1,\"Lengthnote\":\"非尺\",\"Specfullname\":\"Ф12x9\",\"Number\":2}]","lpn":"江XXX","sellerid":1,"consignor":""}
+            // {"list":"[{\"Batcode\":\"A18050011\",\"Classid\":1,\"Classname\":null,\"Materialid\":1,\"Materialname\":\"HRB400\",\"Specid\":1,\"Length\":\"L\",\"Lengthtype\":1,\"Lengthnote\":\"非尺\",\"Specfullname\":\"Ф12x9\",\"Number\":2,\"Printnumber\":2}]","lpn":"江XXX","sellerid":1,"consignor":""}
             JArray array = new JArray();
             var obj = (JObject)JsonConvert.DeserializeObject(requestData);
 
@@ -112,7 +112,7 @@
 
                             if (printlog.Status == 0)
                             {
-                                // 更新出库的车牌号和收货单位
+                                // 更新出库的车牌号和收货单位、还有打印的数量
                                 printlog.Consignor = consignor;
                                 printlog.Adder = userid;
                                 this.db.SalePrintlog.Update(printlog);
@@ -136,6 +136,25 @@
                                         else
                                         {
                                             return new ResponseModel(ApiResponseStatus.Failed, "数据错误", "经销商授权信息有误！");
+                                        }
+
+                                        // 更新打印数量
+                                        for (var i = 0; i < array.Count; i++)
+                                        {
+                                            if (auth.Batcode == array[i]["Batcode"].ToString())
+                                            {
+                                                int.TryParse(array[i]["Printnumber"].ToString(), out int printnumber);
+                                                detail.Printnumber = printnumber;
+
+                                                this.db.SalePrintLogDetail.Update(detail);
+                                                if (this.db.SaveChanges() <= 0)
+                                                {
+                                                    return new ResponseModel(ApiResponseStatus.Failed, "数据错误", "更新打印数量时发生错误！");
+                                                }
+
+                                                // 节约时间，找到了就不跳出
+                                                break;
+                                            }
                                         }
                                     }
                                 }

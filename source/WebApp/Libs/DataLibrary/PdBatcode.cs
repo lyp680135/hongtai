@@ -14,6 +14,11 @@
         [MaxLength(50)]
         public string Batcode { get; set; }
 
+        /// <summary>
+        /// Gets or sets 批号序号（日期+序号）
+        /// </summary>
+        public int Serialno { get; set; }
+
         public int? Createtime { get; set; }
 
         [MaxLength(50)]
@@ -40,7 +45,5 @@
         /// Gets or sets 成材率
         /// </summary>
         public double? Productrate { get; set; }
-
-        public int Serialno { get; set; }
     }
 }

@@ -320,6 +320,7 @@
                             this.db.SaveChanges();
                             qualityentryclerkids.Add(tempadmin.Entity.Id);
                         }
+
                         if (wuliorhuaxue[i] == 3)
                         {
                             var tempadmin = this.db.MngAdmin.Add(

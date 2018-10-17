@@ -8,7 +8,6 @@ namespace ServiceXUnit.Test
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using Xunit;
-    using System.Linq;
 
     public class UnitTest1
     {

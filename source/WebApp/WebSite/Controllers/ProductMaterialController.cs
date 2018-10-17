@@ -49,8 +49,14 @@
                         if (this.db.SaveChanges() > 0)
                         {
                             tran.Commit();
+                            var apiurl = string.Empty;
+#if DEBUG
+                            apiurl = "http://localhost:41178/";
+#else
+            apiurl=this.settingService.MngSetting.Domain_WebApi;
+#endif
                             var responData = Util.Helpers.HttpHelper.HttpPost(
-                                $"{this.settingService.MngSetting.Domain_WebApi}api/v1/WarrantyTemplate/?materialid=" + wsclass.Id, null, System.Text.Encoding.UTF8);
+                                $"{apiurl}api/v1/WarrantyTemplate/?materialid=" + wsclass.Id, null, System.Text.Encoding.UTF8);
                             var webApi_ResponseModel = JsonConvert.DeserializeObject<WebApiResponseModel>(responData);
                             if (webApi_ResponseModel.Status == ApiResponseStatus.Failed)
                             {
@@ -110,8 +116,14 @@
                     if (this.db.SaveChanges() > 0)
                     {
                         tran.Commit();
+                        var apiurl = string.Empty;
+#if DEBUG
+                        apiurl = "http://localhost:41178/";
+#else
+            apiurl=this.settingService.MngSetting.Domain_WebApi;
+#endif
                         var responData = Util.Helpers.HttpHelper.HttpPost(
-                            $"{this.settingService.MngSetting.Domain_WebApi}api/v1/WarrantyTemplate/?materialid=" + hiddId, null, System.Text.Encoding.UTF8);
+                            $"{apiurl}api/v1/WarrantyTemplate/?materialid=" + hiddId, null, System.Text.Encoding.UTF8);
                         var webApi_ResponseModel = JsonConvert.DeserializeObject<WebApiResponseModel>(responData);
                         if (webApi_ResponseModel.Status == ApiResponseStatus.Failed)
                         {

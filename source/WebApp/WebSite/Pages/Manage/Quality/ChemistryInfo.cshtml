@@ -165,7 +165,7 @@
                                                         if (item.TargetName == itemChild.Key)
                                                         {
                                                             <td>
-                                                                <input class="validate[@Html.Raw(item.TargetIsNull==1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName)" value="@itemChild.Value" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
+                                                                <input class="validate[@Html.Raw(item.TargetIsNull==1 ? "required," : "")custom[qualityCheck,number]]" type="text" name="@Html.Raw(item.TargetName)" value="@itemChild.Value" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
                                                             </td>
                                                         }
                                                     }
@@ -173,7 +173,7 @@
                                                 else
                                                 {
                                                     <td>
-                                                        <input class="validate[@Html.Raw(item.TargetIsNull==1 ? "required," : "")custom[number]]" type="text" name="@Html.Raw(item.TargetName)" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
+                                                        <input class="validate[@Html.Raw(item.TargetIsNull==1 ? "required," : "")custom[qualityCheck,number]]" type="text" name="@Html.Raw(item.TargetName)" onkeypress="if(event.keyCode==13) focusNextInput(this);" />
                                                     </td>
                                                 }
 

@@ -122,6 +122,7 @@
                     {
                         Authid = authid,
                         Number = number,
+                        Printnumber = number,
                     });
                 }
 

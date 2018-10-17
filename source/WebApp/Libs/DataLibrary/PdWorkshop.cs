@@ -32,19 +32,19 @@
         public string Manager { get; set; }
 
         // 入库操作员
-        [MaxLength(50)]
+        [MaxLength(255)]
         public string Inputer { get; set; }
 
         // 出库操作员
-        [MaxLength(50)]
+        [MaxLength(255)]
         public string Outputer { get; set; }
 
         // 质量录入员
-        [MaxLength(50)]
+        [MaxLength(255)]
         public string QAInputer { get; set; }
 
         // 炉号工
-        [MaxLength(50)]
+        [MaxLength(255)]
         public string Furnacer { get; set; }
 
         public int? CreateTime { get; set; }

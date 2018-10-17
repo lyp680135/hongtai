@@ -42,7 +42,8 @@
             if (this.Db.MngAdmin.FirstOrDefault(c => c.UserName == this.UserName) != null)
             {
                 this.Msg = "该登录手机号己存在！";
-            }else if (this.Db.MngAdmin.FirstOrDefault(c => c.RealName == this.RealName) != null)
+            }
+            else if (this.Db.MngAdmin.FirstOrDefault(c => c.RealName == this.RealName) != null)
             {
                 this.Msg = "该姓名己存在，建议加以区分！";
             }

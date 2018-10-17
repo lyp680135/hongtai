@@ -28,7 +28,7 @@
                 if (manageModel != null)
                 {
                     string database = "sitecontent_" + manageModel.Id;
-                    string sql = "select * from " + database + " where id = " + id;
+                    string sql = "select * from " + database + " where id = " + id + " and cid =" + cid;
                     return this.mySqlHelper.ExecuteEntityToDic(sql, System.Data.CommandType.Text, null);
                 }
             }
@@ -81,7 +81,6 @@
 
             return 0;
         }
-
 
         public List<Dictionary<string, object>> GetContentColumnDataList(int cid, int? page, int? pageSize, string where = null)
         {

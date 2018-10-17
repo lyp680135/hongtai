@@ -50,6 +50,7 @@ namespace WarrantyManage.Pages.Manage.Quality
             {
                 predicate.Extend(w => w.Status == 0, PredicateOperator.And);
             }
+
             if (!string.IsNullOrWhiteSpace(smeltCode))
             {
                 predicate.Extend(w => w.SmeltCode == smeltCode.Trim(), PredicateOperator.And);

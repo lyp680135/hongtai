@@ -46,7 +46,7 @@
                 var workshop = this.db.PdWorkshop.Where(p => p.Outputer.Contains(userid)).FirstOrDefault();
                 if (workshop != null)
                 {
-                    var batcodes = this.db.PdBatcode.Where(p => p.Batcode.StartsWith(workshop.Code)).OrderByDescending(c => c.Id).ToList();
+                    var batcodes = this.db.PdBatcode.Where(p => p.Workshopid == workshop.Id).OrderByDescending(c => c.Id).ToList();
                     if (batcodes != null)
                     {
                         return new ResponseModel(ApiResponseStatus.Success, string.Empty, JsonConvert.SerializeObject(batcodes));
@@ -72,7 +72,7 @@
                 var workshop = this.db.PdWorkshop.Where(p => p.Outputer.Contains(userid)).FirstOrDefault();
                 if (workshop != null)
                 {
-                    var product = this.db.PdProduct.Where(p => p.Batcode == batcode && p.Batcode.StartsWith(workshop.Code)).Join(
+                    var product = this.db.PdProduct.Where(p => p.Batcode == batcode).Join(
                         this.db.BaseProductMaterial, p => p.Materialid, m => m.Id, (p, m) => new
                         {
                             batcode = p.Batcode,
@@ -127,13 +127,50 @@
                     return new ResponseModel(ApiResponseStatus.Failed, "请输入出库产品", string.Empty);
                 }
 
-                foreach (var item in list)
+                var mngsetInfo = this.db.MngSetting.FirstOrDefault();
+
+                // 流程版必需输了质量数据且通过了审核才能出库
+                if (mngsetInfo.SystemVersion == EnumList.SystemVersion.流程版本)
                 {
-                    // 判断该炉号是否已经做好质量录入
-                    var quality = this.db.PdQuality.Where(p => p.Batcode == item["batcode"].ToString() && p.CheckStatus == CheckStatus_PdQuality.审核通过).FirstOrDefault();
-                    if (quality == null)
+                    foreach (var item in list)
                     {
-                        return new ResponseModel(ApiResponseStatus.Failed, "出库失败了，所选炉号还没有通过质量检测", string.Empty);
+                        // 判断该炉号是否已经做好质量录入
+                        var quality = this.db.PdQuality.Where(p => p.Batcode == item["batcode"].ToString() && p.CheckStatus == CheckStatus_PdQuality.审核通过).FirstOrDefault();
+                        if (quality == null)
+                        {
+                            return new ResponseModel(ApiResponseStatus.Failed, "出库失败了，所选批号[" + item["batcode"].ToString() + "]还没有通过质量检测。", string.Empty);
+                        }
+                    }
+                }
+                else if (mngsetInfo.SystemVersion == EnumList.SystemVersion.简单版本)
+                {
+                    foreach (var item in list)
+                    {
+                        var product = this.db.PdProduct.Where(p => p.Batcode == item["batcode"].ToString()).FirstOrDefault();
+                        if (product != null)
+                        {
+                            int materialid = product.Materialid.Value;
+
+                            // 判断系统是否有预置数据
+                            var presetdata = this.db.PdQuality.Where(p => p.MaterialId == materialid && p.CreateFlag == 1).Count();
+                            if (presetdata > 0)
+                            {
+                                // 判断该炉号是否已经匹配到预置质量数据
+                                var quality = this.db.PdQualityProductPreset.Where(p => p.Batcode == item["batcode"].ToString()).FirstOrDefault();
+                                if (quality == null)
+                                {
+                                    return new ResponseModel(ApiResponseStatus.Failed, "出库失败了，所选批号[" + item["batcode"].ToString() + "]还没有质量检测。", string.Empty);
+                                }
+                            }
+                            else
+                            {
+                                return new ResponseModel(ApiResponseStatus.Failed, "出库失败了，所选批号[" + item["batcode"].ToString() + "]找不到质量检测。", string.Empty);
+                            }
+                        }
+                        else
+                        {
+                            return new ResponseModel(ApiResponseStatus.Failed, "出库失败了，所选批号[" + item["batcode"].ToString() + "]中没有找到产品。", string.Empty);
+                        }
                     }
                 }
 

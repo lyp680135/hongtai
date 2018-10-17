@@ -108,7 +108,7 @@ namespace Util.Helpers {
                 return null;
             if( digits == null )
                 return result;
-            return Math.Round( result, digits.Value );
+            return Math.Round( result, digits.Value, MidpointRounding.AwayFromZero);
         }
 
         /// <summary>

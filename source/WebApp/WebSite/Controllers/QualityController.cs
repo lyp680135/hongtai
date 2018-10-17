@@ -106,6 +106,7 @@
                     batcode = productInfo.Batcode;
                 }
             }
+
             return JsonConvert.SerializeObject(new ResponseModel(EnumList.ApiResponseStatus.Success, string.Empty, batcode));
         }
 
@@ -227,6 +228,7 @@
                     {
                         batcode = curritem.Batcode;
                     }
+
                     // 如果上个月的批号没有，则继续保持当前批号，即返回空值
                 }
             }
@@ -311,7 +313,6 @@
             List<BaseQualityStandard> dxQualityStandards = null;
             if (materialid <= 0)
             {
-
                 if (!string.IsNullOrEmpty(batCode))
                 {
                     productInfo = this.db.PdProduct.FirstOrDefault(f => f.Batcode == batCode);
@@ -384,7 +385,7 @@
                            || item.TargetMax.ToDouble(2) < val.ToDouble(2))
                             {
                                 // 如果集合没有就添加
-                                if (!targetNameList.Any(x => x == item.TargetName))
+                                if (!targetNameList.Any(x => x == item.TargetName) && i <= 1)
                                 {
                                     targetNameList.Add(item.TargetName + i.ToString());
                                 }
@@ -530,7 +531,7 @@
                         }
 
                         double qqb = 0;
-                        double qb = 0;
+                        double qiangqb = 0;
 
                         // 如果少指标就返回
                         if (targetdxName.Count > 0)
@@ -539,12 +540,12 @@
                             {
                                 if (!keyValue.Keys.Any(a => a == "强屈比"))
                                 {
-                                    keyValue.Add("强屈比", qqb);
+                                    keyValue.Add("强屈比", qiangqb);
                                 }
 
                                 if (!keyValue.Keys.Any(b => b == "屈屈比"))
                                 {
-                                    keyValue.Add("屈屈比", qb);
+                                    keyValue.Add("屈屈比", qqb);
                                 }
                             }
                         }
@@ -554,15 +555,15 @@
                             {
                                 if (!keyValue.Keys.Any(a => a == "屈屈比"))
                                 {
-                                    qqb = (keyValue["抗拉强度"].ToDouble() / keyValue["下屈服强度"].ToDouble()).ToDouble(2);
+                                    qqb = (keyValue["下屈服强度"].ToDouble() / materialNameNum).ToDouble(2);
                                     keyValue.Add("屈屈比", qqb);
                                 }
 
-                                // 屈屈比计算公式
+                                // 强屈比计算公式
                                 if (!keyValue.Keys.Any(b => b == "强屈比"))
                                 {
-                                    qb = (keyValue["下屈服强度"].ToDouble() / materialNameNum).ToDouble(2);
-                                    keyValue.Add("强屈比", qb);
+                                    qiangqb = (keyValue["抗拉强度"].ToDouble() / keyValue["下屈服强度"].ToDouble()).ToDouble(2);
+                                    keyValue.Add("强屈比", qiangqb);
                                 }
                             }
                         }
@@ -684,7 +685,7 @@
                         }
 
                         double qqb = 0;
-                        double qb = 0;
+                        double qiangqb = 0;
 
                         // 如果少指标就返回
                         if (targetdxName.Count > 0)
@@ -693,12 +694,12 @@
                             {
                                 if (!keyValue.Keys.Any(a => a == "强屈比"))
                                 {
-                                    keyValue.Add("强屈比", qqb);
+                                    keyValue.Add("强屈比", qiangqb);
                                 }
 
                                 if (!keyValue.Keys.Any(b => b == "屈屈比"))
                                 {
-                                    keyValue.Add("屈屈比", qb);
+                                    keyValue.Add("屈屈比", qqb);
                                 }
                             }
                         }
@@ -708,15 +709,15 @@
                             {
                                 if (!keyValue.Keys.Any(a => a == "屈屈比"))
                                 {
-                                    qqb = (keyValue["抗拉强度"].ToDouble() / keyValue["下屈服强度"].ToDouble()).ToDouble(2);
+                                    qqb = (keyValue["下屈服强度"].ToDouble() / materialNameNum).ToDouble(2);
                                     keyValue.Add("屈屈比", qqb);
                                 }
 
                                 // 屈屈比计算公式
                                 if (!keyValue.Keys.Any(b => b == "强屈比"))
                                 {
-                                    qb = (keyValue["下屈服强度"].ToDouble() / materialNameNum).ToDouble(2);
-                                    keyValue.Add("强屈比", qb);
+                                    qiangqb = (keyValue["抗拉强度"].ToDouble() / keyValue["下屈服强度"].ToDouble()).ToDouble(2);
+                                    keyValue.Add("强屈比", qiangqb);
                                 }
                             }
                         }
@@ -765,11 +766,13 @@
             {
                 return "冶炼炉号不能为空";
             }
+
             var chemistryInfo = this.db.PdSmeltCode.FirstOrDefault(f => f.SmeltCode == yLCode && f.Status == 0);
             if (chemistryInfo != null)
             {
                 return "已存在该冶炼炉号化学数据,无法重复添加";
             }
+
             var listQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 0 && w.Status == 0 && w.Materialid == mId && w.TargetCategory == EnumList.TargetCategory.化学指标).ToList();
             if (listQualityStandards == null || listQualityStandards.Count <= 0)
             {
@@ -799,7 +802,6 @@
             return "true";
         }
 
-
         /// <summary>
         /// 编辑状态
         /// </summary>
@@ -813,11 +815,13 @@
             {
                 return "不存在化学数据无法编辑";
             }
+
             var chemistry = this.db.PdSmeltCode.FirstOrDefault(f => f.SmeltCode == chemistryInfo.SmeltCode && f.Status == 0 && f.Id != id);
             if (chemistry != null)
             {
                 return "已经存在该冶炼炉号化学数据,恢复失败";
             }
+
             chemistryInfo.Status = status;
             this.db.Update(chemistryInfo);
             this.db.SaveChanges();
@@ -841,6 +845,7 @@
             {
                 return "请输入炉批号";
             }
+
             List<string> list_ma_spec = this.GetMaterialSpecNameByBatCode(batCode);
             if (list_ma_spec == null)
             {
@@ -921,7 +926,6 @@
 
                 foreach (var item in listQualityStandards)
                 {
-
                     keyValuePairs.Add(item.TargetName, this.Request.Form[item.TargetName].ToString());
                 }
 
@@ -945,6 +949,11 @@
                     if (dxQualityStandards == null || dxQualityStandards.Count <= 0)
                     {
                         return "该批号下的产品没有设置好可以参考的多样本质量指标";
+                    }
+
+                    if (this.Request.Form["下屈服强度" + i].SafeString() == string.Empty)
+                    {
+                        break;
                     }
 
                     Dictionary<string, object> keyValue = new Dictionary<string, object>();
@@ -976,8 +985,8 @@
                         }
                     }
 
-                    string qqb = string.Empty;
-                    string qb = string.Empty;
+                    double qqb = 0;
+                    double qiangqb = 0;
 
                     // 如果少指标就返回
                     if (targetdxName.Count > 0)
@@ -986,12 +995,12 @@
                         {
                             if (!keyValue.Keys.Any(a => a == "强屈比"))
                             {
-                                keyValue.Add("强屈比", qqb.ToDouble(2));
+                                keyValue.Add("强屈比", qiangqb);
                             }
 
                             if (!keyValue.Keys.Any(b => b == "屈屈比"))
                             {
-                                keyValue.Add("屈屈比", qb.ToDouble(2));
+                                keyValue.Add("屈屈比", qqb);
                             }
                         }
                     }
@@ -1001,21 +1010,22 @@
                         {
                             if (!keyValue.Keys.Any(a => a == "屈屈比"))
                             {
-                                qqb = (keyValue["抗拉强度"].ToDouble(2) / keyValue["下屈服强度"].ToDouble(2)).ToString("f2");
+                                qqb = (keyValue["下屈服强度"].ToDouble() / materialNameNum).ToDouble(2);
                                 keyValue.Add("屈屈比", qqb);
                             }
 
-                            // 屈屈比计算公式
+                            // 强屈比计算公式
                             if (!keyValue.Keys.Any(b => b == "强屈比"))
                             {
-                                qb = (keyValue["下屈服强度"].ToDouble(2) / materialNameNum.ToDouble(2)).ToString("f2");
-                                keyValue.Add("强屈比", qb);
+                                qiangqb = (keyValue["抗拉强度"].ToDouble() / keyValue["下屈服强度"].ToDouble()).ToDouble(2);
+                                keyValue.Add("强屈比", qiangqb);
                             }
                         }
                     }
 
                     keyValues.Add(keyValue);
                 }
+
                 pdquatuly.Qualityinfos_Dynamics = keyValues;
             }
 
@@ -1042,6 +1052,7 @@
             {
                 return "不存在质量数据,无法编辑";
             }
+
             List<string> list_ma_spec = this.GetMaterialSpecNameByBatCode(pdquatulyInfo.Batcode);
             if (list_ma_spec == null)
             {
@@ -1077,6 +1088,7 @@
             {
                 return "添加失败，材质或规格提取数字失败";
             }
+
             List<object> keyValues = new List<object>();
             var dxQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 1 && w.Status == 0 && w.Materialid == pdquatulyInfo.MaterialId && w.TargetCategory == EnumList.TargetCategory.物理指标).ToList();
             var listQualityStandards = this.db.BaseQualityStandard.Where(w => w.TargetType == 0 && w.Status == 0 && w.Materialid == pdquatulyInfo.MaterialId && w.TargetCategory == EnumList.TargetCategory.物理指标).ToList();
@@ -1111,6 +1123,11 @@
                         return "该批号下的产品没有设置好可以参考的多样本质量指标";
                     }
 
+                    if (this.Request.Form["下屈服强度" + i].SafeString() == string.Empty)
+                    {
+                        break;
+                    }
+
                     Dictionary<string, object> keyValue = new Dictionary<string, object>();
                     foreach (var item in dxQualityStandards)
                     {
@@ -1140,8 +1157,8 @@
                         }
                     }
 
-                    string qqb = string.Empty;
-                    string qb = string.Empty;
+                    double qqb = 0;
+                    double qiangqb = 0;
 
                     // 如果少指标就返回
                     if (targetdxName.Count > 0)
@@ -1150,12 +1167,12 @@
                         {
                             if (!keyValue.Keys.Any(a => a == "强屈比"))
                             {
-                                keyValue.Add("强屈比", qqb);
+                                keyValue.Add("强屈比", qiangqb);
                             }
 
                             if (!keyValue.Keys.Any(b => b == "屈屈比"))
                             {
-                                keyValue.Add("屈屈比", qb);
+                                keyValue.Add("屈屈比", qqb);
                             }
                         }
                     }
@@ -1165,15 +1182,15 @@
                         {
                             if (!keyValue.Keys.Any(a => a == "屈屈比"))
                             {
-                                qqb = (keyValue["抗拉强度"].ToDouble(2) / keyValue["下屈服强度"].ToDouble(2)).ToString("f2");
+                                qqb = (keyValue["下屈服强度"].ToDouble() / materialNameNum).ToDouble(2);
                                 keyValue.Add("屈屈比", qqb);
                             }
 
-                            // 屈屈比计算公式
+                            // 强屈比计算公式
                             if (!keyValue.Keys.Any(b => b == "强屈比"))
                             {
-                                qb = (keyValue["下屈服强度"].ToDouble() / materialNameNum).ToString("f2");
-                                keyValue.Add("强屈比", qb);
+                                qiangqb = (keyValue["抗拉强度"].ToDouble() / keyValue["下屈服强度"].ToDouble()).ToDouble(2);
+                                keyValue.Add("强屈比", qiangqb);
                             }
                         }
                     }
@@ -1341,7 +1358,7 @@
                             }
 
                             double qqb = 0;
-                            double qb = 0;
+                            double qiangqb = 0;
 
                             // 如果少指标就返回
                             if (targetdxName.Count > 0)
@@ -1350,12 +1367,12 @@
                                 {
                                     if (!keyValue.Keys.Any(a => a == "强屈比"))
                                     {
-                                        keyValue.Add("强屈比", qqb);
+                                        keyValue.Add("强屈比", qiangqb);
                                     }
 
                                     if (!keyValue.Keys.Any(b => b == "屈屈比"))
                                     {
-                                        keyValue.Add("屈屈比", qb);
+                                        keyValue.Add("屈屈比", qqb);
                                     }
                                 }
                             }
@@ -1365,15 +1382,15 @@
                                 {
                                     if (!keyValue.Keys.Any(a => a == "屈屈比"))
                                     {
-                                        qqb = (keyValue["抗拉强度"].ToDouble() / keyValue["下屈服强度"].ToDouble()).ToDouble(2);
+                                        qqb = (keyValue["下屈服强度"].ToDouble() / materialNameNum).ToDouble(2);
                                         keyValue.Add("屈屈比", qqb);
                                     }
 
-                                    // 屈屈比计算公式
+                                    // 强屈比计算公式
                                     if (!keyValue.Keys.Any(b => b == "强屈比"))
                                     {
-                                        qb = (keyValue["下屈服强度"].ToDouble() / materialNameNum).ToDouble(2);
-                                        keyValue.Add("强屈比", qb);
+                                        qiangqb = (keyValue["抗拉强度"].ToDouble() / keyValue["下屈服强度"].ToDouble()).ToDouble(2);
+                                        keyValue.Add("强屈比", qiangqb);
                                     }
                                 }
                             }
@@ -1381,6 +1398,7 @@
                             keyValues.Add(keyValue);
                         }
                     }
+
                     this.db.PdQuality.Add(new PdQuality()
                     {
                         Batcode = batCode,
@@ -1550,7 +1568,7 @@
                     }
 
                     double qqb = 0;
-                    double qb = 0;
+                    double qiangqb = 0;
 
                     // 如果少指标就返回
                     if (targetdxName.Count > 0)
@@ -1559,12 +1577,12 @@
                         {
                             if (!keyValue.Keys.Any(a => a == "强屈比"))
                             {
-                                keyValue.Add("强屈比", qqb);
+                                keyValue.Add("强屈比", qiangqb);
                             }
 
                             if (!keyValue.Keys.Any(b => b == "屈屈比"))
                             {
-                                keyValue.Add("屈屈比", qb);
+                                keyValue.Add("屈屈比", qqb);
                             }
                         }
                     }
@@ -1574,15 +1592,15 @@
                         {
                             if (!keyValue.Keys.Any(a => a == "屈屈比"))
                             {
-                                qqb = (keyValue["抗拉强度"].ToDouble() / keyValue["下屈服强度"].ToDouble()).ToDouble(2);
+                                qqb = (keyValue["下屈服强度"].ToDouble() / materialNameNum).ToDouble(2);
                                 keyValue.Add("屈屈比", qqb);
                             }
 
-                            // 屈屈比计算公式
+                            // 强屈比计算公式
                             if (!keyValue.Keys.Any(b => b == "强屈比"))
                             {
-                                qb = (keyValue["下屈服强度"].ToDouble() / materialNameNum).ToDouble(2);
-                                keyValue.Add("强屈比", qb);
+                                qiangqb = (keyValue["抗拉强度"].ToDouble() / keyValue["下屈服强度"].ToDouble()).ToDouble(2);
+                                keyValue.Add("强屈比", qiangqb);
                             }
                         }
                     }
@@ -1627,7 +1645,7 @@
 
                         if (checkStatus == EnumList.CheckStatus_PdQuality.审核通过)
                         {
-                            for (int i = 0; i < Count; i++)
+                            for (int i = 0; i < tempObject.Count; i++)
                             {
                                 // tempObject[i].冷弯 = "完好/Pass";
                                 // tempObject[i].反弯 = "完好/Pass";
@@ -1638,7 +1656,7 @@
                         }
                         else if (checkStatus == EnumList.CheckStatus_PdQuality.审核不通过)
                         {
-                            for (int i = 0; i < 3; i++)
+                            for (int i = 0; i < tempObject.Count; i++)
                             {
                                 JObject qualityinfos_Dynamics = (JObject)q.Qualityinfos_Dynamics.Object[i];
                                 qualityinfos_Dynamics["冷弯"] = string.Empty;
@@ -1777,6 +1795,7 @@
                 {
                     return this.AjaxResult(false, "该材质下没有质量指标,请先录入质量指标");
                 }
+
                 string sFileName = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}.xlsx";
 
                 using (ExcelPackage package = new ExcelPackage())
@@ -1846,6 +1865,7 @@
                 {
                     return this.AjaxResult(false, "只能撤回30天内的质保书");
                 }
+
                 using (var tran = this.db.Database.BeginTransaction())
                 {
                     // 标识质保书状态
@@ -1862,7 +1882,6 @@
 
                         // 删除授权详情纪录
                         this.db.SaleSellerAuthDetail.RemoveRange(list_SaleSellerAuthDetail);
-
 
                         // 删除授权纪录
                         var model_SaleSellerAuth = this.db.SaleSellerAuth.FirstOrDefault(c => c.Id == auth.Authid);

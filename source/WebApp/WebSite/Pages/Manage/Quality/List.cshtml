@@ -144,7 +144,7 @@ CheckStatus_PdQuality.审核不通过
                         <td style="text-indent:0;">
                             <div class="top">
                                 <label><input type="checkbox" name="chkId" value="@qua.Id" />炉批号：<b>@qua.Batcode</b></label>
-                                <label>录入人/时间：<b>@GetEntryPersonName(qua.EntryPerson)</b>（@qua.Createtime.ToLong().GetDateTimeFromUnixTime().ToString("yyyy-MM-dd hh:mm:ss")）</label>
+                                <label>录入人/时间：<b>@GetEntryPersonName(qua.EntryPerson)</b>（@qua.Createtime.ToLong().GetDateTimeFromUnixTime()）</label>
                                 <label>
                                     审核状态：
                                     @if (qua.CheckStatus == CheckStatus_PdQuality.审核通过)
@@ -224,7 +224,21 @@ CheckStatus_PdQuality.审核不通过
                                                     var value = pro.Value.ToString();
                                                     @if (value != string.Empty && value != "NaN" && value != "null" && value != "0")
                                                     {
-                                                        <span style="color:@Html.Raw((pro.Value.ToDouble(2) >= qualityInfo.TargetMin && pro.Value.ToDouble(2) <= qualityInfo.TargetMax) ? "black" : "red")">@pro.Value</span>
+                                                        double.TryParse(value, out double dvalue);
+                                                        string showvalue = dvalue.ToString("0.000");
+                                                        if (pro.Key.ToUpper() == "C"
+                                                            || pro.Key.ToUpper() == "SI"
+                                                            || pro.Key.ToUpper() == "MN"
+                                                            || pro.Key.ToUpper() == "CEQ"
+                                                            )
+                                                        {
+                                                            showvalue = dvalue.ToString("0.00");
+                                                        }
+                                                        else if (pro.Key == "重量偏差")
+                                                        {
+                                                            showvalue = dvalue.ToString("0.0");
+                                                        }
+                                                        <span style="color:@Html.Raw((dvalue >= qualityInfo.TargetMin && dvalue <= qualityInfo.TargetMax) ? "black" : "red")">@showvalue</span>
                                                     }
                                                     else
                                                     {
@@ -234,7 +248,32 @@ CheckStatus_PdQuality.审核不通过
                                                 }
                                                 else
                                                 {
-                                                    <span>@pro.Value</span>
+                                                    double.TryParse(pro.Value.ToString(), out double dvalue);
+                                                    if (dvalue > 0)
+                                                    {
+                                                        string showvalue = dvalue.ToString("0.000");
+                                                        if (pro.Key.ToUpper() == "C"
+                                                            || pro.Key.ToUpper() == "SI"
+                                                            || pro.Key.ToUpper() == "MN"
+                                                            || pro.Key.ToUpper() == "CEQ"
+                                                            )
+                                                        {
+                                                            showvalue = dvalue.ToString("0.00");
+                                                        }
+                                                        <span>@showvalue</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        if (pro.Key == "重量偏差")
+                                                        {
+                                                            string showvalue2 = dvalue.ToString("0.0");
+                                                            <span>@showvalue2</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>-</span>
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -245,7 +284,7 @@ CheckStatus_PdQuality.审核不通过
                                 @{
                                     Object JObject_dynamics = null;
                                     //System.Reflection.PropertyInfo[] properties_dynamics = null;
-                                    if (qua.Qualityinfos_Dynamics.SafeString() != string.Empty && qua.Qualityinfos_Dynamics.Object.Count > 2)
+                                    if (qua.Qualityinfos_Dynamics.SafeString() != string.Empty && qua.Qualityinfos_Dynamics.Object.Count >= 2)
                                     {
                                         JObject_dynamics = qua.Qualityinfos_Dynamics.Object[0];
                                         if (JObject_dynamics != null)
@@ -269,10 +308,17 @@ CheckStatus_PdQuality.审核不通过
                                 foreach (var item in (List<Object>)qua.Qualityinfos_Dynamics.Object)
                                 {
                                     <div class="dataLine">
-                                        @if (qua.Qualityinfos_Dynamics.SafeString() != string.Empty && qua.Qualityinfos_Dynamics.Object.Count > 2)
+                                        @if (qua.Qualityinfos_Dynamics.SafeString() != string.Empty && qua.Qualityinfos_Dynamics.Object.Count >= 2)
                                         {
                                             if (item != null)
                                             {
+                                                var val = ((Newtonsoft.Json.Linq.JObject)item)["下屈服强度"].SafeString();
+                                                var valInt = ((Newtonsoft.Json.Linq.JObject)item)["下屈服强度"].ToDouble();
+                                                if (val == string.Empty || valInt == 0)
+                                                {
+                                                    break;
+                                                }
+
                                                 @foreach (var itemChild in (Newtonsoft.Json.Linq.JObject)item)
                                                 {
                                                     var value = itemChild.Value.SafeString();

@@ -33,6 +33,7 @@ namespace WarrantyManage.Pages.Manage.Quality
             {
                 this.RedirectToError();
             }
+
             if (mid > 0)
             {
                 this.MaterialId = mid;

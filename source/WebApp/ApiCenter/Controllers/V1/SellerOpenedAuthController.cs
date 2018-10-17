@@ -74,7 +74,9 @@
 
             if (!string.IsNullOrWhiteSpace(condition))
             {
-                data = data.Where(w => w.Batcode.ToUpper().Contains(condition.ToUpper()) || w.MaterialName.ToUpper().Contains(condition.ToUpper())||w.Mobile.ToUpper().Contains(condition.ToUpper())).ToList();
+                data = data.Where(w => w.Batcode.ToUpper().Contains(condition.ToUpper())
+                || w.MaterialName.ToUpper().Contains(condition.ToUpper())
+                || w.Mobile.ToUpper().Contains(condition.ToUpper())).ToList();
             }
 
             if (data.Count() > 0)
@@ -114,7 +116,6 @@
                         mobile = obj.FirstOrDefault().Mobile,
                         list = jarr
                     });
-
                 }
 
                 return new ResponseModel(ApiResponseStatus.Success, string.Empty, JsonConvert.SerializeObject(list));

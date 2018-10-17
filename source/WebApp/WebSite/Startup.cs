@@ -2,6 +2,8 @@ namespace WarrantyManage
 {
     using System;
     using System.IO;
+    using System.Text.Encodings.Web;
+    using System.Text.Unicode;
     using Common.Middleware;
     using Common.Service;
     using Microsoft.AspNetCore.Authentication.Cookies;
@@ -21,8 +23,6 @@ namespace WarrantyManage
     using Microsoft.Extensions.Options;
     using UEditorNetCore;
     using WarrantyManage.MiddleWare;
-    using System.Text.Unicode;
-    using System.Text.Encodings.Web;
 
     public class Startup
     {

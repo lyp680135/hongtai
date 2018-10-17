@@ -49,7 +49,6 @@
         [BindProperty(SupportsGet = true)]
         public int IsFirstLogin { get; set; }
 
-
         public void OnGet()
         {
             if (this.Request.Cookies["UserName"] != null)
@@ -62,7 +61,6 @@
 
         public async void OnPostAsync()
         {
-
             // 用户名与手机号登录都在这
             if (string.IsNullOrEmpty(this.UserName))
             {

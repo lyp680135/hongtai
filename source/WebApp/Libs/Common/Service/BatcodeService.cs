@@ -203,7 +203,7 @@
             {
                 if (offset > 0)
                 {
-                    var pdcode = this.SingleNextById(curritem.Id, workshiftcode);
+                    var pdcode = this.SingleNextById(curritem.Id, workshopcode);
 
                     if (pdcode != null)
                     {

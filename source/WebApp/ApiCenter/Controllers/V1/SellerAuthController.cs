@@ -90,6 +90,7 @@
             {
                 data = data.Where(w => w.Batcode.ToUpper().Contains(condition.ToUpper()) || w.MaterialName.ToUpper().Contains(condition.ToUpper()) || w.Lpn.ToUpper().Contains(condition.ToUpper())).ToList();
             }
+
             if (data.Count() > 0)
             {
                 List<object> list = new List<object>();

@@ -137,7 +137,7 @@
                 <thead>
                     <tr>
                         <th><input name="" type="checkbox" id="chkall" /></th>
-                        <th>ID</th>
+                        @*<th>ID</th>*@
                         <th>指标名</th>
                         <th>指标英文名</th>
                         <th>材质</th>
@@ -145,6 +145,7 @@
                         <th>参考值范围</th>
                         <th style="width:80px">指标类型</th>
                         <th style="width:80px">是否禁用</th>
+                        <th>指标类型</th>
                         <th>是否必填</th>
                         <th>备注</th>
                     </tr>
@@ -156,7 +157,7 @@
                         {
                             <tr onclick="Edit(@item.Id)" title="@item.TargetNote">
                                 <td style="width:40px" onclick="stopchoose()"><input name="id" type="checkbox" value="@item.Id" /></td>
-                                <td style="width:50px">@item.Id</td>
+                                @*<td style="width:50px">@item.Id</td>*@
                                 <td style="width:100px">@item.TargetName</td>
                                 <td style="width:100px">@item.TargetNameEn</td>
                                 <td style="width:130px">
@@ -187,6 +188,7 @@
                                 </td>
                                 <td style="width:100px">@item.TargetMin ~ @item.TargetMax</td>
                                 <td>@item.TargetType.ToString().Replace("0", "单样本").Replace("1", "多样本")</td>
+                                 <td>@Enum.GetName(typeof(DataLibrary.EnumList.TargetCategory), Convert.ToInt32(item.TargetCategory))</td>
                                 <td>
                                     @if (item.Status == 1)
                                     {
@@ -326,6 +328,18 @@
                             <option value="">请选择</option>
                             <option value="0" selected="selected">单样本</option>
                             <option value="1">多样本</option>
+                        </select>
+                    </li>
+                    <li>
+                    </li>
+                    <li style="line-height:34px;" class="rukuli">
+                        <label style="width:70px;">指标类别</label>
+                        <select name="TargetCategory" id="TargetCategory" class="validate[required] scinput">
+                            <option value="">请选择</option>
+                            @foreach (DataLibrary.EnumList.TargetCategory item in Enum.GetValues(typeof(DataLibrary.EnumList.TargetCategory)))
+                            {
+                                <option value="@Convert.ToInt32(item)">@Enum.GetName(typeof(DataLibrary.EnumList.TargetCategory), item)</option>
+                            }
                         </select>
                     </li>
                     <li>
@@ -543,7 +557,8 @@
                     $("#TargetNote").val(re.targetNote);
                     $("#TargetType").val(re.targetType);
                     $('input[name=Status]').eq(re.status).attr('checked', 'checked');
-
+                    $('input[name=TargetIsNull]').eq(re.targetIsNull).attr('checked', 'checked');
+                    $("#TargetCategory").val(re.targetCategory);
                     $("#Id").val(id);
                     layer.close(loadLayer);
                 }, error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -591,6 +606,7 @@
                     $("#TargetType").val(re.targetType);
                     $('input[name=Status]').eq(re.status).attr('checked', 'checked');
                     $('input[name=TargetIsNull]').eq(re.targetIsNull).attr('checked', 'checked');
+                    $("#TargetCategory").val(re.targetCategory);
                     $("#Id").val(id);
                 }, error: function (XMLHttpRequest, textStatus, errorThrown) {
                     layer.msg('无法获取到数据！', { icon: 2 });

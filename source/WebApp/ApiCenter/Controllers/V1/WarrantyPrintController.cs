@@ -58,7 +58,6 @@ namespace WarrantyApiCenter.Controllers.V1
             List<ResModel> resList = new List<ResModel>();
             if (dicList.Count > 0)
             {
-
                 resList = dicList.GroupBy(o => o.PrintNo).ToList().Select(s => new ResModel
                 {
                     PrintNo = s.FirstOrDefault().PrintNo,
@@ -67,6 +66,7 @@ namespace WarrantyApiCenter.Controllers.V1
                     Number = s.Sum(m => m.Number)
                 }).ToList();
             }
+
             return new ResponseModel(ApiResponseStatus.Success, string.Empty, JsonConvert.SerializeObject(resList));
         }
 
