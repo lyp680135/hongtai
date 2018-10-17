@@ -27,6 +27,7 @@ using System.IO.Ports;
 using System.Threading;
 using System.IO;
 using WpfCardPrinter.ModelAccess.SqliteAccess;
+using WpfCardPrinter.Model;
 
 namespace WpfCardPrinter
 {
@@ -198,9 +199,8 @@ namespace WpfCardPrinter
 
             this.Dispatcher.BeginInvoke(new Action(() => { SetLoadingValue(5, "", "正在装载标牌资源...完成！"); }));
             this.Dispatcher.BeginInvoke(new Action(() => { SetLoadingValue(6, "", "正在加载初始数据..."); }));
-
-            InitData();
-
+            
+            InitData();          
             if (!mInitFailed)
             {
                 this.Dispatcher.BeginInvoke(new Action(() => { SetLoadingValue(70, "", "正在加载初始数据...完成！"); }));
@@ -251,6 +251,20 @@ namespace WpfCardPrinter
                     t.Start();
                 }
             }));
+
+            using (PdWorkshopTeamAdminRelationAccess pdWorkshopTeamAdminRelationAccess = new PdWorkshopTeamAdminRelationAccess())
+            {
+                var pdWorkshopTeamAdminRelation = pdWorkshopTeamAdminRelationAccess.Single(mUser.Id);
+                if (pdWorkshopTeamAdminRelation != null)
+                {
+                    this.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        //当第一次使用系统时，把默认的排班写入库中
+                        SetCurrentWorkShift(pdWorkshopTeamAdminRelation.WorkShopTeamId);
+                    }));
+                    
+                }
+            }
         }
 
         private void StartReloadProduct(string batcode, bool should_reload_material = true)
@@ -292,12 +306,12 @@ namespace WpfCardPrinter
                 {
                     if (should_reload_material)
                     {
-	                    var lastproduct = access.SingleLastProductByWorkshopid(mWorkshop.Id);
-	                    if (lastproduct != null)
-	                    {
-	                        cbClass.SelectedValue = lastproduct.Classid;
-	                        mMaterial = findMaterialById(lastproduct.Materialid.Value);
-	                        cbMaterial.SelectedValue = mMaterial;
+                        var lastproduct = access.SingleLastProductByWorkshopid(mWorkshop.Id);
+                        if (lastproduct != null)
+                        {
+                            cbClass.SelectedValue = lastproduct.Classid;
+                            mMaterial = findMaterialById(lastproduct.Materialid.Value);
+                            cbMaterial.SelectedValue = mMaterial;
 
                             cbSpec.SelectedValue = lastproduct.Specid;
                         }
@@ -1995,7 +2009,7 @@ namespace WpfCardPrinter
             {
                 if (!mbOffline)
                 {
-            		check = CheckBatCode(mCurrentBatCode);
+                    check = CheckBatCode(mCurrentBatCode);
                 }
                 else
                 {
@@ -2287,9 +2301,9 @@ namespace WpfCardPrinter
             DoMaterialChanged(classid, materialid);
 
             //重新加载产品
-            StartReloadProduct(batcode,false);
+            StartReloadProduct(batcode, false);
         }
-		
+
         /// <summary>
         /// 切换材质
         /// </summary>
@@ -2330,7 +2344,7 @@ namespace WpfCardPrinter
                 }
             }
         }
-		
+
         /// <summary>
         /// 切换规格
         /// </summary>
@@ -2457,9 +2471,9 @@ namespace WpfCardPrinter
                         if (querytime == null && !string.IsNullOrEmpty(querybatcode))
                         {
                             mCurrentBatCode = querybatcode;
-                          
+
                             StartReloadProduct(mCurrentBatCode);
-                                
+
                             return;
                         }
 
@@ -2530,11 +2544,11 @@ namespace WpfCardPrinter
                                         }
                                     }
                                 }
-	                            else
-	                            {
-	                                MessageBox.Show("你目前正在离线状态，将不能生成下一个批号！\r\n请尽快恢复网络！", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Warning);
-	                            }
-							}
+                                else
+                                {
+                                    MessageBox.Show("你目前正在离线状态，将不能生成下一个批号！\r\n请尽快恢复网络！", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                }
+                            }
                         }
                         else
                         {
@@ -3103,7 +3117,7 @@ namespace WpfCardPrinter
                     if (this.mWorkshop == null)
                     {
                         this.mWorkshop = waccess.Single(myWorkshopProductLine);
-                        
+
                         if (this.mWorkshop == null)
                         {
                             return batcode;
@@ -3740,7 +3754,7 @@ namespace WpfCardPrinter
                                                     {
                                                         if (shouldreload)
                                                         {
-	                                                        //重新读取
+                                                            //重新读取
                                                             StartReloadProduct(mCurrentBatCode);
                                                         }
 
@@ -3801,8 +3815,8 @@ namespace WpfCardPrinter
                                         {
                                             if (shouldreload)
                                             {
-	                                            //重新读取
-	                                            StartReloadProduct(mCurrentBatCode);
+                                                //重新读取
+                                                StartReloadProduct(mCurrentBatCode);
                                             }
 
                                             this.Dispatcher.BeginInvoke(new Action(() =>
@@ -3831,7 +3845,7 @@ namespace WpfCardPrinter
                                                     {
                                                         if (shouldreload)
                                                         {
-                                                        	//重新读取
+                                                            //重新读取
                                                             StartReloadProduct(mCurrentBatCode);
                                                         }
 
@@ -4569,7 +4583,7 @@ namespace WpfCardPrinter
 
             txtCurrWeight.Text = realweight;
         }
-        
+
     }
     #endregion
 
