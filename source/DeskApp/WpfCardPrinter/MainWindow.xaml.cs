@@ -667,7 +667,8 @@ namespace WpfCardPrinter
 
                     PdBatcodeAccess baccess = new PdBatcodeAccess(access.GetConnection());
                     var batcode = baccess.SingleByBatcode(mCurrentBatCode);
-                    log.BatcodeId = batcode.Id;
+                    if (batcode != null)
+                        log.BatcodeId = batcode.Id;
 
                     //写入换班记录到数据库
                     long newid = access.Insert(log);
