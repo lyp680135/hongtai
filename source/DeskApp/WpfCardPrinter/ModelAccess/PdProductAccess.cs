@@ -428,9 +428,8 @@ namespace WpfCardPrinter.ModelAccess
 
                 sb.Append(" AND createtime>@time AND createtime<@nexttime");
             }
-
-            sb.Append(" AND WorkShift = @WorkShift ");
-            sb.Append(") AS A LEFT JOIN pdworkshopteam AS B ON A.workshift = B.id) AS C LEFT JOIN basespecifications AS D"
+          
+            sb.Append(") AS A LEFT JOIN pdworkshopteam AS B ON A.workshift = B.id  where B.WorkshopId=@WorkshopId) AS C LEFT JOIN basespecifications AS D"
                         + " ON C.specid=D.id ORDER BY batcode ASC,bundlecode ASC");
 
             using (MySqlCommand command = new MySqlCommand(sb.ToString(), _connection))
@@ -449,7 +448,7 @@ namespace WpfCardPrinter.ModelAccess
                     command.Parameters["@nexttime"].Value = nexttime;
                 }
 
-                command.Parameters.Add("@WorkShift", MySqlDbType.Int32).Value = workShopId;
+                command.Parameters.Add("@WorkshopId", MySqlDbType.Int32).Value = workShopId;
                 using (MySqlDataReader dr = command.ExecuteReader())
                 {
                     if (dr.HasRows)
