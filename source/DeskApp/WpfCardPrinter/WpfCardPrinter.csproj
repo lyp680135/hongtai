@@ -166,6 +166,7 @@
     <Compile Include="ModelAccess\MngAdminAccess.cs" />
     <Compile Include="ModelAccess\PdStockOutAccess.cs" />
     <Compile Include="ModelAccess\PdWorkshopAccess.cs" />
+    <Compile Include="ModelAccess\PdWorkshopTeamAdminRelationAccess.cs" />
     <Compile Include="ModelAccess\SqliteAccess\BaseSqliteAccess.cs" />
     <Compile Include="ModelAccess\SqliteAccess\LoginLogSqliteAccess.cs" />
     <Compile Include="ModelAccess\SqliteAccess\ProductSqliteAccess.cs" />
@@ -174,6 +175,7 @@
     <Compile Include="Model\MngAdmin.cs" />
     <Compile Include="Model\PdStockOut.cs" />
     <Compile Include="Model\PdWorkshop.cs" />
+    <Compile Include="Model\PdWorkshopTeamAdminRelation.cs" />
     <Compile Include="Model\ProductInfo.cs" />
     <Compile Include="OffsetConfig.xaml.cs">
       <DependentUpon>OffsetConfig.xaml</DependentUpon>

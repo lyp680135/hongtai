@@ -199,8 +199,8 @@ namespace WpfCardPrinter
 
             this.Dispatcher.BeginInvoke(new Action(() => { SetLoadingValue(5, "", "正在装载标牌资源...完成！"); }));
             this.Dispatcher.BeginInvoke(new Action(() => { SetLoadingValue(6, "", "正在加载初始数据..."); }));
-            
-            InitData();          
+
+            InitData();
             if (!mInitFailed)
             {
                 this.Dispatcher.BeginInvoke(new Action(() => { SetLoadingValue(70, "", "正在加载初始数据...完成！"); }));
@@ -259,10 +259,10 @@ namespace WpfCardPrinter
                 {
                     this.Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        //当第一次使用系统时，把默认的排班写入库中
+                        //登录时自动换班,显示换班信息
                         SetCurrentWorkShift(pdWorkshopTeamAdminRelation.WorkShopTeamId);
                     }));
-                    
+
                 }
             }
         }
@@ -2461,7 +2461,7 @@ namespace WpfCardPrinter
             {
                 using (PdProductAccess access = new PdProductAccess())
                 {
-                    var list = access.Query(querybatcode, querytime);
+                    var list = access.Query(querybatcode, querytime, mWorkshop.Id);
                     if (list == null)
                     {
                         MessageBox.Show("没有找到满足条件的产品记录！", "查询结果", MessageBoxButton.OK, MessageBoxImage.Error);

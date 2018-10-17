@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace WpfCardPrinter.ModelAccess
 {
-    class PdProductAccess :BaseAccess<PdProduct>
+    class PdProductAccess : BaseAccess<PdProduct>
     {
         public PdProductAccess() : base()
         {
@@ -17,7 +17,7 @@ namespace WpfCardPrinter.ModelAccess
         }
 
         public PdProductAccess(PdProduct model)
-            :base(model)
+            : base(model)
         {
 
         }
@@ -48,8 +48,8 @@ namespace WpfCardPrinter.ModelAccess
                 return newid;
             }
 
-            if (string.IsNullOrEmpty(product.Batcode) 
-                || string.IsNullOrEmpty(product.Bundlecode) 
+            if (string.IsNullOrEmpty(product.Batcode)
+                || string.IsNullOrEmpty(product.Bundlecode)
                 || product.Classid <= 0
                 || product.Materialid <= 0
                 || product.Specid <= 0
@@ -210,7 +210,7 @@ namespace WpfCardPrinter.ModelAccess
 
                                 obj.Specname = (!Convert.IsDBNull(dr["specname"])) ? dr.GetString("specname") : null;
                                 obj.ReferWeight = (!Convert.IsDBNull(dr["referpieceweight"])) ? dr.GetDouble("referpieceweight") : new double?();
-                                
+
                                 productlist.Add(obj);
                             }
                         }
@@ -310,7 +310,7 @@ namespace WpfCardPrinter.ModelAccess
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
             }
@@ -371,12 +371,12 @@ namespace WpfCardPrinter.ModelAccess
             return product;
         }
 
-        public List<PdProduct> Query(string batcode, DateTime? createdate)
+        public List<PdProduct> Query(string batcode, DateTime? createdate, int workShopId = 0)
         {
             List<PdProduct> productlist = null;
 
             int time = 0, nexttime = 0;
-            StringBuilder sb=new StringBuilder();
+            StringBuilder sb = new StringBuilder();
 
 
             if (string.IsNullOrEmpty(batcode) && createdate == null)
@@ -386,7 +386,7 @@ namespace WpfCardPrinter.ModelAccess
 
             sb.Append("SELECT C.*,D.specname,D.referpieceweight FROM (SELECT A.*,B.TeamName FROM (SELECT * FROM pdproduct WHERE 1=1");
 
-            if(!string.IsNullOrEmpty(batcode))
+            if (!string.IsNullOrEmpty(batcode))
             {
                 sb.Append(" AND batcode=@batcode");
             }
@@ -401,6 +401,7 @@ namespace WpfCardPrinter.ModelAccess
                 sb.Append(" AND createtime>@time AND createtime<@nexttime");
             }
 
+            sb.Append(" AND WorkShift = @WorkShift ");
             sb.Append(") AS A LEFT JOIN pdworkshopteam AS B ON A.workshift = B.id) AS C LEFT JOIN basespecifications AS D"
                         + " ON C.specid=D.id ORDER BY batcode ASC,bundlecode ASC");
 
@@ -420,6 +421,7 @@ namespace WpfCardPrinter.ModelAccess
                     command.Parameters["@nexttime"].Value = nexttime;
                 }
 
+                command.Parameters.Add("@WorkShift", MySqlDbType.Int32).Value = workShopId;
                 using (MySqlDataReader dr = command.ExecuteReader())
                 {
                     if (dr.HasRows)
