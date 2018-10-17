@@ -36,6 +36,7 @@ namespace WpfCardPrinter
     public partial class MainWindow : Window
     {
         public string myWorkshopProductLine = LoginWindow.shopCode;
+        public string ProductLine = System.Configuration.ConfigurationManager.AppSettings["ProductLine"];
         public string myQRCodeUrlString = System.Configuration.ConfigurationManager.AppSettings["QRCodeUrlString"];
         public int nunlength = string.IsNullOrWhiteSpace(System.Configuration.ConfigurationManager.AppSettings["UnfixedLengthNumber"]) ? 0 : Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["UnfixedLengthNumber"]);
         public string mLabelPageWidth = ConfigurationManager.AppSettings["PageWidth"];
@@ -3130,7 +3131,7 @@ namespace WpfCardPrinter
 
                     if (curritem == null || curritem.Id <= 0)     //如果当前批号为空并且数据库里也没有
                     {
-                        batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, 1.ToString("D5"), myWorkshopProductLine);
+                        batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, 1.ToString("D5"), this.ProductLine);
                         serialno = Convert.ToInt32(string.Format("{0}{1}", DATE_CODE, 1.ToString("D5")));
                         PdBatcode pdcode = new PdBatcode();
                         pdcode.Batcode = batcode;
@@ -3170,7 +3171,7 @@ namespace WpfCardPrinter
                                     number = 1;
                                 }
                                 serialno = Convert.ToInt32(string.Format("{0}{1}", DATE_CODE, number.ToString("D5")));
-                                batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, number.ToString("D5"), myWorkshopProductLine);
+                                batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, number.ToString("D5"), this.ProductLine);
                                 access.Insert(new PdBatcode
                                 {
                                     Batcode = batcode,
