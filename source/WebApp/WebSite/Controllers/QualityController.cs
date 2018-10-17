@@ -385,7 +385,7 @@
                            || item.TargetMax.ToDouble(2) < val.ToDouble(2))
                             {
                                 // 如果集合没有就添加
-                                if (!targetNameList.Any(x => x == item.TargetName) && i <= 1)
+                                if (!targetNameList.Any(x => x == item.TargetName) && val.SafeString() != string.Empty)
                                 {
                                     targetNameList.Add(item.TargetName + i.ToString());
                                 }

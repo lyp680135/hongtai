@@ -86,7 +86,7 @@
                             if (productInfo != null)
                             {
                                 this.ListQualityStandards = this.Db.BaseQualityStandard.Where(w => w.Materialid == productInfo.Materialid && w.Status == 0 && w.TargetCategory == targetCategory).ToList();
-                            }
+                            }                            
                         }
                     }
                 }

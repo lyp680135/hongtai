@@ -195,11 +195,26 @@
                 </div>
                 <button type="button" id="selsmeltcode" class="layui-btn layui-btn-sm layui-btn-normal" onclick="locationHref(); return false;"><i class="layui-icon">&#xe615;</i>选择冶炼炉号</button>
             }
+            @{
+                if (Model.PdQuality.Id == 0)
+                {
+                    var productList = this._db.PdProduct.Where(w => w.Batcode == Model.BatCode).ToList();
+                    if (productList.Count <= 0 || !productList.Any())
+                    {
 
-            @if (Model.ListQualityStandards == null || Model.ListQualityStandards.Count <= 0)
-            {
-                <h3 class="element">请先设置质量指标</h3>
+                        <h3 class="element">该批号下尚未生产产品</h3>
+                    }
+                    else
+                    {
+                        @if (Model.ListQualityStandards == null || Model.ListQualityStandards.Count <= 0)
+                        {
+                            <h3 class="element">请先设置质量指标</h3>
+                        }
+                    }
+                }
             }
+
+
             @if (Model.ListQualityStandards != null)
             {
 
@@ -327,7 +342,7 @@
                                 if (ListQualityStandards != null && ListQualityStandards.Count > 0)
                                 {
                                     var count = Model.PdQuality.Id > 0 ? Model.PdQuality.Qualityinfos_Dynamics.Object.Count : 4;
-                                    if(count < 4){ count = 4; }
+                                    if (count < 4) { count = 4; }
                                     for (int i = 0; i < count; i++)
                                     {
                                         <tr>
@@ -341,7 +356,7 @@
                                                     <td class="tdtips">第@(i + 1)次</td>
                                                     @foreach (var item in sxQualityStandards)
                                                     {
-                                                        if (Model.PdQuality != null && Model.PdQuality.Qualityinfos_Dynamics.SafeString() != string.Empty 
+                                                        if (Model.PdQuality != null && Model.PdQuality.Qualityinfos_Dynamics.SafeString() != string.Empty
                                                             && Model.PdQuality.Qualityinfos_Dynamics.Object.Count >= 2
                                                             && i < Model.PdQuality.Qualityinfos_Dynamics.Object.Count)
                                                         {
