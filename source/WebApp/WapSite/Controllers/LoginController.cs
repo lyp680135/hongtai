@@ -70,8 +70,8 @@
 #if DEBUG
             var responData = Util.Helpers.HttpHelper.HttpGet(
                 systemMemberType == SystemMemberType.Manage ?
-                $"http://localhost:49134/api/TokenByPhone?phone={mobile}&code={code}" :
-                $"http://localhost:49134/api/TokenBySaler?phone={mobile}&code={code}",
+                $"http://localhost:41178/api/TokenByPhone?phone={mobile}&code={code}" :
+                $"http://localhost:41178/api/TokenBySaler?phone={mobile}&code={code}",
                 System.Text.Encoding.UTF8);
 #else
 
@@ -132,7 +132,7 @@
             var setting = this.settingService.MngSetting;
 #if DEBUG
             var responData = Util.Helpers.HttpHelper.HttpGet(
-                $"http://localhost:49134/api/Token?userName={userName}&pwd={pwd}",
+                $"http://localhost:41178/api/Token?userName={userName}&pwd={pwd}",
                 System.Text.Encoding.UTF8);
 #else
             var responData = Util.Helpers.HttpHelper.HttpGet(

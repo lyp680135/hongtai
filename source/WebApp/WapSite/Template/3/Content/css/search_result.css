@@ -1,4 +1,4 @@
-@charset "utf-8";
+﻿@charset "utf-8";
 /* CSS Document */
 /*---------------------------banner-------------------------- */
 .content{
@@ -19,6 +19,9 @@
     padding-left: 12px;
     padding-right:12px;
     vertical-align: middle;
+}
+.container-fluid.content .row>div.list{
+    padding-left:20px;
 }
 /*---------------------------title-------------------------- */
 .row.service.title span{
@@ -57,6 +60,7 @@ table tr td{
 .content.print{
     border-top:1px solid #666666;
     padding-bottom: 45px;
+    padding:0;
 }
 input{
     background-color:#edeeef;

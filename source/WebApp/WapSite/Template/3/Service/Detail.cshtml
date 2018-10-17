@@ -1,6 +1,7 @@
 ﻿@page
 @inject ICMSService _cmsService
 @inject DataLibrary.DataContext Db
+@inject Util.Helpers.MySqlHelper mySqlHelper
 @functions{
     public DataLibrary.SiteBasic SiteBasic { get; set; }
 
@@ -20,6 +21,17 @@
 
     public DataLibrary.PdWorkshop PdWorkshop { get; set; }
 
+    public List<DBModel> dBModels { get; set; }
+    public class DBModel
+    {
+        public string PrintNo { get; set; }
+
+        public int Createtime { get; set; }
+
+        public string Consignor { get; set; }
+
+        public decimal Number { get; set; }
+    }
     /// <summary>
     /// Gets or sets 出库纪录
     /// </summary>
@@ -35,6 +47,21 @@
             vc = this.Request.Query["r"];
         }
 
+        if (this._cmsService.IuserService.IsAuth)
+        {
+            var sqlStr = string.Format(
+                @"select a.printno,a.createtime,a.consignor,SUM(b.number) as number,a.id as id from saleprintlog  a
+                        inner JOIN saleprintlogdetail b on a.id=b.printid
+                        inner JOIN salesellerauth c on b.authid=c.Id
+                        WHERE c.Sellerid={0} and a.status={1} and c.batcode='{2}' ", 
+                        this._cmsService.IuserService.SaleSellerUser.Id,
+                        (int)SalePrintlogStatus.已下载,
+                        bc);
+
+            sqlStr += $" GROUP BY a.printno,b.number,a.Createtime,a.consignor, a.id order by a.id desc ";
+            var dicList = this.mySqlHelper.ExecuteList<DBModel>(sqlStr, null, System.Data.CommandType.Text);
+            dBModels = dicList;
+        }
         this.SiteBasic = (from c in this.Db.SiteBasic select c).ToList()[0];
 
         this.PdProduct = this.Db.PdProduct.FirstOrDefault(x => x.Batcode == bc && x.Randomcode == vc);
@@ -60,6 +87,7 @@
 }
 @section head
     {
+    <link href="/Content/css/service.css" rel="stylesheet" />
     <link href="/Content/css/search_result.css" rel="stylesheet" />
     @*<link href="/Content/js/layui/css/layui.css" rel="stylesheet" />*@
     <script type="text/javascript" src="/Content/js/layui/layui.js"></script>
@@ -146,7 +174,8 @@ else
             </div>
         </div>
     </div>
-
+@if (!this._cmsService.IuserService.IsAuth)
+{
     <div class="container-fluid content print">
         <div class="row service title">
             <div class="col-xs-12">
@@ -183,12 +212,72 @@ else
             </div>
         </div>
     </div>
+
 }
-    <style type="text/css">
-        .container-fluid.footer {
-            margin-bottom: 55px;
+else
+{
+    <div class="container-fluid content print">
+        <div class="row service title">
+            <div class="col-xs-12 list">
+                <img src="/Content/images/title_print.png" />
+                <span>打印产品质量证明书</span>
+            </div>
+        </div>
+        <div class="thead">
+            <div class="tr">
+                <span>打印编号</span>
+                <span>产品件数</span>
+                <span>生成时间</span>
+            </div>
+        </div>
+        @if (dBModels != null && dBModels.Any())
+        {
+            foreach (var item in dBModels)
+            {
+                <div class="detail" pid="@item.PrintNo">
+                    <div class="tbody">
+                        <div class="btr">
+                            <div class=" td">
+                                <span>@item.Consignor</span>
+                                <span>@item.PrintNo</span>
+                            </div>
+                            <div class="td js">1件</div>
+                            <div class="td js">
+                                <span class="sj">@item.Createtime.ToLong().GetDateTimeFromUnixTime().ToString("yyyy/MM/dd")</span>
+                                <i class="jt">@Html.Raw($"{item.Number}件")</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         }
-        .nav-bottom ul li a img{
-            margin-bottom:5px;
+        else
+        {
+            <div class="nodata" style="position:initial;padding-top:100px;padding-bottom:100px;height:initial;">
+                <img src="~/Content/images/nodata.png" style="width:40%;" />
+                <div class="tip" style="color:gray;padding:10px 0px;">
+                    没有查到相关质量证明书
+                </div>
+            </div>
         }
-    </style>
+    </div>
+}
+}
+        <style type="text/css">
+            .container-fluid.footer {
+                margin-bottom: 55px;
+            }
+
+            .nav-bottom ul li a img {
+                margin-bottom: 5px;
+            }
+        </style>
+
+        <script>
+    $(function () {
+        $('.detail').click(function () {
+            var pid = $(this).attr('pid');
+            window.location.href = '@Html.Raw($"{this._cmsService.GetSetting().Domain_WAPManage}WarrantyBook/")' + pid;
+        });
+    })
+        </script>

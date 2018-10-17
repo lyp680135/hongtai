@@ -217,3 +217,21 @@ vertical-align:inherit;
     text-overflow: ellipsis;
     line-height: 25px;
 }
+
+.tipitem.nodata .tip {
+    margin: 12px 0 25px 0;
+}
+
+.nodata {
+    position: fixed;
+    height: 100%;
+    height: 285px;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    color: black;
+    font-size: 18px;
+    padding-top: 200px;
+    background-size: 60px 110px;
+    background-position: 48% 44%;
+}
