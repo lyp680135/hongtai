@@ -111,7 +111,7 @@
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </td>
                         <td style="text-align: right;padding-left:30px">
-                            <img src="{{data.QualityIcon}}" width="290" height="120" style="padding-right:0px;" />
+                            <img src="{{data.QualityIcon}}?v=1.0" width="290" height="120" style="padding-right:0px;" />
                         </td>
                         <td style="text-align: left; width:210px;padding-top:10px;">
                             <div style="margin-left: 20px;">
