@@ -216,6 +216,9 @@
                     'alertTextOk': '该手机号未被使用，可以继续注册',
                     'alertText': '该手机号己被使用，不能继续注册',
                     'alertTextLoad': '正在验证是否己被注册'
+                }, "qualityCheck": {
+                    "regex": /^-?\d+(\.\d{1,3})?$/,
+                    "alertText": "* 数据格式错误"
                 }
             };
 
