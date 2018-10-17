@@ -18,6 +18,7 @@ import NoRuleStockOutput from '@/pages/NoRuleStockOutput'
 import SelectBundleCode from '@/pages/SelectBundleCode'
 import WarrantyAuth from '@/pages/WarrantyAuth'
 import WarrantyPrint from '@/pages/WarrantyPrint'
+import Detail from '@/pages/Detail'
 Vue.use(Router)
 
 var router = new Router({
@@ -136,6 +137,15 @@ var router = new Router({
         keepAlive: false
       },
       component: WarrantyPrint
+    },
+    {
+      path: '/Detail/:batcode',
+      name: 'Detail',
+      meta: {
+        title: '打印详情',
+        keepAlive: false
+      },
+      component: Detail
     }
   ]
 })

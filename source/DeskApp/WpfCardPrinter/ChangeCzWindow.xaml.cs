@@ -75,26 +75,14 @@ namespace WpfCardPrinter
                     var productList = pdaccess.GetListByBatcode(mCurrentBatCode.Batcode);
                     if (productList != null && productList.Count > 0)
                     {
-                        MessageBoxResult result = MessageBox.Show("此操作将会重置数据,确认操作？", "操作提醒", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                        MessageBoxResult result = MessageBox.Show("此操作将会清空该批号下的产品数据,确认操作？", "操作提醒", MessageBoxButton.OKCancel, MessageBoxImage.Question);
                         if (result == MessageBoxResult.OK)
                         {
-                            using (BaseSpecificationsAccess specaccess = new BaseSpecificationsAccess())
+                            //不需要判断同名规格是否存在，直接清空
+                            productList.ForEach(o =>
                             {
-                                var objList = specaccess.GetListByClassAndMaterial(cid, mid);
-                                productList.ForEach(o =>
-                                {
-                                    var obj = specaccess.GetListById(Convert.ToInt32(o.Specid)).FirstOrDefault();
-                                    if (cid != ClassId || !objList.Any(x => x.Callname == obj.Callname && x.Referlength == obj.Referlength))
-                                    {
-                                        pdaccess.DeleteProductById(o.Id);
-                                    }
-                                    else
-                                    {
-                                        o.Materialid = mid;
-                                        pdaccess.Update(o);
-                                    }
-                                });
-                            }
+                                pdaccess.DeleteProductById(o.Id);
+                            });
                         }
                     }
                 }

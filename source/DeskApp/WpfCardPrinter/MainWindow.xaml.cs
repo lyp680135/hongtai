@@ -2399,6 +2399,17 @@ namespace WpfCardPrinter
                     mSelectedProduct.Specid = id;
 
                     mSelectedProduct.Specname = selectedspec.Specname;
+                    mSelectedProduct.Length = selectedspec.Referlength;
+                    mSelectedProduct.Meterweight = selectedspec.Refermeterweight;
+                    mSelectedProduct.Piececount = selectedspec.Referpiececount;
+                    mSelectedProduct.ReferWeight = selectedspec.Referpieceweight;
+
+                    //将规格更改更新到数据库
+                    using (PdProductAccess access = new PdProductAccess())
+                    {
+                        var result = access.UpdateSpec(mSelectedProduct);
+                    }
+
                     mProductList[mSelectedProductIndex] = mSelectedProduct;
 
                     if (mSelectedProductIndex > 0)

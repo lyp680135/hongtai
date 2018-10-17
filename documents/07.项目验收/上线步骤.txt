@@ -1,0 +1,6 @@
+1、确定和录入各个材质的规格
+2、每个车间安装好标牌打印程序后，配置线号
+    <add key="ProductLine" value="L" />
+3、手动增加或修改各车间的初始批号到批号表
+INSERT INTO `pdbatcode` VALUES (3, '标牌打印程序', '18B00001A', 1800001, 1539745576, 0, 1, NULL, NULL, NULL);
+4、

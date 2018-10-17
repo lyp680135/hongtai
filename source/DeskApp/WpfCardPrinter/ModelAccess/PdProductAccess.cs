@@ -155,6 +155,34 @@ namespace WpfCardPrinter.ModelAccess
             }
         }
 
+
+        public int UpdateSpec(PdProduct product)
+        {
+            using (MySqlCommand mysqlcom = new MySqlCommand("UPDATE pdproduct SET "
+                        + "specid=@specid,lengthtype=@lengthtype,length=@length,piececount=@piececount,"
+                        + "meterweight=@meterweight,weight=@weight"
+                        + " WHERE id=@id", _connection))
+            {
+                mysqlcom.Parameters.Add("@specid", MySqlDbType.Int32);
+                mysqlcom.Parameters["@specid"].Value = product.Specid;
+                mysqlcom.Parameters.Add("@lengthtype", MySqlDbType.Int32);
+                mysqlcom.Parameters["@lengthtype"].Value = product.Lengthtype;
+                mysqlcom.Parameters.Add("@length", MySqlDbType.Double);
+                mysqlcom.Parameters["@length"].Value = product.Length;
+                mysqlcom.Parameters.Add("@piececount", MySqlDbType.Int32);
+                mysqlcom.Parameters["@piececount"].Value = product.Piececount;
+                mysqlcom.Parameters.Add("@meterweight", MySqlDbType.Double);
+                mysqlcom.Parameters["@meterweight"].Value = product.Meterweight;
+                mysqlcom.Parameters.Add("@weight", MySqlDbType.Double);
+                mysqlcom.Parameters["@weight"].Value = product.Weight;
+
+                mysqlcom.Parameters.Add("@id", MySqlDbType.Int32);
+                mysqlcom.Parameters["@id"].Value = product.Id;
+
+                return mysqlcom.ExecuteNonQuery();
+            }
+        }
+
         public List<PdProduct> GetListByBatcode(string batcode)
         {
             List<PdProduct> productlist = null;

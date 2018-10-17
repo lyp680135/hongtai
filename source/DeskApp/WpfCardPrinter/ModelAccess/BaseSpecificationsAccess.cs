@@ -61,6 +61,7 @@ namespace WpfCardPrinter.ModelAccess
 
             return list;
         }
+
         public List<BaseSpecifications> GetListById(int id)
         {
             List<BaseSpecifications> list = null;
