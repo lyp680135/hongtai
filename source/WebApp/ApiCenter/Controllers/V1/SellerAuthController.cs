@@ -222,7 +222,7 @@
                     string batcode = jt["Batcode"].ToString();
                     string lpn = jt["Lpn"].ToString();
 
-                    DataLibrary.SaleSellerAuth sellerAuth = this.db.SaleSellerAuth.FirstOrDefault(x => x.Sellerid == saleSeller.Id && x.Classid.Value == classid && x.Materialid.Value == materialid && x.Specid.Value == specid);
+                    DataLibrary.SaleSellerAuth sellerAuth = this.db.SaleSellerAuth.FirstOrDefault(x => x.Sellerid == saleSeller.Id && x.Classid.Value == classid && x.Materialid.Value == materialid && x.Specid.Value == specid && x.Batcode == batcode);
                     if (sellerAuth == null)
                     {
                         SaleSellerAuth entity = new SaleSellerAuth
