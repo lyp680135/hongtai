@@ -69,11 +69,12 @@ namespace WpfCardPrinter.ModelAccess.SqliteAccess
         /// </summary>
         public void Update(LoginLog loginlog)
         {
-            string sqlStr = string.Format(@"update loginlog set LoginTime=@LoginTime where UserName=@UserName ");
+            string sqlStr = string.Format(@"update loginlog set LoginTime=@LoginTime,Code=@Code where UserName=@UserName ");
             using (SQLiteCommand cmd = new SQLiteCommand(sqlStr, _connection))
             {
                 cmd.Parameters.Add("@UserName", DbType.String).Value = loginlog.UserName;
                 cmd.Parameters.Add("@LoginTime", DbType.Int64).Value = loginlog.LoginTime;
+                cmd.Parameters.Add("@Code", DbType.String).Value = loginlog.Code;
                 cmd.ExecuteNonQuery();
             }
         }
