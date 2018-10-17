@@ -1,0 +1,227 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+/* testimonial --------------------------------------*/
+.testimonial h2 {
+    font-size: 14px;
+    font-weight: inherit;
+    line-height: 33px;
+    margin-top: 6px;
+}
+
+.testimonial .input_box {
+    font-size: 16px;
+    height: 44px;
+    width: 100%;
+    background-image: -webkit-linear-gradient(top, #e5e5e5, #e5e5e5 50%, transparent 50%);
+    background-image: linear-gradient(180deg, #e5e5e5, #e5e5e5 50%, transparent 50%);
+    background-size: 120% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+}
+
+.testimonial .content {
+    padding: 0;
+}
+
+    .testimonial .content div {
+        padding-right: 12px;
+    }
+/* hotline --------------------------------------*/
+.hotline .row_box * {
+    font-size: 14px;
+}
+
+.hotline .exception {
+    margin-bottom: 6px;
+}
+
+.hotline .content {
+    padding: 12px 0;
+}
+/* address --------------------------------------*/
+.address .content {
+    padding-right: 12px;
+}
+
+    .address .content img {
+        width: 100%;
+        display: block;
+    }
+
+    .address .content p {
+        line-height: 38px;
+    }
+/* query_result --------------------------------------*/
+.query_result .title_bar img {
+    width: inherit;
+    height: 22px;
+    margin-bottom: -6px;
+}
+
+.query_result .content h2 {
+    font-size: 14px;
+    font-weight: inherit;
+    color: #999;
+    float: left;
+    line-height: 28px;
+    margin-right: 13px;
+}
+
+.query_result .content p {
+    color: #333;
+    float: left;
+    line-height: 28px;
+}
+
+.query_result .left_box {
+    float: left;
+    width: 125px;
+}
+
+.query_result .right_box {
+    float: left;
+}
+
+.query_result .content {
+    padding: 14px 0;
+}
+/* stamp --------------------------------------*/
+.stamp .content {
+    padding: 5px 0 0 0;
+}
+
+.stamp h2 {
+    font-size: 14px;
+    font-weight: inherit;
+    width: 85px;
+    display: table-cell;
+    line-height: 44px;
+}
+
+.stamp .input_box {
+    min-width: 100%;
+    display: table-cell;
+}
+
+    .stamp .input_box input {
+        display: block;
+        color: #999;
+    }
+
+.stamp .row_box {
+    background-image: -webkit-linear-gradient(top, #e5e5e5, #e5e5e5 50%, transparent 50%);
+    background-image: linear-gradient(180deg, #e5e5e5, #e5e5e5 50%, transparent 50%);
+    background-size: 120% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    position: relative;
+}
+
+.stamp .determine {
+    padding-right: 12px;
+}
+
+.stamp .send {
+    position: absolute;
+    right: 12px;
+    top: 8px;
+    z-index: 120;
+    width: 84px;
+    height: 28px;
+    background: #e50011;
+    border-radius: 3px;
+    font-size: 13px;
+    color: #fff;
+    border: none;
+}
+
+    .stamp .send:focus, .stamp .send:hover, .stamp .send:active {
+        background: #a3000b;
+    }
+
+.stamp span {
+    font-size: 12px;
+    color: #999;
+    line-height: 17px;
+    margin: 10px 0 -2px 0;
+    display: block;
+    letter-spacing: 1px;
+}
+
+.BMap_Marker div {
+    left: 5px;
+    top: 10px;
+}
+
+/*详情*/
+.bg {
+    width: 100%;
+    height: 15px;
+    background-color: #eee;
+}
+
+.zbsdy {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 12px;
+    border-bottom: 1px #cdcece solid;
+}
+
+.detail {
+    border-collapse: collapse;
+}
+
+.detail .tbody .btr {
+    border-top: 1px #cdcece solid;
+    height: 60px;
+}
+
+.thead .tr {
+    line-height: 50px;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+    .thead .tr span {
+        display: inline-block;
+        width: 32.333%;
+        text-align: center;
+    }
+
+.detail .tbody .btr .td {
+    width: 32.333%;
+    float: left;
+    text-align: center;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+    .detail .tbody .btr .td span {
+        line-height: 20px;        
+        display: inline-block;
+        width: 100%;
+    }
+
+.jt {
+    width: 0px;
+    height: 0px;
+    border-bottom: 10px solid transparent; /* left arrow slant */
+    border-top: 10px solid transparent; /* right arrow slant */
+    border-left: 12px solid #cdcece; /* bottom, add background color here */
+    font-size: 0px;
+    line-height: 0px;
+    position: relative;
+    right: -47px;
+    top: -65px;
+}
+
+.js {
+    height: 60px;
+    line-height: 60px;
+}
+
+.sj {
+    text-align-last: left;
+}
