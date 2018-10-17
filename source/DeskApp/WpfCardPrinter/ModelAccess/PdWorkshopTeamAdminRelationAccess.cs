@@ -20,16 +20,17 @@ namespace WpfCardPrinter.ModelAccess
 
         }
 
-        public PdWorkshopTeamAdminRelation Single(int adminId)
+        public PdWorkshopTeamAdminRelation Single(int adminId, int workShopId)
         {
             PdWorkshopTeamAdminRelation pdWorkshopTeamAdminRelation = null;
             try
             {
-                string sql = "SELECT * FROM pdworkshopteamadminrelation WHERE AdminId=@AdminId";
+                string sql = "SELECT * FROM pdworkshopteamadminrelation WHERE AdminId=@AdminId and workShopId=@workShopId";
                 using (MySqlCommand mysqlcom = new MySqlCommand(sql, _connection))
                 {
 
-                    mysqlcom.Parameters.Add("@AdminId", MySqlDbType.VarChar).Value = adminId;                 
+                    mysqlcom.Parameters.Add("@AdminId", MySqlDbType.Int32).Value = adminId;
+                    mysqlcom.Parameters.Add("@workShopId", MySqlDbType.Int32).Value = workShopId;
                     using (MySqlDataReader dr = mysqlcom.ExecuteReader())
                     {
                         if (dr.HasRows)

@@ -254,7 +254,7 @@ namespace WpfCardPrinter
 
             using (PdWorkshopTeamAdminRelationAccess pdWorkshopTeamAdminRelationAccess = new PdWorkshopTeamAdminRelationAccess())
             {
-                var pdWorkshopTeamAdminRelation = pdWorkshopTeamAdminRelationAccess.Single(mUser.Id);
+                var pdWorkshopTeamAdminRelation = pdWorkshopTeamAdminRelationAccess.Single(mUser.Id, mWorkshop.Id);
                 if (pdWorkshopTeamAdminRelation != null)
                 {
                     this.Dispatcher.BeginInvoke(new Action(() =>
