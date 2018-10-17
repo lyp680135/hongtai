@@ -834,7 +834,7 @@ namespace WpfCardPrinter
                 {
                     mCurrentBatCode = "";
 
-                    return;
+                    throw new Exception("该车间没有设置初始批号...");
                 }
 
                 this.Dispatcher.BeginInvoke(new Action(() => { SetLoadingValue(45, "", "正在加载品名材质信息..."); }));
