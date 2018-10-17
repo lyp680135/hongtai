@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
     using WarrantyApiCenter.Models;
@@ -13,11 +14,13 @@
     [Produces("application/json")]
     public class WarrantyTemplateController : BaseController
     {
+        private readonly IHostingEnvironment hostingEnvironment;
         private DataLibrary.DataContext db;
 
-        public WarrantyTemplateController(DataLibrary.DataContext db)
+        public WarrantyTemplateController(DataLibrary.DataContext db, IHostingEnvironment hostingEnvironment)
         {
             this.db = db;
+           this.hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet]
@@ -28,7 +31,7 @@
         public ResponseModel Get()
         {
             List<string> lt = new List<string>();
-            string path = AppDomain.CurrentDomain.BaseDirectory + string.Format(@"qualitypics/template/");
+            string path = this.hostingEnvironment.ContentRootPath + string.Format(@"/qualitypics/template/");
             DirectoryInfo folder = new DirectoryInfo(path);
             foreach (FileInfo file in folder.GetFiles())
             {
@@ -59,7 +62,7 @@
 
             if (lin != null && !string.IsNullOrWhiteSpace(lin.Templatename))
             {
-                string path = AppDomain.CurrentDomain.BaseDirectory + string.Format(@"qualitypics/template/");
+                string path = this.hostingEnvironment.ContentRootPath + string.Format(@"/qualitypics/template/");
                 string templatePath = path + lin.Templatename;
                 if (System.IO.File.Exists(templatePath))
                 {
