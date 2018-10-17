@@ -139,7 +139,7 @@
                                             <option value="">班组</option>
                                             @foreach (var te in Model.Teamlist)
                                             {
-                                                if (this.db.PdWorkshopTeamAdminRelation.FirstOrDefault(c => c.AdminId == resultOperator[i].Id && c.WorkShopTeamId == te.Id) != null)
+                                                if (this.db.PdWorkshopTeamAdminRelation.FirstOrDefault(c => c.AdminId == resultOperator[i].Id && c.WorkShopTeamId == te.Id && c.WorkShopId == Model.Wsclass.Id) != null)
                                                 {
                                                     <option value="@te.Id" selected="selected">@te.TeamName</option>
 

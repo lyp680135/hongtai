@@ -20,5 +20,7 @@
 
         [Required]
         public int WorkShopTeamId { get; set; }
+
+        public int WorkShopId { get; set; }
     }
 }

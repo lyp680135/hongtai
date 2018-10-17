@@ -457,7 +457,7 @@
 
                         if (rukuperson != null)
                         {
-                            relationadmin = this.db.PdWorkshopTeamAdminRelation.FirstOrDefault(c => c.AdminId == rukuperson.Id);
+                            relationadmin = this.db.PdWorkshopTeamAdminRelation.FirstOrDefault(c => c.AdminId == rukuperson.Id && c.WorkShopId == rs.Id);
 
                             if (!rukuperson.GroupManage.Object.Contains((int)GroupManage.入库操作员))
                             {
@@ -474,12 +474,14 @@
                                    {
                                        AdminId = rukuperson.Id,
                                        WorkShopTeamId = workShopTeamId[i],
+                                       WorkShopId = rs.Id
                                    });
                             }
                             else
                             {
                                 relationadmin.AdminId = rukuperson.Id;
                                 relationadmin.WorkShopTeamId = workShopTeamId[i];
+                                relationadmin.WorkShopId = rs.Id;
                             }
 
                             rukuperson.RealName = rukuName[i];
@@ -501,7 +503,7 @@
                                      UserName = rukuTel[i]
                                  });
                             this.db.SaveChanges();
-                            relationadmin = this.db.PdWorkshopTeamAdminRelation.FirstOrDefault(c => c.AdminId == tempadmin.Entity.Id);
+                            relationadmin = this.db.PdWorkshopTeamAdminRelation.FirstOrDefault(c => c.AdminId == tempadmin.Entity.Id && c.WorkShopId == rs.Id);
                             if (relationadmin == null)
                             {
                                 var relation = this.db.PdWorkshopTeamAdminRelation.Add(
@@ -509,12 +511,14 @@
                                    {
                                        AdminId = tempadmin.Entity.Id,
                                        WorkShopTeamId = workShopTeamId[i],
+                                       WorkShopId = rs.Id
                                    });
                             }
                             else
                             {
                                 relationadmin.AdminId = tempadmin.Entity.Id;
                                 relationadmin.WorkShopTeamId = workShopTeamId[i];
+                                relationadmin.WorkShopId = rs.Id;
                             }
 
                             this.db.SaveChanges();
