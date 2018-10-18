@@ -80,19 +80,7 @@
 
     <div class="rightinfo">
         <form id="form1" class="layui-form" method="post" onsubmit="javascript: return false;">
-            <div class="layui-form-item">
-                @*<label class="layui-form-label" style="font-size:16px;">炉批号</label>*@
-                @if (Model.PdQuality.Id == 0 && Model.List_workShop != null && Model.List_workShop.Count > 0)
-                {
-                    <div class="layui-input-inline" style="width:150px;">
-                        <select id="WorkShopCode" name="WorkShopCode" lay-filter="WorkShopCode">
-                            @foreach (var item in Model.List_workShop)
-                            {
-                                <option value="@item.Code">@item.Name</option>
-                            }
-                        </select>
-                    </div>
-                }
+            <div class="layui-form-item">            
                 @if (Model.PdQuality.Id == 0)
                 {
                     <div class="layui-input-inline">
