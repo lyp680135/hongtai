@@ -3141,7 +3141,7 @@ namespace WpfCardPrinter
 
                     if (this.mWorkshop != null)
                     {
-                        curritem = access.SingleLastById(this.mWorkshop.Id);
+                        curritem = access.SingleLastById(this.mWorkshop.Id, this.ProductLine);
                     }
 
                     //如果是刚打开程序初始读取批号
@@ -3173,6 +3173,8 @@ namespace WpfCardPrinter
                         pdcode.Status = 0;
                         pdcode.Workshopid = mCurrentTeam.WorkshopId;
                         pdcode.Serialno = serialno;
+                        pdcode.Workshopline = this.ProductLine;
+
                         access.Insert(pdcode);
 
                         if (curritem == null)
@@ -3189,7 +3191,7 @@ namespace WpfCardPrinter
                             {
                                 return curritem.Batcode;
                             }
-                            var pdcode = access.SingleNextById(curritem.Serialno, this.mWorkshop.Id);
+                            var pdcode = access.SingleNextById(curritem.Serialno, this.mWorkshop.Id, this.ProductLine);
                             if (pdcode != null && pdcode.Id > 0)
                             {
                                 return pdcode.Batcode;
@@ -3212,7 +3214,8 @@ namespace WpfCardPrinter
                                     Adder = "标牌打印程序",
                                     Status = 0,
                                     Workshopid = mCurrentTeam.WorkshopId,
-                                    Serialno = serialno
+                                    Serialno = serialno,
+                                    Workshopline = this.ProductLine
                                 });
                             }
                         }
@@ -3220,7 +3223,7 @@ namespace WpfCardPrinter
                         else
                         {
 
-                            var pdcode = access.SingleByPrefixCode(curritem.Serialno, this.mWorkshop.Id);
+                            var pdcode = access.SingleByPrefixCode(curritem.Serialno, this.mWorkshop.Id, this.ProductLine);
                             if (pdcode != null)
                             {
                                 return pdcode.Batcode;

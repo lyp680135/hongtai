@@ -76,7 +76,7 @@ namespace WpfCardPrinter.ModelAccess
                 PdBatcode code = access.SingleByBatcode(batcode);
                 if (code != null)
                 {
-                    var pdcode = access.SingleLast(code.Workshopid);
+                    var pdcode = access.SingleLast(code.Workshopid, code.Workshopline);
                     if (pdcode != null)
                     {
                         if (pdcode.Batcode == batcode)

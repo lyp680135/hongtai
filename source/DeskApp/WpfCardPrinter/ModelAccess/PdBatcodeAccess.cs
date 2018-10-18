@@ -35,7 +35,7 @@ namespace WpfCardPrinter.ModelAccess
             long newid = -1;
             try
             {
-                using (MySqlCommand mysqlcom = new MySqlCommand("INSERT INTO pdbatcode (batcode,adder,createtime,status,workshopid,Serialno) VALUES (@batcode,@adder,unix_timestamp(now()),@status,@workshopid,@Serialno)", _connection))
+                using (MySqlCommand mysqlcom = new MySqlCommand("INSERT INTO pdbatcode (batcode,adder,createtime,status,workshopid,Serialno,Workshopline) VALUES (@batcode,@adder,unix_timestamp(now()),@status,@workshopid,@Serialno,@Workshopline)", _connection))
                 {
                     mysqlcom.Parameters.Add("@batcode", MySqlDbType.VarChar);
                     mysqlcom.Parameters["@batcode"].Value = pdcode.Batcode;
@@ -46,6 +46,9 @@ namespace WpfCardPrinter.ModelAccess
                     mysqlcom.Parameters.Add("@workshopid", MySqlDbType.Int32);
                     mysqlcom.Parameters["@workshopid"].Value = pdcode.Workshopid;
                     mysqlcom.Parameters.Add("@Serialno",MySqlDbType.Int32).Value = pdcode.Serialno;
+                    mysqlcom.Parameters.Add("@workshopline", MySqlDbType.VarChar);
+                    mysqlcom.Parameters["@workshopline"].Value = pdcode.Workshopline;
+
                     if (mysqlcom.ExecuteNonQuery() > 0)
                     {
                         newid = mysqlcom.LastInsertedId;
@@ -87,6 +90,8 @@ namespace WpfCardPrinter.ModelAccess
                             pdbatcode.Billetnumber = Convert.IsDBNull(dr["billetnumber"]) ? new int?() : dr.GetInt32("billetnumber");
                             pdbatcode.Workshopid = dr.GetInt32("workshopid");
                             pdbatcode.Serialno = dr.GetInt32("serialno");
+                            pdbatcode.Workshopline = Convert.IsDBNull(dr["workshopline"]) ? null : dr.GetString("workshopline");
+                            
                         }
                     }
                 }
@@ -95,14 +100,17 @@ namespace WpfCardPrinter.ModelAccess
             return pdbatcode;
         }
 
-        public PdBatcode SingleByPrefixCode(int prefixCode,int wid)
+        public PdBatcode SingleByPrefixCode(int prefixCode,int wid, string workshopline)
         {
             PdBatcode pdcode = null;
-            using (MySqlCommand mysqlcom = new MySqlCommand("SELECT * FROM pdbatcode WHERE serialno < @prefix and workshopid=@workshopid ORDER BY serialno DESC LIMIT 1", _connection))
+            using (MySqlCommand mysqlcom = new MySqlCommand("SELECT * FROM pdbatcode WHERE serialno < @prefix and workshopid=@workshopid AND workshopline=@workshopline ORDER BY serialno DESC LIMIT 1", _connection))
             {
                 mysqlcom.Parameters.Add("@prefix", MySqlDbType.Int32);
                 mysqlcom.Parameters["@prefix"].Value = prefixCode;
                 mysqlcom.Parameters.Add("@workshopid", MySqlDbType.Int32).Value = wid;
+                mysqlcom.Parameters.Add("@workshopline", MySqlDbType.VarChar);
+                mysqlcom.Parameters["@workshopline"].Value = workshopline;
+
                 using (MySqlDataReader dr = mysqlcom.ExecuteReader())
                 {
                     if (dr.HasRows)
@@ -119,6 +127,8 @@ namespace WpfCardPrinter.ModelAccess
                             pdcode.Billetpieceweight = Convert.IsDBNull(dr["billetpieceweight"]) ? new double?() : dr.GetDouble("billetpieceweight");
                             pdcode.Billetnumber = Convert.IsDBNull(dr["billetnumber"]) ? new int?() : dr.GetInt32("billetnumber");
                             pdcode.Serialno = int.Parse(dr["Serialno"].ToString());
+                            pdcode.Workshopline = Convert.IsDBNull(dr["workshopline"]) ? null : dr.GetString("workshopline");
+                            
                         }
                     }
                 }
@@ -152,6 +162,8 @@ namespace WpfCardPrinter.ModelAccess
                             pdcode.Billetnumber = Convert.IsDBNull(dr["billetnumber"]) ? new int?() : dr.GetInt32("billetnumber");
                             pdcode.Workshopid = dr.GetInt32("workshopid");
                             pdcode.Serialno = dr.GetInt32("serialno");
+                            pdcode.Workshopline = Convert.IsDBNull(dr["workshopline"]) ? null : dr.GetString("workshopline");
+                            
                         }
                     }
                 }
@@ -160,15 +172,18 @@ namespace WpfCardPrinter.ModelAccess
             return pdcode;
         }
 
-        public PdBatcode  SingleNextById(int Serialno, int workshopid)
+        public PdBatcode SingleNextById(int Serialno, int workshopid, string workshopline)
         {
             PdBatcode pdcode = null;
 
             //判断下一个批号数据库中有没有
-            using (MySqlCommand mysqlcom = new MySqlCommand("SELECT * FROM pdbatcode WHERE Serialno > @Serialno and workshopid=@workshopid  ORDER BY Serialno ASC LIMIT 1", _connection))
+            using (MySqlCommand mysqlcom = new MySqlCommand("SELECT * FROM pdbatcode WHERE Serialno > @Serialno and workshopid=@workshopid AND workshopline=@workshopline ORDER BY Serialno ASC LIMIT 1", _connection))
             {
                 mysqlcom.Parameters.Add("@Serialno", MySqlDbType.Int32).Value = Serialno;
                 mysqlcom.Parameters.Add("@workshopid", MySqlDbType.Int32).Value = workshopid;
+                mysqlcom.Parameters.Add("@workshopline", MySqlDbType.VarChar);
+                mysqlcom.Parameters["@workshopline"].Value = workshopline;
+
                 using (MySqlDataReader dr = mysqlcom.ExecuteReader())
                 {
                     //如果有数据就输出
@@ -187,6 +202,8 @@ namespace WpfCardPrinter.ModelAccess
                             pdcode.Billetpieceweight = Convert.IsDBNull(dr["billetpieceweight"]) ? new double?() : dr.GetDouble("billetpieceweight");
                             pdcode.Billetnumber = Convert.IsDBNull(dr["billetnumber"]) ? new int?() : dr.GetInt32("billetnumber");
                             pdcode.Serialno = int.Parse(dr["Serialno"].ToString());
+                            pdcode.Workshopline = Convert.IsDBNull(dr["workshopline"]) ? null : dr.GetString("workshopline");
+                            
                         }
                     }
                 }
@@ -196,16 +213,18 @@ namespace WpfCardPrinter.ModelAccess
         }
 
 
-        public PdBatcode SingleLast(int shopid)
+        public PdBatcode SingleLast(int shopid, string workshopline)
         {
             PdBatcode pdcode = null;
 
             try
             {
-                using (MySqlCommand command = new MySqlCommand("SELECT * FROM pdbatcode WHERE workshopid=@shopid ORDER BY serialno DESC LIMIT 1", _connection))
+                using (MySqlCommand command = new MySqlCommand("SELECT * FROM pdbatcode WHERE workshopid=@shopid AND workshopline=@workshopline ORDER BY serialno DESC LIMIT 1", _connection))
                 {
                     command.Parameters.Add("@shopid", MySqlDbType.Int32);
                     command.Parameters["@shopid"].Value = shopid;
+                    command.Parameters.Add("@workshopline", MySqlDbType.VarChar);
+                    command.Parameters["@workshopline"].Value = workshopline;
 
                     using (MySqlDataReader dr = command.ExecuteReader())
                     {
@@ -224,6 +243,8 @@ namespace WpfCardPrinter.ModelAccess
                                 pdcode.Billetnumber = Convert.IsDBNull(dr["billetnumber"]) ? new int?() : dr.GetInt32("billetnumber");
                                 pdcode.Workshopid = dr.GetInt32("workshopid");
                                 pdcode.Serialno = dr.GetInt32("serialno");
+                                pdcode.Workshopline = Convert.IsDBNull(dr["workshopline"]) ? null : dr.GetString("workshopline");
+                            
                             }
                         }
                     }
@@ -237,16 +258,18 @@ namespace WpfCardPrinter.ModelAccess
             return pdcode;
         }
 
-        public PdBatcode SingleLastById(int shopid)
+        public PdBatcode SingleLastById(int shopid, string workshopline)
         {
             PdBatcode pdcode = null;
 
             try
             {
-                using (MySqlCommand command = new MySqlCommand("SELECT * FROM pdbatcode WHERE workshopid=@id ORDER BY id DESC LIMIT 1", _connection))
+                using (MySqlCommand command = new MySqlCommand("SELECT * FROM pdbatcode WHERE workshopid=@id AND workshopline=@workshopline ORDER BY id DESC LIMIT 1", _connection))
                 {
-                    command.Parameters.Add("@id", MySqlDbType.VarChar);
+                    command.Parameters.Add("@id", MySqlDbType.Int32);
                     command.Parameters["@id"].Value = shopid;
+                    command.Parameters.Add("@workshopline", MySqlDbType.VarChar);
+                    command.Parameters["@workshopline"].Value = workshopline;
 
                     using (MySqlDataReader dr = command.ExecuteReader())
                     {
@@ -265,6 +288,7 @@ namespace WpfCardPrinter.ModelAccess
                                 pdcode.Billetnumber = Convert.IsDBNull(dr["billetnumber"]) ? new int?() : dr.GetInt32("billetnumber");
                                 pdcode.Workshopid = dr.GetInt32("workshopid");
                                 pdcode.Serialno = dr.GetInt32("serialno");
+                                pdcode.Workshopline = Convert.IsDBNull(dr["workshopline"]) ? null : dr.GetString("workshopline");
                             }
                         }
                     }
@@ -279,17 +303,19 @@ namespace WpfCardPrinter.ModelAccess
         }
 
 
-        public PdBatcode SinglePrevByIdAndShopId(int id, int shopid)
+        public PdBatcode SinglePrevByIdAndShopId(int id, int shopid, string workshopline)
         {
             PdBatcode pdcode = null;
 
             //判断下一个批号数据库中有没有
-            using (MySqlCommand mysqlcom = new MySqlCommand("SELECT * FROM pdbatcode WHERE id<@currid AND workshopid=@shopid ORDER BY serialno DESC LIMIT 1", _connection))
+            using (MySqlCommand mysqlcom = new MySqlCommand("SELECT * FROM pdbatcode WHERE id<@currid AND workshopid=@shopid AND workshopline=@workshopline ORDER BY serialno DESC LIMIT 1", _connection))
             {
                 mysqlcom.Parameters.Add("@currid", MySqlDbType.Int32); ;
                 mysqlcom.Parameters["@currid"].Value = id;
                 mysqlcom.Parameters.Add("@shopid", MySqlDbType.Int32);
                 mysqlcom.Parameters["@shopid"].Value = shopid;
+                mysqlcom.Parameters.Add("@workshopline", MySqlDbType.VarChar);
+                mysqlcom.Parameters["@workshopline"].Value = workshopline;
 
                 using (MySqlDataReader dr = mysqlcom.ExecuteReader())
                 {
@@ -310,6 +336,7 @@ namespace WpfCardPrinter.ModelAccess
                             pdcode.Billetnumber = Convert.IsDBNull(dr["billetnumber"]) ? new int?() : dr.GetInt32("billetnumber");
                             pdcode.Workshopid = dr.GetInt32("workshopid");
                             pdcode.Serialno = dr.GetInt32("serialno");
+                            pdcode.Workshopline = Convert.IsDBNull(dr["workshopline"]) ? null : dr.GetString("workshopline");
                         }
                     }
                 }
@@ -319,7 +346,7 @@ namespace WpfCardPrinter.ModelAccess
         }
 
 
-        public PdBatcode SingleNextByIdAndShopId(int id, int shopid)
+        public PdBatcode SingleNextByIdAndShopId(int id, int shopid, string workshopline)
         {
             PdBatcode pdcode = null;
 
@@ -330,6 +357,8 @@ namespace WpfCardPrinter.ModelAccess
                 mysqlcom.Parameters["@currid"].Value = id;
                 mysqlcom.Parameters.Add("@shopid", MySqlDbType.Int32);
                 mysqlcom.Parameters["@shopid"].Value = shopid;
+                mysqlcom.Parameters.Add("@workshopline", MySqlDbType.VarChar);
+                mysqlcom.Parameters["@workshopline"].Value = workshopline;
 
                 using (MySqlDataReader dr = mysqlcom.ExecuteReader())
                 {
@@ -350,6 +379,7 @@ namespace WpfCardPrinter.ModelAccess
                             pdcode.Billetnumber = Convert.IsDBNull(dr["billetnumber"]) ? new int?() : dr.GetInt32("billetnumber");
                             pdcode.Workshopid = dr.GetInt32("workshopid");
                             pdcode.Serialno = dr.GetInt32("serialno");
+                            pdcode.Workshopline = Convert.IsDBNull(dr["workshopline"]) ? null : dr.GetString("workshopline");
                         }
                     }
                 }

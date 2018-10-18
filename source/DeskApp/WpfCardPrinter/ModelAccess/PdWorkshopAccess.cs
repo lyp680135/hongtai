@@ -149,7 +149,6 @@ namespace WpfCardPrinter.ModelAccess
             }
             catch (Exception e)
             {
-
             }
 
             return list;

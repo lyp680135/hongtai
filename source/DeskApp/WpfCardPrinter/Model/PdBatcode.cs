@@ -35,5 +35,10 @@ namespace DataLibrary
         /// Gets or sets 成材率
         /// </summary>
         public double? Productrate { get; set; }
+
+        /// <summary>
+        /// 生产线
+        /// </summary>
+        public string Workshopline { get; set; }
     }
 }
