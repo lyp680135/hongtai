@@ -3338,7 +3338,7 @@ namespace WpfCardPrinter
         {
 
             //获取配置
-            int offsetX = 0, offsetY = 0, fontsize = 12;
+            int offsetX = 0, offsetY = 0, fontsize = 11;
             int w = 0, h = 0;
             int qrcodeWidth = 0;
 
@@ -3437,7 +3437,7 @@ namespace WpfCardPrinter
                             CultureInfo.GetCultureInfo("zh-CHS"),
                             FlowDirection.LeftToRight,
                             new Typeface("微软雅黑"),
-                            fontsize,
+                            fontsize - 1,
                             Brushes.Black);
                             formattedText.SetFontWeight(FontWeight.FromOpenTypeWeight(900));
 

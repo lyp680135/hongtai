@@ -131,18 +131,18 @@
                     </Canvas.Background>
 
                     <Label Name="lbLabelProductClass" Canvas.Top="0" Canvas.Left="0" Content="" />
-                    <Label Name="lbLabelGBStandard" Canvas.Top="47" Canvas.Left="219" Content="GB/T1499.2 - 2007" Visibility="Visible" FontSize="11px" FontWeight="Bold" VerticalContentAlignment="Center" Width="134"  />
-                    <Label Name="lbLabelMaterial" Canvas.Top="76" Canvas.Left="85" Content="HRB400" FontSize="11px" Visibility="Hidden" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
-                    <Label Name="lbLabelBatcode" Canvas.Top="76" Canvas.Left="173" Content="Z18010001" FontSize="11px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
-                    <Label Name="lbLabelSpec" Canvas.Top="106" Canvas.Left="85" Content="Φ25" FontSize="11px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
-                    <Label Name="lbLabelWeight" Canvas.Top="137" Canvas.Left="85" Content="1284" FontSize="11px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
-                    <Label Name="lbLabelPiececount" Canvas.Top="138" Canvas.Left="185" Content="51" FontSize="11px" FontWeight="Bold" VerticalContentAlignment="Center" Margin="0 0" Width="40px" />
-                    <Label Name="lbLabelTime" Canvas.Top="166" Canvas.Left="85" Content="20180129" FontSize="11px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
+                    <Label Name="lbLabelGBStandard" Canvas.Top="47" Canvas.Left="219" Content="GB/T1499.2 - 2007" Visibility="Visible" FontSize="9px" FontWeight="Bold" VerticalContentAlignment="Center" Width="134"  />
+                    <Label Name="lbLabelMaterial" Canvas.Top="76" Canvas.Left="85" Content="HRB400" FontSize="10px" Visibility="Hidden" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
+                    <Label Name="lbLabelBatcode" Canvas.Top="76" Canvas.Left="173" Content="Z18010001" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
+                    <Label Name="lbLabelSpec" Canvas.Top="106" Canvas.Left="85" Content="Φ25" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
+                    <Label Name="lbLabelWeight" Canvas.Top="137" Canvas.Left="85" Content="1284" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
+                    <Label Name="lbLabelPiececount" Canvas.Top="138" Canvas.Left="185" Content="51" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Margin="0 0" Width="40px" />
+                    <Label Name="lbLabelTime" Canvas.Top="166" Canvas.Left="85" Content="20180129" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
                     <Label Name="lbLabelWorkshift" Canvas.Top="0" Canvas.Left="0" Content="" />
                     <Label Name="lbLabelQAInspectors" Canvas.Top="0" Canvas.Left="0" Content="" />
-                    <Label Name="lbLabelRandomCode" Canvas.Top="76" Canvas.Left="278" Content="123" FontSize="11px" FontWeight="Bold" VerticalContentAlignment="Center" Width="40px" />
-                    <Label Name="lbLabelLength" Content="12" FontSize="11px" FontWeight="Bold" VerticalContentAlignment="Center" Margin="0 0" Width="40px" Canvas.Left="185" Canvas.Top="106" />
-                    <Label Name="lbLabelBundleCode" Content="23" FontSize="11px" FontWeight="Bold" VerticalContentAlignment="Center" Width="40px" Canvas.Left="185" Canvas.Top="165" />
+                    <Label Name="lbLabelRandomCode" Canvas.Top="76" Canvas.Left="278" Content="123" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="40px" />
+                    <Label Name="lbLabelLength" Content="12" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Margin="0 0" Width="40px" Canvas.Left="185" Canvas.Top="106" />
+                    <Label Name="lbLabelBundleCode" Content="23" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="40px" Canvas.Left="185" Canvas.Top="165" />
                     <Image Name="imgLabelQRcode" Canvas.Top="138" Canvas.Left="243" Width="60px" Height="60px"></Image>
                 </Canvas>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 10 0 0">
