@@ -48,24 +48,33 @@ namespace WpfCardPrinter
 
         private void UpdateVersion()
         {
-            var resStr = HttpUtils.GetResponseText(updateVersionUrl, 5000);
-            if (!string.IsNullOrEmpty(resStr))
+            try
             {
-                var version = resStr.Split(',')[0];
-                var file = System.Diagnostics.FileVersionInfo.GetVersionInfo(AppDomain.CurrentDomain.BaseDirectory + "WpfCardPrinter.exe").FileVersion;
-                var oldVerNum = Convert.ToInt16(file.Replace(".", string.Empty));
-                var newVerNum = Convert.ToInt16(version.Replace(".", string.Empty));
-                if (newVerNum > oldVerNum)
+                var resStr = HttpUtils.GetResponseText(updateVersionUrl, 5000);
+                if (!string.IsNullOrEmpty(resStr))
                 {
-                    MessageBoxResult mbr = MessageBox.Show("有新版本程序,是否需要更新?", "操作提醒", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-                    if (mbr == MessageBoxResult.OK)
+                    var version = resStr.Split(',')[0];
+                    var file = System.Diagnostics.FileVersionInfo.GetVersionInfo(AppDomain.CurrentDomain.BaseDirectory + "WpfCardPrinter.exe").FileVersion;
+                    var oldVerNum = Convert.ToInt16(file.Replace(".", string.Empty));
+                    var newVerNum = Convert.ToInt16(version.Replace(".", string.Empty));
+                    if (newVerNum > oldVerNum)
                     {
-                        //CommonUtils.UpdateAppSetting("updateVersion", version);
-                        CommonUtils.start(cmdStr);
-                        Environment.Exit(0);
+                        MessageBoxResult mbr = MessageBox.Show("有新版本程序,是否需要更新?", "操作提醒", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                        if (mbr == MessageBoxResult.OK)
+                        {
+                            //CommonUtils.UpdateAppSetting("updateVersion", version);
+                            CommonUtils.start(cmdStr);
+                            Environment.Exit(0);
+                        }
                     }
                 }
             }
+            catch (Exception)
+            {
+                MessageBox.Show("请检查网络或配置是否正常！\n\n", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
         }
 
         private void InitData()
