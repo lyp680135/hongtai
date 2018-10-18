@@ -3338,7 +3338,7 @@ namespace WpfCardPrinter
         {
 
             //获取配置
-            int offsetX = 0, offsetY = 0, fontsize = 11;
+            int offsetX = 0, offsetY = 0, fontsize = 12;
             int w = 0, h = 0;
             int qrcodeWidth = 0;
 
