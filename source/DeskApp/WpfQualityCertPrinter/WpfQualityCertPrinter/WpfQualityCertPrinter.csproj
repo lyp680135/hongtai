@@ -290,7 +290,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Libs\log4net.dll" />
-    <Content Include="Libs\Newtonsoft.Json.dll" />
     <Content Include="Libs\zxing.dll" />
     <Content Include="log4net.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

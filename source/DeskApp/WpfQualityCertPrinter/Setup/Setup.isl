@@ -340,6 +340,7 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
+		<row><td>Component</td><td>{BC2027AE-32E2-496D-8008-9ADB9CBCFA14}</td><td>INSTALLDIR</td><td>2</td><td/><td>File</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Component2</td><td>{D61B7284-800A-4B57-94F6-BF1D59FDA409}</td><td>INSTALLDIR</td><td>2</td><td/><td>File2</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISX_DEFAULTCOMPONENT</td><td>{238807A5-0BE7-4ABC-B3F8-5A65A47B2A2A}</td><td>LOGS</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISX_DEFAULTCOMPONENT1</td><td>{002850E9-A9E1-475F-B8B8-9A6D20418B6A}</td><td>INSTALLDIR</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -1052,6 +1053,7 @@
 	<table name="CreateFolder">
 		<col key="yes" def="s72">Directory_</col>
 		<col key="yes" def="s72">Component_</col>
+		<row><td>INSTALLDIR</td><td>Component</td></row>
 		<row><td>INSTALLDIR</td><td>Component2</td></row>
 		<row><td>INSTALLDIR</td><td>ISX_DEFAULTCOMPONENT</td></row>
 		<row><td>INSTALLDIR</td><td>ISX_DEFAULTCOMPONENT1</td></row>
@@ -1870,6 +1872,7 @@
 	<table name="FeatureComponents">
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
+		<row><td>AlwaysInstall</td><td>Component</td></row>
 		<row><td>AlwaysInstall</td><td>Component2</td></row>
 		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT</td></row>
 		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT1</td></row>
@@ -1888,6 +1891,7 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
+		<row><td>File</td><td>Component</td><td>WpfQualityCertPrinter.内容文件</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;WpfQualityCertPrinter&gt;|ContentFiles</td><td>3</td><td/></row>
 		<row><td>File2</td><td>Component2</td><td>WpfQualityCertPrinter.主输出</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;WpfQualityCertPrinter&gt;|Built</td><td>3</td><td/></row>
 	</table>
 
@@ -2031,6 +2035,7 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
+		<row><td>Component</td><td/><td/><td>_1E7472B1_5750_4DF9_BCAD_3930ADF010E5_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Component2</td><td/><td/><td>_ED64B078_DC08_420E_BE8F_BD9797A0BB7F_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ISX_DEFAULTCOMPONENT</td><td/><td/><td>_425172E4_CA0D_444E_BCF3_76C5423C10C2_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ISX_DEFAULTCOMPONENT1</td><td/><td/><td>_320F1508_53D4_4647_85BE_C8D0B4596986_FILTER</td><td/><td/><td/><td/></row>
