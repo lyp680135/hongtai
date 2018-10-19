@@ -134,6 +134,25 @@
                             }
                         </select>
                     </div>
+                    if (Model.PdWorkShopLineList != null && Model.PdWorkShopLineList.Any())
+                    {
+                        <div class="layui-input-inline" style="width:100px;">
+                            <select id="WorkShopLine" name="WorkShopLine" lay-filter="WorkShopLine">
+                                @foreach (var item in Model.PdWorkShopLineList)
+                                {
+                                    if (Model.WorkShopLine == item)
+                                    {
+                                        <option value="@item" selected="selected">@item</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+
+                                }
+                            </select>
+                        </div>
+                    }
                 }
                 else if (Model.PdQuality.Id > 0 && Model.List_workShop != null && Model.List_workShop.Count > 0)
                 {
@@ -188,6 +207,14 @@
                 }
             </div>
             @if (Model.PdQuality.Id == 0 && !string.IsNullOrWhiteSpace(Model.BatCode) && Model.List_workShop != null && Model.List_workShop.Count > 0)
+            {
+                <lable class="yllh" style="">冶炼炉号:</lable>
+                <div class="layui-input-inline">
+                    <input type="text" name="SmeltCode" id="SmeltCode" lay-verify="SmeltCode" autocomplete="off" placeholder="请输入冶炼炉号" class="validate[required] layui-input BatCode"/>
+                </div>
+                <button type="button" id="selsmeltcode" class="layui-btn layui-btn-sm layui-btn-normal" onclick="locationHref(); return false;"><i class="layui-icon">&#xe615;</i>选择冶炼炉号</button>
+            }
+            else
             {
                 <lable class="yllh" style="">冶炼炉号:</lable>
                 <div class="layui-input-inline">
@@ -561,10 +588,20 @@
                 language: "zh-CN",
                 minimumResultsForSearch: -1
             });
-
+            $('#WorkShopLine').select2({
+                placeholder: "选择线号",
+                width: "100px",
+                language: "zh-CN",
+                minimumResultsForSearch: -1
+            });
             $('#WorkShopCode').change(function () {
                 var $this = $(this);
                 window.location.href = '/Manage/quality/PhysicsInfo?wid=' + $this.val();
+            });
+            $('#WorkShopLine').change(function () {
+                var wid = $('#WorkShopCode').val();
+                var $this = $(this);
+                window.location.href = '/Manage/quality/PhysicsInfo?wid=' + wid + '&WorkShopLine=' + $this.val();
             });
             //保存数据
             $("#btnSubmit").click(function () {

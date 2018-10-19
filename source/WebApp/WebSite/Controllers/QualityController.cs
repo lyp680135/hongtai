@@ -1029,6 +1029,7 @@
                 pdquatuly.Qualityinfos_Dynamics = keyValues;
             }
 
+            pdquatuly.Sid = pdsmelcodeInfo.Id;
             pdquatuly.CreateFlag = 0;
             pdquatuly.Batcode = batCode;
             pdquatuly.CheckStatus = EnumList.CheckStatus_PdQuality.等待审核;
@@ -1044,9 +1045,16 @@
         /// 编辑物理数据
         /// </summary>
         /// <param name="qId">质量数据id</param>
+        /// <param name="smeltCode">冶炼炉号</param>
         /// <returns>string</returns>
-        public string PhysicsEdit(int qId)
+        public string PhysicsEdit(int qId, string smeltCode)
         {
+            var pdsmelcodeInfo = this.db.PdSmeltCode.FirstOrDefault(f => f.SmeltCode == smeltCode && f.Status == 0);
+            if (pdsmelcodeInfo == null)
+            {
+                return "不存在该冶炼炉号化学数据,请先输入化学数据";
+            }
+
             var pdquatulyInfo = this.db.PdQuality.FirstOrDefault(f => f.Id == qId);
             if (pdquatulyInfo == null)
             {
@@ -1199,6 +1207,8 @@
                 }
 
                 pdquatulyInfo.Qualityinfos_Dynamics = keyValues;
+                pdquatulyInfo.Sid = pdsmelcodeInfo.Id;
+                pdquatulyInfo.Qualityinfos = pdsmelcodeInfo.Chemistry;
                 this.db.SaveChanges();
             }
 

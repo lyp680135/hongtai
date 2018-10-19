@@ -64,5 +64,7 @@
         /// </summary>
         [MaxLength(255)]
         public string CheckMark { get; set; }
+
+        public int? Sid { get; set; }
     }
 }
