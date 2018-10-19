@@ -1,4 +1,4 @@
-namespace WarrantyManage.Pages.Manage.Quality
+﻿namespace WarrantyManage.Pages.Manage.Quality
 {
     using System;
     using System.Collections.Generic;
@@ -53,17 +53,17 @@ namespace WarrantyManage.Pages.Manage.Quality
                 new PdWorkshop
                 {
                     Id = 1,
-                    Name = "1¯"
+                    Name = "1炉"
                 },
                 new PdWorkshop
                 {
                     Id = 2,
-                    Name = "��1¯"
+                    Name = "新1炉"
                 },
                 new PdWorkshop
                 {
                     Id = 3,
-                    Name = "��2¯"
+                    Name = "新2炉"
                 }
             };
             this.PageIndex = pg;
