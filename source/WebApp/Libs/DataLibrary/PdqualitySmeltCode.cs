@@ -27,5 +27,7 @@
         /// Gets or sets 产品质量数据- 化学
         /// </summary>
         public JsonObject<object> Chemistry { get; set; }
+
+        public int? ChemistryshopId { get; set; }
     }
 }

@@ -20,7 +20,7 @@
             this.userService = userService;
         }
 
-        public List<DataLibrary.PdWorkshop> List_workShop { get; set; }
+        public List<DataLibrary.PdWorkshop> List_workShop { get; set; } = new List<PdWorkshop> { };
 
         public List<DataLibrary.BaseQualityStandard> ListQualityStandards { get; set; }
 
@@ -32,10 +32,26 @@
         {
             var userId = this.userService.ApplicationUser.Mng_admin.Id;
             var targetCategory = EnumList.TargetCategory.化学指标;
-            this.List_workShop = this.Db.PdWorkshop.AsEnumerable().Where(c => c.QAInputer.Split(',').Contains(userId.ToString())).ToList();
+            this.List_workShop = new List<PdWorkshop>
+            {
+                new PdWorkshop
+                {
+                    Id = 1,
+                    Name = "1炉"
+                },
+                new PdWorkshop
+                {
+                    Id = 2,
+                    Name = "新1炉"
+                },
+                new PdWorkshop
+                {
+                    Id = 3,
+                    Name = "新2炉"
+                }
+            };
             if (this.List_workShop.Count > 0)
             {
-                var workInfo = this.List_workShop.FirstOrDefault();
                 if (!id.HasValue || id.Value <= 0)
                 {
                     BaseProductMaterial currentInfo = this.Db.BaseProductMaterial.FirstOrDefault();

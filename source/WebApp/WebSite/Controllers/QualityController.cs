@@ -793,7 +793,8 @@
                     Chemistry = keyValuePairs,
                     Createtime = (int)Util.Extensions.GetCurrentUnixTime(),
                     EntryPerson = this.userService.ApplicationUser.Mng_admin.Id,
-                    Status = 0
+                    Status = 0,
+                    ChemistryshopId = this.Request.Form["WorkShopCode"].ToInt()
                 });
 
                 this.db.SaveChanges();

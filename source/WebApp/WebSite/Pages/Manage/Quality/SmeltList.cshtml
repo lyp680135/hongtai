@@ -26,12 +26,27 @@
                         按冶炼炉号查询:
                     </label>
                     <input type="text" style="width:100px" class="date scinput" id="SmeltCode" name="SmeltCode" value="@Model.SmeltCode" />
+                    <div class="layui-input-inline" style="width:150px;">
+                        <select id="chemistryshopId" name="chemistryshopId" lay-filter="chemistryshopId">
+                            @foreach (var item in Model.List_workShop)
+                            {
+                                @if (Model.ChemistryshopId == item.Id)
+                                {
+                                    <option value="@item.Id" selected="selected">@item.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
                     <div style="clear:both"></div>
                 </li>
                 <li>
-                   @if (!string.IsNullOrEmpty(Model.Type))
+                    @if (!string.IsNullOrEmpty(Model.Type))
                     {
-                        <input name="Type" hidden="hidden"  value="Physicsinfo" id="Type" />
+                        <input name="Type" hidden="hidden" value="Physicsinfo" id="Type" />
                         <button id="addBtn" name="sb" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button>
                     }
                     else
@@ -78,12 +93,14 @@
                         {
                             <tr SmeltCode="@item.SmeltCode" SId="@item.Id">
                                 <td>@Util.Extensions.GetDateTimeFromUnixTime(item.Createtime.ToLong()).ToString("yyyy/MM/dd")</td>
-                                <td>@{ 
-                                    var EntryPerson = db.MngAdmin.FirstOrDefault(c => c.Id==item.EntryPerson);
-                                    if (EntryPerson!=null) {
-                                        @Html.Raw(EntryPerson.RealName)
-                                     }
-                                }
+                                <td>
+                                    @{
+                                        var EntryPerson = db.MngAdmin.FirstOrDefault(c => c.Id == item.EntryPerson);
+                                        if (EntryPerson != null)
+                                        {
+                                            @Html.Raw(EntryPerson.RealName)
+                                        }
+                                    }
                                 </td>
                                 <td>@item.SmeltCode</td>
                                 @{
@@ -122,7 +139,7 @@
                                     <td>
                                         @if (item.Status == 0)
                                         {
-                                            <a class="tablelink" href="javascript:void(0)" onclick="zuofei(@item.Id,1)" style="color:green" >作废</a>
+                                            <a class="tablelink" href="javascript:void(0)" onclick="zuofei(@item.Id,1)" style="color:green">作废</a>
                                         }
                                         else
                                         {
@@ -152,6 +169,13 @@ new KeyValuePair<string, string>("pg","{0}")
         })
     </form>
     <script type="text/javascript">
+        layui.use('form', function () {
+            var form = layui.form;
+
+            form.on('select(WorkShopCode)', function (data) {
+                //GetBatCode('', 1, true);
+            });
+        });
         $(function () {
             @{
                 if (!string.IsNullOrEmpty(Model.Type))

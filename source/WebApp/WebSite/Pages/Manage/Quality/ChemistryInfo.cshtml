@@ -80,9 +80,17 @@
 
     <div class="rightinfo">
         <form id="form1" class="layui-form" method="post" onsubmit="javascript: return false;">
-            <div class="layui-form-item">            
+            <div class="layui-form-item">
                 @if (Model.PdQuality.Id == 0)
                 {
+                    <div class="layui-input-inline" style="width:150px;">
+                        <select id="WorkShopCode" name="WorkShopCode" lay-filter="WorkShopCode">
+                            @foreach (var item in Model.List_workShop)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </div>
                     <div class="layui-input-inline">
                         <input type="text" name="YLCode" id="YLCode" lay-verify="YLCode" autocomplete="off" placeholder="请输入冶炼炉号" class="validate[required] layui-input" />
                     </div>
@@ -264,7 +272,7 @@
                 </div>
 
                 <div class="layui-form-item">
-                    <div class="layui-input-block">                       
+                    <div class="layui-input-block">
                         @if (Model.PdQuality.Id == 0)
                         {
                             <button class="layui-btn layui-btn-normal" type="button" id="btnSubmit">保存</button>
@@ -382,22 +390,7 @@
             });
         }
 
-        $(document).ready(function () {
-            @*@if (Model.PdQuality.Id == 0) {
-                    @Html.Raw("GetBatCode('', 1, true);")
-                }*@
-
-            //$("#BatCode").blur(function () {
-            //    CheckBatCode($("#BatCode").val());
-            //    });
-
-
-            //$("#form1").validationEngine({
-            //    validationEventTriggers: "blur",
-            //    inlineValidation: true,
-            //    success: false,
-            //});
-
+        $(document).ready(function () {       
             //保存数据
             $("#btnSubmit").click(function () {
                 $('input').removeClass('bgcolor');

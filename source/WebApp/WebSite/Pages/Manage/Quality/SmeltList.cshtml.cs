@@ -28,6 +28,8 @@ namespace WarrantyManage.Pages.Manage.Quality
             get { return 6; }
         }
 
+        public List<PdWorkshop> List_workShop { get; set; } = new List<PdWorkshop> { };
+
         public List<DataLibrary.PdqualitySmeltCode> ManageModels { get; set; }
 
         public int PageIndex { get; set; }
@@ -42,8 +44,28 @@ namespace WarrantyManage.Pages.Manage.Quality
 
         public new int Page { get; set; }
 
-        public void OnGet(int pg = 1, string smeltCode = "", string type = "")
+        public int ChemistryshopId { get; set; }
+
+        public void OnGet(int chemistryshopId = 0, int pg = 1, string smeltCode = "", string type = "")
         {
+            this.List_workShop = new List<PdWorkshop>
+            {
+                new PdWorkshop
+                {
+                    Id = 1,
+                    Name = "1Â¯"
+                },
+                new PdWorkshop
+                {
+                    Id = 2,
+                    Name = "ÐÂ1Â¯"
+                },
+                new PdWorkshop
+                {
+                    Id = 3,
+                    Name = "ÐÂ2Â¯"
+                }
+            };
             this.PageIndex = pg;
             var predicate = PredicateBuilder.New<PdqualitySmeltCode>(true);
             if (!string.IsNullOrEmpty(type))
@@ -60,6 +82,12 @@ namespace WarrantyManage.Pages.Manage.Quality
             if (!string.IsNullOrEmpty(type))
             {
                 this.Type = type;
+            }
+
+            if (chemistryshopId > 0)
+            {
+                predicate.Extend(w => w.ChemistryshopId == chemistryshopId, PredicateOperator.And);
+                this.ChemistryshopId = chemistryshopId;
             }
 
             int total = 0;
