@@ -210,7 +210,7 @@
             {
                 <lable class="yllh" style="">冶炼炉号:</lable>
                 <div class="layui-input-inline">
-                    <input type="text" name="SmeltCode" id="SmeltCode" lay-verify="SmeltCode" autocomplete="off" placeholder="请输入冶炼炉号" class="validate[required] layui-input BatCode"/>
+                    <input type="text" name="SmeltCode" id="SmeltCode" lay-verify="SmeltCode" autocomplete="off" placeholder="请输入冶炼炉号" class="validate[required] layui-input BatCode" />
                 </div>
                 <button type="button" id="selsmeltcode" class="layui-btn layui-btn-sm layui-btn-normal" onclick="locationHref(); return false;"><i class="layui-icon">&#xe615;</i>选择冶炼炉号</button>
             }
@@ -502,7 +502,7 @@
                         if (json.data != '') {
                             $("#BatCode").val(json.Data);
                             $("#ChangeBatCode button").removeClass("layui-btn-disabled");
-                            window.location.href = '/Manage/quality/PhysicsInfo?batcode=' + $("#BatCode").val() + '&wid=' + $('#WorkShopCode').val();
+                            window.location.href = '/Manage/quality/PhysicsInfo?batcode=' + $("#BatCode").val() + '&wid=' + $('#WorkShopCode').val() + '&workShopLine=' + $('#WorkShopLine').val();
                             layer.msg("炉批号获取完成");
 
                             //CheckBatCode(json.Data);

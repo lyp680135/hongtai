@@ -192,7 +192,7 @@
                                     FirstChar = string.Empty,
                                     GroupManage = (new int[] { (int)GroupManage.出库操作员 }).ToList(),
                                     InJob = true,
-                                    Password = Util.Helpers.Encrypt.Md5By32(rukuTel[i].Substring(rukuTel[i].Length - 6)),
+                                    Password = Util.Helpers.Encrypt.Md5By32(chukuTel[i].Substring(chukuTel[i].Length - 6)),
                                     RealName = chukuName[i],
                                     Sex = true,
                                     UserName = chukuTel[i]
@@ -293,7 +293,7 @@
                                    FirstChar = string.Empty,
                                    GroupManage = (new int[] { (int)GroupManage.质量员 }).ToList(),
                                    InJob = true,
-                                   Password = Util.Helpers.Encrypt.Md5By32(rukuTel[i].Substring(rukuTel[i].Length - 6)),
+                                   Password = Util.Helpers.Encrypt.Md5By32(ruluTel[i].Substring(ruluTel[i].Length - 6)),
                                    RealName = luruName[i],
                                    Sex = true,
                                    UserName = ruluTel[i]
@@ -311,7 +311,7 @@
                                   FirstChar = string.Empty,
                                   GroupManage = (new int[] { quanlityhuaxue != null ? quanlityhuaxue.Id : 0 }).ToList(),
                                   InJob = true,
-                                  Password = Util.Helpers.Encrypt.Md5By32(rukuTel[i].Substring(rukuTel[i].Length - 6)),
+                                  Password = Util.Helpers.Encrypt.Md5By32(ruluTel[i].Substring(ruluTel[i].Length - 6)),
                                   RealName = luruName[i],
                                   Sex = true,
                                   UserName = ruluTel[i]
@@ -331,7 +331,7 @@
                                   FirstChar = string.Empty,
                                   GroupManage = (new int[] { quanlityhuaxue != null ? quanlityhuaxue.Id : 0, (int)GroupManage.质量员 }).ToList(),
                                   InJob = true,
-                                  Password = Util.Helpers.Encrypt.Md5By32(rukuTel[i].Substring(rukuTel[i].Length - 6)),
+                                  Password = Util.Helpers.Encrypt.Md5By32(ruluTel[i].Substring(ruluTel[i].Length - 6)),
                                   RealName = luruName[i],
                                   Sex = true,
                                   UserName = ruluTel[i]
@@ -499,7 +499,7 @@
                                      FirstChar = string.Empty,
                                      GroupManage = (new int[] { (int)GroupManage.入库操作员 }).ToList(),
                                      InJob = true,
-                                     Password = string.Empty,
+                                     Password = Util.Helpers.Encrypt.Md5By32(rukuTel[i].Substring(rukuTel[i].Length - 6)),
                                      RealName = rukuName[i],
                                      Sex = true,
                                      UserName = rukuTel[i]
@@ -573,7 +573,7 @@
                                     FirstChar = string.Empty,
                                     GroupManage = (new int[] { (int)GroupManage.出库操作员 }).ToList(),
                                     InJob = true,
-                                    Password = string.Empty,
+                                    Password = Util.Helpers.Encrypt.Md5By32(chukuTel[i].Substring(chukuTel[i].Length - 6)),
                                     RealName = chukuName[i],
                                     Sex = true,
                                     UserName = chukuTel[i]
@@ -685,7 +685,7 @@
                                        FirstChar = string.Empty,
                                        GroupManage = (new int[] { (int)GroupManage.质量员 }).ToList(),
                                        InJob = true,
-                                       Password = string.Empty,
+                                       Password = Util.Helpers.Encrypt.Md5By32(ruluTel[i].Substring(ruluTel[i].Length - 6)),
                                        RealName = luruName[i],
                                        Sex = true,
                                        UserName = ruluTel[i]
@@ -703,7 +703,7 @@
                                       FirstChar = string.Empty,
                                       GroupManage = (new int[] { quanlityhuaxue != null ? quanlityhuaxue.Id : 0 }).ToList(),
                                       InJob = true,
-                                      Password = string.Empty,
+                                      Password = Util.Helpers.Encrypt.Md5By32(ruluTel[i].Substring(ruluTel[i].Length - 6)),
                                       RealName = luruName[i],
                                       Sex = true,
                                       UserName = ruluTel[i]
@@ -721,7 +721,7 @@
                                       FirstChar = string.Empty,
                                       GroupManage = (new int[] { quanlityhuaxue != null ? quanlityhuaxue.Id : 0, (int)GroupManage.质量员 }).ToList(),
                                       InJob = true,
-                                      Password = string.Empty,
+                                      Password = Util.Helpers.Encrypt.Md5By32(ruluTel[i].Substring(ruluTel[i].Length - 6)),
                                       RealName = luruName[i],
                                       Sex = true,
                                       UserName = ruluTel[i]
@@ -776,7 +776,7 @@
                                     FirstChar = string.Empty,
                                     GroupManage = (new int[] { (int)GroupManage.炉号工 }).ToList(),
                                     InJob = true,
-                                    Password = string.Empty,
+                                    Password = Util.Helpers.Encrypt.Md5By32(luhaoTel[i].Substring(luhaoTel[i].Length - 6)),
                                     RealName = luhaoName[i],
                                     Sex = true,
                                     UserName = luhaoTel[i]
