@@ -535,7 +535,7 @@
                                     if (d.Key.ToUpper() == "V")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out v);
-                                        outinfo["Qualityinfo"][d.Key] = "0"; //v.ToString("0.000");
+                                        outinfo["Qualityinfo"][d.Key] = v.ToString("0.000");
                                     }
 
                                     if (d.Key.ToUpper() == "NB")
