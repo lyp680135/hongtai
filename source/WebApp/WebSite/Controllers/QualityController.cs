@@ -1209,7 +1209,6 @@
 
                 pdquatulyInfo.Qualityinfos_Dynamics = keyValues;
                 pdquatulyInfo.Sid = pdsmelcodeInfo.Id;
-                pdquatulyInfo.Qualityinfos = pdsmelcodeInfo.Chemistry;
                 this.db.SaveChanges();
             }
 
