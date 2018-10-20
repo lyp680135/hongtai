@@ -684,11 +684,13 @@
                                     pos++;
                                 }
 
-                                // 判断是否是抗震，抗震的才显示屈屈比和强屈比
+                                // 判断是否是抗震，抗震的才显示屈屈比和强屈比、伸长率Agt
                                 if (!material.Name.EndsWith("E"))
                                 {
                                     dynamicdata["强屈比"] = string.Empty;
                                     dynamicdata["屈屈比"] = string.Empty;
+
+                                    dynamicdata["伸长率Agt"] = string.Empty;
                                 }
 
                                 // 冷弯、反弯
