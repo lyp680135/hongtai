@@ -81,7 +81,11 @@ namespace WpfCardPrinter
                             //不需要判断同名规格是否存在，直接清空
                             productList.ForEach(o =>
                             {
-                                pdaccess.DeleteProductById(o.Id);
+                                 //将数据备份到删除记录表
+                                if (pdaccess.InsertDeleted(o) > 0)
+                                {
+                                    pdaccess.DeleteProductById(o.Id);
+                                }
                             });
                         }
                     }

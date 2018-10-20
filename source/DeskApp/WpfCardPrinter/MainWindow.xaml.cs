@@ -1035,21 +1035,28 @@ namespace WpfCardPrinter
 
         public void CountTeamProducted()
         {
-            using (PdWorkshopTeamLogAccess access = new PdWorkshopTeamLogAccess())
+            try
             {
-                using (PdBatcodeAccess baccess = new PdBatcodeAccess(access.GetConnection()))
+                using (PdWorkshopTeamLogAccess access = new PdWorkshopTeamLogAccess())
                 {
-                    var batcode = baccess.SingleByBatcode(mCurrentBatCode);
-                    if (batcode == null)
+                    using (PdBatcodeAccess baccess = new PdBatcodeAccess(access.GetConnection()))
                     {
-                        return;
+                        var batcode = baccess.SingleByBatcode(mCurrentBatCode);
+                        if (batcode == null)
+                        {
+                            return;
+                        }
+
+                        double totalweight = 0;
+                        int count = access.CountCurrTeamProducted(mCurrentTeam, batcode.Id, out totalweight);
+
+                        txtTeamCount.Content = string.Format("已产({0})", count);
                     }
-
-                    double totalweight = 0;
-                    int count = access.CountCurrTeamProducted(mCurrentTeam, batcode.Id, out totalweight);
-
-                    txtTeamCount.Content = string.Format("已产({0})", count);
                 }
+            }
+            catch
+            {
+
             }
         }
 

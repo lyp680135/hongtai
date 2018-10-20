@@ -183,6 +183,102 @@ namespace WpfCardPrinter.ModelAccess
             }
         }
 
+        public long InsertDeleted(PdProduct product)
+        {
+            long newid = -1;
+
+            //防止异常数据保存
+            if (product.Classid == null)
+            {
+                MessageBox.Show("产品品名没有设置，不能保存", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
+                return newid;
+            }
+            if (product.Materialid == null)
+            {
+                MessageBox.Show("产品材质没有设置，不能保存", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
+                return newid;
+            }
+            if (product.WorkShift == null)
+            {
+                MessageBox.Show("班组信息异常，不能保存", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
+                return newid;
+            }
+            if (product.Specid == null)
+            {
+                MessageBox.Show("产品规格没有设置，不能保存", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
+                return newid;
+            }
+
+            if (string.IsNullOrEmpty(product.Batcode)
+                || string.IsNullOrEmpty(product.Bundlecode)
+                || product.Classid <= 0
+                || product.Materialid <= 0
+                || product.Specid <= 0
+                || product.WorkShift <= 0)
+            {
+                return newid;
+            }
+
+            string sql = "INSERT INTO pdproductdeleted (batcode,classid,materialid,specid,lengthtype,"
+                        + "length,bundlecode,piececount,meterweight,weight,createtime,adder,workshift,randomcode)"
+                        + " VALUES (@batcode,@classid,@materialid,@specid,"
+                        + "@lengthtype,@length,@bundlecode,@piececount,"
+                        + "@meterweight,@weight,unix_timestamp(now()),@adder,@workshift,@randomcode"
+                        + ")";
+
+            if (product.Createtime > 0)
+            {
+                sql = "INSERT INTO pdproductdeleted (batcode,classid,materialid,specid,lengthtype,"
+                        + "length,bundlecode,piececount,meterweight,weight,createtime,adder,workshift,randomcode)"
+                        + " VALUES (@batcode,@classid,@materialid,@specid,"
+                        + "@lengthtype,@length,@bundlecode,@piececount,"
+                        + "@meterweight,@weight,@createtime,@adder,@workshift,@randomcode"
+                        + ")";
+            }
+
+            using (MySqlCommand mysqlcom = new MySqlCommand(sql, _connection))
+            {
+                mysqlcom.Parameters.Add("@batcode", MySqlDbType.VarChar);
+                mysqlcom.Parameters["@batcode"].Value = product.Batcode;
+                mysqlcom.Parameters.Add("@classid", MySqlDbType.Int32); ;
+                mysqlcom.Parameters["@classid"].Value = product.Classid;
+                mysqlcom.Parameters.Add("@materialid", MySqlDbType.Int32);
+                mysqlcom.Parameters["@materialid"].Value = product.Materialid;
+                mysqlcom.Parameters.Add("@specid", MySqlDbType.Int32);
+                mysqlcom.Parameters["@specid"].Value = product.Specid;
+                mysqlcom.Parameters.Add("@lengthtype", MySqlDbType.Int32);
+                mysqlcom.Parameters["@lengthtype"].Value = product.Lengthtype;
+                mysqlcom.Parameters.Add("@length", MySqlDbType.Double);
+                mysqlcom.Parameters["@length"].Value = product.Length;
+                mysqlcom.Parameters.Add("@bundlecode", MySqlDbType.VarChar);
+                mysqlcom.Parameters["@bundlecode"].Value = product.Bundlecode;
+                mysqlcom.Parameters.Add("@piececount", MySqlDbType.Int32);
+                mysqlcom.Parameters["@piececount"].Value = product.Piececount;
+                mysqlcom.Parameters.Add("@meterweight", MySqlDbType.Double);
+                mysqlcom.Parameters["@meterweight"].Value = product.Meterweight;
+                mysqlcom.Parameters.Add("@weight", MySqlDbType.Double);
+                mysqlcom.Parameters["@weight"].Value = product.Weight;
+                mysqlcom.Parameters.Add("@adder", MySqlDbType.Int32);
+                mysqlcom.Parameters["@adder"].Value = product.Adder;
+                mysqlcom.Parameters.Add("@workshift", MySqlDbType.Int32);
+                mysqlcom.Parameters["@workshift"].Value = product.WorkShift;
+                mysqlcom.Parameters.Add("@randomcode", MySqlDbType.VarChar);
+                mysqlcom.Parameters["@randomcode"].Value = product.Randomcode;
+
+                if (product.Createtime > 0)
+                {
+                    mysqlcom.Parameters.Add("@createtime", MySqlDbType.Int32);
+                    mysqlcom.Parameters["@createtime"].Value = product.Createtime;
+                }
+
+                mysqlcom.ExecuteNonQuery();
+
+                newid = (int)mysqlcom.LastInsertedId;
+            }
+
+            return newid;
+        }
+
         public List<PdProduct> GetListByBatcode(string batcode)
         {
             List<PdProduct> productlist = null;
@@ -501,7 +597,9 @@ namespace WpfCardPrinter.ModelAccess
             using (MySqlCommand sqlcmd = new MySqlCommand(sqlStr, _connection))
             {
                 sqlcmd.Parameters.Add("@Id", MySqlDbType.Int32).Value = Id;
-                sqlcmd.ExecuteNonQuery();
+                int ret = sqlcmd.ExecuteNonQuery();
+
+                return;
             }
         }
     }

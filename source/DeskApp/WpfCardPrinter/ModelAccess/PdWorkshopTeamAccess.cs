@@ -71,20 +71,27 @@ namespace WpfCardPrinter.ModelAccess
                 return false;
             }
 
-            using (PdBatcodeAccess access = new PdBatcodeAccess())
+            try
             {
-                PdBatcode code = access.SingleByBatcode(batcode);
-                if (code != null)
+                using (PdBatcodeAccess access = new PdBatcodeAccess())
                 {
-                    var pdcode = access.SingleLast(code.Workshopid, code.Workshopline);
-                    if (pdcode != null)
+                    PdBatcode code = access.SingleByBatcode(batcode);
+                    if (code != null)
                     {
-                        if (pdcode.Batcode == batcode)
+                        var pdcode = access.SingleLast(code.Workshopid, code.Workshopline);
+                        if (pdcode != null)
                         {
-                            enable = true;
+                            if (pdcode.Batcode == batcode)
+                            {
+                                enable = true;
+                            }
                         }
                     }
                 }
+            }
+            catch
+            {
+
             }
 
             return enable;
