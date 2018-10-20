@@ -78,6 +78,20 @@
                 <ul class="seachform" style="width:100%">
                     <li>
                         <label>
+                            炉批号:
+                        </label>
+                        <input name="BatCode" type="text" class="scinput" value="@Model.BatCode" />
+                        <div style="clear:both"></div>
+                    </li>
+                    <li>
+                        <label>
+                            车牌号:
+                        </label>
+                        <input name="Lpn" type="text" class="scinput" value="@Model.Lpn" />
+                        <div style="clear:both"></div>
+                    </li>
+                    <li>
+                        <label>
                             质保打印编号:
                         </label>
                         <input name="Printno" type="text" class="scinput" value="@Model.Printno" />
@@ -109,6 +123,8 @@
                 <thead>
                     <tr style="background:#f0f5f7">
                         <td>图片预览</td>
+                        <td>炉批号</td>
+                        <td>车牌号</td>
                         <td>质保书打印编号</td>
                         <td>收货单位</td>
                         <td>产品数量</td>
@@ -118,7 +134,7 @@
                 </thead>
                 <tbody>
                     @{
-                        var spList = Model.SalePrintLogList;
+                        var spList = Model.ViewModelLogList;
                         if (spList != null && spList.Count > 0)
                         {
                             foreach (var item in spList)
@@ -128,9 +144,11 @@
                                     <td>
                                         <img src="@string.Format("{0}{1}{2}{3}",Setting.Domain_WebApi,"qualitypics/",imgName,"p.jpg")" />
                                     </td>
+                                    <td>@item.BatCode</td>
+                                    <td>@item.Lpn</td>
                                     <td>@item.Printno</td>
                                     <td>@item.Consignor</td>
-                                    <td>@_db.SalePrintLogDetail.Where(c=>c.PrintId == item.Id).Sum(c=>c.Number)</td>
+                                    <td>@_db.SalePrintLogDetail.Where(c => c.PrintId == item.Id).Sum(c => c.Number)</td>
                                     <td>@Util.Extensions.GetDateTimeFromUnixTime(item.Createtime.ToLong()).ToString("yyyy/MM/dd")</td>
                                     <td>
                                         @if (item.Status.Value == (int)EnumList.SalePrintlogStatus.已撤回)
