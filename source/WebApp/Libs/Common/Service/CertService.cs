@@ -535,37 +535,37 @@
                                     if (d.Key.ToUpper() == "V")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out v);
-                                        outinfo["Qualityinfo"][d.Key] = v.ToString("0.000");
+                                        outinfo["Qualityinfo"][d.Key] = "0"; //v.ToString("0.000");
                                     }
 
                                     if (d.Key.ToUpper() == "NB")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out nb);
-                                        outinfo["Qualityinfo"][d.Key] = nb.ToString("0.000");
+                                        outinfo["Qualityinfo"][d.Key] = "0"; nb.ToString("0.000");
                                     }
 
                                     if (d.Key.ToUpper() == "CU")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out cu);
-                                        outinfo["Qualityinfo"][d.Key] = cu.ToString("0.000");
+                                        outinfo["Qualityinfo"][d.Key] = "0"; cu.ToString("0.000");
                                     }
 
                                     if (d.Key.ToUpper() == "NI")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out ni);
-                                        outinfo["Qualityinfo"][d.Key] = ni.ToString("0.000");
+                                        outinfo["Qualityinfo"][d.Key] = "0"; ni.ToString("0.000");
                                     }
 
                                     if (d.Key.ToUpper() == "MO")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out mo);
-                                        outinfo["Qualityinfo"][d.Key] = mo.ToString("0.000");
+                                        outinfo["Qualityinfo"][d.Key] = "0"; mo.ToString("0.000");
                                     }
 
                                     if (d.Key.ToUpper() == "CR")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out cr);
-                                        outinfo["Qualityinfo"][d.Key] = cr.ToString("0.000");
+                                        outinfo["Qualityinfo"][d.Key] = "0"; cr.ToString("0.000");
                                     }
 
                                     // Ceq 要读手动输入的
@@ -682,6 +682,13 @@
                                     }
 
                                     pos++;
+                                }
+
+                                // 判断是否是抗震，抗震的才显示屈屈比和强屈比
+                                if (!material.Name.EndsWith("E"))
+                                {
+                                    dynamicdata["强屈比"] = string.Empty;
+                                    dynamicdata["屈屈比"] = string.Empty;
                                 }
 
                                 // 冷弯、反弯
