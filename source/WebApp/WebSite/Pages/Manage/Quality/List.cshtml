@@ -144,6 +144,18 @@ CheckStatus_PdQuality.审核不通过
                         <td style="text-indent:0;">
                             <div class="top">
                                 <label><input type="checkbox" name="chkId" value="@qua.Id" />炉批号：<b>@qua.Batcode</b></label>
+                                @{
+                                    var ylCode = this._db.PdSmeltCode.FirstOrDefault(f => f.Id == qua.Sid);
+                                    if (ylCode != null)
+                                    {
+                                        <label>冶炼炉号:<b>@ylCode.SmeltCode</b></label>
+                                    }
+                                    var materialInfo = this._db.BaseProductMaterial.FirstOrDefault(f => f.Id == qua.MaterialId);
+                                    if (materialInfo != null)
+                                    {
+                                        <label>牌号:<b>@materialInfo.Name</b></label>
+                                    }
+                                }
                                 <label>录入人/时间：<b>@GetEntryPersonName(qua.EntryPerson)</b>（@qua.Createtime.ToLong().GetDateTimeFromUnixTime()）</label>
                                 <label>
                                     审核状态：
@@ -165,7 +177,7 @@ CheckStatus_PdQuality.审核不通过
                                     }
                                 </label>
                                 @*等待审核的质量数据才可以编辑*@
-                                @if (qua.CheckStatus == DataLibrary.EnumList.CheckStatus_PdQuality.等待审核 && (groupIds.Contains((int)DataLibrary.EnumList.GroupManage.品质主管)|| groupIds.Contains((int)DataLibrary.EnumList.GroupManage.质量员)))
+                                @if (qua.CheckStatus == DataLibrary.EnumList.CheckStatus_PdQuality.等待审核 && (groupIds.Contains((int)DataLibrary.EnumList.GroupManage.品质主管) || groupIds.Contains((int)DataLibrary.EnumList.GroupManage.质量员)))
                                 {
                                     <label>
                                         <a href="/Manage/Quality/physicsInfo?id=@qua.Id" class="layui-btn layui-btn-sm layui-btn-normal">编辑</a>
