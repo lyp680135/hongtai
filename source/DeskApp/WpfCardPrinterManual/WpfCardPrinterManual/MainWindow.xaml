@@ -1,0 +1,120 @@
+﻿<Window x:Class="WpfCardPrinterManual.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfCardPrinterManual"       
+        mc:Ignorable="d"
+        Title="标牌打印(手动输入版)" Height="450" Width="900" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="58*"/>
+            <RowDefinition Height="230*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="470*"/>
+            <ColumnDefinition Width="430*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Name="mask" Visibility="Hidden" Grid.ColumnSpan="10" Grid.RowSpan="10" Panel.ZIndex="999" Opacity="0.7" Background="#eeeeee">
+
+        </Grid>
+        <Grid Name="loading" Visibility="Hidden" Grid.ColumnSpan="10" Grid.RowSpan="10" Panel.ZIndex="10000" Height="220" Width="420" Background="#ffffff">
+            <local:LoadingControl x:Name="LoadingControl" Width="20" Height="50" VerticalAlignment="Top" Margin="60,45,314,0"/>
+            <ProgressBar Name="progress" HorizontalAlignment="Left" Height="10" Margin="60,138,0,0" VerticalAlignment="Top" Width="305"/>
+            <Label Name="lbTip" Content="正在加载数据，请稍等..." FontSize="18" HorizontalAlignment="Left" Margin="135,54,0,0" VerticalAlignment="Top"/>
+            <Label Name="lbProc" Content="进度信息" HorizontalAlignment="Left" Margin="70,156,0,0" VerticalAlignment="Top"/>
+            <Label Name="lbError" Content="错误信息" HorizontalAlignment="Left" Margin="70,177,0,0" VerticalAlignment="Top" Foreground="Red"/>
+        </Grid>
+        <DockPanel Grid.ColumnSpan="4" Margin="0,0,-0.4,0.4">
+            <DockPanel.Background>
+                <ImageBrush ImageSource="/WpfCardPrinterManual;component/Resources/topbg.png" Stretch="UniformToFill" TileMode="None"  />
+            </DockPanel.Background>
+            <DockPanel Height="56px" DockPanel.Dock="Left">
+                <Label Name="lbTitle" Content="鸿泰钢铁集团有限公司标牌打印" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" />
+            </DockPanel>
+            <StackPanel Orientation="Horizontal" Width="395px" Height="56px" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                <Image Source="/WpfCardPrinterManual;component/Resources/banner_01.png" Width="125px" Height="56px" Margin="5px 0px 0px 0px" />
+                <Image Source="/WpfCardPrinterManual;component/Resources/banner_02.png" Width="125px" Height="56px" Margin="5px 0px 0px 0px" />
+                <Image Source="/WpfCardPrinterManual;component/Resources/banner_03.png" Width="125px" Height="56px" Margin="5px 0px 0px 0px" />
+            </StackPanel>
+        </DockPanel>
+        <DockPanel Grid.Row="1" Grid.Column="0">
+            <StackPanel DockPanel.Dock="Bottom" Margin="0 30px 0 0px">
+                <Canvas Name="panelLabel" Width="370px" Height="230px" MaxWidth="370px" MaxHeight="370px">
+                    <Canvas.Background>
+                        <ImageBrush ImageSource="/WpfCardPrinterManual;component/Resources/zhi.jpg" Stretch="Uniform" TileMode="None"  />
+                    </Canvas.Background>
+
+                    <Label Name="lbLabelProductClass" Canvas.Top="0" Canvas.Left="0" Content="" />
+                    <Label Name="lbLabelGBStandard" Canvas.Top="47" Canvas.Left="219" Content="GB/T1499.2 - 2007" Visibility="Visible" FontSize="9px" FontWeight="Bold" VerticalContentAlignment="Center" Width="134"  />
+                    <Label Name="lbLabelMaterial" Canvas.Top="76" Canvas.Left="85" Content="HRB400" FontSize="10px" Visibility="Hidden" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
+                    <Label Name="lbLabelBatcode" Canvas.Top="76" Canvas.Left="173" Content="Z18010001" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
+                    <Label Name="lbLabelSpec" Canvas.Top="106" Canvas.Left="85" Content="Φ25" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
+                    <Label Name="lbLabelWeight" Canvas.Top="137" Canvas.Left="85" Content="1284" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
+                    <Label Name="lbLabelPiececount" Canvas.Top="138" Canvas.Left="185" Content="51" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Margin="0 0" Width="40px" />
+                    <Label Name="lbLabelTime" Canvas.Top="166" Canvas.Left="85" Content="20180129" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
+                    <Label Name="lbLabelWorkshift" Canvas.Top="0" Canvas.Left="0" Content="" />
+                    <Label Name="lbLabelQAInspectors" Canvas.Top="0" Canvas.Left="0" Content="" />
+                    <Label Name="lbLabelRandomCode" Canvas.Top="76" Canvas.Left="278" Content="123" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="40px" />
+                    <Label Name="lbLabelLength" Content="12" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Margin="0 0" Width="40px" Canvas.Left="185" Canvas.Top="106" />
+                    <Label Name="lbLabelBundleCode" Content="23" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="40px" Canvas.Left="185" Canvas.Top="165" />
+                    <Image Name="imgLabelQRcode" Canvas.Top="138" Canvas.Left="243" Width="60px" Height="60px"></Image>
+                </Canvas>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 10 0 0">
+                    <Label Content="标牌预览" HorizontalAlignment="Center" VerticalContentAlignment="Center" />
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="调整打印位置" Width="20" Height="20" Background="Transparent" Click="Change_config" RenderTransformOrigin="0.415,1.225">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Stretch="Fill" Width="15" Height="15" Source="/WpfCardPrinterManual;component/Resources/setting.png" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </DockPanel>
+        <DockPanel Grid.RowSpan="3"  Grid.Column="1" Margin="0,80,0,0">
+            <StackPanel Margin="0,5,0,5">
+                <DockPanel Margin="0,20,0,0">
+                    <Label Width="70" Content="轧制批号："  Height="30" Foreground="Red"/>
+                    <TextBox Name="txtBatCode" Height="30" Width="130" Foreground="Red" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center"  VerticalContentAlignment="Center"/>
+                    <Label Width="70" Height="30" Content="执行标准："/>
+                    <TextBox Name="txtGBStandard" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
+                </DockPanel>
+                <DockPanel Margin="0,15,0,0">
+                    <Label Width="70" Height="30" Content="      品名：" />
+                    <TextBox Name="txtCbClass" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
+                    <Label Width="70" Height="30" Content="      材质：" />
+                    <TextBox Name="txtMaterial" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
+                </DockPanel>
+                <DockPanel Margin="0,10,0,0">
+                    <Label Width="70" Height="30" Content="      规格：" />
+                    <TextBox Name="cbSpec" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
+                    <Label Width="70" Height="30" Content="      米重：" />
+                    <TextBox Name="txtMeterWeight" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
+                </DockPanel>
+                <DockPanel Margin="0,10,0,0">
+                    <Label Width="70" Height="30" Content="      长度：" />
+                    <TextBox Name="txtLength" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
+                    <Label Width="70" Height="30" Content="      支数：" />
+                    <TextBox Name="txtPiececount" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
+                </DockPanel>
+                <DockPanel Margin="0,10,0,10">
+                    <Label Width="70" Height="30" Content="      捆号：" />
+                    <TextBox Name="txtBundle" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
+                    <Label Width="70" Height="30" Content="      称重：" />
+                    <TextBox Name="txtWeight" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
+                </DockPanel>
+                <DockPanel Margin="0,10,0,10">
+                    <Label Width="70" Height="30" Content="      时间：" />
+                    <DatePicker Name="dpProductionDate" IsEnabled="False" Height="25" Width="120" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
+                </DockPanel>
+                <Separator Height="1px" />
+                <DockPanel Margin="0,10,0,15" HorizontalAlignment="Center">
+                    <Button Content="标牌打印" IsDefault="True" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80" Margin="10,0,10,0" Height="30" />
+                    <Button Content="连续打印..." Name="btnPrints" Background="Beige" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80" Margin="10,0,10,0" Height="30"/>
+                </DockPanel>
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</Window>
