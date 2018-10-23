@@ -89,7 +89,7 @@
                 </DockPanel>
                 <DockPanel Margin="0,10,0,0">
                     <Label Width="70" Height="30" Content="      规格：" />
-                    <TextBox Name="cbSpec" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
+                    <TextBox Name="txtSpec" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
                     <Label Width="70" Height="30" Content="      米重：" />
                     <TextBox Name="txtMeterWeight" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
                 </DockPanel>
@@ -111,7 +111,7 @@
                 </DockPanel>
                 <Separator Height="1px" />
                 <DockPanel Margin="0,10,0,15" HorizontalAlignment="Center">
-                    <Button Content="标牌打印" IsDefault="True" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80" Margin="10,0,10,0" Height="30" />
+                    <Button Content="标牌打印" IsDefault="True" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80" Margin="10,0,10,0" Height="30" Click="Print_Click"/>
                     <Button Content="连续打印..." Name="btnPrints" Background="Beige" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80" Margin="10,0,10,0" Height="30"/>
                 </DockPanel>
             </StackPanel>

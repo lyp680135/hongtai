@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
+using System.Printing;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -14,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WpfCardPrinter.Utils;
 using WpfCardPrinterManual.Model;
+using WpfCardPrinterManual.ModelAccess.SqliteAccess;
 
 namespace WpfCardPrinterManual
 {
@@ -24,6 +28,10 @@ namespace WpfCardPrinterManual
     {
         public string mLabelPageWidth = ConfigurationManager.AppSettings["PageWidth"];
         public string mLabelPageHeight = ConfigurationManager.AppSettings["PageHeight"];
+        public string myQRCodeUrlString = System.Configuration.ConfigurationManager.AppSettings["QRCodeUrlString"];
+        public string mPrintNumber = ConfigurationManager.AppSettings["PrintNumber"];
+        private PrintQueue mDefaultPrinter = null;
+        int batprinted = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -50,7 +58,381 @@ namespace WpfCardPrinterManual
         /// <param name="count">打印队列长度</param>
         public void DoPrint(PdProduct product, int printing, int count, bool shouldreload = false)
         {
+            //获取配置
+            int offsetX = 0, offsetY = 0, fontsize = 12;
+            int w = 0, h = 0;
+            int qrcodeWidth = 0;
 
+            string DefaultPrinter = ConfigurationManager.AppSettings["DefaultPrinter"];
+            string OffsetX = ConfigurationManager.AppSettings["OffsetX"];
+            string OffsetY = ConfigurationManager.AppSettings["OffsetY"];
+            string FontSize = ConfigurationManager.AppSettings["FontSize"];
+            string ProductClassPoint = ConfigurationManager.AppSettings["ProductClassPoint"];
+            string GBStandardPoint = ConfigurationManager.AppSettings["GBStandardPoint"];
+            string MaterialPoint = ConfigurationManager.AppSettings["MaterialPoint"];
+            string BatcodePoint = ConfigurationManager.AppSettings["BatcodePoint"];
+            string RandomcodePoint = ConfigurationManager.AppSettings["RandomcodePoint"];
+            string SpecPoint = ConfigurationManager.AppSettings["SpecPoint"];
+            string LengthPoint = ConfigurationManager.AppSettings["LengthPoint"];
+            string WeightPoint = ConfigurationManager.AppSettings["WeightPoint"];
+            string PiececountPoint = ConfigurationManager.AppSettings["PiececountPoint"];
+            string DatePoint = ConfigurationManager.AppSettings["DatePoint"];
+            string BundlecodePoint = ConfigurationManager.AppSettings["BundlecodePoint"];
+            string WorkshiftPoint = ConfigurationManager.AppSettings["WorkshiftPoint"];
+            string QAInspectorsPoint = ConfigurationManager.AppSettings["QAInspectorsPoint"];
+            string QRCodePoint = ConfigurationManager.AppSettings["QRCodePoint"];
+            string QRCodeWidth = ConfigurationManager.AppSettings["QRCodeWidth"];
+
+            int.TryParse(OffsetX, out offsetX);
+            int.TryParse(OffsetY, out offsetY);
+            int.TryParse(FontSize, out fontsize);
+
+            int.TryParse(mLabelPageWidth, out w);
+            int.TryParse(mLabelPageHeight, out h);
+
+            int.TryParse(QRCodeWidth, out qrcodeWidth);
+            this.Dispatcher.Invoke(new Action(() =>
+            {
+                DrawingVisual vis = new DrawingVisual();
+                using (DrawingContext dc = vis.RenderOpen())
+                {
+                    var url = QRCodeUtils.GetShortUrl(myQRCodeUrlString);
+                    System.Drawing.Bitmap qrcodebmp = QRCodeUtils.Generate(url, 300);
+                    var pen = new Pen(Brushes.Black, 1);
+                    Rect rect = new Rect(0, 0, w, h);
+                    #region 质量标准
+                    if (!string.IsNullOrEmpty(GBStandardPoint))
+                    {
+                        var point = CommonUtils.GetPointFromSetting(GBStandardPoint);
+
+                        FormattedText formattedText = new FormattedText(
+                        product.GBStandard,
+                        CultureInfo.GetCultureInfo("zh-CHS"),
+                        FlowDirection.LeftToRight,
+                        new Typeface("微软雅黑"),
+                        fontsize - 1,
+                        Brushes.Black);
+                        formattedText.SetFontWeight(FontWeight.FromOpenTypeWeight(900));
+
+                        var position = new Point(point.X + offsetX, point.Y + offsetY);
+                        dc.DrawText(formattedText, position);
+                    }
+                    #endregion
+
+                    #region 牌号
+                    if (!string.IsNullOrEmpty(MaterialPoint))
+                    {
+                        var point = CommonUtils.GetPointFromSetting(MaterialPoint);
+
+                        FormattedText formattedText = new FormattedText(
+                        product.MaterialName,
+                        CultureInfo.GetCultureInfo("zh-CHS"),
+                        FlowDirection.LeftToRight,
+                        new Typeface("微软雅黑"),
+                        fontsize,
+                        Brushes.Black);
+                        formattedText.SetFontWeight(FontWeight.FromOpenTypeWeight(900));
+
+                        var position = new Point(point.X + offsetX, point.Y + offsetY);
+                        dc.DrawText(formattedText, position);
+                    }
+                    #endregion
+
+                    #region 轧制批号
+                    if (!string.IsNullOrEmpty(BatcodePoint))
+                    {
+                        var point = CommonUtils.GetPointFromSetting(BatcodePoint);
+
+                        FormattedText formattedText = new FormattedText(
+                        product.Batcode,
+                        CultureInfo.GetCultureInfo("zh-CHS"),
+                        FlowDirection.LeftToRight,
+                        new Typeface("微软雅黑"),
+                        fontsize,
+                        Brushes.Black);
+                        formattedText.SetFontWeight(FontWeight.FromOpenTypeWeight(900));
+
+                        var position = new Point(point.X + offsetX, point.Y + offsetY);
+                        dc.DrawText(formattedText, position);
+                    }
+                    #endregion
+
+                    #region 校验码
+                    if (!string.IsNullOrEmpty(RandomcodePoint))
+                    {
+                        var point = CommonUtils.GetPointFromSetting(RandomcodePoint);
+
+                        FormattedText formattedText = new FormattedText(
+                        product.Randomcode,
+                        CultureInfo.GetCultureInfo("zh-CHS"),
+                        FlowDirection.LeftToRight,
+                        new Typeface("微软雅黑"),
+                        fontsize,
+                        Brushes.Black);
+                        formattedText.SetFontWeight(FontWeight.FromOpenTypeWeight(900));
+
+                        var position = new Point(point.X + offsetX, point.Y + offsetY);
+                        dc.DrawText(formattedText, position);
+                    }
+                    #endregion
+
+                    #region 规格
+                    if (!string.IsNullOrEmpty(SpecPoint))
+                    {
+                        var point = CommonUtils.GetPointFromSetting(SpecPoint);
+
+                        FormattedText formattedText = new FormattedText(
+                        product.SpecName,
+                        CultureInfo.GetCultureInfo("zh-CHS"),
+                        FlowDirection.LeftToRight,
+                        new Typeface("微软雅黑"),
+                        fontsize,
+                        Brushes.Black);
+                        formattedText.SetFontWeight(FontWeight.FromOpenTypeWeight(900));
+
+                        var position = new Point(point.X + offsetX, point.Y + offsetY);
+                        dc.DrawText(formattedText, position);
+                    }
+                    #endregion
+
+                    #region 定尺
+                    if (!string.IsNullOrEmpty(LengthPoint))
+                    {
+                        var point = CommonUtils.GetPointFromSetting(LengthPoint);
+                        string lengthtxt = string.Format("{0}", product.Length);
+                        FormattedText formattedText = new FormattedText(
+                        lengthtxt,
+                        CultureInfo.GetCultureInfo("zh-CHS"),
+                        FlowDirection.LeftToRight,
+                        new Typeface("微软雅黑"),
+                        fontsize,
+                        Brushes.Black);
+                        formattedText.SetFontWeight(FontWeight.FromOpenTypeWeight(900));
+
+                        var position = new Point(point.X + offsetX, point.Y + offsetY);
+                        dc.DrawText(formattedText, position);
+                    }
+                    #endregion
+
+                    #region 重量
+                    if (!string.IsNullOrEmpty(WeightPoint))
+                    {
+                        //TODO：如果只显示理重
+                        var point = CommonUtils.GetPointFromSetting(WeightPoint);
+                        FormattedText formattedText = new FormattedText(
+                        string.Format("{0}", product.Weight),
+                        CultureInfo.GetCultureInfo("zh-CHS"),
+                        FlowDirection.LeftToRight,
+                        new Typeface("微软雅黑"),
+                        fontsize,
+                        Brushes.Black);
+                        formattedText.SetFontWeight(FontWeight.FromOpenTypeWeight(900));
+
+                        var position = new Point(point.X + offsetX, point.Y + offsetY);
+                        dc.DrawText(formattedText, position);
+                    }
+                    #endregion
+
+                    #region 支数
+                    if (!string.IsNullOrEmpty(PiececountPoint))
+                    {
+                        var point = CommonUtils.GetPointFromSetting(PiececountPoint);
+                        string piececounttxt = string.Format("{0}", product.Piececount);
+                        FormattedText formattedText = new FormattedText(
+                        piececounttxt,
+                        CultureInfo.GetCultureInfo("zh-CHS"),
+                        FlowDirection.LeftToRight,
+                        new Typeface("微软雅黑"),
+                        fontsize,
+                        Brushes.Black);
+                        formattedText.SetFontWeight(FontWeight.FromOpenTypeWeight(900));
+
+                        var position = new Point(point.X + offsetX, point.Y + offsetY);
+                        dc.DrawText(formattedText, position);
+                    }
+
+                    #endregion
+
+                    #region 日期
+                    if (!string.IsNullOrEmpty(DatePoint))
+                    {
+                        var point = CommonUtils.GetPointFromSetting(DatePoint);
+
+                        FormattedText formattedText = new FormattedText(
+                        TimeUtils.GetDateTimeFromUnixTime(product.Createtime.Value).ToString("yyyyMMdd"),
+                        CultureInfo.GetCultureInfo("zh-CHS"),
+                        FlowDirection.LeftToRight,
+                        new Typeface("微软雅黑"),
+                        fontsize,
+                        Brushes.Black);
+                        formattedText.SetFontWeight(FontWeight.FromOpenTypeWeight(900));
+
+                        var position = new Point(point.X + offsetX, point.Y + offsetY);
+                        dc.DrawText(formattedText, position);
+                    }
+                    #endregion
+
+                    #region 捆号
+                    if (!string.IsNullOrEmpty(BundlecodePoint))
+                    {
+                        var point = CommonUtils.GetPointFromSetting(BundlecodePoint);
+
+                        FormattedText formattedText = new FormattedText(
+                            product.Bundlecode,
+                            CultureInfo.GetCultureInfo("zh-CHS"),
+                            FlowDirection.LeftToRight,
+                            new Typeface("微软雅黑"),
+                            fontsize,
+                            Brushes.Black);
+                        formattedText.SetFontWeight(FontWeight.FromOpenTypeWeight(900));
+
+                        var position = new Point(point.X + offsetX, point.Y + offsetY);
+                        dc.DrawText(formattedText, position);
+                    }
+                    #endregion
+
+                    #region 二维码
+                    if (!string.IsNullOrEmpty(QRCodePoint))
+                    {
+                        var point = CommonUtils.GetPointFromSetting(QRCodePoint);
+
+                        var bmprect = new Rect(point.X + offsetX, point.Y + offsetY, qrcodeWidth, qrcodeWidth);
+                        dc.DrawImage(ImageUtils.ChangeBitmapToImageSource(qrcodebmp), bmprect);
+                    }
+                    #endregion
+
+                    dc.Close();
+
+                    //保存到本地
+                    RenderTargetBitmap bitmap = new RenderTargetBitmap(
+                    (int)(w * 1.3), (int)(h * 1.3), 96, 96, PixelFormats.Pbgra32);
+                    bitmap.Render(vis);
+
+                    int printcount = 0;
+                    int.TryParse(mPrintNumber, out printcount);
+                    if (printcount <= 0) printcount = 1;
+
+                    PrintDialog dialog = new PrintDialog();
+                    PrintTicket pt = dialog.PrintTicket;
+                    pt.PageOrientation = PageOrientation.Landscape;
+                    pt.CopyCount = printcount;
+
+                    //从本地计算机中获取所有打印机对象(PrintQueue)
+                    var printers = new LocalPrintServer().GetPrintQueues();
+                    //选择一个打印机
+                    var selectedPrinter = printers.FirstOrDefault(p => p.Name.Contains(DefaultPrinter));
+                    if (selectedPrinter == null)
+                    {
+                        if (mDefaultPrinter == null)
+                        {
+                            LogHelper.WriteLog("没有找到默认打印机");
+                        }
+                    }
+                    else
+                    {
+                        dialog.PrintQueue = selectedPrinter;
+                    }
+
+                    PageMediaSize pagesize = new PageMediaSize(PageMediaSizeName.Unknown, h, w);
+                    pt.PageMediaSize = pagesize;
+                    if (mDefaultPrinter == null)
+                    {
+
+                        if (dialog.ShowDialog() == true)
+                        {
+                            dialog.PrintVisual(vis, "标牌打印");
+
+                            mDefaultPrinter = selectedPrinter;
+
+                            Task.Factory.StartNew(() =>
+                            {
+                                Task task = new Task(() =>
+                                {
+                                    if (batprinted == count)
+                                    {
+                                        this.Dispatcher.BeginInvoke(new Action(() =>
+                                        {
+                                            HideLoading();
+                                            batprinted = 0;
+                                        }));
+                                    }
+                                    else
+                                    {
+                                        this.Dispatcher.BeginInvoke(new Action(() =>
+                                        {
+                                            batprinted++;
+
+                                            if (batprinted <= count)
+                                            {
+                                                string formatstr = "正在批量打印第{0}件，共{1}件";
+                                                SetLoadingValue(batprinted / count * 100, "正在批量打印中...", string.Format(formatstr, batprinted + 1, count));
+
+                                                if (batprinted == count)
+                                                {
+                                                    this.Dispatcher.BeginInvoke(new Action(() =>
+                                                    {
+                                                        HideLoading();
+                                                        batprinted = 0;
+
+                                                    }));
+                                                }
+                                            }
+                                        }));
+                                    }
+                                });
+
+                                task.Start();
+                                Task.WaitAll(task);
+                            });
+                        }
+                    }
+                    else
+                    {
+                        dialog.PrintVisual(vis, "标牌打印");
+
+                        Task.Factory.StartNew(() =>
+                        {
+                            Task task = new Task(() =>
+                            {
+                                if (batprinted == count)
+                                {
+                                    this.Dispatcher.BeginInvoke(new Action(() =>
+                                    {
+                                        HideLoading();
+                                        batprinted = 0;
+                                    }));
+                                }
+                                else
+                                {
+                                    this.Dispatcher.BeginInvoke(new Action(() =>
+                                    {
+                                        batprinted++;
+
+                                        if (batprinted <= count)
+                                        {
+                                            string formatstr = "正在批量打印第{0}件，共{1}件";
+                                            SetLoadingValue(batprinted / count * 100, "正在批量打印中...", string.Format(formatstr, batprinted, count));
+
+                                            if (batprinted == count)
+                                            {
+                                                this.Dispatcher.BeginInvoke(new Action(() =>
+                                                {
+                                                    HideLoading();
+                                                    batprinted = 0;
+                                                }));
+                                            }
+                                        }
+                                    }));
+                                }
+                            });
+
+                            task.Start();
+                            Task.WaitAll(task);
+
+                        });
+                    }
+                }
+            }));
         }
         public void InitLabel()
         {
@@ -306,6 +688,57 @@ namespace WpfCardPrinterManual
                 lbTip.Content = tips;
             }
 
+        }
+
+        /// <summary>
+        /// 打印
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Print_Click(object sender, RoutedEventArgs e)
+        {
+            PdProduct pdProduct = new PdProduct();
+            pdProduct.GBStandard = txtGBStandard.Text;
+            pdProduct.Batcode = txtBatCode.Text;
+            pdProduct.ClassName = txtCbClass.Text;
+            pdProduct.MaterialName = txtMaterial.Text;
+            int Piececount;
+            int.TryParse(txtPiececount.Text, out Piececount);
+            pdProduct.Piececount = Piececount;
+            double Weight;
+            double.TryParse(txtWeight.Text, out Weight);
+            pdProduct.Weight = Weight;
+            double MeterWeight;
+            double.TryParse(txtMeterWeight.Text, out MeterWeight);
+            pdProduct.Meterweight = MeterWeight;
+            pdProduct.SpecName = txtSpec.Text;
+            pdProduct.Bundlecode = txtBundle.Text;
+            pdProduct.Randomcode = GenerateRandomCode();
+            double Length;
+            double.TryParse(txtLength.Text, out Length);
+            pdProduct.Length = Length;            
+            pdProduct.Createtime = (int)TimeUtils.GetCurrentUnixTime();
+            using (PdProductAccess pdProductAccess = new PdProductAccess())
+            {
+                pdProductAccess.InsertProduct(pdProduct);
+            }
+            DoPrint(pdProduct, 1, 1);
+        }
+
+        public string GenerateRandomCode()
+        {
+            StringBuilder codebuilder = new StringBuilder();
+
+            long tick = DateTime.Now.Ticks;
+            Random ran = new Random((int)(tick & 0xffffffffL) | (int)(tick >> 32));
+
+            for (int i = 0; i < 3; i++)
+            {
+                int r = ran.Next(0, 10);
+                codebuilder.Append(r);
+            }
+
+            return codebuilder.ToString();
         }
     }
 }

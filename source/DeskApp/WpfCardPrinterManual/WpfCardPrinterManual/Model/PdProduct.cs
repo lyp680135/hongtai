@@ -18,7 +18,7 @@ namespace WpfCardPrinterManual.Model
         public double? Meterweight { get; set; }
         public double? Weight { get; set; }
         public int? Createtime { get; set; }             
-        public string Randomcode { get; set; }              
-        public int BundlecodeValue { get; set; }
+        public string Randomcode { get; set; }
+        public string GBStandard { get; set; }
     }
 }
