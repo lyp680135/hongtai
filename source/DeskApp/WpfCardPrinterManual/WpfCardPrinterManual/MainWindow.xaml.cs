@@ -697,6 +697,11 @@ namespace WpfCardPrinterManual
         /// <param name="e"></param>
         private void Print_Click(object sender, RoutedEventArgs e)
         {
+            Print();
+        }
+
+        public void Print()
+        {
             PdProduct pdProduct = new PdProduct();
             pdProduct.GBStandard = txtGBStandard.Text;
             pdProduct.Batcode = txtBatCode.Text;
@@ -712,11 +717,12 @@ namespace WpfCardPrinterManual
             double.TryParse(txtMeterWeight.Text, out MeterWeight);
             pdProduct.Meterweight = MeterWeight;
             pdProduct.SpecName = txtSpec.Text;
-            pdProduct.Bundlecode = txtBundle.Text;
+            int Bundlecode = Convert.ToInt16(txtBundle.Text);
+            pdProduct.Bundlecode = Bundlecode <= 9 ? Bundlecode.ToString("D2") : Bundlecode.ToString();
             pdProduct.Randomcode = GenerateRandomCode();
             double Length;
             double.TryParse(txtLength.Text, out Length);
-            pdProduct.Length = Length;            
+            pdProduct.Length = Length;
             pdProduct.Createtime = (int)TimeUtils.GetCurrentUnixTime();
             using (PdProductAccess pdProductAccess = new PdProductAccess())
             {
@@ -724,7 +730,6 @@ namespace WpfCardPrinterManual
             }
             DoPrint(pdProduct, 1, 1);
         }
-
         public string GenerateRandomCode()
         {
             StringBuilder codebuilder = new StringBuilder();
