@@ -123,8 +123,6 @@
                 <thead>
                     <tr style="background:#f0f5f7">
                         <td>图片预览</td>
-                        <td>炉批号</td>
-                        <td>车牌号</td>
                         <td>质保书打印编号</td>
                         <td>收货单位</td>
                         <td>产品数量</td>
@@ -134,7 +132,7 @@
                 </thead>
                 <tbody>
                     @{
-                        var spList = Model.ViewModelLogList;
+                        var spList = Model.SalePrintLogList;
                         if (spList != null && spList.Count > 0)
                         {
                             foreach (var item in spList)
@@ -142,10 +140,8 @@
                                 var imgName = string.Format("{0}{1}", item.Id.ToString(), item.Checkcode.ToString());
                                 <tr>
                                     <td>
-                                        <img src="@string.Format("{0}{1}{2}{3}",Setting.Domain_WebApi,"qualitypics/",imgName,"p.jpg")" />
+                                        <img src="@string.Format("{0}{1}{2}{3}",Setting.Domain_WebApi,"qualitypics/generate/",imgName,"p.jpg")" />
                                     </td>
-                                    <td>@item.BatCode</td>
-                                    <td>@item.Lpn</td>
                                     <td>@item.Printno</td>
                                     <td>@item.Consignor</td>
                                     <td>@_db.SalePrintLogDetail.Where(c => c.PrintId == item.Id).Sum(c => c.Number)</td>
@@ -166,7 +162,7 @@
                         }
                     }
                 </tbody>
-            </table>
+            </table>          
             @await Component.InvokeAsync("PageList", new
             {
                 PageSize = Model.PageSize,
