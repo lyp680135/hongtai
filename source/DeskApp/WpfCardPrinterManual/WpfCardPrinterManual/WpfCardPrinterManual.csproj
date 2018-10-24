@@ -84,6 +84,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BatPrintConfirmWindow.xaml.cs">
+      <DependentUpon>BatPrintConfirmWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ModelAccess\SqliteAccess\BaseSqliteAccess.cs" />
     <Compile Include="ModelAccess\SqliteAccess\PdProductAccess.cs" />
     <Compile Include="Model\PdProduct.cs" />
@@ -101,6 +104,10 @@
     <Compile Include="Utils\MD5Util.cs" />
     <Compile Include="Utils\QRCodeUtils.cs" />
     <Compile Include="Utils\TimeUtils.cs" />
+    <Page Include="BatPrintConfirmWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

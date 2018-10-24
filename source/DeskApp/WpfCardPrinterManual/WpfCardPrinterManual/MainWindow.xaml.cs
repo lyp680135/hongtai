@@ -699,8 +699,11 @@ namespace WpfCardPrinterManual
         {
             Print();
         }
-
-        public void Print()
+        /// <summary>
+        /// 获取产品对象
+        /// </summary>
+        /// <returns></returns>
+        public PdProduct GetPdProduct()
         {
             PdProduct pdProduct = new PdProduct();
             pdProduct.GBStandard = txtGBStandard.Text;
@@ -717,18 +720,25 @@ namespace WpfCardPrinterManual
             double.TryParse(txtMeterWeight.Text, out MeterWeight);
             pdProduct.Meterweight = MeterWeight;
             pdProduct.SpecName = txtSpec.Text;
-            int Bundlecode = Convert.ToInt16(txtBundle.Text);
+            int Bundlecode;
+            int.TryParse(txtBundle.Text, out Bundlecode);
             pdProduct.Bundlecode = Bundlecode <= 9 ? Bundlecode.ToString("D2") : Bundlecode.ToString();
             pdProduct.Randomcode = GenerateRandomCode();
             double Length;
             double.TryParse(txtLength.Text, out Length);
             pdProduct.Length = Length;
             pdProduct.Createtime = (int)TimeUtils.GetCurrentUnixTime();
+            return pdProduct;
+        }
+
+        public void Print()
+        {
+
             using (PdProductAccess pdProductAccess = new PdProductAccess())
             {
-                pdProductAccess.InsertProduct(pdProduct);
+                pdProductAccess.InsertProduct(GetPdProduct());
             }
-            DoPrint(pdProduct, 1, 1);
+            DoPrint(GetPdProduct(), 1, 1);
         }
         public string GenerateRandomCode()
         {
@@ -744,6 +754,73 @@ namespace WpfCardPrinterManual
             }
 
             return codebuilder.ToString();
+        }
+
+        private void btnPrints_Click(object sender, RoutedEventArgs e)
+        {
+            //弹出批量打印确认表单窗口，确认打印产品捆数
+            BatPrintConfirmWindow window = new BatPrintConfirmWindow(GetPdProduct());
+            window.Title = "开始批量打印";
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.Owner = this;
+            window.doPrintHandler += btnReprintList;
+            window.ShowDialog();
+        }
+
+        /// <summary>
+        /// 批量打印
+        /// </summary>
+        /// <param name="productList"></param>
+        public void btnReprintList(List<PdProduct> productList)
+        {
+            //统计打印进度
+            ShowLoading();
+
+            string DefaultPrinter = ConfigurationManager.AppSettings["DefaultPrinter"];
+            var printers = new LocalPrintServer().GetPrintQueues();
+
+            //如果没有设置打印机，应该先弹出打印机选择界面
+            if (mDefaultPrinter == null)
+            {
+                //选择一个打印机
+                var selectedPrinter = printers.FirstOrDefault(p => p.Name.Contains(DefaultPrinter));
+                if (selectedPrinter == null)
+                {
+                    MessageBox.Show("在批量打印前请先设置好打印机！", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                    PrintDialog dialog = new PrintDialog();
+                    if (dialog.ShowDialog() == true)
+                    {
+                        mDefaultPrinter = dialog.PrintQueue;
+                    }
+                }
+                else
+                {
+                    mDefaultPrinter = selectedPrinter;
+                }
+            }
+            int len = productList.Count;
+            int printing = 1;
+            batprinted = 0;
+            string formatstr = "正在批量打印第{0}件，共{1}件";
+
+            this.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                SetLoadingValue(printing / len * 100, "正在批量打印中...", string.Format(formatstr, printing, len));
+                progress.IsIndeterminate = true;
+            }));
+            Task.Factory.StartNew(() =>
+            {
+                using (PdProductAccess pdProductAccess = new PdProductAccess())
+                {
+                    foreach (var item in productList)
+                    {
+                        pdProductAccess.InsertProduct(item);
+                        DoPrint(item, printing, len);
+                    }
+                }
+            });
+
         }
     }
 }
