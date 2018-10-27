@@ -35,6 +35,11 @@ namespace WpfCardPrinterManual
         public MainWindow()
         {
             InitializeComponent();
+
+            //默认打牌时间为当前时间
+            dpProductionDate.Text = DateTime.Now.ToShortDateString();
+
+            InitLabel();
         }
         /// <summary>
         /// 更改配置
@@ -354,6 +359,14 @@ namespace WpfCardPrinterManual
                                         {
                                             HideLoading();
                                             batprinted = 0;
+
+                                            //将捆号重置
+                                            int startbundle = 0;
+                                            int.TryParse(product.Bundlecode, out startbundle);
+
+                                            startbundle++;
+
+                                            txtBundle.Text = startbundle.ToString("00");
                                         }));
                                     }
                                     else
@@ -374,6 +387,13 @@ namespace WpfCardPrinterManual
                                                         HideLoading();
                                                         batprinted = 0;
 
+                                                        //将捆号重置
+                                                        int startbundle = 0;
+                                                        int.TryParse(product.Bundlecode, out startbundle);
+
+                                                        startbundle++;
+
+                                                        txtBundle.Text = startbundle.ToString("00");
                                                     }));
                                                 }
                                             }
@@ -400,6 +420,14 @@ namespace WpfCardPrinterManual
                                     {
                                         HideLoading();
                                         batprinted = 0;
+
+                                        //将捆号重置
+                                        int startbundle = 0;
+                                        int.TryParse(product.Bundlecode, out startbundle);
+
+                                        startbundle++;
+
+                                        txtBundle.Text = startbundle.ToString("00");
                                     }));
                                 }
                                 else
@@ -419,6 +447,14 @@ namespace WpfCardPrinterManual
                                                 {
                                                     HideLoading();
                                                     batprinted = 0;
+
+                                                    //将捆号重置
+                                                    int startbundle = 0;
+                                                    int.TryParse(product.Bundlecode, out startbundle);
+
+                                                    startbundle++;
+
+                                                    txtBundle.Text = startbundle.ToString("00");
                                                 }));
                                             }
                                         }
@@ -434,6 +470,7 @@ namespace WpfCardPrinterManual
                 }
             }));
         }
+
         public void InitLabel()
         {
             if (!string.IsNullOrEmpty(mLabelPageWidth) && !string.IsNullOrEmpty(mLabelPageHeight))
@@ -511,6 +548,10 @@ namespace WpfCardPrinterManual
                     var point = CommonUtils.GetPointFromSetting(ProductClassPoint);
                     Canvas.SetTop(lbLabelProductClass, (point.Y + offsetY) * scale);
                     Canvas.SetLeft(lbLabelProductClass, (point.X + offsetX) * scale);
+                }
+                else
+                {
+                    lbLabelProductClass.Visibility = System.Windows.Visibility.Hidden;
                 }
 
                 //是否显示国家生产标准
@@ -631,6 +672,11 @@ namespace WpfCardPrinterManual
                     var point = CommonUtils.GetPointFromSetting(QRCodePoint);
                     Canvas.SetTop(imgLabelQRcode, (point.Y + offsetY) * scale);
                     Canvas.SetLeft(imgLabelQRcode, (point.X + offsetX) * scale);
+
+                    var url = QRCodeUtils.GetShortUrl(myQRCodeUrlString);
+                    System.Drawing.Bitmap qrcodebmp = QRCodeUtils.Generate(url, 300);
+
+                    imgLabelQRcode.Source = ImageUtils.ChangeBitmapToImageSource(qrcodebmp);
                 }
             }
             else
@@ -727,7 +773,7 @@ namespace WpfCardPrinterManual
             double Length;
             double.TryParse(txtLength.Text, out Length);
             pdProduct.Length = Length;
-            pdProduct.Createtime = (int)TimeUtils.GetCurrentUnixTime();
+            pdProduct.Createtime = (int)((dpProductionDate.SelectedDate != null) ? ((dpProductionDate.SelectedDate.Value.ToUniversalTime().Ticks - 621355968000000000) / 10000000) : 0);
             return pdProduct;
         }
 
@@ -740,6 +786,7 @@ namespace WpfCardPrinterManual
             }
             DoPrint(GetPdProduct(), 1, 1);
         }
+
         public string GenerateRandomCode()
         {
             StringBuilder codebuilder = new StringBuilder();
@@ -821,6 +868,26 @@ namespace WpfCardPrinterManual
                 }
             });
 
+        }
+
+        private void PreviewLabel(object sender, TextChangedEventArgs e)
+        {
+            if (txtGBStandard != null && txtMaterial != null && txtBatCode != null &&
+                txtCbClass != null && txtLength != null && txtWeight != null &&
+                txtPiececount != null && txtSpec != null && dpProductionDate != null && txtBundle != null)
+            {
+                //预览标牌
+                lbLabelGBStandard.Content = txtGBStandard.Text;
+                lbLabelMaterial.Content = txtMaterial.Text;
+                lbLabelBatcode.Content = txtBatCode.Text;
+                lbLabelProductClass.Content = txtCbClass.Text;
+                lbLabelLength.Content = txtLength.Text;
+                lbLabelWeight.Content = txtWeight.Text;
+                lbLabelPiececount.Content = txtPiececount.Text;
+                lbLabelSpec.Content = txtSpec.Text;
+                lbLabelTime.Content = dpProductionDate.Text;
+                lbLabelBundleCode.Content = txtBundle.Text;
+            }
         }
     }
 }

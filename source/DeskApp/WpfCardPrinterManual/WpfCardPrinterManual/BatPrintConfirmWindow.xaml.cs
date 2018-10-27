@@ -35,8 +35,6 @@ namespace WpfCardPrinterManual
 
         public void InitLable(PdProduct pdProduct)
         {
-            txtBatCode.Text = pdProduct.Batcode;
-            txtMaterial.Text = pdProduct.MaterialName;
             txtBundle.Text = pdProduct.Bundlecode;
             txtPrintNum.Text = "1";
         }

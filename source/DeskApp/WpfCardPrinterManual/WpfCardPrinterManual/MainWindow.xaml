@@ -8,13 +8,13 @@
         Title="标牌打印(手动输入版)" Height="450" Width="900" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="58*"/>
+            <RowDefinition Height="58"/>
             <RowDefinition Height="230*"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="470*"/>
-            <ColumnDefinition Width="430*"/>
+            <ColumnDefinition Width="450*"/>
         </Grid.ColumnDefinitions>
         <Grid Name="mask" Visibility="Hidden" Grid.ColumnSpan="10" Grid.RowSpan="10" Panel.ZIndex="999" Opacity="0.7" Background="#eeeeee">
 
@@ -49,16 +49,16 @@
                     <Label Name="lbLabelProductClass" Canvas.Top="0" Canvas.Left="0" Content="" />
                     <Label Name="lbLabelGBStandard" Canvas.Top="47" Canvas.Left="219" Content="GB/T1499.2 - 2007" Visibility="Visible" FontSize="9px" FontWeight="Bold" VerticalContentAlignment="Center" Width="134"  />
                     <Label Name="lbLabelMaterial" Canvas.Top="76" Canvas.Left="85" Content="HRB400" FontSize="10px" Visibility="Hidden" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
-                    <Label Name="lbLabelBatcode" Canvas.Top="76" Canvas.Left="173" Content="Z18010001" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
+                    <Label Name="lbLabelBatcode" Canvas.Top="76" Canvas.Left="173" Content="" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="80px" />
                     <Label Name="lbLabelSpec" Canvas.Top="106" Canvas.Left="85" Content="Φ25" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
                     <Label Name="lbLabelWeight" Canvas.Top="137" Canvas.Left="85" Content="1284" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
-                    <Label Name="lbLabelPiececount" Canvas.Top="138" Canvas.Left="185" Content="51" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Margin="0 0" Width="40px" />
+                    <Label Name="lbLabelPiececount" Canvas.Top="138" Canvas.Left="185" Content="56" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Margin="0 0" Width="40px" />
                     <Label Name="lbLabelTime" Canvas.Top="166" Canvas.Left="85" Content="20180129" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="100px" />
                     <Label Name="lbLabelWorkshift" Canvas.Top="0" Canvas.Left="0" Content="" />
                     <Label Name="lbLabelQAInspectors" Canvas.Top="0" Canvas.Left="0" Content="" />
                     <Label Name="lbLabelRandomCode" Canvas.Top="76" Canvas.Left="278" Content="123" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="40px" />
-                    <Label Name="lbLabelLength" Content="12" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Margin="0 0" Width="40px" Canvas.Left="185" Canvas.Top="106" />
-                    <Label Name="lbLabelBundleCode" Content="23" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="40px" Canvas.Left="185" Canvas.Top="165" />
+                    <Label Name="lbLabelLength" Content="9" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Margin="0 0" Width="40px" Canvas.Left="185" Canvas.Top="106" />
+                    <Label Name="lbLabelBundleCode" Content="01" FontSize="10px" FontWeight="Bold" VerticalContentAlignment="Center" Width="40px" Canvas.Left="185" Canvas.Top="165" />
                     <Image Name="imgLabelQRcode" Canvas.Top="138" Canvas.Left="243" Width="60px" Height="60px"></Image>
                 </Canvas>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 10 0 0">
@@ -73,46 +73,46 @@
                 </StackPanel>
             </StackPanel>
         </DockPanel>
-        <DockPanel Grid.RowSpan="3"  Grid.Column="1" Margin="0,80,0,0">
+        <DockPanel Grid.RowSpan="3"  Grid.Column="1" Margin="0,70,0,0">
             <StackPanel Margin="0,5,0,5">
                 <DockPanel Margin="0,20,0,0">
-                    <Label Width="70" Content="轧制批号："  Height="30" Foreground="Red"/>
-                    <TextBox Name="txtBatCode" Height="30" Width="130" Foreground="Red" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center"  VerticalContentAlignment="Center"/>
-                    <Label Width="70" Height="30" Content="执行标准："/>
-                    <TextBox Name="txtGBStandard" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
+                    <Label Width="70" Content="轧制批号：" FontSize="14" Height="30" Foreground="Red"/>
+                    <TextBox Name="txtBatCode" Text="18Y00001A" FontSize="14" Height="30" Width="140" Foreground="Red" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center"  VerticalContentAlignment="Center" TextChanged="PreviewLabel"/>
+                    <Label Width="70" Height="30" Content="执行标准：" FontSize="14"/>
+                    <TextBox Name="txtGBStandard" Text="GB/T1499.2 - 2018" FontSize="14" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Width="140" Height="30" VerticalContentAlignment="Center" TextChanged="PreviewLabel"/>
                 </DockPanel>
                 <DockPanel Margin="0,15,0,0">
-                    <Label Width="70" Height="30" Content="      品名：" />
-                    <TextBox Name="txtCbClass" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
-                    <Label Width="70" Height="30" Content="      材质：" />
-                    <TextBox Name="txtMaterial" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
+                    <Label Width="70" Height="30" FontSize="14" Content="      品名：" />
+                    <TextBox Name="txtCbClass" FontSize="14" Text="热轧带肋钢筋" HorizontalAlignment="Left" VerticalAlignment="Center" Width="140" Height="30" VerticalContentAlignment="Center" TextChanged="PreviewLabel"/>
+                    <Label Width="70" Height="30" FontSize="14" Content="      材质：" />
+                    <TextBox Name="txtMaterial" FontSize="14" Text="HRB400" HorizontalAlignment="Left" VerticalAlignment="Center" Width="140" Height="30" VerticalContentAlignment="Center" TextChanged="PreviewLabel"/>
                 </DockPanel>
                 <DockPanel Margin="0,10,0,0">
-                    <Label Width="70" Height="30" Content="      规格：" />
-                    <TextBox Name="txtSpec" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
-                    <Label Width="70" Height="30" Content="      米重：" />
-                    <TextBox Name="txtMeterWeight" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
+                    <Label Width="70" Height="30" FontSize="14" Content="      规格：" />
+                    <TextBox Name="txtSpec" Text="Φ25" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Width="140" Height="30" VerticalContentAlignment="Center" TextChanged="PreviewLabel"/>
+                    <Label Width="70" Height="30" FontSize="14" Content="      米重：" />
+                    <TextBox Name="txtMeterWeight" Text="0" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Width="140" Height="30" VerticalContentAlignment="Center" TextChanged="PreviewLabel"/>
                 </DockPanel>
                 <DockPanel Margin="0,10,0,0">
-                    <Label Width="70" Height="30" Content="      长度：" />
-                    <TextBox Name="txtLength" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
-                    <Label Width="70" Height="30" Content="      支数：" />
-                    <TextBox Name="txtPiececount" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
+                    <Label Width="70" Height="30" FontSize="14" Content="      长度：" />
+                    <TextBox Name="txtLength" Text="9" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Width="140" Height="30" VerticalContentAlignment="Center" TextChanged="PreviewLabel"/>
+                    <Label Width="70" Height="30" FontSize="14" Content="      支数：" />
+                    <TextBox Name="txtPiececount" FontSize="14" Text="56" HorizontalAlignment="Left" VerticalAlignment="Center" Width="140" Height="30" VerticalContentAlignment="Center" TextChanged="PreviewLabel"/>
                 </DockPanel>
                 <DockPanel Margin="0,10,0,10">
-                    <Label Width="70" Height="30" Content="      捆号：" />
-                    <TextBox Name="txtBundle" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
-                    <Label Width="70" Height="30" Content="      称重：" />
-                    <TextBox Name="txtWeight" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Height="30" VerticalContentAlignment="Center"/>
+                    <Label Width="70" Height="30" FontSize="14" Content="      捆号：" />
+                    <TextBox Name="txtBundle" Text="01" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Width="140" Height="30" VerticalContentAlignment="Center" TextChanged="PreviewLabel"/>
+                    <Label Width="70" Height="30" FontSize="14" Content="      称重：" />
+                    <TextBox Name="txtWeight" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Width="140" Height="30" VerticalContentAlignment="Center" TextChanged="PreviewLabel"/>
                 </DockPanel>
                 <DockPanel Margin="0,10,0,10">
-                    <Label Width="70" Height="30" Content="      时间：" />
-                    <DatePicker Name="dpProductionDate" IsEnabled="False" Height="25" Width="120" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
+                    <Label Width="70" Height="30" FontSize="14" Content="      时间：" />
+                    <DatePicker Name="dpProductionDate" FontSize="14" Height="25" Width="140" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
                 </DockPanel>
                 <Separator Height="1px" />
                 <DockPanel Margin="0,10,0,15" HorizontalAlignment="Center">
-                    <Button Content="标牌打印" IsDefault="True" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80" Margin="10,0,10,0" Height="30" Click="Print_Click"/>
-                    <Button Content="连续打印..." Name="btnPrints" Background="Beige" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80" Margin="10,0,10,0" Height="30" Click="btnPrints_Click"/>
+                    <Button Content="标牌打印" FontSize="14" IsDefault="True" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80" Margin="10,0,10,0" Height="30" Click="Print_Click"/>
+                    <Button Content="连续打印..." FontSize="14" Name="btnPrints" Background="Beige" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80" Margin="10,0,10,0" Height="30" Click="btnPrints_Click"/>
                 </DockPanel>
             </StackPanel>
         </DockPanel>
