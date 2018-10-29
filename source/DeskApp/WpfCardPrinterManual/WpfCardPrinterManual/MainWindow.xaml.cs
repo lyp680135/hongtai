@@ -40,6 +40,8 @@ namespace WpfCardPrinterManual
             dpProductionDate.Text = DateTime.Now.ToShortDateString();
 
             InitLabel();
+
+            ReadSetting();
         }
         /// <summary>
         /// 更改配置
@@ -367,6 +369,8 @@ namespace WpfCardPrinterManual
                                             startbundle++;
 
                                             txtBundle.Text = startbundle.ToString("00");
+
+                                            UpdateSetting();
                                         }));
                                     }
                                     else
@@ -394,6 +398,8 @@ namespace WpfCardPrinterManual
                                                         startbundle++;
 
                                                         txtBundle.Text = startbundle.ToString("00");
+
+                                                        UpdateSetting();
                                                     }));
                                                 }
                                             }
@@ -428,6 +434,8 @@ namespace WpfCardPrinterManual
                                         startbundle++;
 
                                         txtBundle.Text = startbundle.ToString("00");
+
+                                        UpdateSetting();
                                     }));
                                 }
                                 else
@@ -455,6 +463,8 @@ namespace WpfCardPrinterManual
                                                     startbundle++;
 
                                                     txtBundle.Text = startbundle.ToString("00");
+
+                                                    UpdateSetting();
                                                 }));
                                             }
                                         }
@@ -888,6 +898,149 @@ namespace WpfCardPrinterManual
                 lbLabelTime.Content = dpProductionDate.Text;
                 lbLabelBundleCode.Content = txtBundle.Text;
             }
+        }
+
+        public void ReadSetting()
+        {
+            if (ConfigurationManager.AppSettings["BatcodeValue"] != null)
+            {
+                txtBatCode.Text = ConfigurationManager.AppSettings["BatcodeValue"];
+            }
+            if (ConfigurationManager.AppSettings["GBStandardValue"] != null)
+            {
+                txtGBStandard.Text = ConfigurationManager.AppSettings["GBStandardValue"];
+            }
+            if (ConfigurationManager.AppSettings["ClassValue"] != null)
+            {
+                txtCbClass.Text = ConfigurationManager.AppSettings["ClassValue"];
+            }
+            if (ConfigurationManager.AppSettings["MaterialValue"] != null)
+            {
+                txtMaterial.Text = ConfigurationManager.AppSettings["MaterialValue"];
+            }
+            if (ConfigurationManager.AppSettings["SpecValue"] != null)
+            {
+                txtSpec.Text = ConfigurationManager.AppSettings["SpecValue"];
+            }
+            if (ConfigurationManager.AppSettings["LengthValue"] != null)
+            {
+                txtLength.Text = ConfigurationManager.AppSettings["LengthValue"];
+            }
+            if (ConfigurationManager.AppSettings["PiececountValue"] != null)
+            {
+                txtPiececount.Text = ConfigurationManager.AppSettings["PiececountValue"];
+            }
+            if (ConfigurationManager.AppSettings["BundleValue"] != null)
+            {
+                txtBundle.Text = ConfigurationManager.AppSettings["BundleValue"];
+            }
+            if (ConfigurationManager.AppSettings["WeightValue"] != null)
+            {
+                txtWeight.Text = ConfigurationManager.AppSettings["WeightValue"];
+            }
+        }
+
+        /// <summary>
+        /// 保存打印批号、规格信息
+        /// </summary>
+        public void UpdateSetting()
+        {
+            string[] keys = new string[]
+            {
+                "BatcodeValue",
+                "GBStandardValue",
+                "ClassValue",
+                "MaterialValue",
+                "SpecValue",
+                "LengthValue",
+                "PiececountValue",
+                "BundleValue",
+                "WeightValue",
+            };
+
+            Configuration config =
+               ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            foreach (string key in keys)
+            {
+                string value = string.Empty;
+                switch (key)
+                {
+                    case "BatcodeValue":
+                        {
+                            value = txtBatCode.Text;
+                        }
+                        break;
+                    case "GBStandardValue":
+                        {
+                            value = txtGBStandard.Text;
+                        }
+                        break;
+                    case "ClassValue":
+                        {
+                            value = txtCbClass.Text;
+                        }
+                        break;
+                    case "MaterialValue":
+                        {
+                            value = txtMaterial.Text;
+                        }
+                        break;
+                    case "SpecValue":
+                        {
+                            value = txtSpec.Text;
+                        }
+                        break;
+                    case "LengthValue":
+                        {
+                            value = txtLength.Text;
+                        }
+                        break;
+                    case "PiececountValue":
+                        {
+                            value = txtPiececount.Text;
+                        }
+                        break;
+                    case "BundleValue":
+                        {
+                            value = txtBundle.Text;
+                        }
+                        break;
+                    case "WeightValue":
+                        {
+                            value = txtWeight.Text;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                if (HasSetting(key))
+                {
+                    config.AppSettings.Settings.Remove(key);
+                }
+
+                config.AppSettings.Settings.Add(key, value);
+            }
+
+            config.Save(ConfigurationSaveMode.Modified);
+
+            ConfigurationManager.RefreshSection("appSettings");
+        }
+
+        public bool HasSetting(string key)
+        {
+            bool result = false;
+            foreach (string keys in ConfigurationManager.AppSettings)
+            {
+                if (keys == key)
+                {
+                    result = true;
+                    break;
+                }
+            }
+
+            return result;
         }
     }
 }
