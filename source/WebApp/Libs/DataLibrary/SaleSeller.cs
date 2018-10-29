@@ -15,7 +15,7 @@
         [Required]
         public string Name { get; set; }
 
-        [MaxLength(50)]
+        [MaxLength(255)]
         [Required]
         public string Mobile { get; set; }
 
