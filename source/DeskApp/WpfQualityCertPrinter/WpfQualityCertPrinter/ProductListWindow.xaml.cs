@@ -50,6 +50,8 @@ namespace WpfQualityCertPrinter
         private string m_batcode = null;
         private ObservableCollection<ProductInfo> m_list = new ObservableCollection<ProductInfo>();
 
+        private bool mbLoaded = false;
+
         public ProductListWindow(string batcode)
         {
             InitializeComponent();
@@ -73,6 +75,7 @@ namespace WpfQualityCertPrinter
                 var list = access.GetListByBatcode(this.m_batcode);
                 if (list != null)
                 {
+                    double weight=0;
                     foreach (var item in list)
                     {
                         var pdinfo = new ProductInfo();
@@ -121,10 +124,16 @@ namespace WpfQualityCertPrinter
                         }
 
                         pdinfo.Checked = false;
+
+                        weight += (item.Weight!=null) ? item.Weight.Value : item.ReferWeight.Value;
                         
                         m_list.Add(pdinfo);
                     }
+
+                    lbTips.Content = string.Format("该批号下还有{0}件，共{1}kg。", m_list.Count, weight);
                 }
+
+                lbTips.Content = "该批号下没有生产，或已没有产品可以出库。";
             }
         }
 
@@ -298,6 +307,42 @@ namespace WpfQualityCertPrinter
             }
 
             BindView();
+        }
+
+        private void ReSelectProduct(object sender, TextChangedEventArgs e)
+        {
+            if (!mbLoaded)
+            {
+                mbLoaded = true;
+                return;
+            }
+
+            //根据输入的件数选产品
+            int count = 0;
+
+            int.TryParse(txtBundleCount.Text, out count);
+            if (count > 0)
+            {
+                if (count > m_list.Count)
+                {
+                    MessageBox.Show("不能超过实际产品件数，请按要求输入！", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    count = m_list.Count;
+                }
+
+                //先全不选中
+                for (var i = 0; i < m_list.Count; i++)
+                {
+                    m_list[i].Checked = false;
+                }
+
+                for (var i = 0; i < count; i++)
+                {
+                    m_list[i].Checked = true;
+                }
+
+                BindView();
+            }
         }
     }
 }

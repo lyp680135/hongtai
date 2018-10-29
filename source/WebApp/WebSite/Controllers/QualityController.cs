@@ -485,14 +485,29 @@
                 // 如果少指标就返回
                 if (targetName.Count > 0)
                 {
-                    keyValuePairs.Add("Ceq", ceq);
+                    if (!keyValuePairs.Keys.Any(x => x == "Ceq"))
+                    {
+                        keyValuePairs.Add("Ceq", ceq);
+                    }
+                    else
+                    {
+                        keyValuePairs["Ceq"] = ceq;
+                    }
                 }
                 else
                 {
                     ceq = (keyValuePairs["C"] + (keyValuePairs["Mn"] / 6) +
                     ((keyValuePairs["C"] + keyValuePairs["V"] + keyValuePairs["Mo"]) / 5) +
                     ((keyValuePairs["Cu"] = keyValuePairs["Ni"]) / 15)).ToDouble(2);
-                    keyValuePairs.Add("Ceq", ceq);
+
+                    if (!keyValuePairs.Keys.Any(x => x == "Ceq"))
+                    {
+                        keyValuePairs.Add("Ceq", ceq);
+                    }
+                    else
+                    {
+                        keyValuePairs["Ceq"] = ceq;
+                    }
                 }
 
                 // List<PdQualityInfo_Dynamics> list_PdQualityInfo_Dynamics = new List<PdQualityInfo_Dynamics>();
@@ -583,7 +598,7 @@
                 this.db.SaveChanges();
                 return "true";
             }
-            catch
+            catch(Exception ex)
             {
                 return "修改失败，请检查录入的数据";
             }

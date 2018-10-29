@@ -79,6 +79,11 @@
             return service.AddScoped<ICertService, CertService>();
         }
 
+        public static IServiceCollection AddCertNewService(this IServiceCollection service)
+        {
+            return service.AddScoped<ICertNewService, CertNewService>();
+        }
+
         public static IServiceCollection AddMySqlServices(this IServiceCollection service, string connStr)
         {
             return service.AddScoped<MySqlHelper>(o => new MySqlHelper(connStr));

@@ -72,7 +72,7 @@ namespace WpfQualityCertPrinter.ModelAccess
 
             try
             {
-                string sql = "SELECT * FROM saleseller WHERE parent IS NULL";
+                string sql = "SELECT * FROM saleseller WHERE parent IS NULL ORDER BY CONVERT( Name USING gbk ) COLLATE gbk_chinese_ci ASC";
 
                 using (MySqlCommand mysqlcom = new MySqlCommand(sql, _connection))
                 {

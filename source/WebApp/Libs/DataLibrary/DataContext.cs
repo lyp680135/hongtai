@@ -67,7 +67,11 @@
 
         public virtual DbSet<SalePrintlog> SalePrintlog { get; set; }
 
+        public virtual DbSet<SalePrintlogNew> SalePrintlogNew { get; set; }
+
         public virtual DbSet<SalePrintLogDetail> SalePrintLogDetail { get; set; }
+
+        public virtual DbSet<SalePrintLogDetailNew> SalePrintLogDetailNew { get; set; }
 
         public virtual DbSet<SaleSeller> SaleSeller { get; set; }
 

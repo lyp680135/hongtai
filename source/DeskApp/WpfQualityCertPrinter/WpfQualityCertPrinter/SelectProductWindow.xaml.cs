@@ -131,7 +131,7 @@ namespace WpfQualityCertPrinter
 
             if (cbSeller.SelectedValue == null)
             {
-                MessageBox.Show("必须选择售达方才能出库！", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("无效的售达方数据，请确认该售达方已在后台添加！", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 

@@ -1,7 +1,46 @@
 1、确定和录入各个材质的规格
 2、每个车间安装好标牌打印程序后，配置线号
-    <add key="ProductLine" value="L" />
+    <add key="ProductLine" value="A" />
 3、手动增加或修改各车间的初始批号到批号表
-INSERT INTO `pdbatcode` VALUES (3, '标牌打印程序', '18B00001A', 1800001, 1539745576, 0, 1, NULL, NULL, NULL);
+INSERT INTO `pdbatcode` VALUES (1, '标牌打印程序', '18Y05639A', 1805639, 1539928652, 0, 1, NULL, NULL, NULL,'A');
+INSERT INTO `pdbatcode` VALUES (2, '标牌打印程序', '18Y04324B', 1804324, 1539928652, 0, 1, NULL, NULL, NULL,'B');
+INSERT INTO `pdbatcode` VALUES (2, '标牌打印程序', '18K01211A', 1804324, 1539928652, 0, 3, NULL, NULL, NULL,'A');
 4、将质量指标的C、Si、Mn、P、S设置成必填，其他设置成非必填
 
+5、增加自定义标牌打印程序
+
+
+6、增加自定义质保书打印程序
+
+CREATE TABLE `saleprintlognew`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `MaterialId` int(11) NULL DEFAULT NULL,
+  `consignor` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `Lpn` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `createtime` int(11) NULL DEFAULT NULL,
+  `printno` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `signetangle` int(11) NULL DEFAULT NULL,
+  `status` int(11) NULL DEFAULT NULL,
+  `checkcode` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `adder` int(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+CREATE TABLE `saleprintlogdetailnew`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `PrintId` int(11) NOT NULL,
+  `MaterialId` int(11) NULL DEFAULT NULL,
+  `SellerId` int(11) NULL DEFAULT NULL,
+  `BatCode` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `Spec` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `Length` int(11) NULL DEFAULT NULL,
+  `SingleWeight` float(21, 0) NULL DEFAULT NULL,
+  `Printnumber` int(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+7、增大售达方手机号个数
+ALTER TABLE `saleseller` 
+MODIFY COLUMN `Mobile` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `Createtime`;
+
+8、增加预置数据导入功能菜单（Manage/Quality/Template）,打开权限设置将权限改为菜单权限即可。

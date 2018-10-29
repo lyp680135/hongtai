@@ -52,7 +52,7 @@
             width: 150px !important;
             display: block;
             border: 1px solid #cccccc;
-            padding:7px 10px;
+            padding: 7px 10px;
         }
 
         option {
@@ -85,38 +85,37 @@
             <div class="tools">
                 <ul class="seachform" style="width:100%">
                     <li>
-                        <label>
-                            按时间查询:
-                        </label>
-                        <input type="text" style="width:100px" class="date scinput" id="startTime" name="startTime" value="@Model.StartTime" />
-                        -
-                        <input type="text" style="width:100px" class="date scinput" id="endTime" name="endTime" value="@Model.EndTime" />
-                        <div style="clear:both"></div>
-                    </li>
-                    <li>
-                        <label>按材质:</label>
+                        <label>材质:</label>
 
                         <select name="materialId" style="width:200px;opacity:1" id="Materialid">
                             <option value="0">请选择</option>
                             @foreach (var item in _db.BaseProductClass.ToList())
                             {
-                                <optgroup label="@item.Name">
-                                    @foreach (var items in _db.BaseProductMaterial.Where(w => w.Classid == item.Id).ToList())
+                             <optgroup label="@item.Name">
+                                @foreach (var items in _db.BaseProductMaterial.Where(w => w.Classid == item.Id).ToList())
+                                        {
+                                            if (Model.MaterialId == items.Id)
+                                            {
+                                                    <option value="@Html.Raw(Model.MaterialId)" selected=selected>@Html.Raw(items.Name)</option>
+                                    }
+                                    else
                                     {
-                                        if (Model.MaterialId == items.Id)
-                                        {
-                                            <option value="@Html.Raw(Model.MaterialId)" selected=selected>@Html.Raw(items.Name)</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="@Html.Raw(items.Id)">@Html.Raw(items.Name)</option>
-                                        }
+                                                    <option value="@Html.Raw(items.Id)">@Html.Raw(items.Name)</option>
+                                    }
 
                                     }
-                                </optgroup>
-                            }
-                        </select>
-
+                                                    </optgroup>
+                                    }
+                                    </select>
+                    </li>
+                    <li>
+                        <label>
+                            时间查询:
+                        </label>
+                        <input type="text" style="width:100px" class="date scinput" id="startTime" name="startTime" value="@Model.StartTime" />
+                        -
+                        <input type="text" style="width:100px" class="date scinput" id="endTime" name="endTime" value="@Model.EndTime" />
+                        <div style="clear:both"></div>
                     </li>
                     <li>
                         <button id="sb" name="sb" type="submit" class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon">&#xe615;</i>查询</button>
@@ -372,7 +371,7 @@ new KeyValuePair<string, string>("pg","{0}")
                     dataType: 'json',
                     success: function (data) {
                         var json = data;
-                       // console.log(json);
+                        // console.log(json);
                         if (json.status == 1) {
                             if (parseInt(json.data) > 0) {
                                 layer.alert('同步成功了！', { icon: 6 });
@@ -389,6 +388,10 @@ new KeyValuePair<string, string>("pg","{0}")
                         $("#batsyncBtn").attr("disabled", false);
                     }
                 })
+            });
+
+            $('#Materialid').change(function () {
+                window.location.href = '/Manage/Quality/Template?materialId=' + $(this).val();
             });
         })
 
@@ -443,9 +446,7 @@ new KeyValuePair<string, string>("pg","{0}")
 
             return selectedid;
         }
-
         layui.use('upload', function () {
-            var Materialid = $('#Materialid').val();
             //得到 upload 对象
             var upload = layui.upload;
             upload.render({
@@ -455,14 +456,18 @@ new KeyValuePair<string, string>("pg","{0}")
                 , exts: 'xlsx'
                 , before: function (obj) { //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
                     layer.load(); //上传loading
+                },
+                data: {
+                    materialid: $('#Materialid').val()
                 }
                 , done: function (data, index, upload) {
                     if (data.state) {
-                        layer.alert(data.content, { icon: 1, time: 2000 });
-                        window.location.reload();
+                        layer.alert(data.content, { icon: 1 },function () { 
+                            window.location.reload();
+                        });
                     }
                     else {
-                        layer.alert(data.content, { icon: 1, time: 2000 });
+                        layer.alert(data.content, { icon: 2, time: 2000 });
                     }
                     layer.closeAll('loading'); //关闭loading
                 }

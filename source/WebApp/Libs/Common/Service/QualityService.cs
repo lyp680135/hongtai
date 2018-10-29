@@ -21,13 +21,13 @@
             this.pdQualityProductPreset = pdQualityProductPreset;
         }
 
-        public List<PdQuality> GetQualityData(List<Tuple<string, int?>> batcodeMidList)
+        public List<PdQuality> GetQualityData(List<Tuple<string, int?>> batcodeMidList, bool isSimpleVer = false)
         {
             var qualityList = new List<PdQuality>();
             var mngsetInfo = this.mngSetting.FindSingle();
 
             // 流程版
-            if (mngsetInfo.SystemVersion == EnumList.SystemVersion.流程版本)
+            if (mngsetInfo.SystemVersion == EnumList.SystemVersion.流程版本 && !isSimpleVer)
             {
                 if (batcodeMidList != null && batcodeMidList.Count > 0)
                 {
@@ -44,7 +44,7 @@
             }
 
             // 简单版
-            else if (mngsetInfo.SystemVersion == EnumList.SystemVersion.简单版本)
+            else if (mngsetInfo.SystemVersion == EnumList.SystemVersion.简单版本 || isSimpleVer)
             {
                 // 根据炉批号和材质id查询所有的关系数据
                 var qidList = new List<PdQualityProductPreset>();

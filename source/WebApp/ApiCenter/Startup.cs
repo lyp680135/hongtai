@@ -75,6 +75,7 @@
             services.AddQualityService();
             services.AddStockoutService();
             services.AddCertService();
+            services.AddCertNewService();
             services.AddMySqlServices(ConnStr);
             services.AddApiVersioning(options =>
             {

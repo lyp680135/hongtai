@@ -1,0 +1,32 @@
+#清空轧制批号表
+truncate table pdbatcode;
+#清空产品表
+truncate table pdproduct;
+#清空生产二维码授权表
+truncate table pdqrcodeauth;
+#清空产品二维护打印日志表
+truncate table pdqrcodeprintedlog;
+#清空产品质量表
+truncate table pdquality;
+#清空产品质量预置表
+truncate table pdqualityproductpreset;
+#清空化学成份表
+truncate table pdqualitysmeltcode;
+#清空产品出库表
+truncate table pdstockout;
+#清空班组换班记录表
+truncate table pdworkshopteamlog;
+#清空质保书打印表
+truncate table saleprintlog;
+#清空质保羽打印明细表
+truncate table saleprintlogdetail;
+#清空经销商表
+truncate table saleseller;
+#清空经销商产品授权表
+truncate table salesellerauth;
+#清空经销商产品授权明细表
+truncate table salesellerauthdetail;
+
+#设置产品表的并行控制索引
+ALTER TABLE pdproduct
+ADD CONSTRAINT batcode_bundle UNIQUE (Batcode, Bundlecode)
