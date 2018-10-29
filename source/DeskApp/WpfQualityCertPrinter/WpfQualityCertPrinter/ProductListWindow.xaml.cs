@@ -75,11 +75,11 @@ namespace WpfQualityCertPrinter
                 var list = access.GetListByBatcode(this.m_batcode);
                 if (list != null)
                 {
-                    double weight=0;
+                    double weight = 0;
                     foreach (var item in list)
                     {
                         var pdinfo = new ProductInfo();
-                        
+
                         pdinfo.Id = item.Id;
                         pdinfo.Batcode = item.Batcode;
                         pdinfo.Classid = item.Classid.Value;
@@ -91,9 +91,9 @@ namespace WpfQualityCertPrinter
                         pdinfo.Bundlecode = item.Bundlecode;
                         pdinfo.Workshiftid = item.WorkShift.Value;
                         pdinfo.Workshiftname = item.Shiftname;
-                        pdinfo.Length = string.Format("{0}",item.Length);
+                        pdinfo.Length = string.Format("{0}", item.Length);
                         pdinfo.Lengthtype = item.Lengthtype.Value;
-                        pdinfo.Specfullname = string.Format("{0}x{1}",item.Callspecname,item.Length);
+                        pdinfo.Specfullname = string.Format("{0}x{1}", item.Callspecname, item.Length);
 
                         if (pdinfo.Lengthtype != (int)EnumList.ProductQualityLevel.定尺)
                         {
@@ -125,15 +125,17 @@ namespace WpfQualityCertPrinter
 
                         pdinfo.Checked = false;
 
-                        weight += (item.Weight!=null) ? item.Weight.Value : item.ReferWeight.Value;
-                        
+                        weight += (item.Weight != null) ? item.Weight.Value : item.ReferWeight.Value;
+
                         m_list.Add(pdinfo);
                     }
 
                     lbTips.Content = string.Format("该批号下还有{0}件，共{1}kg。", m_list.Count, weight);
                 }
-
-                lbTips.Content = "该批号下没有生产，或已没有产品可以出库。";
+                else
+                {
+                    lbTips.Content = "该批号下没有生产，或已没有产品可以出库。";
+                }
             }
         }
 
@@ -148,7 +150,6 @@ namespace WpfQualityCertPrinter
             }
 
             dgProduct.Items.Refresh();
-            dgProduct.Focus();
         }
 
         private void Confirm_Click(object sender, RoutedEventArgs e)

@@ -11,8 +11,9 @@ namespace WpfQualityCertPrinter.ModelAccess
     {
         public T _model;
         public MySqlConnection _connection;
+        public string myConnectionString = "Server=114.215.102.245; Port=3306; Uid=warranty; Pwd=warranty123456; Database=qualitytest";
 
-        public string myConnectionString = "Server=dev.xiaoyutt.com; Port=7035; Uid=warranty; Pwd=warranty123456; Database=warranty_hongtai";
+        //public string myConnectionString = "Server=dev.xiaoyutt.com; Port=7035; Uid=warranty; Pwd=warranty123456; Database=warranty_hongtai";
 
         public BaseAccess()
         {
