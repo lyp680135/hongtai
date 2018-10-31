@@ -82,9 +82,17 @@ namespace WpfCardPrinter.ModelAccess
                         {
                             var material = new BaseProductMaterial();
                             material.Id = dr.GetInt32("id");
-                            material.Classid = dr.GetInt32("classid");
-                            material.Name = dr.GetString("name");
+                            material.Classid = dr.GetInt32("classid");                          
+                            material.MaterialIsCancel = dr.GetInt32("MaterialIsCancel");
                             material.Classname = dr.GetString("classname");
+                            if (material.MaterialIsCancel == 0)
+                            {
+                                material.Name = dr.GetString("name");
+                            }
+                            else
+                            {
+                                material.Name = dr.GetString("name") + "*";
+                            }
                             material.GbClassname = dr.GetString("gbname");
                             material.Deliverytype = (!Convert.IsDBNull(dr["deliverytype"])) ? dr.GetInt32("deliverytype") : new int?();
                             material.Measurement = (!Convert.IsDBNull(dr["measurement"])) ? dr.GetInt32("measurement") : new int?();

@@ -19,5 +19,7 @@ namespace DataLibrary
         public int? Measurement { get; set; }
 
         public string Gbdocument { get; set; }
+
+        public int MaterialIsCancel { get; set; }
     }
 }

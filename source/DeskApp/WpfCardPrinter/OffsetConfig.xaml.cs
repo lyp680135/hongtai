@@ -44,12 +44,12 @@ namespace WpfCardPrinter
             string ypyl = this.ypyl.Text;
             if (string.IsNullOrEmpty(xpyl))
             {
-                MessageBox.Show("请输入X轴偏移量!", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("请输入整体横向偏移!", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             if (string.IsNullOrEmpty(ypyl))
             {
-                MessageBox.Show("请输入X轴偏移量！", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("请输入整体纵向偏移！", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             if (!Regex.IsMatch(xpyl, @"[0-9]\d*$") || !Regex.IsMatch(ypyl, @"[0-9]\d*$"))

@@ -92,6 +92,7 @@ namespace WpfCardPrinter.ModelAccess
                         if (dr.Read())
                         {
                             log = new PdQRCodePrintedLog();
+                            log.Id = dr.GetInt32("id");
                             log.WorkshopId = dr.GetInt32("workshopid");
                             log.SpecId = dr.GetInt32("specid");
                             log.ProductId = dr.GetInt32("productid");
@@ -139,10 +140,26 @@ namespace WpfCardPrinter.ModelAccess
         public int Update(PdQRCodePrintedLog log)
         {
             int result = -1;
-            using (MySqlCommand mysqlcom = new MySqlCommand("UPDATE pdqrcodeprintedlog SET number=@number WHERE id=@id", _connection))
+            using (MySqlCommand mysqlcom = new MySqlCommand("UPDATE pdqrcodeprintedlog SET number=@number,status=@status WHERE id=@id", _connection))
             {
                 mysqlcom.Parameters.Add("@number", MySqlDbType.Int32);
                 mysqlcom.Parameters["@number"].Value = log.Number;
+                mysqlcom.Parameters.Add("@id", MySqlDbType.Int32);
+                mysqlcom.Parameters["@id"].Value = log.Id;
+                mysqlcom.Parameters.Add("@status", MySqlDbType.Int32).Value = log.Status;
+                result = mysqlcom.ExecuteNonQuery();
+            }
+
+            return result;
+        }
+
+        public int UpdateStatus(PdQRCodePrintedLog log)
+        {
+            int result = -1;
+            using (MySqlCommand mysqlcom = new MySqlCommand("UPDATE pdqrcodeprintedlog SET status=@status WHERE id=@id", _connection))
+            {
+                mysqlcom.Parameters.Add("@status", MySqlDbType.Int32);
+                mysqlcom.Parameters["@status"].Value = log.Status;
                 mysqlcom.Parameters.Add("@id", MySqlDbType.Int32);
                 mysqlcom.Parameters["@id"].Value = log.Id;
 
@@ -151,6 +168,5 @@ namespace WpfCardPrinter.ModelAccess
 
             return result;
         }
-
     }
 }

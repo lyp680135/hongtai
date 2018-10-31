@@ -8,8 +8,8 @@
         Title="输入口令" Height="240" Width="350"
         ResizeMode="NoResize">
     <Grid>
-        <Label Content="请输入清空口令" HorizontalAlignment="Center" FontSize="20" Margin="0 20 0 0"/>
-        <PasswordBox Name="txtQueryBatcode" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Width="285" Margin="0,75,0,95.4" Height="37" VerticalContentAlignment="Center"/>
-        <Button Content="确认清空" HorizontalAlignment="Center" Margin="0,156,0,0" VerticalAlignment="Top" Width="285" Height="37" FontSize="20" Click="Submit_Click"/>
+        <Label Content="请输入清空口令" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" Margin="0 20 0 0"/>
+        <PasswordBox Name="txtQueryBatcode" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Top" Width="285" Margin="0,70,0,0" Height="37" VerticalContentAlignment="Center"/>
+        <Button Content="确认清空" HorizontalAlignment="Center" Margin="0,130,0,0" VerticalAlignment="Top" Width="285" Height="37" FontSize="20" Click="Submit_Click"/>
     </Grid>
 </Window>

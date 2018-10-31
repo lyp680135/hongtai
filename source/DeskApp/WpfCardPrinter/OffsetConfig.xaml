@@ -8,9 +8,9 @@
         ResizeMode="NoResize"
         Title="更改配置" Height="250" Width="320">
     <Grid>
-        <Label Content="X轴偏移量：" HorizontalAlignment="Left" Margin="45,34,0,0" VerticalAlignment="Top"/>
+        <Label Content="整体横向偏移：" HorizontalAlignment="Left" Margin="45,34,0,0" VerticalAlignment="Top"/>
         <TextBox Name="xpyl" VerticalAlignment="Top" TextWrapping="Wrap" Width="120" Margin="80,32,0,0" Height="30" VerticalContentAlignment="Center"/>
-        <Label Content="Y轴偏移量：" HorizontalAlignment="Left" Margin="45,84,0,0" VerticalAlignment="Top"/>
+        <Label Content="整体纵向偏移：" HorizontalAlignment="Left" Margin="45,84,0,0" VerticalAlignment="Top"/>
         <TextBox Name="ypyl" VerticalAlignment="Top" TextWrapping="Wrap" Width="120" Margin="80,82,0,0" Height="30" VerticalContentAlignment="Center"/>
         <Button Content="确定" HorizontalAlignment="Left" Margin="40,150,0,0" VerticalAlignment="Top" Width="100" Height="35" Click="Update_Config"/>
         <Button Content="取消" HorizontalAlignment="Left" Margin="180,150,0,0" VerticalAlignment="Top" Width="100" Height="35" Click="Cancel_Click"/>

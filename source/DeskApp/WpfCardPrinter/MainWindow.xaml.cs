@@ -1094,8 +1094,6 @@ namespace WpfCardPrinter
                         }
                     }
 
-
-
                     this.Dispatcher.BeginInvoke(new Action(() =>
                     {
                         //补全列表
@@ -2704,7 +2702,7 @@ namespace WpfCardPrinter
 
             if (mSelectedProduct.Id <= 0)        //新记录用当前时间，老记录不改时间
             {
-                product.Createtime = (int)((dpProductionDate.SelectedDate != null) ? ((dpProductionDate.SelectedDate.Value.ToUniversalTime().Ticks - 621355968000000000) / 10000000) : 0);
+                product.Createtime = (int)((dpProductionDate.SelectedDate != null) ? Utils.TimeUtils.GetUnixTimeFromDateTime(dpProductionDate.SelectedDate.Value) : 0);
             }
             else
             {
@@ -3264,7 +3262,7 @@ namespace WpfCardPrinter
             if (mSelectedProduct != null)
             {
                 lbLabelGBStandard.Content = mMaterial.Gbdocument;
-                lbLabelMaterial.Content = mMaterial.Name;
+                lbLabelMaterial.Content = mMaterial.Name.Replace("*","");
                 lbLabelBatcode.Content = mSelectedProduct.Batcode;
                 lbLabelRandomCode.Content = mSelectedProduct.Randomcode;
                 lbLabelProductClass.Content = mMaterial.GbClassname;

@@ -25,7 +25,7 @@ namespace WpfCardPrinter
         /// 更新UI
         /// </summary>
         /// <param name="id"></param>
-        public delegate void UpdataSelect(string batcode);
+        public delegate void UpdataSelect(string batcode,bool should_reload_material = true);
         public event UpdataSelect updataSelectHandler;
         public Confirm()
         {

@@ -174,7 +174,7 @@ namespace WpfCardPrinter
             foreach(BatPrintProductSpec item in list)
             {
                 //没有选中规格的直接提示，然后跳出
-                if ((item.Specid == null || item.Specid <= 0) && item.Printnums > 0)
+                if ((item.Specid <= 0) && item.Printnums > 0)
                 {
                     MessageBox.Show("输入有误，还有没指定规格的行！！！", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -230,12 +230,14 @@ namespace WpfCardPrinter
                                 product.Piececount = spec.Referpiececount;
                                 product.Meterweight = spec.Refermeterweight;
                                 product.ReferWeight = spec.Referpieceweight;
-                                product.Createtime = (int)Utils.TimeUtils.GetCurrentUnixTime();
                                 product.WorkShift = main.GetCurrentWorkShift().Id;
                                 product.Shiftname = main.GetCurrentWorkShift().TeamName;
                                 product.Weight = spec.Referpieceweight;         //批量打印默认打理重
 
                                 product.Specname = spec.Specname;
+
+                                //时间以输入框的时候为准
+                                product.Createtime = (int)((main.dpProductionDate.SelectedDate != null) ? Utils.TimeUtils.GetUnixTimeFromDateTime(main.dpProductionDate.SelectedDate.Value) : 0);
 
                                 products.Add(product);
                             }
