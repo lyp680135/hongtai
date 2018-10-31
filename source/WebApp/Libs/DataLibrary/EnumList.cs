@@ -231,6 +231,15 @@
         }
 
         /// <summary>
+        /// 材质是否作废
+        /// </summary>
+        public enum MaterialIsCancel
+        {
+            未作废 = 0,
+            作废 = 1
+        }
+
+        /// <summary>
         /// 质保书状态
         /// </summary>
         public enum SalePrintlogStatus

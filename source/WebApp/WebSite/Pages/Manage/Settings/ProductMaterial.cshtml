@@ -147,7 +147,8 @@
                     <th>材质强度</th>
                     <th>质保书模板</th>
                     <th>备注</th>
-
+                    <th>状态</th>
+                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -158,34 +159,45 @@
                     {
                         foreach (DataLibrary.BaseProductMaterial pmclass in list)
                         {
-                <tr onclick="Edit(@pmclass.Id)">
-                    <td onclick="stopchoose()"><input name="id" type="checkbox" value="@pmclass.Id" /></td>
-                    <td>@pmclass.Id</td>
-                    <td>@pmclass.Name</td>
-                    <td>
-                        @{
-                            foreach (DataLibrary.BaseProductClass pclass in list3)
-                            {
-                                if (pclass.Id == pmclass.Classid)
-                                {
-                                    @Html.Raw(pclass.Name);
-                                }
-                                else
-                                {
-                                    @Html.Raw("");
-                                }
-                            }
-                        }
-                    </td>
+                            <tr onclick="Edit(@pmclass.Id)">
+                                <td onclick="stopchoose()"><input name="id" type="checkbox" value="@pmclass.Id" /></td>
+                                <td>@pmclass.Id</td>
+                                <td>@pmclass.Name</td>
+                                <td>
+                                    @{
+                                        foreach (DataLibrary.BaseProductClass pclass in list3)
+                                        {
+                                            if (pclass.Id == pmclass.Classid)
+                                            {
+                                                @Html.Raw(pclass.Name);
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("");
+                                            }
+                                        }
+                                    }
+                                </td>
 
-                    <td>@pmclass.Standardstrength</td>
-                    <td>
-                        @{
-                            @Html.Raw(pmclass.Templatename);
-                        }
-                    </td>
-                    <td>@pmclass.Note</td>
-                </tr>
+                                <td>@pmclass.Standardstrength</td>
+                                <td>
+                                    @{
+                                        @Html.Raw(pmclass.Templatename);
+                                    }
+                                </td>
+                                <td>@pmclass.Note</td>
+                                <td>@typeof(DataLibrary.EnumList.MaterialIsCancel).GetEnumName(pmclass.MaterialIsCancel)</td>
+                                <td>
+                                    @if (pmclass.MaterialIsCancel == MaterialIsCancel.未作废)
+                                    {
+                                        <button id="cancelyes" name="cancelyes" class="layui-btn layui-btn-normal layui-btn-sm zuofei" mId="@pmclass.Id" Status="@Html.Raw(MaterialIsCancel.作废)"><i class="layui-icon">&#x1006;</i>作废</button>
+                                    }
+                                    else
+                                    {
+                                        <button id="cancelno" name="cancelno" class="layui-btn layui-btn-normal layui-btn-sm weizuofei" mId="@pmclass.Id" Status="@Html.Raw(MaterialIsCancel.未作废)"><i class="layui-icon">&#xe605;</i>恢复</button>
+                                    }
+                                </td>
+                            </tr>
                         }
                     }
                 }
@@ -387,6 +399,72 @@
             });
         })
 
+        $('.zuofei').click(function (ev) {
+            // 防止事件冒泡
+            var oEvent = ev || event;
+            oEvent.cancelBubble = true;
+            oEvent.stopPropagation();
+            var $this = $(this);
+            layer.confirm('确定作废该记录？此操作不可恢复！', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var loadLayer = layer.load(1);
+                $.ajax({
+                    type: "get",
+                    url: "/ProductMaterial/Cancel?status=" + $this.attr('Status') + "&id=" + $this.attr('mId'),
+                    data: {},
+                    success: function (re) {
+                        if (parseInt(re) > 0) {
+                            layer.msg('操作成功', { icon: 1 });
+                            setTimeout("window.location.reload();", 1000);
+                        } else {
+                            layer.msg('操作失败', { icon: 2 });
+                        }
+                        layer.close(loadLayer);
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(loadLayer);
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                });
+            }, function () {
+
+            });
+        })
+        $('.weizuofei').click(function (ev) {
+            var oEvent = ev || event;
+            oEvent.cancelBubble = true;
+            oEvent.stopPropagation();
+            var $this = $(this);
+            layer.confirm('确定恢复该记录？此操作不可恢复！', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var loadLayer = layer.load(1);
+                $.ajax({
+                    type: "get",
+                    url: "/ProductMaterial/Cancel?status=" + $this.attr('Status') + "&id=" + $this.attr('mId'),
+                    data: {},
+                    success: function (re) {
+                        if (parseInt(re) > 0) {
+                            layer.msg('操作成功', { icon: 1 });
+                            setTimeout("window.location.reload();", 1000);
+                        } else {
+                            if (parseInt(re) == -2)
+                            {
+                                layer.msg('已经有一个正在使用的同名材质,不能恢复!', { icon: 2 });
+                            }
+                            else
+                                layer.msg('操作失败', { icon: 2 });
+                        }
+                        layer.close(loadLayer);
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(loadLayer);
+                        layer.msg('操作失败，出现服务器错误！', { icon: 2 });
+                    }
+                });
+            }, function () {
+
+            });
+        })
         function submitAdd() {
             var valid = $("#form2").validationEngine("validate");
             if (valid) {

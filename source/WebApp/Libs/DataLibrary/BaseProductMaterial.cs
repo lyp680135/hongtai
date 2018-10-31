@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using static DataLibrary.EnumList;
 
     [Table("baseproductmaterial")]
     public partial class BaseProductMaterial
@@ -26,5 +27,10 @@
 
         [MaxLength(50)]
         public string Templatename { get; set; }
+
+        /// <summary>
+        /// Gets or sets  0:未作废 ：1作废
+        /// </summary>
+        public MaterialIsCancel MaterialIsCancel { get; set; }
     }
 }

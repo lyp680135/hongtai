@@ -114,8 +114,9 @@
                                     <optgroup label="@item.Name">
                                         @foreach (var items in _db.BaseProductMaterial.Where(w => w.Classid == item.Id).ToList())
                                         {
-                                            <option value="@Html.Raw(items.Id)">@Html.Raw(items.Name)</option>
-                                        }
+						var mName = items.MaterialIsCancel == MaterialIsCancel.未作废 ? Html.Raw(items.Name) : Html.Raw($"{items.Name}*");
+                                        	<option value="@Html.Raw(items.Id)">@mName</option>
+                                    	}
                                     </optgroup>
                                 }
                             </select>

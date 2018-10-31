@@ -85,13 +85,15 @@
                 foreach (var item in list)
                 {
                     var batcode = item["Batcode"].ToString();
+                    var specidstr = item["Specid"].ToString();
                     var lengthtypestr = item["Lengthtype"].ToString();
 
+                    int.TryParse(specidstr, out int specid);
                     int.TryParse(lengthtypestr, out int lengthtype);
                     int.TryParse(item["Number"].ToString(), out int number);
                     int.TryParse(item["Printnumber"].ToString(), out int printnumber);
 
-                    CommonResult result = this.stockoutService.Stockout(batcode, lpn, sellerid, lengthtype, number, userid);
+                    CommonResult result = this.stockoutService.StockoutWpf(batcode, lpn, sellerid, specid, lengthtype, number, userid);
                     if (result.Status == (int)CommonResultStatus.Failed)
                     {
                         return new CommonResult(CommonResultStatus.Failed, "打印记录保存失败", result.Reason);
@@ -456,6 +458,10 @@
                         info.Add("OutDate", DateTime.Now.ToString("yyyy-MM-dd")); // 出证日期
                     }
 
+                    // 合计数据
+                    int total = 0;
+                    double totalweight = 0;
+
                     // 组装输出结构休，补全产品信息、规格、长度、质量数据
                     JArray outputarr = new JArray();
                     int index = 0;
@@ -471,6 +477,9 @@
                         productinfo["Weight"] = detail.Spec.Referpieceweight * detail.Printnumber;
 
                         outinfo["PdProduct"] = productinfo;
+
+                        total += detail.Printnumber;
+                        totalweight += detail.Spec.Referpieceweight.Value * detail.Printnumber;
 
                         // 获取规格直径
                         int.TryParse(detail.Spec.Specname.Replace("Ф", string.Empty).Replace("Φ", string.Empty), out int diameter);
@@ -733,6 +742,8 @@
                         }
                     }
 
+                    info.Add("Total", string.Format("{0}件，{1}Kg", total, totalweight));
+
                     info.Add("List", JsonConvert.SerializeObject(outputarr));
                 }
 
@@ -843,6 +854,7 @@
                     html = html.Replace("{{data.EntryPerson}}", jobj["EntryPerson"].ToString());
                     html = html.Replace("{{data.CheckPerson}}", jobj["CheckPerson"].ToString());
                     html = html.Replace("{{data.DomainPc}}", jobj["DomainPc"].ToString());
+                    html = html.Replace("{{data.Total}}", jobj["Total"].ToString());
 
                     Regex regex = new Regex(@"\{\{foreach\(([^\}]*)\)\}\}([\s\S]*?)\{\{/foreach\}\}", RegexOptions.IgnoreCase);
                     var match = regex.Match(html.ToString());

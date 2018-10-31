@@ -108,13 +108,14 @@
                                     <optgroup label="@item.Name">
                                         @foreach (var items in _db.BaseProductMaterial.Where(w => w.Classid == item.Id).ToList())
                                         {
+                                            var mName = items.MaterialIsCancel == MaterialIsCancel.未作废 ? Html.Raw(items.Name) : Html.Raw($"{items.Name}*");
                                             if (Model.Mid == items.Id)
                                             {
-                                                <option value="@Html.Raw(Model.Mid)" selected="selected">@Html.Raw(items.Name)</option>
+                                                <option value="@Html.Raw(Model.Mid)" selected="selected">@mName</option>
                                             }
                                             else
                                             {
-                                                <option value="@Html.Raw(items.Id)">@Html.Raw(items.Name)</option>
+                                                <option value="@Html.Raw(items.Id)">@mName</option>
                                             }
                                         }
                                     </optgroup>
@@ -246,7 +247,8 @@
                                 <optgroup label="@item.Name">
                                     @foreach (var items in _db.BaseProductMaterial.Where(w => w.Classid == item.Id).ToList())
                                     {
-                                        <option value="@Html.Raw(items.Id)">@Html.Raw(items.Name)</option>
+                                        var mName = items.MaterialIsCancel == MaterialIsCancel.未作废 ? Html.Raw(items.Name) : Html.Raw($"{items.Name}*");
+                                        <option value="@Html.Raw(items.Id)">@mName</option>
                                     }
                                 </optgroup>
                             }
@@ -263,7 +265,8 @@
                                 <optgroup label="@item.Name">
                                     @foreach (var items in _db.BaseProductMaterial.Where(w => w.Classid == item.Id).ToList())
                                     {
-                                        <option value="@Html.Raw(items.Id)">@Html.Raw(items.Name)</option>
+                                        var mName = items.MaterialIsCancel == MaterialIsCancel.未作废 ? Html.Raw(items.Name) : Html.Raw($"{items.Name}*");
+                                        <option value="@Html.Raw(items.Id)">@mName</option>
                                     }
                                 </optgroup>
                             }
@@ -293,7 +296,8 @@
                                 <optgroup label="@item.Name">
                                     @foreach (var items in _db.BaseProductMaterial.Where(w => w.Classid == item.Id).ToList())
                                     {
-                                        <option value="@Html.Raw(items.Id)">@Html.Raw(items.Name)</option>
+                                        var mName = items.MaterialIsCancel == MaterialIsCancel.未作废 ? Html.Raw(items.Name) : Html.Raw($"{items.Name}*");
+                                        <option value="@Html.Raw(items.Id)">@mName</option>
                                     }
                                 </optgroup>
                             }

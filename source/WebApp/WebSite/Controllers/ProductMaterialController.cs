@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
     using Models;
     using Newtonsoft.Json;
     using static DataLibrary.EnumList;
@@ -29,7 +30,7 @@
             {
                 try
                 {
-                    var checkClass = this.db.BaseProductMaterial.FirstOrDefault(c => c.Name == name && c.Classid == classid);
+                    var checkClass = this.db.BaseProductMaterial.FirstOrDefault(c => c.Name == name && c.Classid == classid && c.MaterialIsCancel == MaterialIsCancel.未作废);
                     if (checkClass != null)
                     {
                         return "-1";
@@ -42,7 +43,8 @@
                             Classid = classid,
                             Templatename = templatename,
                             Note = note,
-                            Standardstrength = standardstrength
+                            Standardstrength = standardstrength,
+                            MaterialIsCancel = MaterialIsCancel.未作废
                         };
 
                         this.db.BaseProductMaterial.Add(wsclass);
@@ -102,7 +104,7 @@
                         return -1;
                     }
 
-                    if (this.db.BaseProductMaterial.FirstOrDefault(p => p.Id != hiddId && p.Classid == classid && p.Name == name) != null)
+                    if (this.db.BaseProductMaterial.FirstOrDefault(p => p.Id != hiddId && p.Classid == classid && p.Name == name && p.MaterialIsCancel == MaterialIsCancel.未作废) != null)
                     {
                         return -1;
                     }
@@ -194,6 +196,31 @@
             }
 
             return 0;
+        }
+
+        public int Cancel(int id, MaterialIsCancel status)
+        {
+            var materialInfo = this.db.BaseProductMaterial.AsNoTracking().FirstOrDefault(f => f.Id == id);
+            if (materialInfo == null)
+            {
+                return -1;
+            }
+
+            if (status == MaterialIsCancel.未作废)
+            {
+                var materialInfo1 = this.db.BaseProductMaterial.AsNoTracking().FirstOrDefault(f => f.Classid == materialInfo.Classid
+                    && f.Name == materialInfo.Name
+                    && f.MaterialIsCancel == status);
+                if (materialInfo1 != null)
+                {
+                    return -2;
+                }
+            }
+
+            materialInfo.MaterialIsCancel = status;
+            this.db.BaseProductMaterial.Update(materialInfo);
+            this.db.SaveChanges();
+            return 1;
         }
     }
 }

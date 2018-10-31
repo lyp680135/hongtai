@@ -1125,7 +1125,7 @@
                     keyValuePairs.Add(item.TargetName, this.Request.Form[item.TargetName].ToDouble());
                 }
 
-                var dicNew = (JObject)pdquatulyInfo.Qualityinfos.Object;
+                var dicNew = (JObject)pdsmelcodeInfo.Chemistry.Object;
 
                 foreach (var item in dicNew)
                 {

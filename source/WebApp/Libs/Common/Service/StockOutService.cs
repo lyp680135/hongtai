@@ -20,7 +20,7 @@
             this.db = dataContext;
         }
 
-        public CommonResult Stockout(string batcode, string lpn, int sellerid, int lengthtype, int number, int userid)
+        public CommonResult StockoutWpf(string batcode, string lpn, int sellerid, int specid, int lengthtype, int number, int userid)
         {
             var list = new List<DataLibrary.PdProduct>();
 
@@ -29,7 +29,7 @@
             {
                 list = (from p in
                             from pp in this.db.PdProduct
-                            where pp.Batcode == batcode && pp.Lengthtype == lengthtype
+                            where pp.Batcode == batcode && pp.Specid == specid && pp.Lengthtype == lengthtype
                             select new
                             {
                                 productlist = pp,
@@ -43,7 +43,7 @@
                 // 盘螺出库
                 list = (from p in
                             from pp in this.db.PdProduct
-                            where pp.Batcode == batcode && pp.Lengthtype == lengthtype
+                            where pp.Batcode == batcode && pp.Specid == specid && pp.Lengthtype == lengthtype
                             select new
                             {
                                 productlist = pp,
@@ -58,7 +58,7 @@
                 var intList = new List<int>() { -1, 1 };
                 list = (from p in
                             from pp in this.db.PdProduct
-                            where pp.Batcode == batcode && intList.Contains(Convert.ToInt32(pp.Lengthtype))
+                            where pp.Batcode == batcode && pp.Specid == specid && intList.Contains(Convert.ToInt32(pp.Lengthtype))
                             select new
                             {
                                 productlist = pp,
@@ -106,6 +106,7 @@
                                         && s.Materialid == product.Materialid
                                         && s.Lpn == lpn
                                         && s.Sellerid == sellerid
+                                        && s.Specid == product.Specid
                                         && s.Lengthtype == lenType).FirstOrDefault();
                                 if (auth == null)
                                 {

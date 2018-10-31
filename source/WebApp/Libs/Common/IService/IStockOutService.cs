@@ -27,9 +27,10 @@
         /// <param name="batcode">产品轧制批号</param>
         /// <param name="lpn">出库车号</param>
         /// <param name="sellerid">出库的售达方</param>
+        /// <param name="specid">规格</param>
         /// <param name="lengthtype">定尺非尺</param>
         /// <param name="number">数量</param>
         /// <returns>出库结果</returns>
-        CommonResult Stockout(string batcode, string lpn, int sellerid, int lengthtype, int number, int userid);
+        CommonResult StockoutWpf(string batcode, string lpn, int sellerid, int specid, int lengthtype, int number, int userid);
     }
 }
