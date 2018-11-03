@@ -1,0 +1,12 @@
+1.材质表加字段,初始化此字段为未作废
+alter table baseproductmaterial add MaterialIsCancel int null default 0;
+update baseproductmaterial set MaterialIsCancel=0
+
+
+2.将老材质做废
+3.增加新材质
+4.从老材质复制规格、质量指标
+5.批量执行SQL，更新新材质的质量指标所属国家标准（UPDATE basequalitystandard SET Standardid=2 WHERE materialid in (?,?)）
+
+
+额外升级了质保书上加合计的功能

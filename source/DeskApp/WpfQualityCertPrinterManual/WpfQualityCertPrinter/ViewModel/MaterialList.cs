@@ -28,6 +28,11 @@ namespace WpfQualityCertPrinter.ViewModel
         /// 计量方式
         /// </summary>
         public DataLibrary.EnumList.MeteringMode Measurement { get; set; }
+
+        /// <summary>
+        /// Gets or sets  0:未作废 ：1作废
+        /// </summary>
+        public DataLibrary.EnumList.MaterialIsCancel MaterialIsCancel { get; set; }
       
     }
 }

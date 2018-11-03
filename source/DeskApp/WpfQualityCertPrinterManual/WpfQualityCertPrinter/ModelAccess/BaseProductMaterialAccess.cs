@@ -89,7 +89,7 @@ namespace WpfQualityCertPrinter.ModelAccess
         {
             List<MaterialList> list = null;
             //获取材质
-            using (MySqlCommand mysqlcom = new MySqlCommand("SELECT a.id,a.classid,a.name,b.name as classname,b.measurement FROM baseproductmaterial as a left join baseproductclass as b on a.Classid = b.Id", _connection))
+            using (MySqlCommand mysqlcom = new MySqlCommand("SELECT a.id,a.classid,a.name,a.materialiscancel,b.name as classname,b.measurement FROM baseproductmaterial as a left join baseproductclass as b on a.Classid = b.Id", _connection))
             {
 
                 using (MySqlDataReader dr = mysqlcom.ExecuteReader())
@@ -103,7 +103,15 @@ namespace WpfQualityCertPrinter.ModelAccess
                         {
                             var obj = new MaterialList();
                             obj.Materialid = dr.GetInt32("id");
-                            obj.Materialname = dr.GetString("name");
+                            obj.MaterialIsCancel = (EnumList.MaterialIsCancel)dr.GetInt32("materialiscancel");
+                            if (obj.MaterialIsCancel == EnumList.MaterialIsCancel.作废)
+                            {
+                                obj.Materialname = dr.GetString("name") + "(老)";
+                            }
+                            else
+                            {
+                                obj.Materialname = dr.GetString("name");
+                            }
                             obj.Classname = dr.GetString("classname");
                             obj.ShowName = obj.Classname + " - " + obj.Materialname;
                             obj.Measurement = (EnumList.MeteringMode)dr.GetInt32("measurement");

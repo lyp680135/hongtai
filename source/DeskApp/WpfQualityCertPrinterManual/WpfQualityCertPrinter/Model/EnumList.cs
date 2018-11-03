@@ -79,5 +79,13 @@ namespace DataLibrary
             流程版本 = 0,
             简单版本 = 1
         }
+        /// <summary>
+        /// 材质是否作废
+        /// </summary>
+        public enum MaterialIsCancel
+        {
+            未作废 = 0,
+            作废 = 1
+        }
     }
 }

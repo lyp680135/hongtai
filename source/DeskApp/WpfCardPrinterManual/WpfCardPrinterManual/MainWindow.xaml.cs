@@ -872,7 +872,11 @@ namespace WpfCardPrinterManual
                 {
                     foreach (var item in productList)
                     {
+                        //生成随机校验码
+                        item.Randomcode = GenerateRandomCode();
+
                         pdProductAccess.InsertProduct(item);
+
                         DoPrint(item, printing, len);
                     }
                 }

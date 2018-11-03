@@ -58,7 +58,6 @@ namespace WpfCardPrinterManual
                 product.SpecName = pdProduct.SpecName;
                 product.MaterialName = pdProduct.MaterialName;
                 product.Piececount = pdProduct.Piececount;
-                product.Randomcode = pdProduct.Randomcode;
                 product.Length = pdProduct.Length;
                 product.Meterweight = pdProduct.Meterweight;
                 product.Weight = pdProduct.Weight;
