@@ -598,7 +598,7 @@
                 this.db.SaveChanges();
                 return "true";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return "修改失败，请检查录入的数据";
             }
@@ -1946,11 +1946,23 @@
         /// <summary>
         /// 上传数据
         /// </summary>
+        /// <param name="materialid">材质</param>
         /// <returns>ActionResult</returns>
-        public ActionResult UpLoadTemplate()
+        public ActionResult UpLoadTemplate(int materialid)
         {
             try
             {
+                if (materialid <= 0)
+                {
+                    return this.AjaxResult(false, "请先选择材质");
+                }
+
+                var materialInfo = this.db.BaseProductMaterial.FirstOrDefault(f => f.Id == materialid);
+                if (materialInfo.MaterialIsCancel == MaterialIsCancel.作废)
+                {
+                    return this.AjaxResult(false, "该材质已经作废,无法导入数据");
+                }
+
                 var excelfile = this.Request.Form.Files[0];
                 if (excelfile == null || excelfile.Length <= 0)
                 {
@@ -1995,12 +2007,10 @@
                     // 总列数
                     int colCount = worksheet.Dimension.Columns;
 
-                    var materialid = 0;
-
                     // 装头部的字典
                     Dictionary<string, int> dicHead = new Dictionary<string, int>();
 
-                    var bsqList = this.db.BaseQualityStandard.Where(w => w.Status == 0).ToList();
+                    var bsqList = this.db.BaseQualityStandard.Where(w => w.Materialid == materialid && w.Status == 0).ToList();
 
                     // 插入如数据集合
                     List<PdQuality> baseQualityList = new List<PdQuality>();
@@ -2023,44 +2033,12 @@
 
                             if (bsqList == null || bsqList.Count <= 0)
                             {
-                                return this.AjaxResult(false, "元素指标不存在");
+                                return this.AjaxResult(false, "该材质没有质量指标");
                             }
 
-                            // 根据材质Id分组查询
-                            foreach (var item in bsqList.Select(s => s.Materialid).Distinct())
+                            if (bsqList.Count != dicHead.Count)
                             {
-                                var bsqListByMid = bsqList.Where(w => w.Materialid == item).ToList();
-                                if (bsqListByMid == null || bsqListByMid.Count <= 0)
-                                {
-                                    return this.AjaxResult(false, "该材质id:" + item + "下,元素指标不存在");
-                                }
-
-                                // 根据表头搜索出对应的材质Id
-                                foreach (var headItem in dicHead)
-                                {
-                                    var bsqInfoByMid = bsqListByMid.FirstOrDefault(f => f.TargetName == headItem.Key);
-
-                                    if (bsqInfoByMid == null)
-                                    {
-                                        materialid = 0;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        materialid = bsqInfoByMid.Materialid.ToInt();
-                                    }
-                                }
-
-                                // 如果匹配到就跳出循环
-                                if (materialid > 0)
-                                {
-                                    break;
-                                }
-                            }
-
-                            if (materialid == 0)
-                            {
-                                return this.AjaxResult(false, "没找到匹配的材质Id");
+                                return this.AjaxResult(false, "导入数据与选择材质不匹配,请按照文件名选择材质进行数据导入!");
                             }
 
                             if (dicHead.Count <= 0)

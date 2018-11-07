@@ -24,17 +24,19 @@
     padding-left:20px;
 }
 /*---------------------------title-------------------------- */
-.row.service.title span{
+.row.service.title span {
     color: #333;
     font-size: 15px;
     font-weight: 600;
     vertical-align: middle;
 }
-.row.service.title img{
+
+.row.service.title img {
     width: 19px;
     vertical-align: middle;
 }
-.row.service.title{
+
+.row.service.title {
     margin-top: 20px;
     padding-bottom: 10px;
     border-bottom: 1px solid #cccccc;
