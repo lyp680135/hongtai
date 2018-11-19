@@ -189,7 +189,6 @@
                                 </td>
                                 <td style="width:100px">@item.TargetMin ~ @item.TargetMax</td>
                                 <td>@item.TargetType.ToString().Replace("0", "单样本").Replace("1", "多样本")</td>
-                                 <td>@Enum.GetName(typeof(DataLibrary.EnumList.TargetCategory), Convert.ToInt32(item.TargetCategory))</td>
                                 <td>
                                     @if (item.Status == 1)
                                     {
@@ -200,6 +199,7 @@
                                         <lable style="color:green">未禁用</lable>
                                     }
                                 </td>
+                                <td>@Enum.GetName(typeof(DataLibrary.EnumList.TargetCategory), Convert.ToInt32(item.TargetCategory))</td>
                                 <td>
                                     @if (item.TargetIsNull == 1)
                                     {
@@ -443,7 +443,7 @@
                             return;
                         }
                         else {
-                            layer.msg(res, { icon: 2});
+                            layer.msg(res, { icon: 2 });
                             setTimeout(function () { window.location.reload(); }, 2000);
                             return;
                         }
