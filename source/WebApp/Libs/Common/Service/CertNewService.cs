@@ -260,7 +260,6 @@
                         info.Add("DeliveryStateEn", "Unfixed length straight strip");
                     }
 
-
                     string checkPerson = string.Empty;
                     string entryPerson = string.Empty;
 
@@ -314,7 +313,6 @@
 
                         // 获取规格直径
                         int.TryParse(detail.Spec.ToString(), out int diameter);
-
 
                         List<Tuple<string, int?>> detaillist = new List<Tuple<string, int?>>();
                         if (printDetail != null)
@@ -444,9 +442,9 @@
                                     }
                                 }
 
-                                // 重量偏差只保留2位小数点
+                                // 重量偏差只保留1位小数点
                                 double.TryParse(outinfo["Qualityinfo"]["重量偏差"].ToString(), out double realweightoffset);
-                                outinfo["Qualityinfo"]["重量偏差"] = realweightoffset.ToString("0.00");
+                                outinfo["Qualityinfo"]["重量偏差"] = realweightoffset.ToString("0.0");
 
                                 // 合并多行数据为一层数据
                                 var dynamicdata = new JObject();
@@ -513,8 +511,8 @@
 
                                     if (lowstrength > 0)
                                     {
-                                        dynamicdata["强屈比"] = dynamicdata["强屈比"].ToString() + (antistrength / lowstrength).ToString("0.0");
-                                        dynamicdata["屈屈比"] = dynamicdata["屈屈比"].ToString() + (lowstrength / material.Standardstrength).ToString("0.0");
+                                        dynamicdata["强屈比"] = dynamicdata["强屈比"].ToString() + (antistrength / lowstrength).ToString("0.00");
+                                        dynamicdata["屈屈比"] = dynamicdata["屈屈比"].ToString() + (lowstrength / material.Standardstrength).ToString("0.00");
                                     }
                                     else
                                     {
@@ -524,8 +522,8 @@
 
                                     pos++;
                                 }
-								
-								// 判断是否是抗震，抗震的才显示屈屈比和强屈比、伸长率Agt
+
+                                // 判断是否是抗震，抗震的才显示屈屈比和强屈比、伸长率Agt
                                 if (!material.Name.EndsWith("E"))
                                 {
                                     dynamicdata["强屈比"] = string.Empty;

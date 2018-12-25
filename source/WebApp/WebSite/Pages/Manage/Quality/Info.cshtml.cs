@@ -19,7 +19,7 @@
         {
             this.userService = userService;
         }
-
+        public int Wid { get; set; }
         public string Batcode { get; set; }
 
         public string HtmlStr { get; set; }
@@ -30,7 +30,7 @@
 
         public DataLibrary.PdQuality PdQuality { get; set; } = new DataLibrary.PdQuality();
 
-        public void OnGet(int? id, string batcode, string htmlStr)
+        public void OnGet(int? id, string batcode, string htmlStr, int wid)
         {
             var userId = this.userService.ApplicationUser.Mng_admin.Id;
             this.List_workShop = this.Db.PdWorkshop.AsEnumerable().Where(c => c.QAInputer.Split(',').Contains(userId.ToString())).ToList();
@@ -52,10 +52,21 @@
             {
                 if (this.List_workShop.Count > 0)
                 {
-                    var workInfo = this.List_workShop.FirstOrDefault();
+                    var workInfo = new PdWorkshop();
+
                     if (!id.HasValue || id.Value <= 0)
                     {
-                        PdBatcode currentInfo = this.Db.PdBatcode.OrderByDescending(c => c.Id).FirstOrDefault(c => c.Batcode.StartsWith(workInfo.Code)) ?? new PdBatcode();
+                        if (wid > 0)
+                        {
+                            workInfo = this.List_workShop.FirstOrDefault(f => f.Id == wid);
+                            this.Wid = wid;
+                        }
+                        else
+                        {
+                            workInfo = this.List_workShop.FirstOrDefault();
+                        }
+
+                        PdBatcode currentInfo = this.Db.PdBatcode.OrderByDescending(c => c.Id).FirstOrDefault(c => c.Workshopid == workInfo.Id) ?? new PdBatcode();
                         if (currentInfo != null)
                         {
                             this.Batcode = currentInfo.Batcode;

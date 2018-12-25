@@ -612,9 +612,9 @@
                                     }
                                 }
 
-                                // 重量偏差只保留2位小数点
+                                // 重量偏差只保留1位小数点
                                 double.TryParse(outinfo["Qualityinfo"]["重量偏差"].ToString(), out double realweightoffset);
-                                outinfo["Qualityinfo"]["重量偏差"] = realweightoffset.ToString("0.00");
+                                outinfo["Qualityinfo"]["重量偏差"] = realweightoffset.ToString("0.0");
 
                                 // 合并多行数据为一层数据
                                 var dynamicdata = new JObject();
@@ -681,8 +681,8 @@
 
                                     if (lowstrength > 0)
                                     {
-                                        dynamicdata["强屈比"] = dynamicdata["强屈比"].ToString() + (antistrength / lowstrength).ToString("0.0");
-                                        dynamicdata["屈屈比"] = dynamicdata["屈屈比"].ToString() + (lowstrength / material.Standardstrength).ToString("0.0");
+                                        dynamicdata["强屈比"] = dynamicdata["强屈比"].ToString() + (antistrength / lowstrength).ToString("0.00");
+                                        dynamicdata["屈屈比"] = dynamicdata["屈屈比"].ToString() + (lowstrength / material.Standardstrength).ToString("0.00");
                                     }
                                     else
                                     {

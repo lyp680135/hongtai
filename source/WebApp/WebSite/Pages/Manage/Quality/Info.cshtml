@@ -78,10 +78,17 @@
                 @if (Model.PdQuality.Id == 0 && Model.List_workShop != null && Model.List_workShop.Count > 0)
                 {
                     <div class="layui-input-inline" style="width:150px;">
-                        <select id="WorkShopCode" name="WorkShopCode" lay-filter="WorkShopCode">
+                        <select id="wid" name="wid" lay-filter="WorkShopCode">
                             @foreach (var item in Model.List_workShop)
                             {
-                                <option value="@item.Code">@item.Name</option>
+                                @if (Model.Wid > 0 && Model.Wid == item.Id)
+                                {
+                                    <option value="@item.Id" selected="selected">@item.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
                             }
                         </select>
                     </div>
@@ -104,7 +111,7 @@
                 else
                 {
                     <div class="layui-input-inline">
-                        <input type="text" name="BatCode" id="BatCode" lay-verify="BatCode" autocomplete="off" placeholder="请输入炉批号" class="validate[required] layui-input" value="@Model.PdQuality.Batcode" disabled=disabled />
+                        <input type="text" name="BatCode" id="BatCode" lay-verify="BatCode" autocomplete="off" placeholder="请输入炉批号" class="validate[required] layui-input" value="@Model.PdQuality.Batcode" disabled="disabled"/>
                     </div>
                 }
                 <div class="layui-form-mid layui-word-aux" id="BatCodeTips" style="color:orange !important">@Model.HtmlStr</div>
@@ -332,13 +339,13 @@
         }
 
         function GetBatCode(currCode, offset, isShowTips) {
-            var WorkShopCode = $("#WorkShopCode").val();
+            var WorkShopCode = $("#wid").val();
             $("#ChangeBatCode button").addClass("layui-btn-disabled");
             var index = layer.load(1, {
                 shade: [0.1, '#fff'] //0.1透明度的白色背景
             });
             $.ajax({
-                type: "POST", url: '/Quality/GetPatCode', data: "curcode=" + currCode + "&offset=" + offset + "&WorkShopCode=" + (WorkShopCode != undefined ? WorkShopCode : ''),
+                type: "POST", url: '/Quality/GetPatCodeNew', data: "curcode=" + currCode + "&offset=" + offset + "&wid=" + (WorkShopCode != undefined ? WorkShopCode : ''),
                 success: function (re) {
                     var json = JSON.parse(re);
 
