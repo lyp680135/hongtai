@@ -47,6 +47,7 @@ namespace WpfCardPrinter.ModelAccess
                                 team.Leader = (!Convert.IsDBNull(dr["leader"])) ? dr.GetString("leader") : null;
                                 team.Adder = (!Convert.IsDBNull(dr["adder"])) ? dr.GetString("adder") : null;
                                 team.CreateTime = (!Convert.IsDBNull(dr["createtime"])) ? dr.GetInt32("createtime") : new int?();
+                                team.Code = dr.GetString("code");
 
                                 list.Add(team);
                             }

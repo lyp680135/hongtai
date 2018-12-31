@@ -96,6 +96,9 @@ namespace WpfCardPrinter
 
                 this.DialogResult = false;
 
+                MainWindow main = (MainWindow)Application.Current.MainWindow;
+                main.Close();
+
                 this.Close();
             }
         }

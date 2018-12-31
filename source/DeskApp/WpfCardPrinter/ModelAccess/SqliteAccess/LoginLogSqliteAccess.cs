@@ -24,17 +24,29 @@ namespace WpfCardPrinter.ModelAccess.SqliteAccess
 
             if (cn.State == System.Data.ConnectionState.Open)
             {
-                SQLiteCommand cmd = new SQLiteCommand();
-                cmd.Connection = cn;
-                cmd.CommandText = "CREATE TABLE IF NOT EXISTS loginlog ("
-                                + "[Id] INTEGER PRIMARY KEY AUTOINCREMENT,"
-                                + "[UserName] VARCHAR(255),"
-                                + "[LoginTime] INTEGER,"
-                                + "[RealName] VARCHAR(255),"
-                                + "[Address] VARCHAR(255), "
-                                + "[Code] VARCHAR(255) "
-                                + ")";
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    SQLiteCommand cmd = new SQLiteCommand();
+                    cmd.Connection = cn;
+                    cmd.CommandText = "CREATE TABLE IF NOT EXISTS loginlog ("
+                                    + "[Id] INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                    + "[UserName] VARCHAR(255),"
+                                    + "[LoginTime] INTEGER,"
+                                    + "[RealName] VARCHAR(255),"
+                                    + "[Address] VARCHAR(255), "
+                                    + "[Code] VARCHAR(255) "
+                                    + ")";
+                    cmd.ExecuteNonQuery();
+
+                    //for upgrade
+                    cmd.CommandText = "ALTER TABLE loginlog ADD COLUMN "
+                                   + "[Code] VARCHAR(255)";
+                    cmd.ExecuteNonQuery();
+                }
+                catch
+                {
+
+                }
             }
 
             cn.Close();

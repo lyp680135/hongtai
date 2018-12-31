@@ -136,10 +136,10 @@ namespace WpfQualityCertPrinter
             //将密码加密
             password = MD5Util.GenerateMD5(password);
 #if DEBUG
-                    MainWindow mainwindow = new MainWindow(null);
-                    mainwindow.Show();
+            MainWindow mainwindow = new MainWindow(null);
+            mainwindow.Show();
 
-                    this.Close();
+            this.Close();
 #else
             try
             {

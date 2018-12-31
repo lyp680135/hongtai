@@ -39,8 +39,8 @@ namespace WpfCardPrinter
         {
             InitializeComponent();
             InitData();
-#if DEBUG
 
+#if DEBUG
 #else
             UpdateVersion();
 #endif
@@ -55,8 +55,8 @@ namespace WpfCardPrinter
                 {
                     var version = resStr.Split(',')[0];
                     var file = System.Diagnostics.FileVersionInfo.GetVersionInfo(AppDomain.CurrentDomain.BaseDirectory + "WpfCardPrinter.exe").FileVersion;
-                    var oldVerNum = Convert.ToInt16(file.Replace(".", string.Empty));
-                    var newVerNum = Convert.ToInt16(version.Replace(".", string.Empty));
+                    var oldVerNum = Convert.ToInt32(file.Replace(".", string.Empty));
+                    var newVerNum = Convert.ToInt32(version.Replace(".", string.Empty));
                     if (newVerNum > oldVerNum)
                     {
                         MessageBoxResult mbr = MessageBox.Show("有新版本程序,是否需要更新?", "操作提醒", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
@@ -112,8 +112,15 @@ namespace WpfCardPrinter
                         });
                     });
                     this.cbAccount.ItemsSource = userList;
-                    this.cbAccount.SelectedValue = loginlist.FirstOrDefault().Id;
-                    this.cShop.SelectedValue = loginlist.FirstOrDefault().Code;
+                    if (loginlist.FirstOrDefault().Id > 0)
+                    {
+                        this.cbAccount.SelectedValue = loginlist.FirstOrDefault().Id;
+                    }
+
+                    if (!string.IsNullOrEmpty(loginlist.FirstOrDefault().Code))
+                    {
+                        this.cShop.SelectedValue = loginlist.FirstOrDefault().Code;
+                    }
                 }
             }
         }
@@ -189,12 +196,12 @@ namespace WpfCardPrinter
                         //判断是否有权限
                         using (PdWorkshopAccess paccess = new PdWorkshopAccess())
                         {
-                            workshop = paccess.Single(code);
-                            if (workshop != null)
+                            var shop = paccess.Single(code);
+                            if (shop != null)
                             {
-                                if (!string.IsNullOrEmpty(workshop.Inputer))
+                                if (!string.IsNullOrEmpty(shop.Inputer))
                                 {
-                                    var inputers = workshop.Inputer.Split(',');
+                                    var inputers = shop.Inputer.Split(',');
                                     if (inputers.Contains(admin.Id.ToString()))
                                     {
                                         using (LoginLogSqliteAccess login = new LoginLogSqliteAccess())

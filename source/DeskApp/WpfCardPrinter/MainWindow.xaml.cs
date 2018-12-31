@@ -1629,12 +1629,17 @@ namespace WpfCardPrinter
                 {
                     txtBundle.IsReadOnly = true;
                     txtBundle.Background = new SolidColorBrush(Colors.WhiteSmoke);
+                    txtBundle.Height = 25;
+                    txtBundle.FontSize = 14;
+
                     if (mMaterial != null)
                     {
                         if (mMaterial.Deliverytype == (int)EnumList.DeliveryType.盘卷)
                         {
                             txtBundle.IsReadOnly = false;
                             txtBundle.Background = new SolidColorBrush(Colors.LawnGreen);
+                            txtBundle.Height = 40;
+                            txtBundle.FontSize = 20;
                         }
                     }
                     txtBundle.Text = string.Format("{0}", mSelectedProduct.Bundlecode);
@@ -1651,6 +1656,7 @@ namespace WpfCardPrinter
                 }
             }
         }
+
         public void Change_config(object sender, RoutedEventArgs e)
         {
             OffsetConfig cgw = new OffsetConfig();
@@ -1660,6 +1666,7 @@ namespace WpfCardPrinter
             cgw.Owner = this;
             cgw.ShowDialog();
         }
+
         public void MaterialClick(object sender, MouseButtonEventArgs e)
         {
             try
@@ -2320,7 +2327,7 @@ namespace WpfCardPrinter
         /// <param name="e"></param>
         private void ChangeCz_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("确认切换材质？", "操作提醒", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show("切换材质可能会清除当前批号的产品数据。\r\n请确认是否继续操作？", "操作提醒", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
             if (result == MessageBoxResult.OK)
             {
                 if (cbMaterial.SelectedValue == null)
@@ -2488,6 +2495,7 @@ namespace WpfCardPrinter
                     }
                     else
                     {
+                        //如果只是通过批号查询，可以直接切换当前批号并重新加载数据
                         if (querytime == null && !string.IsNullOrEmpty(querybatcode))
                         {
                             mCurrentBatCode = querybatcode;
@@ -3170,8 +3178,8 @@ namespace WpfCardPrinter
 
                     if (curritem == null || curritem.Id <= 0)     //如果当前批号为空并且数据库里也没有
                     {
-                        batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, 1.ToString("D5"), this.ProductLine);
-                        serialno = Convert.ToInt32(string.Format("{0}{1}", DATE_CODE, 1.ToString("D5")));
+                        batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, 1.ToString("D4"), this.ProductLine);
+                        serialno = Convert.ToInt32(string.Format("{0}{1}", DATE_CODE, 1.ToString("D4")));
                         PdBatcode pdcode = new PdBatcode();
                         pdcode.Batcode = batcode;
                         pdcode.Adder = "标牌打印程序";
@@ -3204,15 +3212,15 @@ namespace WpfCardPrinter
                             else
                             {
                                 int serNo = Convert.ToInt32(curritem.Serialno.ToString().Substring(DATE_CODE.Length)) + offset;
-                                var nextBatcode = curcode.Substring((DATE_CODE + FIRST_WORD).Length, 5);
+                                var nextBatcode = curcode.Substring((DATE_CODE + FIRST_WORD).Length, 4);
                                 var currSerNo = curritem.Serialno.ToString().Substring(0, 2);
                                 int number = Convert.ToInt32(nextBatcode) + offset;
                                 if (currSerNo != DATE_CODE)
                                 {
                                     number = 1;
                                 }
-                                serialno = Convert.ToInt32(string.Format("{0}{1}", DATE_CODE, number.ToString("D5")));
-                                batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, number.ToString("D5"), this.ProductLine);
+                                serialno = Convert.ToInt32(string.Format("{0}{1}", DATE_CODE, number.ToString("D4")));
+                                batcode = string.Format("{0}{1}{2}{3}", DATE_CODE, FIRST_WORD, number.ToString("D4"), this.ProductLine);
                                 access.Insert(new PdBatcode
                                 {
                                     Batcode = batcode,
@@ -3457,7 +3465,7 @@ namespace WpfCardPrinter
                             var point = CommonUtils.GetPointFromSetting(MaterialPoint);
 
                             FormattedText formattedText = new FormattedText(
-                            mMaterial.Name,
+                            mMaterial.Name.Replace("*",""),
                             CultureInfo.GetCultureInfo("zh-CHS"),
                             FlowDirection.LeftToRight,
                             new Typeface("微软雅黑"),
@@ -4607,6 +4615,37 @@ namespace WpfCardPrinter
             txtCurrWeight.Text = realweight;
         }
 
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (dgProduct.SelectedIndex < 0)
+            {
+                mSelectedProduct = null;
+                return;
+            }
+            var selectitem = dgProduct.SelectedItem;
+            if (selectitem is PdProduct)
+            {
+                PdProduct pd = (PdProduct)dgProduct.SelectedItem;
+                using (PdQRCodePrintedLogAccess pqpla = new PdQRCodePrintedLogAccess())
+                {
+                    var productInfo = pqpla.SingleByProductid(pd.Id);
+                    if (productInfo == null || productInfo.Id == 0 || pd.Id == 0)
+                    {
+                        MessageBox.Show("没有保存该产品,无法解锁!", "操作提醒", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+                    else
+                    {                       
+                        MessageBoxResult mbr = MessageBox.Show("该操作将记入生产异常报表,是否继续操作?", "操作提醒", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                        if (mbr == MessageBoxResult.OK)
+                        {
+                            productInfo.Status = 0;
+                            pqpla.UpdateStatus(productInfo);
+                        }
+                    }
+                }
+            }
+        }
     }
     #endregion
 

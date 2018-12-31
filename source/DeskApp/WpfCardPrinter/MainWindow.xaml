@@ -73,7 +73,7 @@
             </StackPanel>
         </DockPanel>
         <DockPanel Grid.RowSpan="5" Grid.ColumnSpan="3" Margin="0,58,0,49.4">
-            <DataGrid Name="dgProduct" Margin="10,10,10,0" DockPanel.Dock="Top" Height="220" AutoGenerateColumns="False" HeadersVisibility="Column" 
+            <DataGrid Name="dgProduct" Margin="10,10,10,0" DockPanel.Dock="Top" Height="220" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionMode="Single"
                   PreviewMouseMove="dbProduct_PreviewMouseMove"
                   LoadingRow="dgProduct_LoadingRow" 
                   SelectionChanged="dgProduct_SelectionChanged">

@@ -369,9 +369,10 @@ namespace WpfQualityCertPrinter
                                     this.Dispatcher.BeginInvoke(new Action(() =>
                                     {
                                         string msg = responsedata["msg"].ToString();
+                                        string data = responsedata["data"].ToString();
                                         MessageBox.Show("请求生成质量证明书返回生成失败：\n\n" + msg, "操作提醒", MessageBoxButton.OK, MessageBoxImage.Error);
 
-                                        LogHelper.WriteLog("请求生成质量证明书返回生成失败：" + msg);
+                                        LogHelper.WriteLog("请求生成质量证明书返回生成失败：" + msg + "," + data);
                                     }));
 
                                 }

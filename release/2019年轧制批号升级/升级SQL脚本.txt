@@ -1,0 +1,18 @@
+#更新三车间代码
+
+UPDATE pdworkshop SET Code='S' WHERE Id=3;
+
+#一车间A线
+
+INSERT INTO `warranty_hongtai`.`pdbatcode`(`Id`, `Adder`, `Batcode`, `Createtime`, `Status`, `Workshopid`, `Billetnumber`, `Billetpieceweight`, `Productrate`, `Serialno`, `Workshopline`) VALUES (null, '标牌打印程序', '19Y0001A', 1546272000, 0, 1, NULL, NULL, NULL, 190001, 'A');
+
+#一车间B线
+
+INSERT INTO `warranty_hongtai`.`pdbatcode`(`Id`, `Adder`, `Batcode`, `Createtime`, `Status`, `Workshopid`, `Billetnumber`, `Billetpieceweight`, `Productrate`, `Serialno`, `Workshopline`) VALUES (null, '标牌打印程序', '19Y0001A', 1546272000, 0, 1, NULL, NULL, NULL, 190001, 'B');
+
+#三车间
+
+INSERT INTO `warranty_hongtai`.`pdbatcode`(`Id`, `Adder`, `Batcode`, `Createtime`, `Status`, `Workshopid`, `Billetnumber`, `Billetpieceweight`, `Productrate`, `Serialno`, `Workshopline`) VALUES (null, '标牌打印程序', '19S0001A', 1546272000, 0, 3, NULL, NULL, NULL, 190001, 'A');
+
+#将原来的批号序号字段更新为4位
+UPDATE `pdbatcode` SET Serialno=REPLACE(Serialno,'180','18') where Serialno LIKE '180%'

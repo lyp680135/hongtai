@@ -8,8 +8,8 @@ namespace WpfQualityCertPrinter.Common
     class CommonHouse
     {
         private static string WEBAPI_PROTOCOL = "http://";
-        private static string WEBAPI_SERVER = "dev.xiaoyutt.com";
-        private static string WEBAPI_PORT = "7053";
+        private static string WEBAPI_SERVER = "localhost";
+        private static string WEBAPI_PORT = "41178";
         private static string WEBAPI_ROOT = "api";
         private static string WEBAPI_VERSION = "v1";
 
