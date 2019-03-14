@@ -276,7 +276,7 @@
 		           <td width="78px">Nb</td>
 		           <td width="78px">Cu</td>
 		           <td width="78px">Ni</td>
-		           <td width="77px">Mo</td>
+		           <td width="77px">Ti</td>
 		           <td width="77px">Cr</td>
                             </tr>
                             {{foreach((item,index) in data.List)}}
@@ -291,7 +291,7 @@
 					            <td style="color: rgb(0, 0, 0);">{{item.Qualityinfo.Nb}}</td>
 					            <td style="color: rgb(0, 0, 0);">{{item.Qualityinfo.Cu}}</td>
 					            <td style="color: rgb(0, 0, 0);">{{item.Qualityinfo.Ni}}</td>
-					            <td style="color: rgb(0, 0, 0);">{{item.Qualityinfo.Mo}}</td>
+					            <td style="color: rgb(0, 0, 0);">{{item.Qualityinfo.Ti}}</td>
 					            <td style="color: rgb(0, 0, 0);">{{item.Qualityinfo.Cr}}</td>
                                 <td style="color: rgb(0, 0, 0);">{{item.Qualityinfo.Ceq}}</td>
                                 <td style="color: rgb(0, 0, 0);">{{item.Qualityinfo.Metall}}</td>

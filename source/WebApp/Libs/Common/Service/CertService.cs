@@ -504,7 +504,7 @@
                             if (ok)
                             {
                                 double si = 0, p = 0, s = 0, nb = 0;
-                                double c = 0, mn = 0, cr = 0, v = 0, mo = 0, cu = 0, ni = 0, ceq = 0;
+                                double c = 0, mn = 0, cr = 0, v = 0, mo = 0, cu = 0, ni = 0, ti = 0, ceq = 0;
 
                                 // 化学成份相关数据
                                 outinfo["Qualityinfo"] = (JObject)item.Qualityinfos.Object;
@@ -575,6 +575,12 @@
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out cr);
                                         outinfo["Qualityinfo"][d.Key] = "0"; cr.ToString("0.000");
+                                    }
+
+                                    if (d.Key.ToUpper() == "TI")
+                                    {
+                                        double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out ti);
+                                        outinfo["Qualityinfo"][d.Key] = ti.ToString("0.000");
                                     }
 
                                     // Ceq 要读手动输入的
