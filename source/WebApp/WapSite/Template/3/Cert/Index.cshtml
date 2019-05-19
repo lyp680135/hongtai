@@ -2,42 +2,52 @@
 @inject ICMSService _cmsService
 @inject DataLibrary.DataContext Db
 @functions{
-    public string CertPath { get; set; }
+            public string CertPath { get; set; }
 
-    public void OnGet(string p)
-    {
-        if (!string.IsNullOrEmpty(p))
-        {
-            string[] args = p.Split('-');
-            if (args.Length == 2)
+            public void OnGet(string p)
             {
-                int.TryParse(args[0], out int id);
-
-                var cert = this.Db.SalePrintlog.Where(s => s.Id == id && s.Checkcode == args[1] && s.Status == (int)EnumList.SalePrintlogStatus.已下载).FirstOrDefault();
-                if (cert != null)
+                if (!string.IsNullOrEmpty(p))
                 {
-                    this.CertPath = string.Format("{0}{1}.jpg", id, args[1]);
-                }
-            }
-        }
-    }
+                    string[] args = p.Split('-');
+                    if (args.Length == 2)
+                    {
+                        int.TryParse(args[0], out int id);
 
-}
+                        var cert = this.Db.SalePrintlog.Where(s => s.Id == id && s.Checkcode == args[1] && s.Status == (int)EnumList.SalePrintlogStatus.已下载).FirstOrDefault();
+                        if (cert != null)
+                        {
+                            this.CertPath = string.Format("{0}{1}.jpg", id, args[1]);
+                        }
+                        else
+                        {
+                            if (args[1].StartsWith("n"))
+                            {
+                                var certnew = this.Db.SalePrintlogNew.Where(s => s.Id == id && s.Checkcode == args[1] && s.Status == (int)EnumList.SalePrintlogStatus.已下载).FirstOrDefault();
+                                if(certnew != null)
+                                {
+                                    this.CertPath = string.Format("{0}{1}.jpg", id, args[1]);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
 @{
     ViewData["Tag"] = 4;
     ViewData["Title"] = $"产品质量证明书";
     ViewData["Desc"] = $"产品质量证明书";
     var siteBasic = _cmsService.GetBasic();
-    var mngSetting = _cmsService.GetSetting();
-    ViewBag.SiteBasic = siteBasic;
+            var mngSetting = _cmsService.GetSetting();
+            ViewBag.SiteBasic = siteBasic;
     ViewBag.SiteSetting = mngSetting;
     //网站基本设置
 
 
 
     string certpath = mngSetting.Domain_WebApi + "qualitypics/" + CertPath;
-}
-@section head{
+        }
+        @section head{
     <link rel="stylesheet" href="/Content/js/photo-swiper/photoswipe.css">
     <link rel="stylesheet" href="/Content/js/photo-swiper/default-skin/default-skin.css">
     <link href="/Content/css/code_result.css" rel="stylesheet" />
@@ -45,27 +55,27 @@
     <script src="/Content/js/photo-swiper/photoswipe-ui-default.min.js" type="text/javascript"></script>
     <style>
         .pswp__button.pswp__button--rotate {
-            background: url(/Content/js/photo-swiper/default-skin/rotate.png) no-repeat;
-            background-position: 50% 50%;
-            background-size: 25px 25px;
-        }
+                background: url(/Content/js/photo-swiper/default-skin/rotate.png) no-repeat;
+                background-position: 50% 50%;
+                background-size: 25px 25px;
+            }
     </style>
     <script>
         var gallery;
-        function initgallery(photos, index, height) {
-            var pswpElement = document.querySelectorAll('.pswp')[0];
+            function initgallery(photos, index, height) {
+                var pswpElement = document.querySelectorAll('.pswp')[0];
 
-            for (var i = 0; i < photos.length; i++) {
-                var items = [
-                    {
+                for (var i = 0; i < photos.length; i++) {
+                    var items = [
+                        {
                         src: photos[i],
                         w: window.screen.width,
                         h: height,
                     },
                 ];
-            }
+                }
 
-            var options = {
+                var options = {
                 index: index, // start at first slide
                 tapToClose: true,
                 maxSpreadZoom: 4,
@@ -73,31 +83,31 @@
 
             // Initializes and opens PhotoSwipe
             gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
-            gallery.init();
+        gallery.init();
         }
 
-        function showPreview(index, elem) {
-            if (elem != undefined) {
-                var width = window.screen.width;
-                var height = width;
-                var img = new Image();
-                img.src = elem.src;
+    function showPreview(index, elem) {
+        if (elem != undefined) {
+            var width = window.screen.width;
+            var height = width;
+            var img = new Image();
+            img.src = elem.src;
 
-                var w = img.width;
-                if (w > 0) {
-                    height = img.height * width / w;
-                }
-
-                var photos=["@certpath"]
-
-                initgallery(photos, 0, height);
+            var w = img.width;
+            if (w > 0) {
+                height = img.height * width / w;
             }
 
+            var photos=["@certpath"]
+
+                initgallery(photos, 0, height);
         }
 
-        function rotate() {
-            return false;
-        }
+    }
+
+    function rotate() {
+        return false;
+    }
     </script>
 }
 
@@ -106,7 +116,7 @@
     <div class="row service title">
         <div class="col-xs-12">
             @if (!string.IsNullOrEmpty(CertPath))
-            {
+    {
                 <img src="@certpath" width="100%" onclick="javascript:showPreview(0,this)" />
                 <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
