@@ -1573,7 +1573,14 @@
                     Dictionary<string, object> keyValue = new Dictionary<string, object>();
                     foreach (var item in dxQualityStandards)
                     {
-                        keyValue.Add(item.TargetName, this.Request.Form[item.TargetName + i].ToDouble(2));
+                        if (item.TargetName.StartsWith("伸长率"))
+                        {
+                            keyValue.Add(item.TargetName, this.Request.Form[item.TargetName + i].ToDouble(1).ToString("f1"));
+                        }
+                        else
+                        {
+                            keyValue.Add(item.TargetName, this.Request.Form[item.TargetName + i].ToDouble(2));
+                        }
                     }
 
                     // 多行元素必要字段校验
@@ -2101,8 +2108,19 @@
                                             if (value != null)
                                             {
                                                 val = value.ToDouble();
+                                                if (s.TargetName.StartsWith("伸长率"))
+                                                {
+                                                    val = value.ToDouble(1);
+                                                }
                                             }
-                                            keyValue.Add(s.TargetName, val);
+                                            if (s.TargetName.StartsWith("伸长率"))
+                                            {
+                                                keyValue.Add(s.TargetName, val.ToString("f1"));
+                                            }
+                                            else
+                                            {
+                                                keyValue.Add(s.TargetName, val);
+                                            }
                                         }
                                         else
                                         {
