@@ -105,13 +105,13 @@
                 <tbody>
                     <tr>
                         <td align="right" width="500">
-                             <img src="{{data.QualityIcon2}}" width="85" height="120" />
+                             <img src="{{data.QualityIcon2}}?v=1.1" width="85" height="120" />
                         </td>
                         <td style="width:515px;padding-left:10px; padding-top:20px;">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </td>
                         <td style="text-align: right;padding-left:30px">
-                            <img src="{{data.QualityIcon}}?v=1.0" width="290" height="120" style="padding-right:0px;" />
+                            <img src="{{data.QualityIcon}}?v=1.1" width="290" height="120" style="padding-right:0px;" />
                         </td>
                         <td style="text-align: left; width:210px;padding-top:10px;">
                             <div style="margin-left: 20px;">
