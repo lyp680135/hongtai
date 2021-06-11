@@ -4,6 +4,10 @@
 @inject Util.Helpers.MySqlHelper mySqlHelper
 @functions{
     public DataLibrary.SiteBasic SiteBasic { get; set; }
+    /// <summary>
+    /// 查询记录（多条）
+    /// </summary>
+    public List<DataLibrary.PdProduct> Products { get; set; }
 
     // 产品模型
     public DataLibrary.PdProduct PdProduct { get; set; }
@@ -64,16 +68,8 @@
         }
         this.SiteBasic = (from c in this.Db.SiteBasic select c).ToList()[0];
 
-        this.PdProduct = this.Db.PdProduct.FirstOrDefault(x => x.Batcode == bc && x.Randomcode == vc);
-        if (this.PdProduct != null)
-        {
-            this.ProductClass = this.Db.BaseProductClass.FirstOrDefault(x => x.Id == this.PdProduct.Classid);
-            this.Material = this.Db.BaseProductMaterial.FirstOrDefault(x => x.Id == this.PdProduct.Materialid);
-            this.Spec = this.Db.BaseSpecifications.FirstOrDefault(x => x.Id == this.PdProduct.Specid);
-            this.PdWorkshopTeam = this.Db.PdWorkshopTeam.FirstOrDefault(x => x.Id == this.PdProduct.WorkShift);
-            this.PdWorkshop = this.Db.PdWorkshop.FirstOrDefault(x => x.Id == this.PdWorkshopTeam.WorkshopId);
-            this.PdStockOut = this.Db.PdStockOut.FirstOrDefault(c => c.Productid == this.PdProduct.Id);
-        }
+        this.Products = this.Db.PdProduct.Where(x => x.Batcode == bc && x.Randomcode == vc).OrderBy(p => p.Batcode).ToList();
+        
     }
 }
 @{
@@ -94,7 +90,7 @@
     <script type="text/javascript" src="/Content/js/login.js"></script>
 }
 
-@if (Model.PdProduct == null)
+@if (Model.Products == null || Model.Products.Count <= 0)
 {
     <div class="nodata" style="position:initial;padding-top:100px;padding-bottom:100px;height:initial;text-align:center;">
         <img src="~/Content/images/logo_small.png" style="width:10%;" />
@@ -105,75 +101,102 @@
 }
 else
 {
-    <div class="container-fluid content">
-        <div class="row service title">
-            <div class="col-xs-12">
-                <img src="/Content/images/logo_small.png" />
-                <span>江苏鸿泰钢铁有限公司</span>
-            </div>
-        </div>
-        <div class="row search_result">
-            <div class="col-xs-12">
-                <table class="table">
-                    <tr>
-                        <td>产品名称:</td>
-                        <td>@Model.ProductClass.Gbname</td>
-                        <td>牌号</td>
-                        <td>@Model.Material.Name</td>
-                    </tr>
-                    <tr>
-                        <td>规格:</td>
-                        <td>@Model.Spec.Specname</td>
-                        <td>定尺:</td>
-                        <td>@Model.PdProduct.Length</td>
-                    </tr>
-                    <tr>
-                        <td>重量:</td>
-                        <td>@Html.Raw(Convert.ToInt32(Model.Spec.Refermeterweight * Model.Spec.Referlength * Model.Spec.Referpiececount))@Html.Raw("  kg")</td>
-                        <td>车间编号:</td>
-                        <td>@Model.PdWorkshop.Code</td>
-                    </tr>
-                    <tr>
-                        <td>批号:</td>
-                        <td>@Model.PdProduct.Batcode</td>
-                        <td>批号校验码:</td>
-                        <td>@Model.PdProduct.Randomcode</td>
-                    </tr>
-                    <tr>
-                        <td>捆号:</td>
-                        <td>@Model.PdProduct.Bundlecode</td>
-                        <td>支数:</td>
-                        <td>@Model.PdProduct.Piececount</td>
-                    </tr>
-                    <tr>
-                        <td>生产班组:</td>
-                        <td colspan="3">@Model.PdWorkshopTeam.TeamName</td>
-                    </tr>
-                    <tr>
-                        <td>生产日期:</td>
-                        <td colspan="3">@Util.Extensions.GetDateTimeFromUnixTime((long)Model.PdProduct.Createtime).ToString("yyyy年MM月dd日")</td>
-                    </tr>
-                    @*<tr>
-                        <td>出厂日期:</td>
-                        <td colspan="3">
-                            @if (Model.PdStockOut != null && Model.PdStockOut.Createtime.HasValue)
-                            {
-                                <p>@(((long)Model.PdStockOut.Createtime.Value).GetDateTimeFromUnixTime().ToString("yyyy年MM月dd日"))</p>
-                            }
-                            else
-                            {
-                                <p>&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;月&nbsp;&nbsp;日</p>
-                            }
-                    </td>
-                </tr>*@
-                <tr>
-                    <td>查询官网:</td>
-                    <td colspan="3">@mngSetting.Domain_PC</td>
-                </tr>
-                </table>
-            </div>
+<div class="container-fluid content">
+    <div class="row service title">
+        <div class="col-xs-12">
+            <img src="/Content/images/logo_small.png" />
+            <span>江苏鸿泰钢铁有限公司</span>
         </div>
     </div>
+    @{
+        var i = 0;
+        @if (Model.Products.Count > 1)
+        {
+            <div style="line-height:40px;">你好！本次查询结果有多条记录：</div>
+        }
+
+        @foreach (var pd in Model.Products)
+        {
+            i++;
+            if (pd != null)
+            {
+                this.PdProduct = pd;
+                this.ProductClass = this.Db.BaseProductClass.FirstOrDefault(x => x.Id == pd.Classid);
+                this.Material = this.Db.BaseProductMaterial.FirstOrDefault(x => x.Id == pd.Materialid);
+                this.Spec = this.Db.BaseSpecifications.FirstOrDefault(x => x.Id == pd.Specid);
+                this.PdWorkshopTeam = this.Db.PdWorkshopTeam.FirstOrDefault(x => x.Id == pd.WorkShift);
+                this.PdWorkshop = this.Db.PdWorkshop.FirstOrDefault(x => x.Id == this.PdWorkshopTeam.WorkshopId);
+                this.PdStockOut = this.Db.PdStockOut.FirstOrDefault(c => c.Productid == pd.Id);
+            }
+            <div class="row search_result">
+                @if (Model.Products.Count > 1)
+                {
+                    <div>第<span style="display:inline">@i</span>条记录：</div>
+                }
+                <div class="col-xs-12">
+                    <table class="table">
+                        <tr>
+                            <td>产品名称:</td>
+                            <td>@Model.ProductClass.Gbname</td>
+                            <td>牌号</td>
+                            <td>@Model.Material.Name</td>
+                        </tr>
+                        <tr>
+                            <td>规格:</td>
+                            <td>@Model.Spec.Specname</td>
+                            <td>定尺:</td>
+                            <td>@Model.PdProduct.Length</td>
+                        </tr>
+                        <tr>
+                            <td>重量:</td>
+                            <td>@Html.Raw(Convert.ToInt32(Model.Spec.Refermeterweight * Model.Spec.Referlength * Model.Spec.Referpiececount))@Html.Raw("  kg")</td>
+                            <td>车间编号:</td>
+                            <td>@Model.PdWorkshop.Code</td>
+                        </tr>
+                        <tr>
+                            <td>批号:</td>
+                            <td>@Model.PdProduct.Batcode</td>
+                            <td>批号校验码:</td>
+                            <td>@Model.PdProduct.Randomcode</td>
+                        </tr>
+                        <tr>
+                            <td>捆号:</td>
+                            <td>@Model.PdProduct.Bundlecode</td>
+                            <td>支数:</td>
+                            <td>@Model.PdProduct.Piececount</td>
+                        </tr>
+                        <tr>
+                            <td>生产班组:</td>
+                            <td colspan="3">@Model.PdWorkshopTeam.TeamName</td>
+                        </tr>
+                        <tr>
+                            <td>生产日期:</td>
+                            <td colspan="3">@Util.Extensions.GetDateTimeFromUnixTime((long)Model.PdProduct.Createtime).ToString("yyyy年MM月dd日")</td>
+                        </tr>
+                        @*<tr>
+                                    <td>出厂日期:</td>
+                                    <td colspan="3">
+                                        @if (Model.PdStockOut != null && Model.PdStockOut.Createtime.HasValue)
+                                        {
+                                            <p>@(((long)Model.PdStockOut.Createtime.Value).GetDateTimeFromUnixTime().ToString("yyyy年MM月dd日"))</p>
+                                        }
+                                        else
+                                        {
+                                            <p>&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;月&nbsp;&nbsp;日</p>
+                                        }
+                                </td>
+                            </tr>*@
+                        <tr>
+                            <td>查询官网:</td>
+                            <td colspan="3">@mngSetting.Domain_PC</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        }
+
+    }
+</div>
 @if (!this._cmsService.IuserService.IsAuth)
 {
     <div class="container-fluid content print">
