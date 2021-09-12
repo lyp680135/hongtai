@@ -174,21 +174,25 @@ else
                             <td colspan="3">@Util.Extensions.GetDateTimeFromUnixTime((long)Model.PdProduct.Createtime).ToString("yyyy年MM月dd日")</td>
                         </tr>
                         @*<tr>
-                                    <td>出厂日期:</td>
-                                    <td colspan="3">
-                                        @if (Model.PdStockOut != null && Model.PdStockOut.Createtime.HasValue)
-                                        {
-                                            <p>@(((long)Model.PdStockOut.Createtime.Value).GetDateTimeFromUnixTime().ToString("yyyy年MM月dd日"))</p>
-                                        }
-                                        else
-                                        {
-                                            <p>&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;月&nbsp;&nbsp;日</p>
-                                        }
-                                </td>
-                            </tr>*@
+                <td>出厂日期:</td>
+                <td colspan="3">
+                    @if (Model.PdStockOut != null && Model.PdStockOut.Createtime.HasValue)
+                    {
+                        <p>@(((long)Model.PdStockOut.Createtime.Value).GetDateTimeFromUnixTime().ToString("yyyy年MM月dd日"))</p>
+                    }
+                    else
+                    {
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;月&nbsp;&nbsp;日</p>
+                    }
+            </td>
+        </tr>*@
                         <tr>
                             <td>查询官网:</td>
                             <td colspan="3">@mngSetting.Domain_PC</td>
+                        </tr>
+                        <tr>
+                            <td>公司地址:</td>
+                            <td colspan="3">江苏省镇江市谏壁镇东陶村</td>
                         </tr>
                     </table>
                 </div>
