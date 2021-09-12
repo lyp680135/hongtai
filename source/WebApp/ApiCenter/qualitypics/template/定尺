@@ -120,10 +120,10 @@
                                     <span style="color: red;">{{data.PrintNo}}</span>
                                 </div>
                                 <div style="font-size: 18.5px; margin-bottom: 0px;">
-                                    地址:{{data.Address}}
+                                   &nbsp;
                                 </div>
-                                <div style="font-size: 11px; padding-bottom: 20px;">
-                                    Address:{{data.AddressEn}}
+                                <div style="font-size: 18px; padding-bottom: 0px; padding-left:5px;">
+                                    www.jshtsteel.com
                                 </div>
                             </div>
                         </td>
@@ -154,7 +154,7 @@
                         <td style="padding-bottom:20px;padding-top:40px;" width="640">
                             <div style="margin-bottom: 20px;font-size:17px;">
                                 生产许可证号/Production License Number
-                                <span style="margin-left: 20px;font-weight: bold;">{{data.PermitNo}}</span>
+                                <span style="margin-left: 20px;font-weight: bold;">(苏){{data.PermitNo}}</span>
                             </div>
                             <div style="margin-bottom: 20px;">
                                 牌号/Steel Grade
@@ -256,15 +256,15 @@
             </table>
             <div style="position:absolute; width:980px;margin-top:15px;text-align:center;font-size:15px;color:#777;">化学成份<br />Chemical Composition(%)</div>
             <table width="1521px" align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:none;margin:0 20px">
-		    <tr><td width="1171px" style="border-top:none;border-right:none;border-left:none;border-bottom:none;margin:0" valign="top">
-		        <table width="1171px" align="center" cellpadding="0" cellspacing="0" style="border-top:1px solid white;">
+		    <tr><td width="1233px" style="border-top:none;border-right:none;border-left:none;border-bottom:none;margin:0" valign="top">
+		        <table width="1233px" align="center" cellpadding="0" cellspacing="0" style="border-top:1px solid white;">
 		         <tr>
-		           <td rowspan="2" width="38px" style="border-bottom:none;border-top:none;"><br />序号NO.</td>
+		           <td rowspan="2" width="39px" style="border-bottom:none;border-top:none;"><br />序号NO.</td>
 		           <td colspan="11" style="height:70px;border-top:none;">&nbsp;</td>
-		           <td rowspan="2" width="76px" height="100px" style="border-bottom:none;border-top:none;"><span style="font-size:23px;color:white;">&nbsp;T</span><br />碳当量<br />Ceq(%)</td>
-		           <td rowspan="2" width="65px" height="100px" style="border-bottom:none;border-top:none;"><span style="font-size:8px;color:white;">&nbsp;M</span><br />金相检测<br />Metallog<br />raphic<br />Phase</td>
-		           <td rowspan="2" width="50px" height="100px" style="border-bottom:none;border-top:none;"><span style="font-size:8px;color:white;">&nbsp;V</span><br />截面维氏<br />硬度<br />Vickers<br />hardness</td>
-		           <td rowspan="2" width="50px" height="100px" style="border-bottom:none;border-top:none;"><span style="font-size:15px;color:white;">&nbsp;M</span><br />微观组织<br />Microstr<br />uctures</td>
+		           <td rowspan="2" width="86px" height="100px" style="border-bottom:none;border-top:none;font-size:16px;font-weight:900"><span style="font-size:23px;color:white;">&nbsp;T</span><br />碳当量<br />Ceq(%)</td>
+		           <td rowspan="2" width="75px" height="100px" style="border-bottom:none;border-top:none;font-size:16px;font-weight:900"><span style="font-size:8px;color:white;">&nbsp;M</span><br />金相检测<br />Metallog<br />raphic<br />Phase</td>
+		           <td rowspan="2" width="60px" height="100px" style="border-bottom:none;border-top:none;font-size:16px;font-weight:900"><span style="font-size:8px;color:white;">&nbsp;V</span><br />截面维氏<br />硬度<br />Vickers<br />hardness</td>
+		           <td rowspan="2" width="60px" height="100px" style="border-bottom:none;border-top:none;font-size:16px;font-weight:900"><span style="font-size:15px;color:white;">&nbsp;M</span><br />微观组织<br />Microstr<br />uctures</td>
 		          </tr>
 		          <tr>
 		           <td width="78px" style="height:30px;">C</td>
@@ -301,14 +301,14 @@
                             {{/foreach}}
                         </table>
                     </td>
-				    <td width="360px" style="border-top:none;border-right:none;border-left:none;border-bottom:none;" valign="top">
-				        <table width="360px" align="center" cellpadding="0" cellspacing="0" style="border-top:1px solid white;">
+				    <td width="291px" style="border-top:none;border-right:none;border-left:none;border-bottom:none;" valign="top">
+				        <table width="291px" align="center" cellpadding="0" cellspacing="0" style="border-top:1px solid white;">
                             <tr>
                                 <td style="height:99px;">备注<br />Remark</td>
                             </tr>
                             <tr>
                                 <td style="height:146px;font-size:13px;line-height:1.5;color: rgb(0, 0, 0);padding:5px;" align="left" valign="top">
-                                    1.本证明书仅限于上述批号,实物标识&nbsp;<img src="{{data.Brand}}" />。<br>
+                                    1.本证明书仅限于上述批号,实物标识&nbsp;"<b>075</b>"。<br>
                                     2.定尺材以理论重量计重。<br>
                                     3.序号相同对应为同一批号数据。<br>
                                     4.重量偏差为该批号入库检测的偏差值。<br>
@@ -330,10 +330,11 @@
             <span style="margin-left: 150px;">产品质量证明书印鉴/Seal</span>
         </div>
         <div style="text-align: center;margin-top: 20px;">
-            <table width="1200" align="center" cellpadding="0" cellspacing="0" style="margin:0 110px">
+            <table width="1500" align="center" cellpadding="0" cellspacing="0" style="margin:0 10px">
                 <tr>
-                    <td style="width:320px">{{data.DomainPc}}</td>
-                    <td style="width:900px">传输与打印：微信传输时请选择“原图”传送，建议打印采用分辨率600dpi以上的彩色激光打印机。</td>
+                    <td style="width:500px;text-align:left; padding-left:80px;">地址：江苏省镇江市谏壁镇东陶村<br />
+                    <span style="font-size:14px;">Address: Jiangsu Zhenjiang Jian Bi Zhen Dong Tao Cun</span></td>
+                    <td style="width:980px;text-align:left;" valign="top">传输与打印：微信传输时请选择“原图”传送，建议打印采用分辨率600dpi以上的彩色激光打印机。</td>
                 </tr>
             </table>
         </div>
