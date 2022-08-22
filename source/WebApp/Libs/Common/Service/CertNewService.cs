@@ -478,7 +478,15 @@
                                                     }
                                                     else
                                                     {
-                                                        dynamicdata[d.Key] = dynamicdata[d.Key] + "/" + x.Value;
+														if (d.Key == "伸长率A")
+                                                        {
+                                                            double.TryParse(x.Value.ToString(), out double val);
+                                                            dynamicdata[d.Key] = dynamicdata[d.Key] + "/" + val.ToString("0");
+                                                        }
+														else
+														{
+                                                            dynamicdata[d.Key] = dynamicdata[d.Key] + "/" + x.Value;
+														}
                                                     }
                                                 }
 
@@ -493,6 +501,12 @@
                                             {
                                                 double.TryParse(x.Value.ToString(), out double val);
                                                 dynamicdata[x.Key] = val.ToString("0.0");
+                                            }
+
+											if (x.Key == "伸长率A")
+                                            {
+                                                double.TryParse(x.Value.ToString(), out double val);
+                                                dynamicdata[x.Key] = val.ToString("0");
                                             }
                                         }
                                     }
