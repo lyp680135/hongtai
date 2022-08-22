@@ -644,7 +644,7 @@
                                                     if (d.Key == "伸长率Agt")
                                                     {
                                                         double.TryParse(x.Value.ToString(), out double val);
-                                                        dynamicdata[d.Key] = dynamicdata[d.Key] + "/" + val.ToString("0.0");
+                                                        dynamicdata[d.Key] = dynamicdata[d.Key] + "/" + val.ToString("0");
                                                     }
                                                     else
                                                     {
@@ -662,7 +662,7 @@
                                             if (x.Key == "伸长率Agt")
                                             {
                                                 double.TryParse(x.Value.ToString(), out double val);
-                                                dynamicdata[x.Key] = val.ToString("0.0");
+                                                dynamicdata[x.Key] = val.ToString("0");
                                             }
                                         }
                                     }
