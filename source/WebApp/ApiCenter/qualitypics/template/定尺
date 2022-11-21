@@ -147,8 +147,8 @@
                                 <span style="margin-left: 20px;font-weight: bold;">{{data.Standard}}</span>
                             </div>
 							<div style="margin-bottom: 20px;">
-                                ISO9001：2008/Number
-                                <span style="margin-left: 20px;font-weight: bold;">UQ100524R0</span>
+                                ISO：2015/Number
+                                <span style="margin-left: 20px;font-weight: bold;">UQ210679R2</span>
                             </div>                        
                         </td>
                         <td style="padding-bottom:20px;padding-top:40px;" width="640">
@@ -165,8 +165,8 @@
                                 <span style="margin-left: 20px; font-weight: bold;">{{data.DeliveryState}}/{{data.DeliveryStateEn}}</span>
                             </div>
                             <div style="margin-bottom: 20px;">
-                                ISO014001：2004/Number
-                                <span style="margin-left: 20px; font-weight: bold;">UE090048R0</span>
+                                ISO014001：2015/Number
+                                <span style="margin-left: 20px; font-weight: bold;">UE210261R</span>
                             </div>
                         </td>
                         <td align="center" valign="top" width="220">
