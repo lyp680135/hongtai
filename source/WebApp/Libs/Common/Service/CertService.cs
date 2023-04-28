@@ -550,31 +550,31 @@
                                     if (d.Key.ToUpper() == "NB")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out nb);
-                                        outinfo["Qualityinfo"][d.Key] = "0"; nb.ToString("0.000");
+                                        outinfo["Qualityinfo"][d.Key] = nb.ToString("0.000");
                                     }
 
                                     if (d.Key.ToUpper() == "CU")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out cu);
-                                        outinfo["Qualityinfo"][d.Key] = "0"; cu.ToString("0.000");
+                                        outinfo["Qualityinfo"][d.Key] = cu.ToString("0.000");
                                     }
 
                                     if (d.Key.ToUpper() == "NI")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out ni);
-                                        outinfo["Qualityinfo"][d.Key] = "0"; ni.ToString("0.000");
+                                        outinfo["Qualityinfo"][d.Key] = ni.ToString("0.000");
                                     }
 
                                     if (d.Key.ToUpper() == "MO")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out mo);
-                                        outinfo["Qualityinfo"][d.Key] = "0"; mo.ToString("0.000");
+                                        outinfo["Qualityinfo"][d.Key] = mo.ToString("0.000");
                                     }
 
                                     if (d.Key.ToUpper() == "CR")
                                     {
                                         double.TryParse(outinfo["Qualityinfo"][d.Key].ToString(), out cr);
-                                        outinfo["Qualityinfo"][d.Key] = "0"; cr.ToString("0.000");
+                                        outinfo["Qualityinfo"][d.Key] = cr.ToString("0.000");
                                     }
 
                                     if (d.Key.ToUpper() == "TI")
