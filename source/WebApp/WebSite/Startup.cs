@@ -122,7 +122,7 @@ namespace WarrantyManage
             app.UseMiddleware<LogMiddleware>();
 
             // 添加日志静态文件
-            app.AddLogStaticFiles();
+            // app.AddLogStaticFiles();
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
             {
