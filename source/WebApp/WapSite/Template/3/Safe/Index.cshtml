@@ -1,0 +1,30 @@
+﻿@page
+@inject ICMSService _cmsService
+@section head{
+    <link href="/Content/css/introduc.css" rel="stylesheet" />
+}
+@{
+    ViewData["Tag"] = 7;
+    ViewData["Title"] = "公司资质";
+    ViewData["Desc"] = "公司资质";
+    var siteBasic = _cmsService.GetBasic();
+    ViewBag.SiteBasic = siteBasic;
+    var mngSetting = _cmsService.GetSetting();
+    ViewBag.SiteSetting = mngSetting;
+
+}
+<div class="container-fluid matter">
+    <div class="row introduce_details">
+        <div class="col-xs-12">
+            @{
+                var about = _cmsService.GetSinglePage("鸿泰资质");
+                if (about != null)
+                {
+
+                    @Html.Raw(Util.Extensions.ToHtml(about.Content).ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))
+
+                }
+            }
+        </div>
+    </div>
+</div>
