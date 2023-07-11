@@ -1,0 +1,31 @@
+﻿@page
+@inject ICMSService _cmsServices;
+@{
+    ViewData["Tag"] = 7;
+    ViewData["Title"] = "公司资质";
+    ViewData["Desc"] = "公司资质";
+    var mngSetting = _cmsServices.GetSetting();
+}
+@section head{
+    <link href="/Content/css/safe.css" rel="stylesheet" />
+}
+
+<!--------------------------面包屑------------------------------>
+<div class="location_box">
+    <div class="location">
+        <span>&nbsp;公司资质</span>
+        <span>您当前的位置： 首页 > </span>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!--------------------------公司资质------------------------------>
+
+@{
+    var Safe = _cmsServices.GetSinglePage("鸿泰资质");
+    if (Safe != null)
+    {
+        <div class="safe_box">
+            @Html.Raw(Util.Extensions.ToHtml(Safe.Content).ToString().Replace("<img src=\"/../", "<img src=\"" + mngSetting.Domain_PC))
+        </div>
+    }
+}
