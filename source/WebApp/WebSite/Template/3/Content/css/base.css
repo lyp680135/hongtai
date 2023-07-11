@@ -220,14 +220,14 @@ a:hover {
     float: right;
     position: absolute;
     top: 0px;
-    left: 32%;
+    left: 28%;
 }
 .nav a {
     flaot: left;
     color: #fff;
     font-size: 18px;
     line-height: 112px;
-    padding: 0 20px;
+    padding: 0 15px;
 }
 
 .nav .current {
