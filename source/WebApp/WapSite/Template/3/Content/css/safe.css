@@ -1,0 +1,44 @@
+@charset "utf-8";
+/* CSS Document */
+/*---------------------------内容-------------------------- */
+.container-fluid.matter{
+    vertical-align:middle;
+    padding: 0 12px 0 12px;
+    margin: 20px 0 45px 0;
+}
+.container-fluid.matter .row{
+    margin-left: 0;
+    margin-right: 0;
+}
+.container-fluid.matter .row>div{
+    padding-left: 0;
+    padding-right:0;
+    vertical-align: middle;
+}
+.introduce_details .div_img{
+    position: relative;
+}
+.introduce_details .div_img img{
+   width: 100%;
+}
+.div_img .introduce_title{
+    position:absolute;
+    bottom: -3px;
+    right: 0;
+    background: rgba(104,166,227,0.76);
+    width: 192px;
+    height: 38px;
+    padding: 5px;
+    text-align: center;
+    color: #fff;
+}
+.introduce_title span{
+    color: #fff;
+    border: 1px solid #fff;
+    display: inline-block;
+    padding: 3px;
+}
+.row.introduce_details p{
+    line-height: 24px;
+    margin-top: 10px;
+}
