@@ -1,17 +1,17 @@
 # 编译Docker镜像
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2 as build-env
 WORKDIR /source
-COPY ./WebApp /source
+COPY ./source/WebApp /source
 
 WORKDIR /source/ApiCenter
 RUN dotnet restore --verbosity q
 
-RUN dotnet publish -c Release -o /source/publish
+RUN dotnet publish -c Release -o /app
 
 # WebApi端镜像
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2
 WORKDIR /app
-copy --from=build-env /source/publish ./
+copy --from=build-env /app ./
 
 
 #拷贝
