@@ -1,6 +1,6 @@
 ﻿{
   "Database": {
     "Type": "MySQL",
-    "ConnectionString": "Server=dev.xiaoyutt.com; Port=7035; Uid=warranty; Pwd=warranty123456; Database=warranty_hongtai"
+    "ConnectionString": "Server=43.155.66.244; Port=33006; Uid=warranty; Pwd=warranty123456; Database=warranty_hongtai"
   }
 }
