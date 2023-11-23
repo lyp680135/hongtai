@@ -360,7 +360,7 @@
                             }
 
                             item["Materialid"] = p.Materialid;
-                            item["Spec"] = item["Specname"];
+                            item["Spec"] = spec.Replace("Φ","");
                             item["SingleWeight"] = p.Weight;
                         }
 
