@@ -291,11 +291,44 @@
 
                         // 检查牌号是否一致
                         bool finderr = false;
+                        int index = 0;
                         List<string> errors = new List<string>();
+                        List<string> batcodes = new List<string>();
                         foreach (var item in array)
                         {
+                            index++;
                             var batcode = (item["Batcode"] != null) ? item["Batcode"].ToString() : null;
-                            var length = (item["Length"] != null) ? int.Parse(item["Length"].ToString()) : 0;
+                            var lengthstr = (item["Length"] != null) ? item["Length"].ToString() : null;
+                            var spec = (item["Specname"] != null) ? item["Specname"].ToString() : null;
+                            var printnumberstr = (item["Printnumber"] != null) ? item["Printnumber"].ToString() : null;
+                            var length = lengthstr.ToInt();
+                            var printnumber = printidstr.ToInt();
+
+                            if (string.IsNullOrEmpty(batcode))
+                            {
+                                errors.Add($"第{index}行, 请输入批号");
+                                continue;
+                            }
+
+                            if (length <= 0)
+                            {
+                                errors.Add($"第{index}行, 请输入定尺长度");
+                                continue;
+                            }
+
+                            if (string.IsNullOrEmpty(spec))
+                            {
+                                errors.Add($"第{index}行, 请输入正确的规格");
+                                continue;
+                            }
+
+                            if (printnumber <= 0)
+                            {
+                                errors.Add($"第{index}行, 请输入件数");
+                                continue;
+                            }
+
+                            batcodes.Add($"{batcode} {spec}");
 
                             var p = this.db.PdProduct.Where(s => s.Batcode == batcode && s.Length == length).FirstOrDefault();
                             if (p == null)
@@ -334,6 +367,12 @@
                         if (finderr)
                         {
                             return new ResponseModel(ApiResponseStatus.Failed, "生成失败", "不同牌号的产品不能打印在一张质保书中，请按要求选择！");
+                        }
+
+                        var loopBatcode = batcodes.GroupBy(x => x).Select(g => new { g.Key, Total = g.Count() }).Where(s => s.Total > 1);
+                        if (loopBatcode.Count() > 0)
+                        {
+                            return new ResponseModel(ApiResponseStatus.Failed, "生成失败", string.Join(",", loopBatcode.Select(x => x.Key).ToArray()) + " 请写在同一行");
                         }
                     }
 
