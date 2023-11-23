@@ -35,7 +35,7 @@
             this.stockoutService = stockout;
         }
 
-        public CommonResult AddCert(JArray list, int sellerid, string lpn, string consignor, int userid, DateTime outDate)
+        public CommonResult AddCert(JArray list, int sellerid, string lpn, string consignor, int userid, DateTime outDate, string purchaseno = "")
         {
             if (list == null || list.Count == 0)
             {
@@ -133,6 +133,7 @@
                     Signetangle = new Random().Next(-45, 45),
                     Checkcode = "n" + checkcode, // 手动输入版的 质保书验证码，前面加n
                     Adder = userid,
+                    Purchaseno = purchaseno,
                 };
 
                 this.db.SalePrintlogNew.Add(entity);
@@ -221,6 +222,9 @@
 
                 // 打印的车牌号
                 info.Add("LPN", printFirst.Lpn);
+
+                // 采购单号
+                info.Add("Purchaseno", printFirst.Purchaseno);
 
                 // 经销商授权表
                 int printId = printFirst.Id;
@@ -708,6 +712,10 @@
 
                     // 车牌号
                     html = html.Replace("{{data.LPN}}", jobj["LPN"].ToString());
+
+                    // 采购单号
+                    html = html.Replace("{{data.Purchaseno}}", jobj["Purchaseno"].ToString());
+
 
                     // 底部
                     html = html.Replace("{{data.OutDate}}", jobj["OutDate"].ToString());

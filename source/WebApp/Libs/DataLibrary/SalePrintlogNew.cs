@@ -58,5 +58,11 @@
         /// Gets or sets 简单流程时保存签发人
         /// </summary>
         public int? Adder { get; set; }
+
+        /// <summary>
+        /// 采购单号
+        /// </summary>
+        [MaxLength(50)]
+        public string Purchaseno { get; set; }
     }
 }

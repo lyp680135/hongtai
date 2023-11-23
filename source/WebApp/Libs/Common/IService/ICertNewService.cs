@@ -20,8 +20,9 @@
         /// <param name="consignor">收货单位</param>
         /// <param name="userid">打印人员Id</param>
         /// <param name="outDate">出证日期</param>
+        /// <param name="purchaseno">采购单号</param>
         /// <returns>质保书序号</returns>
-        CommonResult AddCert(JArray list, int sellerid, string lpn, string consignor, int userid, DateTime outDate);
+        CommonResult AddCert(JArray list, int sellerid, string lpn, string consignor, int userid, DateTime outDate, string purchaseno="");
 
         /// <summary>
         /// 获取填入质保书中的数据
