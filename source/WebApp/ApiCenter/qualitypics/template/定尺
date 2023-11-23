@@ -105,13 +105,13 @@
                 <tbody>
                     <tr>
                         <td align="right" width="500">
-                             <img src="{{data.QualityIcon2}}?v=1.1" width="85" height="120" />
+                             <img src="{{data.QualityIcon2}}?v=1.3" width="85" height="120" />
                         </td>
                         <td style="width:515px;padding-left:10px; padding-top:20px;">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </td>
                         <td style="text-align: right;padding-left:30px">
-                            <img src="{{data.QualityIcon}}?v=1.1" width="290" height="120" style="padding-right:0px;" />
+                            <img src="{{data.QualityIcon}}?v=1.3" width="290" height="120" style="padding-right:0px;" />
                         </td>
                         <td style="text-align: left; width:210px;padding-top:10px;">
                             <div style="margin-left: 20px;">
@@ -147,7 +147,7 @@
                                 <span style="margin-left: 20px;font-weight: bold;">{{data.Standard}}</span>
                             </div>
 							<div style="margin-bottom: 20px;">
-                                ISO：2015/Number
+                                ISO9001：2015/Number
                                 <span style="margin-left: 20px;font-weight: bold;">UQ210679R2</span>
                             </div>                        
                         </td>
@@ -165,8 +165,8 @@
                                 <span style="margin-left: 20px; font-weight: bold;">{{data.DeliveryState}}/{{data.DeliveryStateEn}}</span>
                             </div>
                             <div style="margin-bottom: 20px;">
-                                ISO014001：2015/Number
-                                <span style="margin-left: 20px; font-weight: bold;">UE210261R</span>
+                                ISO14001：2015/Number
+                                <span style="margin-left: 20px; font-weight: bold;">UE210261R2</span>
                             </div>
                         </td>
                         <td align="center" valign="top" width="220">

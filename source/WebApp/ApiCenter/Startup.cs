@@ -67,6 +67,7 @@
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+            services.AddLogService();
             services.AddUserService();
             services.AddLoginService();
             services.AddSettingService();

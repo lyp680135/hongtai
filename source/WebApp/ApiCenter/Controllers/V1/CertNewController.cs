@@ -24,13 +24,15 @@
         private DataLibrary.DataContext db;
         private IUserService userService;
         private ICertNewService certNewService;
+        private ILogService logService;
 
-        public CertNewController(DataLibrary.DataContext dataContext, IUserService user, ICertNewService cert, IHostingEnvironment hostingEnvironment)
+        public CertNewController(DataLibrary.DataContext dataContext, IUserService user, ICertNewService cert, IHostingEnvironment hostingEnvironment, ILogService logService)
         {
             this.db = dataContext;
             this.userService = user;
             this.certNewService = cert;
             this.hostingEnvironment = hostingEnvironment;
+            this.logService = logService;
         }
 
         [HttpGet]
@@ -187,6 +189,7 @@
         /// <param name="id">质保书ID</param>
         /// <returns>撤回操作状态</returns>
         [HttpPost]
+        [Route("Revokecert")]
         [AllowAnonymous]
         public ResponseModel Revokecert(int id)
         {
@@ -230,6 +233,7 @@
 
 
         [HttpPost]
+        [Route("Purchasecert")]
         [AllowAnonymous]
         public ResponseModel Purchasecert(string requestData)
         {
@@ -273,6 +277,7 @@
                         {
                             return new ResponseModel(ApiResponseStatus.Failed, "生成失败", "无效的售达方数据");
                         }
+                        consignor = seller.Name;
                     }
 
                     int materialId = 0;
@@ -302,7 +307,7 @@
                             var spec = (item["Specname"] != null) ? item["Specname"].ToString() : null;
                             var printnumberstr = (item["Printnumber"] != null) ? item["Printnumber"].ToString() : null;
                             var length = lengthstr.ToInt();
-                            var printnumber = printidstr.ToInt();
+                            var printnumber = printnumberstr.ToInt();
 
                             if (string.IsNullOrEmpty(batcode))
                             {
@@ -464,7 +469,8 @@
             }
             catch (Exception ex)
             {
-                return new ResponseModel(ApiResponseStatus.Failed, "生成失败", "请求无效");
+                this.logService.LogError(ex.Message, ex);
+                return new ResponseModel(ApiResponseStatus.Failed, "生成失败", ex.Message);
             }
 
         }
