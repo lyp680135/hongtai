@@ -48,6 +48,11 @@
                 return this.next(httpContext);
             }
 
+            if (requestPath.Contains("/qualitypics/") && httpContext.Request.Method.ToLower() == "get")
+            {
+                return this.next(httpContext);
+            }
+
             if (AnonymousCheck.Invoke(httpContext))
             {
                 return this.next(httpContext);
