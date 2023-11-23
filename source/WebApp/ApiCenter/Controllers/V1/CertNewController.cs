@@ -401,6 +401,13 @@
 
                             // 获取打印序号
                             printno = result.Data.ToString();
+
+                            // 默认已下载
+                            var printFirst = this.db.SalePrintlogNew.FirstOrDefault(x => x.Printno == printno);
+                            printFirst.Status = 1;
+                            this.db.SalePrintlogNew.Update(printFirst);
+                            this.db.SaveChanges();
+
                         }
                         else
                         {
