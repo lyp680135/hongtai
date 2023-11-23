@@ -360,7 +360,7 @@
                             }
 
                             item["Materialid"] = p.Materialid;
-                            item["Spec"] = spec.Replace("Φ","");
+                            item["Spec"] = spec.Replace("Φ", "");
                             item["SingleWeight"] = p.Weight;
                         }
 
@@ -383,7 +383,7 @@
 
                     // var materialId = obj["materialid"].ToInt(); // 材质ID
                     string printno = string.Empty;
-                    int iswater = 0;
+                    int iswater = 1;
                     if (list == null && obj["printno"] != null && obj["iswater"] != null)
                     {
                         printno = obj["printno"].ToString();
