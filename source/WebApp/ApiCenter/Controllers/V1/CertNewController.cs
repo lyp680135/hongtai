@@ -253,6 +253,11 @@
                     var outDate = (obj["outdate"] != null) ? obj["outdate"].SafeString().ToDate() : DateTime.Now;
                     var purchaseno = (obj["purchaseorderno"] != null) ? obj["purchaseorderno"].ToString() : null;
 
+                    if (outDate == DateTime.MinValue)
+                    {
+                        outDate = DateTime.Now;
+                    }
+
                     // 闽源手动版时间需要自定义， 如果时间是服务器当天，则取服务器时间
                     if (outDate.Year == DateTime.Now.Year && outDate.DayOfYear == DateTime.Now.DayOfYear)
                     {
