@@ -498,7 +498,7 @@
                 {
                     ceq = (keyValuePairs["C"] + (keyValuePairs["Mn"] / 6) +
                     ((keyValuePairs["C"] + keyValuePairs["V"] + keyValuePairs["Mo"]) / 5) +
-                    ((keyValuePairs["Cu"] = keyValuePairs["Ni"]) / 15)).ToDouble(2);
+                    ((keyValuePairs["Cu"] + keyValuePairs["Ni"]) / 15)).ToDouble(2);
 
                     if (!keyValuePairs.Keys.Any(x => x == "Ceq"))
                     {
@@ -667,7 +667,7 @@
                 {
                     ceq = (keyValuePairs["C"] + (keyValuePairs["Mn"] / 6) +
                     ((keyValuePairs["C"] + keyValuePairs["V"] + keyValuePairs["Mo"]) / 5) +
-                    ((keyValuePairs["Cu"] = keyValuePairs["Ni"]) / 15)).ToDouble(2);
+                    ((keyValuePairs["Cu"] + keyValuePairs["Ni"]) / 15)).ToDouble(2);
                     keyValuePairs.Add("Ceq", ceq);
                 }
 
@@ -1349,7 +1349,7 @@
                         {
                             ceq = (keyValuePairs["C"] + (keyValuePairs["Mn"] / 6) +
                             ((keyValuePairs["C"] + keyValuePairs["V"] + keyValuePairs["Mo"]) / 5) +
-                            ((keyValuePairs["Cu"] = keyValuePairs["Ni"]) / 15)).ToDouble(2);
+                            ((keyValuePairs["Cu"] + keyValuePairs["Ni"]) / 15)).ToDouble(2);
                             keyValuePairs.Add("Ceq", ceq);
                         }
                     }
@@ -1559,7 +1559,7 @@
                 {
                     ceq = (keyValuePairs["C"] + (keyValuePairs["Mn"] / 6) +
                     ((keyValuePairs["C"] + keyValuePairs["V"] + keyValuePairs["Mo"]) / 5) +
-                    ((keyValuePairs["Cu"] = keyValuePairs["Ni"]) / 15)).ToDouble(2);
+                    ((keyValuePairs["Cu"] + keyValuePairs["Ni"]) / 15)).ToDouble(2);
                     keyValuePairs.Add("Ceq", ceq);
                 }
             }
