@@ -338,7 +338,7 @@
                                 continue;
                             }
 
-                            batcodes.Add($"{batcode} {spec}");
+                            batcodes.Add($"{batcode} {spec} {length}");
 
                             var p = this.db.PdProduct.Where(s => s.Batcode == batcode && s.Length == length).FirstOrDefault();
                             if (p == null)
@@ -398,7 +398,7 @@
                     {
                         if (printid <= 0)
                         {
-                            CommonResult result = this.certNewService.AddCert(array, sellerid, lpn, consignor, userid, outDate, purchaseno);
+                            CommonResult result = this.certNewService.AddCert2(array, sellerid, lpn, consignor, userid, outDate, purchaseno);
                             if (result.Status == (int)CommonResultStatus.Failed)
                             {
                                 return new ResponseModel(ApiResponseStatus.Failed, result.Message, result.Reason);

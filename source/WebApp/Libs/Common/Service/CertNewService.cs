@@ -170,6 +170,119 @@
             }
         }
 
+
+        /// <summary>
+        /// 取真实的质量数据
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="sellerid"></param>
+        /// <param name="lpn"></param>
+        /// <param name="consignor"></param>
+        /// <param name="userid"></param>
+        /// <param name="outDate"></param>
+        /// <param name="purchaseno"></param>
+        /// <returns></returns>
+        public CommonResult AddCert2(JArray list, int sellerid, string lpn, string consignor, int userid, DateTime outDate, string purchaseno = "")
+        {
+            if (list == null || list.Count == 0)
+            {
+                return new CommonResult(CommonResultStatus.Failed, "打印记录保存失败", "产品物资不能为空！");
+            }
+
+            try
+            {
+                int materialid = 0; // 材质ID
+
+                var mngsetInfo = this.db.MngSetting.FirstOrDefault();
+
+                foreach (var item in list)
+                {
+                    materialid = item["Materialid"].ToInt();
+                    string batCode = item["Batcode"].SafeString().Trim();
+
+                    // 判断系统是否有录入质量数据
+                    var data = this.db.PdQuality.Where(p => p.MaterialId == materialid && p.CreateFlag == 0 && p.CheckStatus == CheckStatus_PdQuality.审核通过).Count();
+                    if (data <= 0)
+                    {
+                        return new CommonResult(CommonResultStatus.Failed, "出库失败了，所选批号[" + item["Batcode"].ToString() + "]找不到质量检测数据。", string.Empty);
+                    }
+ 
+                }
+
+                string pno = this.db.SalePrintlogNew.Max(x => x.Printno);
+                if (pno == null || string.IsNullOrEmpty(pno))
+                {
+                    pno = "1000001";
+                }
+                else
+                {
+                    int no = 0;
+                    int.TryParse(pno, out no);
+                    if (no < 1000000)
+                    {
+                        int realno = 1000000 + no;
+                        realno += 1;
+                        pno = string.Format("{0}", realno);
+                    }
+                    else
+                    {
+                        pno = string.Format("{0}", no + 1);
+                    }
+                }
+
+                // 生成随机校验码
+                string checkcode = this.GenerateRandomCode();
+
+                int time = (int)outDate.GetUnixTimeFromDateTime();
+                SalePrintlogNew entity = new SalePrintlogNew
+                {
+                    Createtime = time,
+                    Status = 0,
+                    MaterialId = materialid,
+                    Consignor = consignor,
+                    Printno = pno,
+                    Lpn = lpn,
+                    Signetangle = new Random().Next(-45, 45),
+                    Checkcode = "n" + checkcode, // 手动输入版的 质保书验证码，前面加n
+                    Adder = userid,
+                    Purchaseno = purchaseno,
+                };
+
+                this.db.SalePrintlogNew.Add(entity);
+
+                if (this.db.SaveChanges() > 0)
+                {
+                    foreach (var item in list)
+                    {
+                        this.db.SalePrintLogDetailNew.Add(new SalePrintLogDetailNew()
+                        {
+                            BatCode = item["Batcode"].SafeString().Trim(),
+                            PrintId = entity.Id,
+                            Printnumber = item["Printnumber"].ToInt(),
+                            SingleWeight = (float)item["SingleWeight"].ToDouble(),
+                            Spec = item["Spec"].SafeString(),
+                            Length = item["Length"].ToInt(),
+                            SellerId = sellerid,
+                            MaterialId = materialid
+                        });
+                    }
+
+                    this.db.SaveChanges();
+
+                    return new CommonResult(CommonResultStatus.Success, "打印记录保存成功", null, pno);
+                }
+                else
+                {
+                    return new CommonResult(CommonResultStatus.Failed, "打印记录保存失败", null, pno);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new CommonResult(CommonResultStatus.Failed, "打印记录保存失败", ex.Message);
+            }
+        }
+
+
         public CommonResult GetCertData(string printno)
         {
             if (string.IsNullOrEmpty(printno))
