@@ -53,5 +53,14 @@
         /// <param name="iswater">是否加水印</param>
         /// <returns>生成的图片路径</returns>
         CommonResult GenerateCert(string printno, string savepath, bool iswater);
+
+        /// <summary>
+        /// 生成质保书图片，取真实质量数据
+        /// </summary>
+        /// <param name="printno">质保书序号</param>
+        /// <param name="savepath">质保书保存路径、模板目录默认在template下</param>
+        /// <param name="iswater">是否加水印</param>
+        /// <returns>生成的图片路径</returns>
+        CommonResult GenerateCert2(string printno, string savepath, bool iswater);
     }
 }

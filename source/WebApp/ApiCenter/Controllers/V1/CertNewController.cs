@@ -463,7 +463,7 @@
                         string certsavepath = this.hostingEnvironment.ContentRootPath + "/qualitypics/";
 
                         // 生成质保书
-                        CommonResult retresult = this.certNewService.GenerateCert(printno, certsavepath, (iswater == 0) ? false : true);
+                        CommonResult retresult = this.certNewService.GenerateCert2(printno, certsavepath, (iswater == 0) ? false : true);
                         if (retresult.Status == (int)CommonResultStatus.Failed)
                         {
                             return new ResponseModel(ApiResponseStatus.Failed, retresult.Message, retresult.Reason);
