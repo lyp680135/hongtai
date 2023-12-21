@@ -21,6 +21,7 @@
              new KeyValuePair<string, List<string>>("/api/v1/certNew", new List<string>() { "post", "get" }),
              new KeyValuePair<string, List<string>>("/api/v1/certNew/Revokecert", new List<string>() { "post", "get" }),
              new KeyValuePair<string, List<string>>("/api/v1/certNew/Purchasecert", new List<string>() { "post", "get" }),
+             new KeyValuePair<string, List<string>>("/api/v1/certNew/Redrawcert", new List<string>() { "post", "get" }),
              new KeyValuePair<string, List<string>>("/api/v1/WarrantyTemplate", new List<string>() { "get", "post" }),
         };
 

@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using Util;
@@ -163,7 +164,6 @@
                 if (!string.IsNullOrEmpty(printno))
                 {
                     string certsavepath = this.hostingEnvironment.ContentRootPath + "/qualitypics/";
-
                     // 生成质保书
                     CommonResult retresult = this.certNewService.GenerateCert(printno, certsavepath, (iswater == 0) ? false : true);
                     if (retresult.Status == (int)CommonResultStatus.Failed)
@@ -486,5 +486,45 @@
             }
 
         }
+
+
+        /// <summary>
+        /// 质保书重写
+        /// </summary>
+        /// <param name="id">质保书ID</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("Redrawcert")]
+        [AllowAnonymous]
+        public ResponseModel Redrawcert(int id)
+        {
+            var modelPrint = this.db.SalePrintlogNew.FirstOrDefault(c => c.Id == id);
+            if (modelPrint != null)
+            {
+                if (modelPrint.Status != (int)SalePrintlogStatus.已下载)
+                {
+                    return new ResponseModel(ApiResponseStatus.Failed, "该质保书未生成，不可撤回", "该质保书未生成，不可撤回");
+                }
+
+                string certsavepath = this.hostingEnvironment.ContentRootPath + "/qualitypics/";
+                int iswater = 1;
+
+                // 生成质保书
+                CommonResult retresult = this.certNewService.GenerateCert2(modelPrint.Printno, certsavepath, (iswater == 0) ? false : true);
+                if (retresult.Status == (int)CommonResultStatus.Failed)
+                {
+                    return new ResponseModel(ApiResponseStatus.Failed, retresult.Message, retresult.Reason);
+                }
+                else
+                {
+                    return new ResponseModel(ApiResponseStatus.Success, retresult.Message, JsonConvert.SerializeObject(retresult.Data));
+                }
+            }
+            else
+            {
+                return new ResponseModel(ApiResponseStatus.Failed, "该质保书不存在", "该质保书不存在");
+            }
+        }
+
     }
 }

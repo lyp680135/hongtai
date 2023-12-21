@@ -857,6 +857,21 @@
                     var createtime = (long)printFirst.Createtime.Value;
                     info.Add("OutDate", createtime.GetDateTimeFromUnixTime().ToString("yyyy-MM-dd")); // 出证日期
 
+                    List<Tuple<string, int?>> detaillist = new List<Tuple<string, int?>>();
+                    if (printDetail != null)
+                    {
+                        foreach (var de in printDetail)
+                        {
+                            detaillist.Add(new Tuple<string, int?>(de.BatCode, printFirst.MaterialId.Value));
+                        }
+                    }
+
+                    var info_data = this.qualityService.GetQualityData(detaillist);
+                    if (info_data.Count < detaillist.Count)
+                    {
+                        return new CommonResult(CommonResultStatus.Failed, "质量数据异常", "找不到所选产品的质量数据！");
+                    }
+
                     // 合计数据
                     int total = 0;
                     double totalweight = 0;
@@ -883,16 +898,6 @@
                         // 获取规格直径
                         int.TryParse(detail.Spec.ToString(), out int diameter);
 
-                        List<Tuple<string, int?>> detaillist = new List<Tuple<string, int?>>();
-                        if (printDetail != null)
-                        {
-                            foreach (var de in printDetail)
-                            {
-                                detaillist.Add(new Tuple<string, int?>(de.BatCode, printFirst.MaterialId.Value));
-                            }
-                        }
-
-                        var info_data = this.qualityService.GetQualityData(detaillist);
                         if (index < info_data.Count)
                         {
                             var item = info_data[index];
